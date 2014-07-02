@@ -41,7 +41,7 @@ static const struct input_device_id usfc_tsc_ids[] = {
 			INPUT_DEVICE_ID_MATCH_ABSBIT,
 		.evbit = { BIT_MASK(EV_ABS) | BIT_MASK(EV_KEY) },
 		.keybit = { [BIT_WORD(BTN_TOUCH)] = BIT_MASK(BTN_TOUCH) },
-		/* assumption: ABS_X & ABS_Y are in the same long */
+		/*                                                */
 		.absbit = { [BIT_WORD(ABS_X)] = BIT_MASK(ABS_X) |
 						BIT_MASK(ABS_Y) },
 	},
@@ -51,33 +51,33 @@ static const struct input_device_id usfc_tsc_ids[] = {
 			INPUT_DEVICE_ID_MATCH_ABSBIT,
 		.evbit = { BIT_MASK(EV_ABS) | BIT_MASK(EV_KEY) },
 		.keybit = { [BIT_WORD(BTN_TOUCH)] = BIT_MASK(BTN_TOUCH) },
-		/* assumption: MT_.._X & MT_.._Y are in the same long */
+		/*                                                    */
 		.absbit = { [BIT_WORD(ABS_MT_POSITION_X)] =
 			BIT_MASK(ABS_MT_POSITION_X) |
 			BIT_MASK(ABS_MT_POSITION_Y) },
 	},
-	{ } /* Terminating entry */
+	{ } /*                   */
 };
 
 MODULE_DEVICE_TABLE(input, usfc_tsc_ids);
 
 static struct input_handler s_usfc_handlers[MAX_EVENT_TYPE_NUM] = {
-	{ /* TSC handler */
+	{ /*             */
 		.filter         = usfcdev_filter,
 		.match          = usfcdev_match,
 		.connect        = usfcdev_connect,
 		.disconnect     = usfcdev_disconnect,
-		/* .minor can be used as index in the container, */
-		/*  because .fops isn't supported */
+		/*                                               */
+		/*                                */
 		.minor          = TSC_EVENT_TYPE_IND,
 		.name           = "usfc_tsc_handler",
 		.id_table       = usfc_tsc_ids,
 	},
 };
 
-/* For each event type, one conflicting device (and handle) is supported */
+/*                                                                       */
 static struct input_handle s_usfc_handles[MAX_EVENT_TYPE_NUM] = {
-	{ /* TSC handle */
+	{ /*            */
 		.handler	= &s_usfc_handlers[TSC_EVENT_TYPE_IND],
 		.name		= "usfc_tsc_handle",
 	},

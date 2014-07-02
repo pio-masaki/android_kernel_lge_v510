@@ -31,7 +31,7 @@ struct msm_jpeg_hw_buf {
 };
 
 struct msm_jpeg_hw_pingpong {
-	uint8_t is_fe; /* 1: fe; 0: we */
+	uint8_t is_fe; /*              */
 	struct  msm_jpeg_hw_buf buf[2];
 	int     buf_status[2];
 	int     buf_active_index;
@@ -98,4 +98,4 @@ int msm_jpeg_hw_exec_cmds(struct msm_jpeg_hw_cmd *hw_cmd_p, int m_cmds);
 void msm_jpeg_hw_region_dump(int size);
 void msm_jpeg_io_dump(int size);
 
-#endif /* MSM_JPEG_HW_H */
+#endif /*               */

@@ -34,4 +34,4 @@
 
 int mipi_lgit_device_register(struct msm_panel_info *pinfo,
 					u32 channel, u32 panel);
-#endif  /* MIPI_LGIT_H */
+#endif  /*             */

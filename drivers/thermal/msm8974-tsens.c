@@ -25,7 +25,7 @@
 #include <mach/msm_iomap.h>
 
 #define TSENS_DRIVER_NAME		"msm-tsens"
-/* TSENS register info */
+/*                     */
 #define TSENS_UPPER_LOWER_INTERRUPT_CTRL(n)		((n) + 0x1000)
 #define TSENS_INTERRUPT_EN		BIT(0)
 
@@ -53,7 +53,7 @@
 #define TSENS_S0_MAIN_CONFIG(n)		((n) + 0x38)
 #define TSENS_SN_REMOTE_CONFIG(n)	((n) + 0x3c)
 
-/* TSENS calibration Mask data */
+/*                             */
 #define TSENS_BASE1_MASK		0xff
 #define TSENS0_POINT1_MASK		0x3f00
 #define TSENS1_POINT1_MASK		0xfc000
@@ -112,7 +112,7 @@
 #define TSENS_CAL_DEGC_POINT2		120
 #define TSENS_SLOPE_FACTOR		1000
 
-/* TSENS register data */
+/*                     */
 #define TSENS_TRDY_RDY_MIN_TIME		2000
 #define TSENS_TRDY_RDY_MAX_TIME		2100
 #define TSENS_THRESHOLD_MAX_CODE	0x3ff
@@ -124,7 +124,7 @@
 #define TSENS_SN_MIN_MAX_STATUS_CTRL_DATA	0x3ffc00
 #define TSENS_SN_REMOTE_CFG_DATA	0x11c3
 
-/* Trips: warm and cool */
+/*                      */
 enum tsens_trip_type {
 	TSENS_TRIP_WARM = 0,
 	TSENS_TRIP_COOL,
@@ -355,9 +355,9 @@ static int tsens_tz_get_trip_temp(struct thermal_zone_device *thermal,
 static int tsens_tz_notify(struct thermal_zone_device *thermal,
 				int count, enum thermal_trip_type type)
 {
-	/* TSENS driver does not shutdown the device.
-	   All Thermal notification are sent to the
-	   thermal daemon to take appropriate action */
+	/*                                           
+                                            
+                                              */
 	pr_debug("%s debug\n", __func__);
 	return 1;
 }
@@ -453,7 +453,7 @@ static irqreturn_t tsens_isr(int irq, void *data)
 			lower_thr = true;
 		}
 		if (upper_thr || lower_thr) {
-			/* Notify user space */
+			/*                   */
 			schedule_work(&tm->sensor[i].work);
 			pr_debug("sensor:%d trigger temp (%d degC)\n", i,
 				tsens_tz_code_to_degc((status &

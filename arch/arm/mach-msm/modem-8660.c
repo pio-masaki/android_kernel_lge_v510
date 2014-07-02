@@ -51,7 +51,7 @@ module_param(reset_modem, int, 0644);
 
 static struct subsys_device *modem_8660_dev;
 
-/* Subsystem restart: Modem data, functions */
+/*                                          */
 static void *modem_ramdump_dev;
 static void modem_fatal_fn(struct work_struct *);
 static void modem_unlock_timeout(struct work_struct *work);
@@ -72,9 +72,9 @@ static void modem_unlock_timeout(struct work_struct *work)
 			ioremap_nocache(MODEM_HWIO_MSS_RESET_ADDR, 8);
 	pr_crit("%s: Timeout waiting for modem to unlock.\n", MODULE_NAME);
 
-	/* Set MSS_MODEM_RESET to 0x0 since the unlock didn't work */
+	/*                                                         */
 	writel_relaxed(0x0, hwio_modem_reset_addr);
-	/* Write needs to go through before the modem is restarted. */
+	/*                                                          */
 	mb();
 	iounmap(hwio_modem_reset_addr);
 
@@ -116,11 +116,11 @@ static void modem_fatal_fn(struct work_struct *work)
 
 		writel_relaxed(0x3, hwio_modem_reset_addr);
 
-		/* If we are still alive after 6 seconds (allowing for
-		 * the 5-second-delayed-panic-reboot), modem is either
-		 * still wedged or SMSM didn't come through. Force panic
-		 * in that case.
-		*/
+		/*                                                    
+                                                        
+                                                          
+                  
+  */
 		ret = schedule_delayed_work(&modem_unlock_timeout_work,
 					msecs_to_jiffies(6000));
 
@@ -148,30 +148,30 @@ static int modem_shutdown(const struct subsys_desc *crashed_subsys)
 {
 	void __iomem *modem_wdog_addr;
 
-	/* If the modem didn't already crash, setting SMSM_RESET
-	 * here will help flush caches etc. The ignore_smsm_ack
-	 * flag is set to ignore the SMSM_RESET notification
-	 * that is generated due to the modem settings its own
-	 * SMSM_RESET bit in response to the apps setting the
-	 * apps SMSM_RESET bit.
-	 */
+	/*                                                      
+                                                        
+                                                     
+                                                       
+                                                      
+                        
+  */
 	if (!(smsm_get_state(SMSM_MODEM_STATE) & SMSM_RESET)) {
 		ignore_smsm_ack = 1;
 		smsm_reset_modem(SMSM_RESET);
 	}
 
-	/* Disable the modem watchdog to allow clean modem bootup */
+	/*                                                        */
 	modem_wdog_addr = ioremap_nocache(MODEM_WDOG_ENABLE, 8);
 	writel_relaxed(0x0, modem_wdog_addr);
 
 	/*
-	 * The write above needs to go through before the modem is
-	 * powered up again (subsystem restart).
-	 */
+                                                           
+                                         
+  */
 	mb();
 	iounmap(modem_wdog_addr);
 
-	/* Wait here to allow the modem to clean up caches etc. */
+	/*                                                      */
 	msleep(MODEM_CLEANUP_DELAY_MS);
 	pil_force_shutdown("modem");
 	disable_irq_nosync(MARM_WDOG_EXPIRED);
@@ -191,7 +191,7 @@ static int modem_powerup(const struct subsys_desc *crashed_subsys)
 	return ret;
 }
 
-/* FIXME: Get address, size from PIL */
+/*                                   */
 static struct ramdump_segment modem_segments[] = {
 	{0x42F00000, 0x46000000 - 0x42F00000} };
 
@@ -206,13 +206,13 @@ static int modem_ramdump(int enable, const struct subsys_desc *crashed_subsys)
 
 static void modem_crash_shutdown(const struct subsys_desc *crashed_subsys)
 {
-	/* If modem hasn't already crashed, send SMSM_RESET. */
+	/*                                                   */
 	if (!(smsm_get_state(SMSM_MODEM_STATE) & SMSM_RESET)) {
 		modem_unregister_notifier(&modem_notif_nb);
 		smsm_reset_modem(SMSM_RESET);
 	}
 
-	/* Wait to allow the modem to clean up caches etc. */
+	/*                                                 */
 	mdelay(5);
 }
 
@@ -238,7 +238,7 @@ static int __init modem_8660_init(void)
 {
 	int ret;
 
-	/* Need to listen for SMSM_RESET always */
+	/*                                      */
 	modem_register_notifier(&modem_notif_nb);
 
 #if defined(SUBSYS_FATAL_DEBUG)

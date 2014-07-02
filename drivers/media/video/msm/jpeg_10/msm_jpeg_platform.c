@@ -26,7 +26,7 @@
 #include "msm_jpeg_common.h"
 #include "msm_jpeg_hw.h"
 
-/* AXI rate in KHz */
+/*                 */
 struct ion_client *jpeg_client;
 static void *jpeg_vbif;
 
@@ -72,7 +72,7 @@ uint32_t msm_jpeg_platform_v2p(int fd, uint32_t len, struct file **file_p,
 		goto error1;
 	}
 
-	/* validate user input */
+	/*                     */
 	if (len > size) {
 		JPEG_PR_ERR("%s: invalid offset + len\n", __func__);
 		goto error1;

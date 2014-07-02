@@ -28,7 +28,7 @@
 #include <qdsp6v2/msm-pcm-routing-v2.h>
 #include "../codecs/wcd9320.h"
 
-/* 8974 machine driver */
+/*                     */
 
 #define PM8921_GPIO_BASE		NR_GPIO_IRQS
 #define PM8921_GPIO_PM_TO_SYS(pm_gpio)  (pm_gpio - 1 + PM8921_GPIO_BASE)
@@ -57,14 +57,14 @@
 #define TABLA_MBHC_DEF_BUTTONS 8
 #define TABLA_MBHC_DEF_RLOADS 5
 
-/* Shared channel numbers for Slimbus ports that connect APQ to MDM. */
+/*                                                                   */
 enum {
-	SLIM_1_RX_1 = 145, /* BT-SCO and USB TX */
-	SLIM_1_TX_1 = 146, /* BT-SCO and USB RX */
-	SLIM_2_RX_1 = 147, /* HDMI RX */
-	SLIM_3_RX_1 = 148, /* In-call recording RX */
-	SLIM_3_RX_2 = 149, /* In-call recording RX */
-	SLIM_4_TX_1 = 150, /* In-call musid delivery TX */
+	SLIM_1_RX_1 = 145, /*                   */
+	SLIM_1_TX_1 = 146, /*                   */
+	SLIM_2_RX_1 = 147, /*         */
+	SLIM_3_RX_1 = 148, /*                      */
+	SLIM_3_RX_2 = 149, /*                      */
+	SLIM_4_TX_1 = 150, /*                           */
 };
 
 static u32 top_spk_pamp_gpio  = PM8921_GPIO_PM_TO_SYS(18);
@@ -349,26 +349,26 @@ static const struct snd_soc_dapm_route common_audio_map[] = {
 	{"RX_BIAS", NULL, "MCLK"},
 	{"LDO_H", NULL, "MCLK"},
 
-	/* Speaker path */
+	/*              */
 	{"Ext Spk Bottom Pos", NULL, "LINEOUT1"},
 	{"Ext Spk Bottom Neg", NULL, "LINEOUT3"},
 
 	{"Ext Spk Top Pos", NULL, "LINEOUT2"},
 	{"Ext Spk Top Neg", NULL, "LINEOUT4"},
 
-	/* Microphone path */
+	/*                 */
 	{"AMIC1", NULL, "MIC BIAS1 Internal1"},
 	{"MIC BIAS1 Internal1", NULL, "Handset Mic"},
 
 	{"AMIC2", NULL, "MIC BIAS2 External"},
 	{"MIC BIAS2 External", NULL, "Headset Mic"},
 
-	/**
-	 * AMIC3 and AMIC4 inputs are connected to ANC microphones
-	 * These mics are biased differently on CDP and FLUID
-	 * routing entries below are based on bias arrangement
-	 * on FLUID.
-	 */
+	/* 
+                                                           
+                                                      
+                                                       
+             
+  */
 	{"AMIC3", NULL, "MIC BIAS3 Internal1"},
 	{"MIC BIAS3 Internal1", NULL, "ANCRight Headset Mic"},
 
@@ -377,54 +377,54 @@ static const struct snd_soc_dapm_route common_audio_map[] = {
 
 	{"HEADPHONE", NULL, "LDO_H"},
 
-	/**
-	 * The digital Mic routes are setup considering
-	 * fluid as default device.
-	 */
+	/* 
+                                                
+                            
+  */
 
-	/**
-	 * Digital Mic1. Front Bottom left Digital Mic on Fluid and MTP.
-	 * Digital Mic GM5 on CDP mainboard.
-	 * Conncted to DMIC2 Input on Tabla codec.
-	 */
+	/* 
+                                                                 
+                                     
+                                           
+  */
 	{"DMIC2", NULL, "MIC BIAS1 External"},
 	{"MIC BIAS1 External", NULL, "Digital Mic1"},
 
-	/**
-	 * Digital Mic2. Front Bottom right Digital Mic on Fluid and MTP.
-	 * Digital Mic GM6 on CDP mainboard.
-	 * Conncted to DMIC1 Input on Tabla codec.
-	 */
+	/* 
+                                                                  
+                                     
+                                           
+  */
 	{"DMIC1", NULL, "MIC BIAS1 External"},
 	{"MIC BIAS1 External", NULL, "Digital Mic2"},
 
-	/**
-	 * Digital Mic3. Back Bottom Digital Mic on Fluid.
-	 * Digital Mic GM1 on CDP mainboard.
-	 * Conncted to DMIC4 Input on Tabla codec.
-	 */
+	/* 
+                                                   
+                                     
+                                           
+  */
 	{"DMIC4", NULL, "MIC BIAS3 External"},
 	{"MIC BIAS3 External", NULL, "Digital Mic3"},
 
-	/**
-	 * Digital Mic4. Back top Digital Mic on Fluid.
-	 * Digital Mic GM2 on CDP mainboard.
-	 * Conncted to DMIC3 Input on Tabla codec.
-	 */
+	/* 
+                                                
+                                     
+                                           
+  */
 	{"DMIC3", NULL, "MIC BIAS3 External"},
 	{"MIC BIAS3 External", NULL, "Digital Mic4"},
 
-	/**
-	 * Digital Mic5. Front top Digital Mic on Fluid.
-	 * Digital Mic GM3 on CDP mainboard.
-	 * Conncted to DMIC5 Input on Tabla codec.
-	 */
+	/* 
+                                                 
+                                     
+                                           
+  */
 	{"DMIC5", NULL, "MIC BIAS4 External"},
 	{"MIC BIAS4 External", NULL, "Digital Mic5"},
 
-	/* Tabla digital Mic6 - back bottom digital Mic on Liquid and
-	 * bottom mic on CDP. FLUID/MTP do not have dmic6 installed.
-	 */
+	/*                                                           
+                                                             
+  */
 	{"DMIC6", NULL, "MIC BIAS4 External"},
 	{"MIC BIAS4 External", NULL, "Digital Mic6"},
 };
@@ -521,7 +521,7 @@ static int msm_auxpcm_be_params_fixup(struct snd_soc_pcm_runtime *rtd,
 	struct snd_interval *channels =
 	    hw_param_interval(params, SNDRV_PCM_HW_PARAM_CHANNELS);
 
-	/* PCM only supports mono output with 8khz sample rate */
+	/*                                                     */
 	rate->min = rate->max = 8000;
 	channels->min = channels->max = 1;
 
@@ -796,9 +796,9 @@ static struct snd_soc_ops msm8974_be_ops = {
 	.shutdown = msm_snd_shutdown,
 };
 
-/* Digital audio interface glue - connects codec <---> CPU */
+/*                                                         */
 static struct snd_soc_dai_link msm_dai[] = {
-	/* FrontEnd DAI Links */
+	/*                    */
 	{
 		.name = "MSM8974 Media1",
 		.stream_name = "MultiMedia1",
@@ -810,7 +810,7 @@ static struct snd_soc_dai_link msm_dai[] = {
 		.codec_dai_name = "snd-soc-dummy-dai",
 		.codec_name = "snd-soc-dummy",
 		.ignore_suspend = 1,
-		/* this dainlink has playback support */
+		/*                                    */
 		.ignore_pmdown_time = 1,
 		.be_id = MSM_FRONTEND_DAI_MULTIMEDIA1
 	},
@@ -825,7 +825,7 @@ static struct snd_soc_dai_link msm_dai[] = {
 		.codec_dai_name = "snd-soc-dummy-dai",
 		.codec_name = "snd-soc-dummy",
 		.ignore_suspend = 1,
-		/* this dainlink has playback support */
+		/*                                    */
 		.ignore_pmdown_time = 1,
 		.be_id = MSM_FRONTEND_DAI_VOIP,
 	},
@@ -840,11 +840,11 @@ static struct snd_soc_dai_link msm_dai[] = {
 		.codec_dai_name = "snd-soc-dummy-dai",
 		.codec_name = "snd-soc-dummy",
 		.ignore_suspend = 1,
-		/* this dainlink has playback support */
+		/*                                    */
 		.ignore_pmdown_time = 1,
 		.be_id = MSM_FRONTEND_DAI_MULTIMEDIA3,
 	},
-	/* Hostless PCM purpose */
+	/*                      */
 	{
 		.name = "SLIMBUS_0 Hostless",
 		.stream_name = "SLIMBUS_0 Hostless",
@@ -855,7 +855,7 @@ static struct snd_soc_dai_link msm_dai[] = {
 			    SND_SOC_DPCM_TRIGGER_POST},
 		.no_host_mode = SND_SOC_DAI_LINK_NO_HOST,
 		.ignore_suspend = 1,
-		.ignore_pmdown_time = 1, /* dai link has playback support */
+		.ignore_pmdown_time = 1, /*                               */
 		.codec_dai_name = "snd-soc-dummy-dai",
 		.codec_name = "snd-soc-dummy",
 	},
@@ -871,7 +871,7 @@ static struct snd_soc_dai_link msm_dai[] = {
 		.codec_name = "snd-soc-dummy",
 		.ignore_suspend = 1,
 		.ignore_pmdown_time = 1,
-		 /* this dainlink has playback support */
+		 /*                                    */
 		.be_id = MSM_FRONTEND_DAI_MULTIMEDIA4,
 	},
 	{
@@ -884,13 +884,13 @@ static struct snd_soc_dai_link msm_dai[] = {
 			SND_SOC_DPCM_TRIGGER_POST},
 		.no_host_mode = SND_SOC_DAI_LINK_NO_HOST,
 		.ignore_suspend = 1,
-		/* this dainlink has playback support */
+		/*                                    */
 		.ignore_pmdown_time = 1,
 		.codec_dai_name = "snd-soc-dummy-dai",
 		.codec_name = "snd-soc-dummy",
 	},
 
-	/* AUX PCM Backend DAI Links */
+	/*                           */
 	{
 		.name = LPASS_BE_AUXPCM_RX,
 		.stream_name = "AUX PCM Playback",
@@ -903,7 +903,7 @@ static struct snd_soc_dai_link msm_dai[] = {
 		.be_hw_params_fixup = msm_auxpcm_be_params_fixup,
 		.ops = &msm_auxpcm_be_ops,
 		.ignore_pmdown_time = 1,
-		/* this dainlink has playback support */
+		/*                                    */
 	},
 	{
 		.name = LPASS_BE_AUXPCM_TX,
@@ -917,7 +917,7 @@ static struct snd_soc_dai_link msm_dai[] = {
 		.be_hw_params_fixup = msm_auxpcm_be_params_fixup,
 		.ops = &msm_auxpcm_be_ops,
 	},
-	/* Backend DAI Links */
+	/*                   */
 	{
 		.name = LPASS_BE_SLIMBUS_0_RX,
 		.stream_name = "Slimbus Playback",
@@ -930,7 +930,7 @@ static struct snd_soc_dai_link msm_dai[] = {
 		.init = &msm_audrx_init,
 		.be_hw_params_fixup = msm_slim_0_rx_be_hw_params_fixup,
 		.ops = &msm8974_be_ops,
-		.ignore_pmdown_time = 1, /* dai link has playback support */
+		.ignore_pmdown_time = 1, /*                               */
 	},
 	{
 		.name = LPASS_BE_SLIMBUS_0_TX,

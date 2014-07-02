@@ -29,7 +29,7 @@
 #include "msm-pcm-routing.h"
 #include "../codecs/wcd9310.h"
 
-/* 8064 machine driver */
+/*                     */
 
 #define PM8921_GPIO_BASE		NR_GPIO_IRQS
 #define PM8921_GPIO_PM_TO_SYS(pm_gpio)  (pm_gpio - 1 + PM8921_GPIO_BASE)
@@ -154,7 +154,7 @@ static struct tabla_mbhc_config mbhc_cfg = {
 	.micbias = TABLA_MICBIAS2,
 	.mclk_cb_fn = msm_enable_codec_ext_clk,
 	.mclk_rate = TABLA_EXT_CLK_RATE,
-	.gpio = 0, /* MBHC GPIO is not configured */
+	.gpio = 0, /*                             */
 	.gpio_irq = 0,
 	.gpio_level_insert = 1,
 };
@@ -483,26 +483,26 @@ static const struct snd_soc_dapm_route common_audio_map[] = {
 	{"RX_BIAS", NULL, "MCLK"},
 	{"LDO_H", NULL, "MCLK"},
 
-	/* Speaker path */
+	/*              */
 	{"Ext Spk Bottom Pos", NULL, "LINEOUT1"},
 	{"Ext Spk Bottom Neg", NULL, "LINEOUT3"},
 
 	{"Ext Spk Top Pos", NULL, "LINEOUT2"},
 	{"Ext Spk Top Neg", NULL, "LINEOUT4"},
 
-	/* Microphone path */
+	/*                 */
 	{"AMIC1", NULL, "MIC BIAS1 Internal1"},
 	{"MIC BIAS1 Internal1", NULL, "Handset Mic"},
 
 	{"AMIC2", NULL, "MIC BIAS2 External"},
 	{"MIC BIAS2 External", NULL, "Headset Mic"},
 
-	/**
-	 * AMIC3 and AMIC4 inputs are connected to ANC microphones
-	 * These mics are biased differently on CDP and FLUID
-	 * routing entries below are based on bias arrangement
-	 * on FLUID.
-	 */
+	/* 
+                                                           
+                                                      
+                                                       
+             
+  */
 	{"AMIC3", NULL, "MIC BIAS3 Internal1"},
 	{"MIC BIAS3 Internal1", NULL, "ANCRight Headset Mic"},
 
@@ -869,7 +869,7 @@ static int msm_hdmi_be_hw_params_fixup(struct snd_soc_pcm_runtime *rtd,
 	pr_debug("%s channels->min %u channels->max %u ()\n", __func__,
 			channels->min, channels->max);
 
-	/*Configure the sample rate as 48000 KHz for the LPCM playback*/
+	/*                                                            */
 	if (!hdmi_rate_variable)
 		rate->min = rate->max = 48000;
 	channels->min =  channels->max = msm_hdmi_rx_ch;
@@ -1091,9 +1091,9 @@ static struct snd_soc_ops msm_mi2s_tx_be_ops = {
 };
 
 
-/* Digital audio interface glue - connects codec <---> CPU */
+/*                                                         */
 static struct snd_soc_dai_link msm_dai[] = {
-	/* FrontEnd DAI Links */
+	/*                    */
 	{
 		.name = "MSM8960 Media1",
 		.stream_name = "MultiMedia1",
@@ -1105,7 +1105,7 @@ static struct snd_soc_dai_link msm_dai[] = {
 		.codec_dai_name = "snd-soc-dummy-dai",
 		.codec_name = "snd-soc-dummy",
 		.ignore_suspend = 1,
-		.ignore_pmdown_time = 1, /* this dainlink has playback support */
+		.ignore_pmdown_time = 1, /*                                    */
 		.be_id = MSM_FRONTEND_DAI_MULTIMEDIA1
 	},
 	{
@@ -1119,7 +1119,7 @@ static struct snd_soc_dai_link msm_dai[] = {
 		.codec_dai_name = "snd-soc-dummy-dai",
 		.codec_name = "snd-soc-dummy",
 		.ignore_suspend = 1,
-		.ignore_pmdown_time = 1, /* this dainlink has playback support */
+		.ignore_pmdown_time = 1, /*                                    */
 		.be_id = MSM_FRONTEND_DAI_MULTIMEDIA2,
 	},
 	{
@@ -1132,7 +1132,7 @@ static struct snd_soc_dai_link msm_dai[] = {
 				SND_SOC_DPCM_TRIGGER_POST},
 		.no_host_mode = SND_SOC_DAI_LINK_NO_HOST,
 		.ignore_suspend = 1,
-		.ignore_pmdown_time = 1, /* this dainlink has playback support */
+		.ignore_pmdown_time = 1, /*                                    */
 		.codec_dai_name = "snd-soc-dummy-dai",
 		.codec_name = "snd-soc-dummy",
 		.be_id = MSM_FRONTEND_DAI_CS_VOICE,
@@ -1148,7 +1148,7 @@ static struct snd_soc_dai_link msm_dai[] = {
 		.codec_dai_name = "snd-soc-dummy-dai",
 		.codec_name = "snd-soc-dummy",
 		.ignore_suspend = 1,
-		.ignore_pmdown_time = 1, /* this dainlink has playback support */
+		.ignore_pmdown_time = 1, /*                                    */
 		.be_id = MSM_FRONTEND_DAI_VOIP,
 	},
 	{
@@ -1162,10 +1162,10 @@ static struct snd_soc_dai_link msm_dai[] = {
 		.codec_dai_name = "snd-soc-dummy-dai",
 		.codec_name = "snd-soc-dummy",
 		.ignore_suspend = 1,
-		.ignore_pmdown_time = 1, /* this dainlink has playback support */
+		.ignore_pmdown_time = 1, /*                                    */
 		.be_id = MSM_FRONTEND_DAI_MULTIMEDIA3,
 	},
-	/* Hostless PMC purpose */
+	/*                      */
 	{
 		.name = "SLIMBUS_0 Hostless",
 		.stream_name = "SLIMBUS_0 Hostless",
@@ -1176,7 +1176,7 @@ static struct snd_soc_dai_link msm_dai[] = {
 				SND_SOC_DPCM_TRIGGER_POST},
 		.no_host_mode = SND_SOC_DAI_LINK_NO_HOST,
 		.ignore_suspend = 1,
-		.ignore_pmdown_time = 1, /* this dainlink has playback support */
+		.ignore_pmdown_time = 1, /*                                    */
 		.codec_dai_name = "snd-soc-dummy-dai",
 		.codec_name = "snd-soc-dummy",
 	},
@@ -1190,7 +1190,7 @@ static struct snd_soc_dai_link msm_dai[] = {
 				SND_SOC_DPCM_TRIGGER_POST},
 		.no_host_mode = SND_SOC_DAI_LINK_NO_HOST,
 		.ignore_suspend = 1,
-		.ignore_pmdown_time = 1, /* this dainlink has playback support */
+		.ignore_pmdown_time = 1, /*                                    */
 		.codec_dai_name = "snd-soc-dummy-dai",
 		.codec_name = "snd-soc-dummy",
 	},
@@ -1202,7 +1202,7 @@ static struct snd_soc_dai_link msm_dai[] = {
 		.codec_dai_name = "msm-stub-rx",
 		.platform_name  = "msm-pcm-afe",
 		.ignore_suspend = 1,
-		.ignore_pmdown_time = 1, /* this dainlink has playback support */
+		.ignore_pmdown_time = 1, /*                                    */
 	},
 	{
 		.name = "MSM AFE-PCM TX",
@@ -1224,7 +1224,7 @@ static struct snd_soc_dai_link msm_dai[] = {
 		.codec_dai_name = "snd-soc-dummy-dai",
 		.codec_name = "snd-soc-dummy",
 		.ignore_suspend = 1,
-		.ignore_pmdown_time = 1, /* this dainlink has playback support */
+		.ignore_pmdown_time = 1, /*                                    */
 		.be_id = MSM_FRONTEND_DAI_MULTIMEDIA4,
 	},
 	{
@@ -1237,11 +1237,11 @@ static struct snd_soc_dai_link msm_dai[] = {
 				SND_SOC_DPCM_TRIGGER_POST},
 		.no_host_mode = SND_SOC_DAI_LINK_NO_HOST,
 		.ignore_suspend = 1,
-		.ignore_pmdown_time = 1, /* this dainlink has playback support */
+		.ignore_pmdown_time = 1, /*                                    */
 		.codec_dai_name = "snd-soc-dummy-dai",
 		.codec_name = "snd-soc-dummy",
 	},
-	/* HDMI Hostless */
+	/*               */
 	{
 		.name = "HDMI_RX_HOSTLESS",
 		.stream_name = "HDMI_RX_HOSTLESS",
@@ -1252,11 +1252,11 @@ static struct snd_soc_dai_link msm_dai[] = {
 				SND_SOC_DPCM_TRIGGER_POST},
 		.no_host_mode = SND_SOC_DAI_LINK_NO_HOST,
 		.ignore_suspend = 1,
-		.ignore_pmdown_time = 1, /* this dainlink has playback support */
+		.ignore_pmdown_time = 1, /*                                    */
 		.codec_dai_name = "snd-soc-dummy-dai",
 		.codec_name = "snd-soc-dummy",
 	},
-	/* MI2S TX Hostless */
+	/*                  */
 	{
 		.name = "MI2S_TX Hostless",
 		.stream_name = "MI2S_TX Hostless",
@@ -1270,7 +1270,7 @@ static struct snd_soc_dai_link msm_dai[] = {
 		.codec_dai_name = "snd-soc-dummy-dai",
 		.codec_name = "snd-soc-dummy",
 	},
-	/* Secondary I2S RX Hostless */
+	/*                           */
 	{
 		.name = "SEC_I2S_RX Hostless",
 		.stream_name = "SEC_I2S_RX Hostless",
@@ -1281,7 +1281,7 @@ static struct snd_soc_dai_link msm_dai[] = {
 				SND_SOC_DPCM_TRIGGER_POST},
 		.no_host_mode = SND_SOC_DAI_LINK_NO_HOST,
 		.ignore_suspend = 1,
-		.ignore_pmdown_time = 1, /* this dainlink has playback support */
+		.ignore_pmdown_time = 1, /*                                    */
 		.codec_dai_name = "snd-soc-dummy-dai",
 		.codec_name = "snd-soc-dummy",
 	},
@@ -1296,7 +1296,7 @@ static struct snd_soc_dai_link msm_dai[] = {
 		.codec_dai_name = "snd-soc-dummy-dai",
 		.codec_name = "snd-soc-dummy",
 		.ignore_suspend = 1,
-		.ignore_pmdown_time = 1, /* this dailink has playback support */
+		.ignore_pmdown_time = 1, /*                                   */
 		.be_id = MSM_FRONTEND_DAI_MULTIMEDIA5
 	},
 	{
@@ -1310,7 +1310,7 @@ static struct snd_soc_dai_link msm_dai[] = {
 		.codec_dai_name = "snd-soc-dummy-dai",
 		.codec_name = "snd-soc-dummy",
 		.ignore_suspend = 1,
-		.ignore_pmdown_time = 1, /* this dailink has playback support */
+		.ignore_pmdown_time = 1, /*                                   */
 		.be_id = MSM_FRONTEND_DAI_MULTIMEDIA6
 	},
 	{
@@ -1324,7 +1324,7 @@ static struct snd_soc_dai_link msm_dai[] = {
 		.codec_dai_name = "snd-soc-dummy-dai",
 		.codec_name = "snd-soc-dummy",
 		.ignore_suspend = 1,
-		.ignore_pmdown_time = 1, /* this dailink has playback support */
+		.ignore_pmdown_time = 1, /*                                   */
 		.be_id = MSM_FRONTEND_DAI_MULTIMEDIA7,
 	},
 	{
@@ -1338,10 +1338,10 @@ static struct snd_soc_dai_link msm_dai[] = {
 		.codec_dai_name = "snd-soc-dummy-dai",
 		.codec_name = "snd-soc-dummy",
 		.ignore_suspend = 1,
-		.ignore_pmdown_time = 1, /* this dailink has playback support */
+		.ignore_pmdown_time = 1, /*                                   */
 		.be_id = MSM_FRONTEND_DAI_MULTIMEDIA8,
 	},
-	/* Backend DAI Links */
+	/*                   */
 	{
 		.name = LPASS_BE_SLIMBUS_0_RX,
 		.stream_name = "Slimbus Playback",
@@ -1354,7 +1354,7 @@ static struct snd_soc_dai_link msm_dai[] = {
 		.init = &msm_audrx_init,
 		.be_hw_params_fixup = msm_slim_0_rx_be_hw_params_fixup,
 		.ops = &msm_be_ops,
-		.ignore_pmdown_time = 1, /* this dainlink has playback support */
+		.ignore_pmdown_time = 1, /*                                    */
 	},
 	{
 		.name = LPASS_BE_SLIMBUS_0_TX,
@@ -1379,7 +1379,7 @@ static struct snd_soc_dai_link msm_dai[] = {
 		.be_id = MSM_BACKEND_DAI_SEC_I2S_RX,
 		.be_hw_params_fixup = msm_be_i2s_hw_params_fixup,
 		.ops = &mpq8064_sec_i2s_rx_be_ops,
-		.ignore_pmdown_time = 1, /* this dainlink has playback support */
+		.ignore_pmdown_time = 1, /*                                    */
 	},
 	{
 		.name = LPASS_BE_INT_FM_RX,
@@ -1391,7 +1391,7 @@ static struct snd_soc_dai_link msm_dai[] = {
 		.no_pcm = 1,
 		.be_id = MSM_BACKEND_DAI_INT_FM_RX,
 		.be_hw_params_fixup = msm_be_hw_params_fixup,
-		.ignore_pmdown_time = 1, /* this dainlink has playback support */
+		.ignore_pmdown_time = 1, /*                                    */
 	},
 	{
 		.name = LPASS_BE_INT_FM_TX,
@@ -1404,7 +1404,7 @@ static struct snd_soc_dai_link msm_dai[] = {
 		.be_id = MSM_BACKEND_DAI_INT_FM_TX,
 		.be_hw_params_fixup = msm_be_hw_params_fixup,
 	},
-	/* HDMI BACK END DAI Link */
+	/*                        */
 	{
 		.name = LPASS_BE_HDMI,
 		.stream_name = "HDMI Playback",
@@ -1415,7 +1415,7 @@ static struct snd_soc_dai_link msm_dai[] = {
 		.no_pcm = 1,
 		.be_id = MSM_BACKEND_DAI_HDMI_RX,
 		.be_hw_params_fixup = msm_hdmi_be_hw_params_fixup,
-		.ignore_pmdown_time = 1, /* this dainlink has playback support */
+		.ignore_pmdown_time = 1, /*                                    */
 	},
 	{
 		.name = LPASS_BE_MI2S_TX,
@@ -1429,7 +1429,7 @@ static struct snd_soc_dai_link msm_dai[] = {
 		.be_hw_params_fixup = msm_be_hw_params_fixup,
 		.ops = &msm_mi2s_tx_be_ops,
 	},
-	/* Backend AFE DAI Links */
+	/*                       */
 	{
 		.name = LPASS_BE_AFE_PCM_RX,
 		.stream_name = "AFE Playback",
@@ -1439,7 +1439,7 @@ static struct snd_soc_dai_link msm_dai[] = {
 		.codec_dai_name = "msm-stub-rx",
 		.no_pcm = 1,
 		.be_id = MSM_BACKEND_DAI_AFE_PCM_RX,
-		.ignore_pmdown_time = 1, /* this dainlink has playback support */
+		.ignore_pmdown_time = 1, /*                                    */
 	},
 	{
 		.name = LPASS_BE_AFE_PCM_TX,

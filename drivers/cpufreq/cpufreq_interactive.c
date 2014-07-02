@@ -57,7 +57,7 @@ struct cpufreq_interactive_cpuinfo {
 
 static DEFINE_PER_CPU(struct cpufreq_interactive_cpuinfo, cpuinfo);
 
-/* Workqueues handle frequency scaling */
+/*                                     */
 static struct task_struct *up_task;
 static struct workqueue_struct *down_wq;
 static struct work_struct freq_scale_down_work;
@@ -67,34 +67,34 @@ static cpumask_t down_cpumask;
 static spinlock_t down_cpumask_lock;
 static struct mutex set_speed_lock;
 
-/* Hi speed to bump to from lo speed when load burst (default max) */
+/*                                                                 */
 static u64 hispeed_freq;
 
-/* Go to hi speed when CPU load at or above this value. */
+/*                                                      */
 #define DEFAULT_GO_HISPEED_LOAD 85
 static unsigned long go_hispeed_load;
 
 /*
- * The minimum amount of time to spend at a frequency before we can ramp down.
+                                                                              
  */
 #define DEFAULT_MIN_SAMPLE_TIME (80 * USEC_PER_MSEC)
 static unsigned long min_sample_time;
 
 /*
- * The sample rate of the timer used to increase frequency
+                                                          
  */
 #define DEFAULT_TIMER_RATE (20 * USEC_PER_MSEC)
 static unsigned long timer_rate;
 
 /*
- * Wait this long before raising speed above hispeed, by default a single
- * timer interval.
+                                                                         
+                  
  */
 #define DEFAULT_ABOVE_HISPEED_DELAY DEFAULT_TIMER_RATE
 static unsigned long above_hispeed_delay_val;
 
 /*
- * Boost pulse to hispeed on touchscreen input.
+                                               
  */
 
 static int input_boost_val;
@@ -107,7 +107,7 @@ struct cpufreq_interactive_inputopen {
 static struct cpufreq_interactive_inputopen inputopen;
 
 /*
- * Non-zero means longer-term speed boost active.
+                                                 
  */
 
 static int boost_val;
@@ -146,20 +146,20 @@ static void cpufreq_interactive_timer(unsigned long data)
 		goto exit;
 
 	/*
-	 * Once pcpu->timer_run_time is updated to >= pcpu->idle_exit_time,
-	 * this lets idle exit know the current idle time sample has
-	 * been processed, and idle exit can generate a new sample and
-	 * re-arm the timer.  This prevents a concurrent idle
-	 * exit on that CPU from writing a new set of info at the same time
-	 * the timer function runs (the timer function can't use that info
-	 * until more time passes).
-	 */
+                                                                    
+                                                             
+                                                               
+                                                      
+                                                                    
+                                                                   
+                            
+  */
 	time_in_idle = pcpu->time_in_idle;
 	idle_exit_time = pcpu->idle_exit_time;
 	now_idle = get_cpu_idle_time_us(data, &pcpu->timer_run_time);
 	smp_wmb();
 
-	/* If we raced with cancelling a timer, skip. */
+	/*                                            */
 	if (!idle_exit_time)
 		goto exit;
 
@@ -167,8 +167,8 @@ static void cpufreq_interactive_timer(unsigned long data)
 	delta_time = (unsigned int)(pcpu->timer_run_time - idle_exit_time);
 
 	/*
-	 * If timer ran less than 1ms after short-term sample started, retry.
-	 */
+                                                                      
+  */
 	if (delta_time < 1000)
 		goto rearm;
 
@@ -188,10 +188,10 @@ static void cpufreq_interactive_timer(unsigned long data)
 			100 * (delta_time - delta_idle) / delta_time;
 
 	/*
-	 * Choose greater of short-term load (since last idle timer
-	 * started or timer function re-armed itself) or long-term load
-	 * (since last frequency change).
-	 */
+                                                            
+                                                                
+                                  
+  */
 	if (load_since_change > cpu_load)
 		cpu_load = load_since_change;
 
@@ -232,9 +232,9 @@ static void cpufreq_interactive_timer(unsigned long data)
 	new_freq = pcpu->freq_table[index].frequency;
 
 	/*
-	 * Do not scale below floor_freq unless we have been at or above the
-	 * floor frequency for the minimum sample time since last validated.
-	 */
+                                                                     
+                                                                     
+  */
 	if (new_freq < pcpu->floor_freq) {
 		if (pcpu->timer_run_time - pcpu->floor_validate_time
 		    < min_sample_time) {
@@ -274,19 +274,19 @@ static void cpufreq_interactive_timer(unsigned long data)
 
 rearm_if_notmax:
 	/*
-	 * Already set max speed and don't see a need to change that,
-	 * wait until next idle to re-evaluate, don't need timer.
-	 */
+                                                              
+                                                          
+  */
 	if (pcpu->target_freq == pcpu->policy->max)
 		goto exit;
 
 rearm:
 	if (!timer_pending(&pcpu->cpu_timer)) {
 		/*
-		 * If already at min: if that CPU is idle, don't set timer.
-		 * Else cancel the timer if that CPU goes idle.  We don't
-		 * need to re-evaluate speed until the next idle exit.
-		 */
+                                                             
+                                                           
+                                                        
+   */
 		if (pcpu->target_freq == pcpu->policy->min) {
 			smp_rmb();
 
@@ -322,13 +322,13 @@ static void cpufreq_interactive_idle_start(void)
 	if (pcpu->target_freq != pcpu->policy->min) {
 #ifdef CONFIG_SMP
 		/*
-		 * Entering idle while not at lowest speed.  On some
-		 * platforms this can hold the other CPU(s) at that speed
-		 * even though the CPU is idle. Set a timer to re-evaluate
-		 * speed so this idle CPU doesn't hold the other CPUs above
-		 * min indefinitely.  This should probably be a quirk of
-		 * the CPUFreq driver.
-		 */
+                                                      
+                                                           
+                                                            
+                                                             
+                                                          
+                        
+   */
 		if (!pending) {
 			pcpu->time_in_idle = get_cpu_idle_time_us(
 				smp_processor_id(), &pcpu->idle_exit_time);
@@ -339,18 +339,18 @@ static void cpufreq_interactive_idle_start(void)
 #endif
 	} else {
 		/*
-		 * If at min speed and entering idle after load has
-		 * already been evaluated, and a timer has been set just in
-		 * case the CPU suddenly goes busy, cancel that timer.  The
-		 * CPU didn't go busy; we'll recheck things upon idle exit.
-		 */
+                                                     
+                                                             
+                                                             
+                                                             
+   */
 		if (pending && pcpu->timer_idlecancel) {
 			del_timer(&pcpu->cpu_timer);
 			/*
-			 * Ensure last timer run time is after current idle
-			 * sample start time, so next idle exit will always
-			 * start a new idle sampling period.
-			 */
+                                                      
+                                                      
+                                       
+    */
 			pcpu->idle_exit_time = 0;
 			pcpu->timer_idlecancel = 0;
 		}
@@ -367,16 +367,16 @@ static void cpufreq_interactive_idle_end(void)
 	smp_wmb();
 
 	/*
-	 * Arm the timer for 1-2 ticks later if not already, and if the timer
-	 * function has already processed the previous load sampling
-	 * interval.  (If the timer is not pending but has not processed
-	 * the previous interval, it is probably racing with us on another
-	 * CPU.  Let it compute load based on the previous sample and then
-	 * re-arm the timer for another interval when it's done, rather
-	 * than updating the interval start time to be "now", which doesn't
-	 * give the timer function enough time to make a decision on this
-	 * run.)
-	 */
+                                                                      
+                                                             
+                                                                 
+                                                                   
+                                                                   
+                                                                
+                                                                    
+                                                                  
+         
+  */
 	if (timer_pending(&pcpu->cpu_timer) == 0 &&
 	    pcpu->timer_run_time >= pcpu->idle_exit_time &&
 	    pcpu->governor_enabled) {
@@ -513,9 +513,9 @@ static void cpufreq_interactive_boost(void)
 		}
 
 		/*
-		 * Set floor freq and (re)start timer for when last
-		 * validated.
-		 */
+                                                     
+               
+   */
 
 		pcpu->floor_freq = hispeed_freq;
 		pcpu->floor_validate_time = ktime_to_us(ktime_get());
@@ -528,9 +528,9 @@ static void cpufreq_interactive_boost(void)
 }
 
 /*
- * Pulsed boost on input event raises CPUs to hispeed_freq and lets
- * usual algorithm of min_sample_time  decide when to allow speed
- * to drop.
+                                                                   
+                                                                 
+           
  */
 
 static void cpufreq_interactive_input_event(struct input_handle *handle,
@@ -598,14 +598,14 @@ static const struct input_device_id cpufreq_interactive_ids[] = {
 		.absbit = { [BIT_WORD(ABS_MT_POSITION_X)] =
 			    BIT_MASK(ABS_MT_POSITION_X) |
 			    BIT_MASK(ABS_MT_POSITION_Y) },
-	}, /* multi-touch touchscreen */
+	}, /*                         */
 	{
 		.flags = INPUT_DEVICE_ID_MATCH_KEYBIT |
 			 INPUT_DEVICE_ID_MATCH_ABSBIT,
 		.keybit = { [BIT_WORD(BTN_TOUCH)] = BIT_MASK(BTN_TOUCH) },
 		.absbit = { [BIT_WORD(ABS_X)] =
 			    BIT_MASK(ABS_X) | BIT_MASK(ABS_Y) },
-	}, /* touchpad */
+	}, /*          */
 	{ },
 };
 
@@ -855,9 +855,9 @@ static int cpufreq_governor_interactive(struct cpufreq_policy *policy,
 			hispeed_freq = policy->max;
 
 		/*
-		 * Do not register the idle hook and create sysfs
-		 * entries if we have already done so.
-		 */
+                                                   
+                                        
+   */
 		if (atomic_inc_return(&active_count) > 1)
 			return 0;
 
@@ -881,11 +881,11 @@ static int cpufreq_governor_interactive(struct cpufreq_policy *policy,
 			del_timer_sync(&pcpu->cpu_timer);
 
 			/*
-			 * Reset idle exit time since we may cancel the timer
-			 * before it can run after the last idle exit time,
-			 * to avoid tripping the check in idle exit for a timer
-			 * that is trying to run.
-			 */
+                                                        
+                                                      
+                                                          
+                            
+    */
 			pcpu->idle_exit_time = 0;
 		}
 
@@ -942,7 +942,7 @@ static int __init cpufreq_interactive_init(void)
 	above_hispeed_delay_val = DEFAULT_ABOVE_HISPEED_DELAY;
 	timer_rate = DEFAULT_TIMER_RATE;
 
-	/* Initalize per-cpu timers */
+	/*                          */
 	for_each_possible_cpu(i) {
 		pcpu = &per_cpu(cpuinfo, i);
 		init_timer(&pcpu->cpu_timer);
@@ -958,8 +958,8 @@ static int __init cpufreq_interactive_init(void)
 	sched_setscheduler_nocheck(up_task, SCHED_FIFO, &param);
 	get_task_struct(up_task);
 
-	/* No rescuer thread, bind to CPU queuing the work for possibly
-	   warm cache (probably doesn't matter much). */
+	/*                                                             
+                                               */
 	down_wq = alloc_workqueue("knteractive_down", 0, 1);
 
 	if (!down_wq)
@@ -971,6 +971,9 @@ static int __init cpufreq_interactive_init(void)
 	spin_lock_init(&up_cpumask_lock);
 	spin_lock_init(&down_cpumask_lock);
 	mutex_init(&set_speed_lock);
+
+	/*                          */
+	wake_up_process(up_task);
 
 	idle_notifier_register(&cpufreq_interactive_idle_nb);
 	INIT_WORK(&inputopen.inputopen_work, cpufreq_interactive_input_open);

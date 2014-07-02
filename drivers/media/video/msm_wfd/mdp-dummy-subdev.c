@@ -139,7 +139,7 @@ int mdp_mmap(struct v4l2_subdev *sd, void *arg)
 
 int mdp_munmap(struct v4l2_subdev *sd, void *arg)
 {
-	/* Whatever */
+	/*          */
 	return 0;
 }
 

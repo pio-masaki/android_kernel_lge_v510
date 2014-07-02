@@ -106,14 +106,14 @@ int tpa2028d_poweron(int amp_no)
 
 	agc_output_limiter_disable = (agc_output_limiter_disable<<7);
 
-	fail |= WriteI2C(amp_no, IC_CONTROL, 0xE3); /*Tuen On*/
-	fail |= WriteI2C(amp_no, AGC_ATTACK_CONTROL, 0x05); /*Tuen On*/
-	fail |= WriteI2C(amp_no, AGC_RELEASE_CONTROL, 0x0B); /*Tuen On*/
-	fail |= WriteI2C(amp_no, AGC_HOLD_TIME_CONTROL, 0x00); /*Tuen On*/
-	fail |= WriteI2C(amp_no, AGC_FIXED_GAIN_CONTROL, agc_fixed_gain); /*Tuen On*/
-	fail |= WriteI2C(amp_no, AGC1_CONTROL, 0x3A|agc_output_limiter_disable); /*Tuen On*/
-	fail |= WriteI2C(amp_no, AGC2_CONTROL, 0xC0|agc_compression_rate); /*Tuen On*/
-	fail |= WriteI2C(amp_no, IC_CONTROL, 0xC3); /*Tuen On*/
+	fail |= WriteI2C(amp_no, IC_CONTROL, 0xE3); /*       */
+	fail |= WriteI2C(amp_no, AGC_ATTACK_CONTROL, 0x05); /*       */
+	fail |= WriteI2C(amp_no, AGC_RELEASE_CONTROL, 0x0B); /*       */
+	fail |= WriteI2C(amp_no, AGC_HOLD_TIME_CONTROL, 0x00); /*       */
+	fail |= WriteI2C(amp_no, AGC_FIXED_GAIN_CONTROL, agc_fixed_gain); /*       */
+	fail |= WriteI2C(amp_no, AGC1_CONTROL, 0x3A|agc_output_limiter_disable); /*       */
+	fail |= WriteI2C(amp_no, AGC2_CONTROL, 0xC0|agc_compression_rate); /*       */
+	fail |= WriteI2C(amp_no, IC_CONTROL, 0xC3); /*       */
 
 	return fail;
 }
@@ -129,28 +129,28 @@ inline void set_amp_gain(int amp_no, int amp_state)
 	int fail = 0;
 
 	D("set_amp_gain : amp_no[%d] amp_state[%d]\n", amp_no, amp_state);
-	
+
 	switch (amp_state) {
 	case SPK_ON:
-		//If  sysfs status is zero then speaker on request is ignored ( only from AAT )
+		//                                                                             
 		if (amp_data[amp_no]->state == 0 )
 			break;
 
-		/* if the delay time is need for chip ready,
-		 * should be added to each power or enable function.
-		 */
+		/*                                          
+                                                      
+   */
 		if (amp_data[amp_no]->pdata->power)
 			fail = amp_data[amp_no]->pdata->power(1);
-		/*need 5 msec for prevent mute issue*/
-		//msleep(5);
+		/*                                  */
+		//          
 		mdelay(5);
 		if (amp_data[amp_no]->pdata->enable)
 			fail = amp_data[amp_no]->pdata->enable(1);
-		/*need 10 msec for chip ready*/
-		//msleep(10);
+		/*                           */
+		//           
 		mdelay(10);
 		fail = tpa2028d_poweron(amp_no);
-		//amp_data[amp_no]->state = SPK_ON;
+		//                                 
 		break;
 	case SPK_OFF:
 		if (amp_data[amp_no]->pdata->enable)
@@ -160,7 +160,7 @@ inline void set_amp_gain(int amp_no, int amp_state)
 			fail = amp_data[amp_no]->pdata->enable(0);
 		if (amp_data[amp_no]->pdata->power)
 			fail = amp_data[amp_no]->pdata->power(0);
-		//amp_data[amp_no]->state = SPK_OFF;
+		//                                  
 		break;
 	default:
 		D("Amp_state [%d] does not support \n", amp_state);
@@ -373,12 +373,12 @@ tpa2028d_power_on_store(struct device *dev, struct device_attribute *attr, const
 		return -EINVAL;
 	amp_data[0]->state = val;
 /*
-	if ( val ==0 )
-		set_amp_gain(0, SPK_OFF);
-	else if (val == 1 )
-		set_amp_gain(0, SPK_ON);
-	else
-		return -EINVAL;
+               
+                           
+                    
+                          
+     
+                 
 */
 	return count;
 }
@@ -399,12 +399,12 @@ tpa2028d2_power_on_store(struct device *dev, struct device_attribute *attr, cons
 		return -EINVAL;
 	amp_data[1]->state = val;
 /*
-	if ( val ==0 )
-		set_amp_gain(1, SPK_OFF);
-	else if (val == 1 )
-		set_amp_gain(1, SPK_ON);
-	else
-		return -EINVAL;
+               
+                           
+                    
+                          
+     
+                 
 */
 	return count;
 }
@@ -437,7 +437,7 @@ static int tpa2028d_amp_probe(struct i2c_client *client,
 	int	 i;
 	int	amp_no=0;
 
-//	D("[tpa2028d_amp_probe ] id->name(%s) amp_no(%d) \n", id->name, pamp_no);
+//                                                                          
 
 	if (!i2c_check_functionality(adapter, I2C_FUNC_SMBUS_WORD_DATA)) {
 		err = -EOPNOTSUPP;
@@ -474,9 +474,9 @@ static int tpa2028d_amp_probe(struct i2c_client *client,
 	D("[tpa2028d_amp_probe ] id->name(%s) amp_no(%d) \n", id->name, amp_no);
 	amp_data[amp_no] = data;
 	amp_data[amp_no]->pdata = pdata;
-	amp_data[amp_no]->state = -1;	// Speaker initial status value   0:Speaker Off     1: Speaker On
+	amp_data[amp_no]->state = -1;	//                                                               
 	data->client = client;
-	
+
 	i2c_set_clientdata(client, data);
 
 	set_amp_gain(amp_no, SPK_OFF);
@@ -552,6 +552,6 @@ module_init(tpa2028d2_dual_amp_init);
 module_exit(tpa2028d2_dual_amp_exit);
 
 
-MODULE_DESCRIPTION("Support for TPA2028D Dual Amp Control -> Updated by <meehwa.yun@lge.com> ");
-MODULE_AUTHOR("Kim EunHye <ehgrace.kim@lge.com> ");
+MODULE_DESCRIPTION("Support for TPA2028D Dual Amp Control -> Updated ");
+MODULE_AUTHOR("");
 MODULE_LICENSE("GPL");

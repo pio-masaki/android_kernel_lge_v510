@@ -30,23 +30,23 @@
 #include "peripheral-loader.h"
 #include "pil-q6v5.h"
 
-/* Q6 Register Offsets */
+/*                     */
 #define QDSP6SS_RST_EVB			0x010
 
-/* AXI Halting Registers */
+/*                       */
 #define MSS_Q6_HALT_BASE		0x180
 #define MSS_MODEM_HALT_BASE		0x200
 #define MSS_NC_HALT_BASE		0x280
 
-/* MSS_CLAMP_IO Register Value */
+/*                             */
 #define MSS_IO_UNCLAMP_ALL		0x40
 
-/* RMB Status Register Values */
+/*                            */
 #define STATUS_PBL_SUCCESS		0x1
 #define STATUS_XPU_UNLOCKED		0x1
 #define STATUS_XPU_UNLOCKED_SCRIBBLED	0x2
 
-/* PBL/MBA interface registers */
+/*                             */
 #define RMB_MBA_IMAGE			0x00
 #define RMB_PBL_STATUS			0x04
 #define RMB_MBA_STATUS			0x0C
@@ -100,7 +100,7 @@ static int pil_mss_enable_clks(struct q6v5_data *drv)
 	if (ret)
 		goto err_rom_clk;
 
-	/* TODO: Remove when support for 8974v1.0 HW is dropped. */
+	/*                                                       */
 	mpll1_config_ctl = ioremap(0xFC981034, 0x4);
 	writel_relaxed(0x0300403D, mpll1_config_ctl);
 	mb();
@@ -138,7 +138,7 @@ static int wait_for_mba_ready(struct device *dev)
 	int ret;
 	u32 status;
 
-	/* Wait for PBL completion. */
+	/*                          */
 	ret = readl_poll_timeout(drv->rmb_base + RMB_PBL_STATUS, status,
 		status != 0, POLL_INTERVAL_US, pbl_mba_boot_timeout_ms * 1000);
 	if (ret) {
@@ -150,7 +150,7 @@ static int wait_for_mba_ready(struct device *dev)
 		return -EINVAL;
 	}
 
-	/* Wait for MBA completion. */
+	/*                          */
 	ret = readl_poll_timeout(drv->rmb_base + RMB_MBA_STATUS, status,
 		status != 0, POLL_INTERVAL_US, pbl_mba_boot_timeout_ms * 1000);
 	if (ret) {
@@ -175,10 +175,10 @@ static int pil_mss_shutdown(struct pil_desc *pil)
 	pil_q6v5_halt_axi_port(pil, drv->axi_halt_base + MSS_NC_HALT_BASE);
 
 	/*
-	 * If the shutdown function is called before the reset function, clocks
-	 * and power will not be enabled yet. Enable them here so that register
-	 * writes performed during the shutdown succeed.
-	 */
+                                                                        
+                                                                        
+                                                 
+  */
 	if (drv->is_booted == false) {
 		pil_mss_power_up(pil->dev);
 		pil_mss_enable_clks(drv);
@@ -200,15 +200,15 @@ static int pil_mss_reset(struct pil_desc *pil)
 	struct q6v5_data *drv = dev_get_drvdata(pil->dev);
 	int ret;
 
-	/* Deassert reset to subsystem and wait for propagation */
+	/*                                                      */
 	writel_relaxed(0, drv->restart_reg);
 	mb();
 	udelay(2);
 
 	/*
-	 * Bring subsystem out of reset and enable required
-	 * regulators and clocks.
-	 */
+                                                    
+                          
+  */
 	ret = pil_mss_power_up(pil->dev);
 	if (ret)
 		goto err_power;
@@ -217,24 +217,24 @@ static int pil_mss_reset(struct pil_desc *pil)
 	if (ret)
 		goto err_clks;
 
-	/* Program Image Address */
+	/*                       */
 	if (drv->self_auth) {
 		writel_relaxed(drv->start_addr, drv->rmb_base + RMB_MBA_IMAGE);
-		/* Ensure write to RMB base occurs before reset is released. */
+		/*                                                           */
 		mb();
 	} else {
 		writel_relaxed((drv->start_addr >> 4) & 0x0FFFFFF0,
 				drv->reg_base + QDSP6SS_RST_EVB);
 	}
 
-	/* De-assert MSS IO clamps */
+	/*                         */
 	writel_relaxed(MSS_IO_UNCLAMP_ALL, drv->io_clamp_reg);
 
 	ret = pil_q6v5_reset(pil);
 	if (ret)
 		goto err_q6v5_reset;
 
-	/* Wait for MBA to start. Check for PBL and MBA errors while waiting. */
+	/*                                                                    */
 	if (drv->self_auth) {
 		ret = wait_for_mba_ready(pil->dev);
 		if (ret)

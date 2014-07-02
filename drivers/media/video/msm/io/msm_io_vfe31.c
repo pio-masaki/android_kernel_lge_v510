@@ -41,7 +41,7 @@
 #define EXT_CAM_VSYNC_POL_SEL_SHFT 0xF
 #define MDDI_CLK_CHICKEN_BIT_SHFT  0x7
 
-/* MIPI	CSI	controller registers */
+/*                               */
 #define	MIPI_PHY_CONTROL			0x00000000
 #define	MIPI_PROTOCOL_CONTROL		0x00000004
 #define	MIPI_INTERRUPT_STATUS		0x00000008
@@ -93,7 +93,7 @@
 #define	CAMIO_VFE_CLK_SNAP			122880000
 #define	CAMIO_VFE_CLK_PREV			122880000
 
-/* AXI rates in KHz */
+/*                  */
 #define MSM_AXI_QOS_PREVIEW     192000
 #define MSM_AXI_QOS_SNAPSHOT    192000
 #define MSM_AXI_QOS_RECORDING   192000
@@ -120,7 +120,7 @@ static struct regulator_bulk_data regs[] = {
 	{ .supply = "gp2",  .min_uV = 2600000, .max_uV = 2600000 },
 	{ .supply = "lvsw1" },
 	{ .supply = "fs_vfe" },
-	/* sn12m0pz regulators */
+	/*                     */
 	{ .supply = "gp6",  .min_uV = 3050000, .max_uV = 3100000 },
 	{ .supply = "gp16", .min_uV = 1200000, .max_uV = 1200000 },
 };
@@ -133,7 +133,7 @@ static void msm_camera_vreg_enable(struct platform_device *pdev)
 
 	struct device *dev = &pdev->dev;
 
-	/* Use gp6 and gp16 if and only if dev name matches. */
+	/*                                                   */
 	if (!strncmp(pdev->name, "msm_camera_sn12m0pz", 20))
 		count = ARRAY_SIZE(regs);
 	else
@@ -392,7 +392,7 @@ int msm_camio_enable(struct platform_device *pdev)
 			IRQF_TRIGGER_RISING, "csi", 0);
 		if (rc < 0)
 			goto csi_irq_fail;
-		/* enable required clocks for CSI */
+		/*                                */
 		msm_camio_clk_enable(CAMIO_CSI0_PCLK);
 		msm_camio_clk_enable(CAMIO_CSI0_VFE_CLK);
 		msm_camio_clk_enable(CAMIO_CSI0_CLK);
@@ -461,7 +461,7 @@ void msm_camio_camif_pad_reg_reset(void)
 	usleep_range(10000, 11000);
 
 	reg = (msm_camera_io_r(camifpadbase)) & CAMIF_CFG_RMSK;
-	/* Need to be uninverted*/
+	/*                      */
 	reg &= 0x03;
 	msm_camera_io_w(reg, camifpadbase);
 	usleep_range(10000, 11000);
@@ -596,14 +596,14 @@ int msm_camio_csi_config(struct msm_camera_csi_params *csi_params)
 
 	CDBG("msm_camio_csi_config\n");
 
-	/* SOT_ECC_EN enable error correction for SYNC (data-lane) */
+	/*                                                         */
 	msm_camera_io_w(0x4, csibase + MIPI_PHY_CONTROL);
 
-	/* SW_RST to the CSI core */
+	/*                        */
 	msm_camera_io_w(MIPI_PROTOCOL_CONTROL_SW_RST_BMSK,
 		csibase + MIPI_PROTOCOL_CONTROL);
 
-	/* PROTOCOL CONTROL */
+	/*                  */
 	val = MIPI_PROTOCOL_CONTROL_LONG_PACKET_HEADER_CAPTURE_BMSK |
 		MIPI_PROTOCOL_CONTROL_DECODE_ID_BMSK |
 		MIPI_PROTOCOL_CONTROL_ECC_EN_BMSK;
@@ -614,7 +614,7 @@ int msm_camio_csi_config(struct msm_camera_csi_params *csi_params)
 	CDBG("%s MIPI_PROTOCOL_CONTROL val=0x%x\n", __func__, val);
 	msm_camera_io_w(val, csibase + MIPI_PROTOCOL_CONTROL);
 
-	/* SW CAL EN */
+	/*           */
 	val = (0x1 << MIPI_CALIBRATION_CONTROL_SWCAL_CAL_EN_SHFT) |
 		(0x1 <<
 		MIPI_CALIBRATION_CONTROL_SWCAL_STRENGTH_OVERRIDE_EN_SHFT) |
@@ -623,8 +623,8 @@ int msm_camio_csi_config(struct msm_camera_csi_params *csi_params)
 	CDBG("%s MIPI_CALIBRATION_CONTROL val=0x%x\n", __func__, val);
 	msm_camera_io_w(val, csibase + MIPI_CALIBRATION_CONTROL);
 
-	/* settle_cnt is very sensitive to speed!
-	increase this value to run at higher speeds */
+	/*                                       
+                                             */
 	val = (csi_params->settle_cnt <<
 			MIPI_PHY_D0_CONTROL2_SETTLE_COUNT_SHFT) |
 		(0x0F << MIPI_PHY_D0_CONTROL2_HS_TERM_IMP_SHFT) |
@@ -650,7 +650,7 @@ int msm_camio_csi_config(struct msm_camera_csi_params *csi_params)
 	msm_camera_io_w(0x00000000, csibase + MIPI_PHY_D2_CONTROL);
 	msm_camera_io_w(0x00000000, csibase + MIPI_PHY_D3_CONTROL);
 
-	/* halcyon only supports 1 or 2 lane */
+	/*                                   */
 	switch (csi_params->lane_cnt) {
 	case 1:
 		msm_camera_io_w(csi_params->lane_assign << 8 | 0x4,
@@ -670,10 +670,10 @@ int msm_camio_csi_config(struct msm_camera_csi_params *csi_params)
 		break;
 	}
 
-	/* mask out ID_ERROR[19], DATA_CMM_ERR[11]
-	and CLK_CMM_ERR[10] - de-featured */
+	/*                                        
+                                   */
 	msm_camera_io_w(0xFFF7F3FF, csibase + MIPI_INTERRUPT_MASK);
-	/*clear IRQ bits*/
+	/*              */
 	msm_camera_io_w(0xFFF7F3FF, csibase + MIPI_INTERRUPT_STATUS);
 
 	return rc;

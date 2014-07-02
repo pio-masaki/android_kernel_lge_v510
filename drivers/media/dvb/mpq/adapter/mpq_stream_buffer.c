@@ -35,7 +35,7 @@ int mpq_streambuffer_init(
 	if (data_buff_num > 1) {
 		if (mode != MPQ_STREAMBUFFER_BUFFER_MODE_LINEAR)
 			return -EINVAL;
-		/* Linear buffer group */
+		/*                     */
 		dvb_ringbuffer_init(
 			&sbuff->raw_data,
 			data_buffers,
@@ -44,7 +44,7 @@ int mpq_streambuffer_init(
 	} else if (data_buff_num == 1) {
 		if (mode != MPQ_STREAMBUFFER_BUFFER_MODE_RING)
 			return -EINVAL;
-		/* Single ring-buffer */
+		/*                    */
 		dvb_ringbuffer_init(&sbuff->raw_data,
 			data_buffers[0].base, data_buffers[0].size);
 	}
@@ -77,19 +77,19 @@ ssize_t mpq_streambuffer_pkt_read(
 	size_t ret;
 	size_t read_len;
 
-	/* read-out the packet header first */
+	/*                                  */
 	ret = dvb_ringbuffer_pkt_read(
 				&sbuff->packet_data, idx, 0,
 				(u8 *)packet,
 				sizeof(struct mpq_streambuffer_packet_header));
 
-	/* verify length, at least packet header should exist */
+	/*                                                    */
 	if (ret != sizeof(struct mpq_streambuffer_packet_header))
 		return -EINVAL;
 
 	read_len = ret;
 
-	/* read-out private user-data if there are such */
+	/*                                              */
 	if ((packet->user_data_len) && (user_data != NULL)) {
 		ret = dvb_ringbuffer_pkt_read(
 				&sbuff->packet_data,
@@ -120,7 +120,7 @@ int mpq_streambuffer_pkt_dispose(
 	if (NULL == sbuff)
 		return -EINVAL;
 
-	/* read-out the packet header first */
+	/*                                  */
 	ret = dvb_ringbuffer_pkt_read(&sbuff->packet_data, idx,
 			0,
 			(u8 *)&packet,
@@ -131,14 +131,14 @@ int mpq_streambuffer_pkt_dispose(
 
 	if ((MPQ_STREAMBUFFER_BUFFER_MODE_LINEAR == sbuff->mode) ||
 		(dispose_data)) {
-		/* Advance the read pointer in the raw-data buffer first */
+		/*                                                       */
 		ret = mpq_streambuffer_data_read_dispose(sbuff,
 				packet.raw_data_len);
 		if (ret != 0)
 			return ret;
 	}
 
-	/* Move read pointer to the next linear buffer for subsequent reads */
+	/*                                                                  */
 	if ((MPQ_STREAMBUFFER_BUFFER_MODE_LINEAR == sbuff->mode) &&
 		(packet.raw_data_len > 0)) {
 		struct mpq_streambuffer_buffer_desc *desc;
@@ -156,7 +156,7 @@ int mpq_streambuffer_pkt_dispose(
 		wake_up_all(&sbuff->raw_data.queue);
 	}
 
-	/* Now clear the packet from the packet header */
+	/*                                             */
 	dvb_ringbuffer_pkt_dispose(&sbuff->packet_data, idx);
 
 	if (sbuff->cb)
@@ -180,26 +180,26 @@ int mpq_streambuffer_pkt_write(
 	len = sizeof(struct mpq_streambuffer_packet_header) +
 		packet->user_data_len;
 
-	/* Make sure enough space available for packet header */
+	/*                                                    */
 	if (dvb_ringbuffer_free(&sbuff->packet_data) < len)
 		return -ENOSPC;
 
-	/* Starting writing packet header */
+	/*                                */
 	idx = dvb_ringbuffer_pkt_start(&sbuff->packet_data, len);
 
-	/* Write non-user private data header */
+	/*                                    */
 	dvb_ringbuffer_write(&sbuff->packet_data,
 		(u8 *)packet,
 		sizeof(struct mpq_streambuffer_packet_header));
 
-	/* Write user's own private data header */
+	/*                                      */
 	dvb_ringbuffer_write(&sbuff->packet_data,
 		user_data,
 		packet->user_data_len);
 
 	dvb_ringbuffer_pkt_close(&sbuff->packet_data, idx);
 
-	/* Move write pointer to next linear buffer for subsequent writes */
+	/*                                                                */
 	if ((MPQ_STREAMBUFFER_BUFFER_MODE_LINEAR == sbuff->mode) &&
 		(packet->raw_data_len > 0)) {
 		if (sbuff->pending_buffers_count == sbuff->buffers_num)
@@ -229,24 +229,24 @@ ssize_t mpq_streambuffer_data_write(
 		if (unlikely(dvb_ringbuffer_free(&sbuff->raw_data) < len))
 			return -ENOSPC;
 		/*
-		 * Secure buffers are not permitted to be mapped into kernel
-		 * memory, and so buffer base address may be NULL
-		 */
+                                                              
+                                                   
+   */
 		if (NULL == sbuff->raw_data.data)
 			return -EPERM;
 		res = dvb_ringbuffer_write(&sbuff->raw_data, buf, len);
 		wake_up_all(&sbuff->raw_data.queue);
 	} else {
-		/* Linear buffer group */
+		/*                     */
 		struct mpq_streambuffer_buffer_desc *desc;
 
 		desc = (struct mpq_streambuffer_buffer_desc *)
 				&sbuff->raw_data.data[sbuff->raw_data.pwrite];
 
 		/*
-		 * Secure buffers are not permitted to be mapped into kernel
-		 * memory, and so buffer base address may be NULL
-		 */
+                                                              
+                                                   
+   */
 		if (NULL == desc->base)
 			return -EPERM;
 
@@ -285,7 +285,7 @@ int mpq_streambuffer_data_write_deposit(
 		DVB_RINGBUFFER_PUSH(&sbuff->raw_data, len);
 		wake_up_all(&sbuff->raw_data.queue);
 	} else {
-		/* Linear buffer group */
+		/*                     */
 		struct mpq_streambuffer_buffer_desc *desc;
 		desc = (struct mpq_streambuffer_buffer_desc *)
 				&sbuff->raw_data.data[sbuff->raw_data.pwrite];
@@ -316,9 +316,9 @@ ssize_t mpq_streambuffer_data_read(
 
 	if (MPQ_STREAMBUFFER_BUFFER_MODE_RING == sbuff->mode) {
 		/*
-		 * Secure buffers are not permitted to be mapped into kernel
-		 * memory, and so buffer base address may be NULL
-		 */
+                                                              
+                                                   
+   */
 		if (NULL == sbuff->raw_data.data)
 			return -EPERM;
 
@@ -330,16 +330,16 @@ ssize_t mpq_streambuffer_data_read(
 
 		wake_up_all(&sbuff->raw_data.queue);
 	} else {
-		/* Linear buffer group */
+		/*                     */
 		struct mpq_streambuffer_buffer_desc *desc;
 
 		desc = (struct mpq_streambuffer_buffer_desc *)
 				&sbuff->raw_data.data[sbuff->raw_data.pread];
 
 		/*
-		 * Secure buffers are not permitted to be mapped into kernel
-		 * memory, and so buffer base address may be NULL
-		 */
+                                                              
+                                                   
+   */
 		if (NULL == desc->base)
 			return -EPERM;
 
@@ -366,9 +366,9 @@ ssize_t mpq_streambuffer_data_read_user(
 
 	if (MPQ_STREAMBUFFER_BUFFER_MODE_RING == sbuff->mode) {
 		/*
-		 * Secure buffers are not permitted to be mapped into kernel
-		 * memory, and so buffer base address may be NULL
-		 */
+                                                              
+                                                   
+   */
 		if (NULL == sbuff->raw_data.data)
 			return -EPERM;
 
@@ -379,16 +379,16 @@ ssize_t mpq_streambuffer_data_read_user(
 			dvb_ringbuffer_read_user(&sbuff->raw_data, buf, len);
 		wake_up_all(&sbuff->raw_data.queue);
 	} else {
-		/* Linear buffer group */
+		/*                     */
 		struct mpq_streambuffer_buffer_desc *desc;
 
 		desc = (struct mpq_streambuffer_buffer_desc *)
 				&sbuff->raw_data.data[sbuff->raw_data.pread];
 
 		/*
-		 * Secure buffers are not permitted to be mapped into kernel
-		 * memory, and so buffer base address may be NULL
-		 */
+                                                              
+                                                   
+   */
 		if (NULL == desc->base)
 			return -EPERM;
 

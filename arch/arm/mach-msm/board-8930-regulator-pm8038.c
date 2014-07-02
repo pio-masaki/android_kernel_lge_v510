@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2013, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2011-2012, The Linux Foundation. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -12,8 +12,8 @@
  */
 
 /*
- * This file contains regulator configuration and mappings for targets
- * consisting of MSM8930 and PM8038.
+                                                                      
+                                    
  */
 
 #include <linux/regulator/pm8xxx-regulator.h>
@@ -24,8 +24,8 @@
 	static struct regulator_consumer_supply vreg_consumers_##_id[]
 
 /*
- * Consumer specific regulator names:
- *			 regulator name		consumer dev_name
+                                     
+                                       
  */
 VREG_CONSUMERS(L1) = {
 	REGULATOR_SUPPLY("8038_l1",		NULL),
@@ -35,7 +35,6 @@ VREG_CONSUMERS(L2) = {
 	REGULATOR_SUPPLY("8038_l2",		NULL),
 	REGULATOR_SUPPLY("iris_vdddig",		"wcnss_wlan.0"),
 	REGULATOR_SUPPLY("dsi_vdda",		"mipi_dsi.1"),
-	REGULATOR_SUPPLY("dsi_pll_vdda",	"mdp.0"),
 	REGULATOR_SUPPLY("mipi_csi_vdd",	"msm_csid.0"),
 	REGULATOR_SUPPLY("mipi_csi_vdd",	"msm_csid.1"),
 	REGULATOR_SUPPLY("mipi_csi_vdd",	"msm_csid.2"),
@@ -68,7 +67,6 @@ VREG_CONSUMERS(L9) = {
 	REGULATOR_SUPPLY("8038_l9",		NULL),
 	REGULATOR_SUPPLY("vdd_ana",		"3-004a"),
 	REGULATOR_SUPPLY("vdd",			"3-0024"),
-	REGULATOR_SUPPLY("vdd",			"3-0020"),
 	REGULATOR_SUPPLY("cam_vana",		"4-001a"),
 	REGULATOR_SUPPLY("cam_vana",		"4-006c"),
 	REGULATOR_SUPPLY("cam_vana",		"4-0048"),
@@ -77,22 +75,8 @@ VREG_CONSUMERS(L9) = {
 	REGULATOR_SUPPLY("cam_vaf",		"4-0048"),
 	REGULATOR_SUPPLY("cam_vana",            "4-0020"),
 	REGULATOR_SUPPLY("cam_vaf",             "4-0020"),
-/* Regulators for 8930 QRD SGLTE EVT */
-	REGULATOR_SUPPLY("cam_vana",		"8-001a"),
-	REGULATOR_SUPPLY("cam_vana",		"8-006c"),
-	REGULATOR_SUPPLY("cam_vana",		"8-0048"),
-	REGULATOR_SUPPLY("cam_vana",		"8-0020"),
-	REGULATOR_SUPPLY("cam_vana",		"8-0036"),
-	REGULATOR_SUPPLY("cam_vana",		"8-0010"),
-	REGULATOR_SUPPLY("cam_vaf",		"8-001a"),
-	REGULATOR_SUPPLY("cam_vaf",		"8-006c"),
-	REGULATOR_SUPPLY("cam_vaf",		"8-0048"),
-	REGULATOR_SUPPLY("cam_vaf",		"8-0020"),
-	REGULATOR_SUPPLY("cam_vaf",		"8-0036"),
-	REGULATOR_SUPPLY("cam_vaf",		"8-0010"),
 	REGULATOR_SUPPLY("vdd",			"12-0018"),
 	REGULATOR_SUPPLY("vdd",			"12-0068"),
-	REGULATOR_SUPPLY("CDC_VDDA_A_L9_2P85V",	"sitar1p1-slim"),
 };
 VREG_CONSUMERS(L10) = {
 	REGULATOR_SUPPLY("8038_l10",		NULL),
@@ -118,14 +102,7 @@ VREG_CONSUMERS(L12) = {
 	REGULATOR_SUPPLY("cam_vdig",		"4-001a"),
 	REGULATOR_SUPPLY("cam_vdig",		"4-006c"),
 	REGULATOR_SUPPLY("cam_vdig",		"4-0048"),
-	REGULATOR_SUPPLY("cam_vdig",		"4-0020"),
-/* Regulators for 8930 QRD SGLTE EVT */
-	REGULATOR_SUPPLY("cam_vdig",		"8-001a"),
-	REGULATOR_SUPPLY("cam_vdig",		"8-006c"),
-	REGULATOR_SUPPLY("cam_vdig",		"8-0048"),
-	REGULATOR_SUPPLY("cam_vdig",		"8-0020"),
-	REGULATOR_SUPPLY("cam_vdig",		"8-0036"),
-	REGULATOR_SUPPLY("cam_vdig",		"8-0010"),
+	REGULATOR_SUPPLY("cam_vdig",            "4-0020"),
 };
 VREG_CONSUMERS(L13) = {
 	REGULATOR_SUPPLY("8038_l13",		NULL),
@@ -169,7 +146,6 @@ VREG_CONSUMERS(L22) = {
 VREG_CONSUMERS(L23) = {
 	REGULATOR_SUPPLY("8038_l23",		NULL),
 	REGULATOR_SUPPLY("dsi_vddio",		"mipi_dsi.1"),
-	REGULATOR_SUPPLY("dsi_pll_vddio",	"mdp.0"),
 	REGULATOR_SUPPLY("hdmi_avdd",		"hdmi_msm.0"),
 	REGULATOR_SUPPLY("hdmi_vcc",		"hdmi_msm.0"),
 	REGULATOR_SUPPLY("pll_vdd",		"pil_riva"),
@@ -224,20 +200,12 @@ VREG_CONSUMERS(LVS1) = {
 	REGULATOR_SUPPLY("cam_vio",		"4-001a"),
 	REGULATOR_SUPPLY("cam_vio",		"4-006c"),
 	REGULATOR_SUPPLY("cam_vio",		"4-0048"),
-	REGULATOR_SUPPLY("cam_vio",		"4-0020"),
-/* Regulators for 8930 QRD SGLTE EVT */
-	REGULATOR_SUPPLY("cam_vio",		"8-001a"),
-	REGULATOR_SUPPLY("cam_vio",		"8-006c"),
-	REGULATOR_SUPPLY("cam_vio",		"8-0048"),
-	REGULATOR_SUPPLY("cam_vio",		"8-0020"),
-	REGULATOR_SUPPLY("cam_vio",		"8-0036"),
-	REGULATOR_SUPPLY("cam_vio",		"8-0010"),
+	REGULATOR_SUPPLY("cam_vio",             "4-0020"),
 };
 VREG_CONSUMERS(LVS2) = {
 	REGULATOR_SUPPLY("8038_lvs2",		NULL),
 	REGULATOR_SUPPLY("vcc_i2c",		"3-004a"),
 	REGULATOR_SUPPLY("vcc_i2c",		"3-0024"),
-	REGULATOR_SUPPLY("vcc_i2c",		"3-0020"),
 	REGULATOR_SUPPLY("vcc_i2c",		"0-0048"),
 	REGULATOR_SUPPLY("vddio",		"12-0018"),
 	REGULATOR_SUPPLY("vlogic",		"12-0068"),
@@ -331,7 +299,7 @@ VREG_CONSUMERS(VDD_DIG_CORNER) = {
 		REGULATOR_CHANGE_VOLTAGE | REGULATOR_CHANGE_STATUS, 0, 0, \
 		_always_on, _supply_regulator, 0, _enable_time, _reg_id)
 
-/* Pin control initialization */
+/*                            */
 #define PM8XXX_PC(_id, _name, _always_on, _pin_fn, _pin_ctrl, \
 		  _supply_regulator, _reg_id) \
 	{ \
@@ -440,7 +408,7 @@ VREG_CONSUMERS(VDD_DIG_CORNER) = {
 		 RPM_VREG_STATE_OFF, _sleep_selectable, _always_on, \
 		 _supply_regulator, 0)
 
-/* Pin control initialization */
+/*                            */
 #define RPM_PC_INIT(_id, _always_on, _pin_fn, _pin_ctrl, _supply_regulator) \
 	{ \
 		.init_data = { \
@@ -478,8 +446,7 @@ VREG_CONSUMERS(VDD_DIG_CORNER) = {
 	{ \
 		.constraints = { \
 			.name		= _name, \
-			.valid_ops_mask	= REGULATOR_CHANGE_VOLTAGE | \
-					  REGULATOR_CHANGE_STATUS, \
+			.valid_ops_mask	= REGULATOR_CHANGE_VOLTAGE, \
 			.min_uV		= _min_uV, \
 			.max_uV		= _max_uV, \
 		}, \
@@ -487,28 +454,28 @@ VREG_CONSUMERS(VDD_DIG_CORNER) = {
 		.consumer_supplies	= vreg_consumers_##_id, \
 	}
 
-/* GPIO regulator constraints */
+/*                            */
 struct gpio_regulator_platform_data
 msm8930_pm8038_gpio_regulator_pdata[] __devinitdata = {
-	/*        ID          vreg_name     gpio_label     gpio  supply */
+	/*                                                              */
 	GPIO_VREG(EXT_5V,     "ext_5v",     "ext_5v_en",     63, NULL),
 	GPIO_VREG(EXT_OTG_SW, "ext_otg_sw", "ext_otg_sw_en", 97, "ext_5v"),
 };
 
-/* SAW regulator constraints */
+/*                           */
 struct regulator_init_data msm8930_pm8038_saw_regulator_core0_pdata =
-	/*	      ID  vreg_name	       min_uV   max_uV */
+	/*                                            */
 	SAW_VREG_INIT(S5, "8038_s5",	       850000, 1300000);
 struct regulator_init_data msm8930_pm8038_saw_regulator_core1_pdata =
 	SAW_VREG_INIT(S6, "8038_s6",	       850000, 1300000);
 
-/* PM8038 regulator constraints */
+/*                              */
 struct pm8xxx_regulator_platform_data
 msm8930_pm8038_regulator_pdata[] __devinitdata = {
 	/*
-	 *	    ID  name always_on pd min_uV   max_uV   en_t supply
-	 *	system_uA reg_ID
-	 */
+                                                           
+                    
+  */
 	PM8XXX_NLDO1200(L16, "8038_l16", 0, 1, 375000, 1050000, 200, "8038_s3",
 		0, 0),
 	PM8XXX_NLDO1200(L19, "8038_l19", 0, 1, 375000, 1050000, 200, "8038_s3",
@@ -519,13 +486,13 @@ msm8930_pm8038_regulator_pdata[] __devinitdata = {
 
 static struct rpm_regulator_init_data
 msm8930_rpm_regulator_init_data[] __devinitdata = {
-	/*	ID a_on pd ss min_uV   max_uV  supply sys_uA  freq  fm  ss_fm */
+	/*                                                               */
 	RPM_SMPS(S1, 0, 1, 1,  500000, 1150000, NULL, 100000, 4p80, AUTO, LPM),
 	RPM_SMPS(S2, 1, 1, 1, 1400000, 1400000, NULL, 100000, 1p60, AUTO, LPM),
 	RPM_SMPS(S3, 0, 1, 1, 1150000, 1150000, NULL, 100000, 3p20, AUTO, AUTO),
 	RPM_SMPS(S4, 1, 1, 1, 1950000, 2200000, NULL, 100000, 1p60, AUTO, LPM),
 
-	/*	ID     a_on pd ss min_uV   max_uV  supply  sys_uA init_ip */
+	/*                                                           */
 	RPM_LDO(L1,	 0, 1, 0, 1300000, 1300000, "8038_s2", 0, 0),
 	RPM_LDO(L2,	 0, 1, 0, 1200000, 1200000, "8038_s2", 0, 0),
 	RPM_LDO(L3,	 0, 1, 0, 3075000, 3075000, NULL,      0, 0),
@@ -537,7 +504,7 @@ msm8930_rpm_regulator_init_data[] __devinitdata = {
 	RPM_LDO(L9,	 0, 1, 0, 2850000, 2850000, NULL,      0, 0),
 	RPM_LDO(L10,	 0, 1, 0, 2900000, 2900000, NULL,      0, 0),
 	RPM_LDO(L11,	 1, 1, 0, 1800000, 1800000, "8038_s4", 10000, 10000),
-	RPM_LDO(L12,	 0, 1, 0, 1200000, 1500000, "8038_s2", 0, 0),
+	RPM_LDO(L12,	 0, 1, 0, 1200000, 1200000, "8038_s2", 0, 0),
 	RPM_LDO(L13,	 0, 0, 0, 2220000, 2220000, NULL,      0, 0),
 	RPM_LDO(L14,	 0, 1, 0, 1800000, 1800000, NULL,      0, 0),
 	RPM_LDO(L15,	 0, 1, 0, 1800000, 2950000, NULL,      0, 0),
@@ -551,11 +518,11 @@ msm8930_rpm_regulator_init_data[] __devinitdata = {
 	RPM_LDO(L25,	 0, 0, 0, 1740000, 1740000, "8038_l13", 0, 0),
 	RPM_LDO(L26,     1, 1, 0, 1050000, 1050000, "8038_s2", 10000, 10000),
 
-	/*	ID     a_on pd ss		    supply */
+	/*                               */
 	RPM_VS(LVS1,	 0, 1, 0,		    "8038_l11"),
 	RPM_VS(LVS2,	 0, 1, 0,		    "8038_l11"),
 
-	/*	   ID            a_on ss min_corner  max_corner  supply */
+	/*                                                         */
 	RPM_CORNER(VDD_DIG_CORNER, 0, 1, RPM_VREG_CORNER_NONE,
 		RPM_VREG_CORNER_HIGH, NULL),
 };

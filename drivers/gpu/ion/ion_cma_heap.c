@@ -26,7 +26,7 @@
 
 #include <asm/cacheflush.h>
 
-/* for ion_heap_ops structure */
+/*                            */
 #include "ion_priv.h"
 
 #define ION_CMA_ALLOCATE_FAILED -1
@@ -40,9 +40,9 @@ struct ion_cma_buffer_info {
 
 static int cma_heap_has_outer_cache;
 /*
- * Create scatter-list for the already allocated DMA buffer.
- * This function could be replace by dma_common_get_sgtable
- * as soon as it will avalaible.
+                                                            
+                                                           
+                                
  */
 int ion_cma_get_sgtable(struct device *dev, struct sg_table *sgt,
 			void *cpu_addr, dma_addr_t handle, size_t size)
@@ -58,7 +58,7 @@ int ion_cma_get_sgtable(struct device *dev, struct sg_table *sgt,
 	return 0;
 }
 
-/* ION CMA heap operations functions */
+/*                                   */
 static int ion_cma_allocate(struct ion_heap *heap, struct ion_buffer *buffer,
 			    unsigned long len, unsigned long align,
 			    unsigned long flags)
@@ -97,7 +97,7 @@ static int ion_cma_allocate(struct ion_heap *heap, struct ion_buffer *buffer,
 	ion_cma_get_sgtable(dev,
 			info->table, info->cpu_addr, info->handle, len);
 
-	/* keep this for memory release */
+	/*                              */
 	buffer->priv_virt = info;
 	dev_dbg(dev, "Allocate buffer %p\n", buffer);
 	return 0;
@@ -113,15 +113,14 @@ static void ion_cma_free(struct ion_buffer *buffer)
 	struct ion_cma_buffer_info *info = buffer->priv_virt;
 
 	dev_dbg(dev, "Release buffer %p\n", buffer);
-	/* release memory */
+	/*                */
 	dma_free_coherent(dev, buffer->size, info->cpu_addr, info->handle);
-	sg_free_table(info->table);
-	/* release sg table */
+	/*                  */
 	kfree(info->table);
 	kfree(info);
 }
 
-/* return physical address in addr */
+/*                                 */
 static int ion_cma_phys(struct ion_heap *heap, struct ion_buffer *buffer,
 			ion_phys_addr_t *addr, size_t *len)
 {
@@ -229,9 +228,8 @@ int ion_cma_map_iommu(struct ion_buffer *buffer,
 
 	extra_iova_addr = data->iova_addr + buffer->size;
 	if (extra) {
-		unsigned long phys_addr = sg_phys(table->sgl);
-		ret = msm_iommu_map_extra(domain, extra_iova_addr, phys_addr,
-					extra, SZ_4K, prot);
+		ret = msm_iommu_map_extra(domain, extra_iova_addr, extra, SZ_4K,
+						prot);
 		if (ret)
 			goto out2;
 	}
@@ -282,30 +280,15 @@ int ion_cma_cache_ops(struct ion_heap *heap,
 
 	switch (cmd) {
 	case ION_IOC_CLEAN_CACHES:
-		if (!vaddr)
-			dma_sync_sg_for_device(NULL, buffer->sg_table->sgl,
-				buffer->sg_table->nents, DMA_TO_DEVICE);
-		else
-			dmac_clean_range(vaddr, vaddr + length);
+		dmac_clean_range(vaddr, vaddr + length);
 		outer_cache_op = outer_clean_range;
 		break;
 	case ION_IOC_INV_CACHES:
-		if (!vaddr)
-			dma_sync_sg_for_cpu(NULL, buffer->sg_table->sgl,
-				buffer->sg_table->nents, DMA_FROM_DEVICE);
-		else
-			dmac_inv_range(vaddr, vaddr + length);
+		dmac_inv_range(vaddr, vaddr + length);
 		outer_cache_op = outer_inv_range;
 		break;
 	case ION_IOC_CLEAN_INV_CACHES:
-		if (!vaddr) {
-			dma_sync_sg_for_device(NULL, buffer->sg_table->sgl,
-				buffer->sg_table->nents, DMA_TO_DEVICE);
-			dma_sync_sg_for_cpu(NULL, buffer->sg_table->sgl,
-				buffer->sg_table->nents, DMA_FROM_DEVICE);
-		} else {
-			dmac_flush_range(vaddr, vaddr + length);
-		}
+		dmac_flush_range(vaddr, vaddr + length);
 		outer_cache_op = outer_flush_range;
 		break;
 	default:
@@ -321,35 +304,6 @@ int ion_cma_cache_ops(struct ion_heap *heap,
 	return 0;
 }
 
-static int ion_cma_print_debug(struct ion_heap *heap, struct seq_file *s,
-			const struct rb_root *mem_map)
-{
-	if (mem_map) {
-		struct rb_node *n;
-
-		seq_printf(s, "\nMemory Map\n");
-		seq_printf(s, "%16.s %14.s %14.s %14.s\n",
-			   "client", "start address", "end address",
-			   "size (hex)");
-
-		for (n = rb_first(mem_map); n; n = rb_next(n)) {
-			struct mem_map_data *data =
-					rb_entry(n, struct mem_map_data, node);
-			const char *client_name = "(null)";
-
-
-			if (data->client_name)
-				client_name = data->client_name;
-
-			seq_printf(s, "%16.s %14lx %14lx %14lu (%lx)\n",
-				   client_name, data->addr,
-				   data->addr_end,
-				   data->size, data->size);
-		}
-	}
-	return 0;
-}
-
 static struct ion_heap_ops ion_cma_ops = {
 	.allocate = ion_cma_allocate,
 	.free = ion_cma_free,
@@ -362,7 +316,6 @@ static struct ion_heap_ops ion_cma_ops = {
 	.map_iommu = ion_cma_map_iommu,
 	.unmap_iommu = ion_cma_unmap_iommu,
 	.cache_op = ion_cma_cache_ops,
-	.print_debug = ion_cma_print_debug,
 };
 
 struct ion_heap *ion_cma_heap_create(struct ion_platform_heap *data)
@@ -375,8 +328,8 @@ struct ion_heap *ion_cma_heap_create(struct ion_platform_heap *data)
 		return ERR_PTR(-ENOMEM);
 
 	heap->ops = &ion_cma_ops;
-	/* set device as private heaps data, later it will be
-	 * used to make the link with reserved CMA memory */
+	/*                                                   
+                                                   */
 	heap->priv = data->priv;
 	heap->type = ION_HEAP_TYPE_DMA;
 	cma_heap_has_outer_cache = data->has_outer_cache;

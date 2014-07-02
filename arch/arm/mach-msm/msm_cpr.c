@@ -37,7 +37,7 @@
 
 #define MODULE_NAME "msm-cpr"
 
-/* Need platform device handle for suspend and resume APIs */
+/*                                                         */
 static struct platform_device *cpr_pdev;
 
 static bool enable = 1;
@@ -59,7 +59,7 @@ struct msm_cpr {
 	struct msm_cpr_vp_data *vp;
 };
 
-/* Need to maintain state data for suspend and resume APIs */
+/*                                                         */
 static struct msm_cpr_reg cpr_save_state;
 
 static inline
@@ -117,7 +117,7 @@ static void cpr_regs_dump_all(struct msm_cpr *cpr)
 }
 #endif
 
-/* Enable the CPR H/W Block */
+/*                          */
 static void cpr_enable(struct msm_cpr *cpr)
 {
 	mutex_lock(&cpr->cpr_mutex);
@@ -125,7 +125,7 @@ static void cpr_enable(struct msm_cpr *cpr)
 	mutex_unlock(&cpr->cpr_mutex);
 }
 
-/* Disable the CPR H/W Block */
+/*                           */
 static void cpr_disable(struct msm_cpr *cpr)
 {
 	mutex_lock(&cpr->cpr_mutex);
@@ -165,26 +165,26 @@ cpr_2pt_kv_analysis(struct msm_cpr *cpr, struct msm_cpr_mode *chip_data)
 	int32_t tgt_volt_mV = 0, level_uV, rc;
 	uint32_t quot1, quot2;
 
-	/**
-	 * 2 Point KV Analysis to calculate Step Quot
-	 * STEP_QUOT is number of QUOT units per PMIC step
-	 * STEP_QUOT = (quot1 - quot2) / 4
-	 *
-	 * The step quot is calculated once for every mode and stored for
-	 * later use.
-	 */
+	/* 
+                                              
+                                                   
+                                   
+   
+                                                                  
+              
+  */
 	if (chip_data->step_quot != ~0)
 		goto out_2pt_kv;
 
-	/**
-	 * Using the value from chip_data->tgt_volt_offset
-	 * calculate the new PMIC adjusted voltages and set
-	 * the PMIC to provide this value.
-	 *
-	 * Assuming default voltage is the highest value of safe boot up
-	 * voltage, offset is always subtracted from it.
-	 *
-	 */
+	/* 
+                                                   
+                                                    
+                                   
+   
+                                                                 
+                                                 
+   
+  */
 	if (chip_data->tgt_volt_offset > 0) {
 		tgt_volt_mV = chip_data->calibrated_mV -
 			(chip_data->tgt_volt_offset * cpr->vp->step_size);
@@ -192,9 +192,9 @@ cpr_2pt_kv_analysis(struct msm_cpr *cpr, struct msm_cpr_mode *chip_data)
 	pr_debug("tgt_volt_mV = %d, calibrated_mV = %d", tgt_volt_mV,
 			chip_data->calibrated_mV);
 
-	/* level_uV = tgt_volt_mV * 1000; */
+	/*                                */
 	level_uV = 1350000;
-	/* Call the PMIC specific routine to set the voltage */
+	/*                                                   */
 	rc = regulator_set_voltage(cpr->vreg_cx, level_uV, level_uV);
 	if (rc) {
 		pr_err("%s: Initial voltage set at %duV failed. %d\n",
@@ -207,18 +207,18 @@ cpr_2pt_kv_analysis(struct msm_cpr *cpr, struct msm_cpr_mode *chip_data)
 		return;
 	}
 
-	/* Store the adjusted value of voltage */
+	/*                                     */
 	chip_data->calibrated_mV = 1300;
 
-	/* Take first CPR measurement at a higher voltage to get QUOT1 */
+	/*                                                             */
 
-	/* Enable the Software mode of operation */
+	/*                                       */
 	cpr_modify_reg(cpr, RBCPR_CTL, HW_TO_PMIC_EN_M, SW_MODE);
 
-	/* Enable the cpr measurement */
+	/*                            */
 	cpr_modify_reg(cpr, RBCPR_CTL, LOOP_EN_M, ENABLE_CPR);
 
-	/* IRQ is already disabled */
+	/*                         */
 	rc = cpr_poll_result_done(cpr);
 	if (rc) {
 		pr_err("%s: Quot1: Exiting due to INT_DONE poll timeout\n",
@@ -235,11 +235,11 @@ cpr_2pt_kv_analysis(struct msm_cpr *cpr, struct msm_cpr_mode *chip_data)
 
 	quot1 = (cpr_read_reg(cpr, RBCPR_DEBUG1) & QUOT_SLOW_M) >> 12;
 
-	/* Take second CPR measurement at a lower voltage to get QUOT2 */
+	/*                                                             */
 	level_uV = 1300000;
 
 	cpr_modify_reg(cpr, RBCPR_CTL, LOOP_EN_M, DISABLE_CPR);
-	/* Call the PMIC specific routine to set the voltage */
+	/*                                                   */
 	rc = regulator_set_voltage(cpr->vreg_cx, level_uV, level_uV);
 	if (rc) {
 		pr_err("%s: Voltage set at %duV failed. %d\n",
@@ -250,14 +250,14 @@ cpr_2pt_kv_analysis(struct msm_cpr *cpr, struct msm_cpr_mode *chip_data)
 	cpr_modify_reg(cpr, RBCPR_CTL, HW_TO_PMIC_EN_M, SW_MODE);
 	cpr_modify_reg(cpr, RBCPR_CTL, LOOP_EN_M, ENABLE_CPR);
 
-	/* cpr_write_reg(cpr, RBIF_CONT_NACK_CMD, 0x1); */
+	/*                                              */
 	rc = cpr_poll_result_done(cpr);
 	if (rc) {
 		pr_err("%s: Quot2: Exiting due to INT_DONE poll timeout\n",
 			__func__);
 		goto err_poll_result_done;
 	}
-	/* IRQ is already disabled */
+	/*                         */
 	rc = cpr_poll_result(cpr);
 	if (rc) {
 		pr_err("%s: Quot2: Exiting due to BUSY poll timeout\n",
@@ -268,11 +268,11 @@ cpr_2pt_kv_analysis(struct msm_cpr *cpr, struct msm_cpr_mode *chip_data)
 	chip_data->step_quot = (quot1 - quot2) / 4;
 	pr_debug("%s: Calculated Step Quot is %d\n",
 			__func__, chip_data->step_quot);
-	/* Disable the cpr */
+	/*                 */
 	cpr_modify_reg(cpr, RBCPR_CTL, LOOP_EN_M, DISABLE_CPR);
 
 out_2pt_kv:
-	/* Program the step quot */
+	/*                       */
 	cpr_write_reg(cpr, RBCPR_STEP_QUOT, (chip_data->step_quot & 0xFF));
 	return;
 err_poll_result:
@@ -283,9 +283,9 @@ err_poll_result_done:
 static inline
 void cpr_irq_clr_and_ack(struct msm_cpr *cpr, uint32_t mask)
 {
-	/* Clear the interrupt */
+	/*                     */
 	cpr_write_reg(cpr, RBIF_IRQ_CLEAR, 0x3F);
-	/* Acknowledge the Recommendation */
+	/*                                */
 	cpr_write_reg(cpr, RBIF_CONT_ACK_CMD, 0x1);
 }
 
@@ -317,11 +317,11 @@ cpr_up_event_handler(struct msm_cpr *cpr, uint32_t new_volt)
 
 	chip_data = &cpr->config->cpr_mode_data[cpr->cpr_mode];
 
-	/**
-	 * FIXME: Need to handle a potential race condition between
-	 * freq switch handler and CPR interrupt handler here
-	 */
-	/* Set New PMIC voltage */
+	/* 
+                                                            
+                                                      
+  */
+	/*                      */
 	set_volt_mV = (new_volt < chip_data->Vmax ? new_volt
 				: chip_data->Vmax);
 	rc = regulator_set_voltage(cpr->vreg_cx, set_volt_mV * 1000,
@@ -334,24 +334,24 @@ cpr_up_event_handler(struct msm_cpr *cpr, uint32_t new_volt)
 	}
 	pr_debug("%s: Voltage set at %dmV\n", __func__, set_volt_mV);
 
-	/**
-	 * Save the new calibrated voltage to be re-used
-	 * whenever we return to same mode after a mode switch.
-	 */
+	/* 
+                                                 
+                                                        
+  */
 	chip_data->calibrated_mV = set_volt_mV;
 
-	/* Clear all the interrupts */
+	/*                          */
 	cpr_write_reg(cpr, RBIF_IRQ_CLEAR, 0x3F);
 
-	/* Disable Auto ACK for Down interrupts */
+	/*                                      */
 	cpr_modify_reg(cpr, RBCPR_CTL, SW_AUTO_CONT_NACK_DN_EN_M, 0);
 
-	/* Enable down interrupts to App as it might have got disabled if CPR
-	 * hit Vmin earlier. Voltage set is above Vmin now.
-	 */
+	/*                                                                   
+                                                    
+  */
 	cpr_irq_set(cpr, DOWN_INT, 1);
 
-	/* Acknowledge the Recommendation */
+	/*                                */
 	cpr_write_reg(cpr, RBIF_CONT_ACK_CMD, 0x1);
 }
 
@@ -363,11 +363,11 @@ cpr_dn_event_handler(struct msm_cpr *cpr, uint32_t new_volt)
 
 	chip_data = &cpr->config->cpr_mode_data[cpr->cpr_mode];
 
-	/**
-	 * FIXME: Need to handle a potential race condition between
-	 * freq switch handler and CPR interrupt handler here
-	 */
-	/* Set New PMIC volt */
+	/* 
+                                                            
+                                                      
+  */
+	/*                   */
 	set_volt_mV = (new_volt > chip_data->Vmin ? new_volt
 				: chip_data->Vmin);
 	rc = regulator_set_voltage(cpr->vreg_cx, set_volt_mV * 1000,
@@ -380,28 +380,28 @@ cpr_dn_event_handler(struct msm_cpr *cpr, uint32_t new_volt)
 	}
 	pr_debug("%s: Voltage set at %dmV\n", __func__, set_volt_mV);
 
-	/**
-	 * Save the new calibrated voltage to be re-used
-	 * whenever we return to same mode after a mode switch.
-	 */
+	/* 
+                                                 
+                                                        
+  */
 	chip_data->calibrated_mV = set_volt_mV;
 
-	/* Clear all the interrupts */
+	/*                          */
 	cpr_write_reg(cpr, RBIF_IRQ_CLEAR, 0x3F);
 
 	if (new_volt <= chip_data->Vmin) {
 		/*
-		 * Disable down interrupt to App after we hit Vmin
-		 * It shall be enabled after we service an up interrupt
-		 *
-		 * A race condition between freq switch handler and CPR
-		 * interrupt handler is possible. So, do not disable
-		 * interrupt if a freq switch already caused a mode
-		 * change since we need this interrupt in the new mode.
-		 */
+                                                    
+                                                         
+    
+                                                         
+                                                      
+                                                     
+                                                         
+   */
 		if (cpr->cpr_mode == cpr->prev_mode) {
-			/* Enable Auto ACK for CPR Down Flags
-			 * while DOWN_INT to App is disabled */
+			/*                                   
+                                        */
 			cpr_modify_reg(cpr, RBCPR_CTL,
 					SW_AUTO_CONT_NACK_DN_EN_M,
 					SW_AUTO_CONT_NACK_DN_EN);
@@ -409,7 +409,7 @@ cpr_dn_event_handler(struct msm_cpr *cpr, uint32_t new_volt)
 			pr_debug("%s: DOWN_INT disabled\n", __func__);
 		}
 	}
-	/* Acknowledge the Recommendation */
+	/*                                */
 	cpr_write_reg(cpr, RBIF_CONT_ACK_CMD, 0x1);
 }
 
@@ -424,37 +424,37 @@ static void cpr_set_vdd(struct msm_cpr *cpr, enum cpr_action action)
 	curr_volt = chip_data->calibrated_mV;
 
 	if (action == UP) {
-		/**
-		 * Using up margin in the comparison helps avoid having to
-		 * change up threshold values in chip register.
-		 */
+		/* 
+                                                            
+                                                 
+   */
 		if (error_step < (cpr->config->up_threshold +
 					cpr->config->up_margin)) {
-			/* FIXME: Avoid repeated dn interrupts if we are here */
+			/*                                                    */
 			pr_debug("UP_INT error step too small to set\n");
 			cpr_irq_clr_and_nack(cpr, BIT(4) | BIT(0));
 			return;
 		}
 
-		/* Calculte new PMIC voltage */
+		/*                           */
 		new_volt = curr_volt + (error_step * cpr->vp->step_size);
 		pr_debug("UP_INT: new_volt: %d\n", new_volt);
 		cpr_up_event_handler(cpr, new_volt);
 
 	} else if (action == DOWN) {
-		/**
-		 * Using down margin in the comparison helps avoid having to
-		 * change down threshold values in chip register.
-		 */
+		/* 
+                                                              
+                                                   
+   */
 		if (error_step < (cpr->config->dn_threshold +
 					cpr->config->dn_margin)) {
-			/* FIXME: Avoid repeated dn interrupts if we are here */
+			/*                                                    */
 			pr_debug("DOWN_INT error_step too small to set\n");
 			cpr_irq_clr_and_nack(cpr, BIT(2) | BIT(0));
 			return;
 		}
 
-		/* Calculte new PMIC voltage */
+		/*                           */
 		new_volt = curr_volt - (error_step * cpr->vp->step_size);
 		pr_debug("DOWN_INT: new_volt: %d\n", new_volt);
 		cpr_dn_event_handler(cpr, new_volt);
@@ -469,7 +469,7 @@ static irqreturn_t cpr_irq0_handler(int irq, void *dev_id)
 	reg_val = cpr_read_reg(cpr, RBIF_IRQ_STATUS);
 	ctl_reg = cpr_read_reg(cpr, RBCPR_CTL);
 
-	/* Following sequence of handling is as per each IRQ's priority */
+	/*                                                              */
 	if (reg_val & BIT(4)) {
 		pr_debug(" CPR:IRQ %d occured for UP Flag\n", irq);
 		cpr_set_vdd(cpr, UP);
@@ -487,7 +487,7 @@ static irqreturn_t cpr_irq0_handler(int irq, void *dev_id)
 		cpr_irq_clr_and_nack(cpr, BIT(5) | BIT(0));
 
 	} else if (reg_val & BIT(3)) {
-		/* SW_AUTO_CONT_ACK_EN is enabled */
+		/*                                */
 		pr_debug(" CPR:IRQ %d occured for Mid Flag\n", irq);
 	}
 	return IRQ_HANDLED;
@@ -500,29 +500,29 @@ static void cpr_config(struct msm_cpr *cpr)
 
 	chip_data = &cpr->config->cpr_mode_data[cpr->cpr_mode];
 
-	/* Program the SW vlevel */
+	/*                       */
 	cpr_modify_reg(cpr, RBIF_SW_VLEVEL, SW_VLEVEL_M,
 			cpr->config->sw_vlevel);
 
-	/* Set the floor and ceiling values */
+	/*                                  */
 	cpr->floor =  cpr->config->floor;
 	cpr->ceiling = cpr->config->ceiling;
 
-	/* Program the Ceiling & Floor values */
+	/*                                    */
 	cpr_modify_reg(cpr, RBIF_LIMIT, (CEILING_M | FLOOR_M),
 					((cpr->ceiling << 6) | cpr->floor));
 
-	/* Program the Up and Down Threshold values */
+	/*                                          */
 	cpr_modify_reg(cpr, RBCPR_CTL, UP_THRESHOLD_M | DN_THRESHOLD_M,
 			cpr->config->up_threshold << 24 |
 			cpr->config->dn_threshold << 28);
 
 	cpr->curr_osc = chip_data->ring_osc;
 
-	/**
-	 * Program the gate count and target values
-	 * for all the ring oscilators
-	 */
+	/* 
+                                            
+                               
+  */
 	while (cnt < NUM_OSC) {
 		cpr_modify_reg(cpr, RBCPR_GCNT_TARGET(cnt),
 				(GCNT_M | TARGET_M),
@@ -533,28 +533,28 @@ static void cpr_config(struct msm_cpr *cpr)
 		cnt++;
 	}
 
-	/* Configure the step quot */
+	/*                         */
 	cpr_2pt_kv_analysis(cpr, chip_data);
 
-	/**
-	 * Call the PMIC specific routine to set the voltage
-	 * Set with an extra step since it helps as per
-	 * characterization data.
-	 */
+	/* 
+                                                     
+                                                
+                          
+  */
 	chip_data->calibrated_mV +=  cpr->vp->step_size;
 	tmp_uV = chip_data->calibrated_mV * 1000;
 	rc = regulator_set_voltage(cpr->vreg_cx, tmp_uV, tmp_uV);
 	if (rc)
 		pr_err("%s: Voltage set failed %d\n", __func__, rc);
 
-	/* Program the Timer for default delay between CPR measurements */
+	/*                                                              */
 	delay_count = 0xFFFF;
 	cpr_write_reg(cpr, RBCPR_TIMER_INTERVAL, delay_count);
 
-	/* Enable the Timer */
+	/*                  */
 	cpr_modify_reg(cpr, RBCPR_CTL, TIMER_M, ENABLE_TIMER);
 
-	/* Enable Auto ACK for Mid interrupts */
+	/*                                    */
 	cpr_modify_reg(cpr, RBCPR_CTL, SW_AUTO_CONT_ACK_EN_M,
 			SW_AUTO_CONT_ACK_EN);
 }
@@ -568,7 +568,7 @@ static void cpr_mode_config(struct msm_cpr *cpr, enum cpr_mode mode)
 	pr_debug("%s: Switching to %s mode\n", __func__,
 		(mode == TURBO_MODE ? "TURBO" : "NORMAL"));
 
-	/* Configure the new mode */
+	/*                        */
 	cpr_config(cpr);
 }
 
@@ -596,10 +596,10 @@ cpr_freq_transition(struct notifier_block *nb, unsigned long val,
 			cpr_mode_config(cpr, TURBO_MODE);
 		else
 			cpr_mode_config(cpr, NORMAL_MODE);
-		/**
-		 * Enable all interrupts. One of them could be in a disabled
-		 * state if vdd had hit Vmax / Vmin earlier
-		 */
+		/* 
+                                                              
+                                             
+   */
 		cpr_irq_set(cpr, (UP_INT | DOWN_INT), 1);
 
 		enable_irq(cpr->irq);
@@ -718,7 +718,7 @@ static int __devinit msm_cpr_probe(struct platform_device *pdev)
 	if (!cpr)
 		return -ENOMEM;
 
-	/* Initialize platform_data */
+	/*                          */
 	cpr->config = pdata;
 
 	cpr_pdev = pdev;
@@ -757,7 +757,7 @@ static int __devinit msm_cpr_probe(struct platform_device *pdev)
 
 	mutex_init(&cpr->cpr_mutex);
 
-	/* Initialize the Voltage domain for CPR */
+	/*                                       */
 	cpr->vreg_cx = regulator_get(&pdev->dev, "vddx_cx");
 	if (IS_ERR(cpr->vreg_cx)) {
 		res = PTR_ERR(cpr->vreg_cx);
@@ -765,23 +765,23 @@ static int __devinit msm_cpr_probe(struct platform_device *pdev)
 		goto err_reg_get;
 	}
 
-	/* Assume current mode is TURBO Mode */
+	/*                                   */
 	cpr->cpr_mode = TURBO_MODE;
 	cpr->prev_mode = TURBO_MODE;
 
-	/* Initial configuration of CPR */
+	/*                              */
 	cpr_config(cpr);
 
 	platform_set_drvdata(pdev, cpr);
 
-	/* Initialze the Debugfs Entry for cpr */
+	/*                                     */
 	res = msm_cpr_debug_init(cpr->base);
 	if (res) {
 		pr_err("CPR: Debugfs Creation Failed\n");
 		goto err_ioremap;
 	}
 
-	/* Register the interrupt handler for IRQ 0 */
+	/*                                          */
 	res = request_threaded_irq(irqn, NULL, cpr_irq0_handler,
 			IRQF_TRIGGER_RISING, "msm-cpr-irq0", cpr);
 	if (res) {
@@ -789,16 +789,16 @@ static int __devinit msm_cpr_probe(struct platform_device *pdev)
 		goto err_ioremap;
 	}
 
-	/**
-	 * Enable the requested interrupt lines.
-	 * Do not enable MID_INT since we shall use
-	 * SW_AUTO_CONT_ACK_EN bit.
-	 */
+	/* 
+                                         
+                                            
+                            
+  */
 	irq_enabled = INT_MASK & ~MID_INT;
 	cpr_modify_reg(cpr, RBIF_IRQ_EN(cpr->config->irq_line),
 			INT_MASK, irq_enabled);
 
-	/* Enable the cpr */
+	/*                */
 	cpr_modify_reg(cpr, RBCPR_CTL, LOOP_EN_M, ENABLE_CPR);
 
 

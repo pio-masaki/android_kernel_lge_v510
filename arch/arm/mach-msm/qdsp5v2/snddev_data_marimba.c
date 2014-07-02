@@ -27,7 +27,7 @@
 #include <mach/qdsp5v2/mi2s.h>
 #include <mach/qdsp5v2/audio_acdb_def.h>
 
-/* define the value for BT_SCO */
+/*                             */
 #define BT_SCO_PCM_CTL_VAL (PCM_CTL__RPCM_WIDTH__LINEAR_V |\
 				PCM_CTL__TPCM_WIDTH__LINEAR_V)
 #define BT_SCO_DATA_FORMAT_PADDING (DATA_FORMAT_PADDING_INFO__RPCM_FORMAT_V |\
@@ -634,13 +634,13 @@ static struct adie_codec_hwsetting_entry idual_mic_endfire_settings[] = {
 		.osr = 256,
 		.actions = idual_mic_endfire_8KHz_osr256_actions,
 		.action_sz = ARRAY_SIZE(idual_mic_endfire_8KHz_osr256_actions),
-	}, /* 8KHz profile can be used for 16KHz */
+	}, /*                                    */
 	{
 		.freq_plan = 16000,
 		.osr = 256,
 		.actions = idual_mic_endfire_8KHz_osr256_actions,
 		.action_sz = ARRAY_SIZE(idual_mic_endfire_8KHz_osr256_actions),
-	}, /* 8KHz profile can be used for 48KHz */
+	}, /*                                    */
 	{
 		.freq_plan = 48000,
 		.osr = 256,
@@ -711,13 +711,13 @@ static struct adie_codec_hwsetting_entry idual_mic_broadside_settings[] = {
 		.osr = 256,
 		.actions = idual_mic_bs_8KHz_osr256_actions,
 		.action_sz = ARRAY_SIZE(idual_mic_bs_8KHz_osr256_actions),
-	}, /* 8KHz profile can be used for 16KHz */
+	}, /*                                    */
 	{
 		.freq_plan = 16000,
 		.osr = 256,
 		.actions = idual_mic_bs_8KHz_osr256_actions,
 		.action_sz = ARRAY_SIZE(idual_mic_bs_8KHz_osr256_actions),
-	}, /* 8KHz profile can be used for 16KHz */
+	}, /*                                    */
 	{
 		.freq_plan = 48000,
 		.osr = 256,
@@ -765,13 +765,13 @@ static struct adie_codec_hwsetting_entry ispk_dual_mic_ef_settings[] = {
 		.osr = 256,
 		.actions = ispk_dual_mic_ef_8KHz_osr256_actions,
 		.action_sz = ARRAY_SIZE(ispk_dual_mic_ef_8KHz_osr256_actions),
-	}, /* 8KHz profile can be used for 16Khz */
+	}, /*                                    */
 	{
 		.freq_plan = 16000,
 		.osr = 256,
 		.actions = ispk_dual_mic_ef_8KHz_osr256_actions,
 		.action_sz = ARRAY_SIZE(ispk_dual_mic_ef_8KHz_osr256_actions),
-	}, /* 8KHz profile can be used for 48KHz */
+	}, /*                                    */
 	{
 		.freq_plan = 48000,
 		.osr = 256,
@@ -815,13 +815,13 @@ static struct adie_codec_hwsetting_entry ispk_dual_mic_bs_settings[] = {
 		.osr = 256,
 		.actions = ispk_dual_mic_bs_8KHz_osr256_actions,
 		.action_sz = ARRAY_SIZE(ispk_dual_mic_bs_8KHz_osr256_actions),
-	}, /* 8KHz profile can be used for 16Khz */
+	}, /*                                    */
 	{
 		.freq_plan = 16000,
 		.osr = 256,
 		.actions = ispk_dual_mic_bs_8KHz_osr256_actions,
 		.action_sz = ARRAY_SIZE(ispk_dual_mic_bs_8KHz_osr256_actions),
-	}, /* 8KHz profile can be used for 48KHz */
+	}, /*                                    */
 	{
 		.freq_plan = 48000,
 		.osr = 256,
@@ -859,7 +859,7 @@ static struct adie_codec_action_unit itty_hs_mono_tx_8KHz_osr256_actions[] =
 	TTY_HEADSET_MONO_TX_8000_OSR_256;
 
 static struct adie_codec_hwsetting_entry itty_hs_mono_tx_settings[] = {
-	/* 8KHz, 16KHz, 48KHz TTY Tx devices can shared same set of actions */
+	/*                                                                  */
 	{
 		.freq_plan = 8000,
 		.osr = 256,
@@ -977,7 +977,7 @@ static struct adie_codec_hwsetting_entry ispeaker_tx_settings[] = {
 		.actions = ispeaker_tx_8KHz_osr256_actions,
 		.action_sz = ARRAY_SIZE(ispeaker_tx_8KHz_osr256_actions),
 	},
-	{ /* 8KHz profile is good for 16KHz */
+	{ /*                                */
 		.freq_plan = 16000,
 		.osr = 256,
 		.actions = ispeaker_tx_8KHz_osr256_actions,
@@ -1254,13 +1254,13 @@ static struct adie_codec_hwsetting_entry fluid_idual_mic_endfire_settings[] = {
 		.osr = 256,
 		.actions = fluid_idual_mic_ef_8KHz_osr256_actions,
 		.action_sz = ARRAY_SIZE(fluid_idual_mic_ef_8KHz_osr256_actions),
-	}, /* 8KHz profile can be used for 16KHz */
+	}, /*                                    */
 	{
 		.freq_plan = 16000,
 		.osr = 256,
 		.actions = fluid_idual_mic_ef_8KHz_osr256_actions,
 		.action_sz = ARRAY_SIZE(fluid_idual_mic_ef_8KHz_osr256_actions),
-	}, /* 8KHz profile can also be used for 48KHz */
+	}, /*                                         */
 	{
 		.freq_plan = 48000,
 		.osr = 256,

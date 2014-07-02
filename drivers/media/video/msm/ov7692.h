@@ -42,17 +42,17 @@ enum ov7692_setting {
 	RES_CAPTURE
 };
 enum ov7692_reg_update {
-	/* Sensor egisters that need to be updated during initialization */
+	/*                                                               */
 	REG_INIT,
-	/* Sensor egisters that needs periodic I2C writes */
+	/*                                                */
 	UPDATE_PERIODIC,
-	/* All the sensor Registers will be updated */
+	/*                                          */
 	UPDATE_ALL,
-	/* Not valid update */
+	/*                  */
 	UPDATE_INVALID
 };
 
-/*OV SENSOR SCCB*/
+/*              */
 struct OV7692_WREG {
 	uint8_t addr;
 	uint8_t data;
@@ -60,7 +60,7 @@ struct OV7692_WREG {
 } OV7692_WREG;
 
 #ifdef CONFIG_WEBCAM_OV7692_QRD
-/*  96MHz PCLK @ 24MHz MCLK */
+/*                          */
 struct reg_addr_val_pair_struct ov7692_init_settings_array[] = {
 	{0x12, 0x80},
 	{0x0e, 0x08},
@@ -97,7 +97,7 @@ struct reg_addr_val_pair_struct ov7692_init_settings_array[] = {
 	{0xcb, 0xe0},
 	{0xd0, 0x48},
 	{0x82, 0x03},
-	/*{0x0e, 0x00},*/
+	/*             */
 	{0x70, 0x00},
 	{0x71, 0x34},
 	{0x74, 0x28},
@@ -115,7 +115,7 @@ struct reg_addr_val_pair_struct ov7692_init_settings_array[] = {
 	{0x50, 0x9a},
 	{0x51, 0x80},
 	{0x4c, 0x7d},
-	/*{0x0e, 0x00},*/
+	/*             */
 	{0x85, 0x10},
 	{0x86, 0x00},
 	{0x87, 0x00},
@@ -182,37 +182,37 @@ struct reg_addr_val_pair_struct ov7692_init_settings_array[] = {
 	{0xa2, 0x0e},
 };
 #endif
-/* Exposure Compensation */
+/*                       */
 struct OV7692_WREG ov7692_exposure_compensation_lv0_tbl[] = {
-	/*@@ +1.7EV*/
+	/*         */
 	{0x24, 0xc0},
 	{0x25, 0xb8},
 	{0x26, 0xe6},
 };
 
 struct OV7692_WREG ov7692_exposure_compensation_lv1_tbl[] = {
-	/*@@ +1.0EV*/
+	/*         */
 	{0x24, 0xa8},
 	{0x25, 0xa0},
 	{0x26, 0xc4},
 };
 
 struct OV7692_WREG ov7692_exposure_compensation_lv2_default_tbl[] = {
-	/*@@ default*/
+	/*          */
 	{0x24, 0x86},
 	{0x25, 0x76},
 	{0x26, 0xb3},
 };
 
 struct OV7692_WREG ov7692_exposure_compensation_lv3_tbl[] = {
-	/*@@ -1.0EV*/
+	/*         */
 	{0x24, 0x70},
 	{0x25, 0x60},
 	{0x26, 0xa2},
 };
 
 struct OV7692_WREG ov7692_exposure_compensation_lv4_tbl[] = {
-	/*@@ -1.7EV*/
+	/*         */
 	{0x24, 0x50},
 	{0x25, 0x40},
 	{0x26, 0xa2},
@@ -228,20 +228,20 @@ struct OV7692_WREG ov7692_antibanding_auto_tbl[] = {
 };
 
 struct OV7692_WREG ov7692_antibanding_50z_tbl[] = {
-	/*Band 50Hz*/
+	/*         */
 	{0x13, 0x20, INVMASK(0x20)},
 	{0x14, 0x17, INVMASK(0x17)},
 };
 
 struct OV7692_WREG ov7692_antibanding_60z_tbl[] = {
-	/*Band 60Hz*/
+	/*         */
 	{0x13, 0x20, INVMASK(0x20)},
 	{0x14, 0x16, INVMASK(0x17)},
 };
 
-/*Saturation*/
+/*          */
 struct OV7692_WREG ov7692_saturation_lv0_tbl[] = {
-	/*Saturation level 0*/
+	/*                  */
 	{0x81, 0x33, INVMASK(0x33)},
 	{0xd8, 0x00, INVMASK(0xff)},
 	{0xd9, 0x00, INVMASK(0xff)},
@@ -249,7 +249,7 @@ struct OV7692_WREG ov7692_saturation_lv0_tbl[] = {
 };
 
 struct OV7692_WREG ov7692_saturation_lv1_tbl[] = {
-	/*Saturation level 1*/
+	/*                  */
 	{0x81, 0x33, INVMASK(0x33)},
 	{0xd8, 0x10, INVMASK(0xff)},
 	{0xd9, 0x10, INVMASK(0xff)},
@@ -257,7 +257,7 @@ struct OV7692_WREG ov7692_saturation_lv1_tbl[] = {
 };
 
 struct OV7692_WREG ov7692_saturation_lv2_tbl[] = {
-	/*Saturation level 2*/
+	/*                  */
 	{0x81, 0x33, INVMASK(0x33)},
 	{0xd8, 0x20, INVMASK(0xff)},
 	{0xd9, 0x20, INVMASK(0xff)},
@@ -266,7 +266,7 @@ struct OV7692_WREG ov7692_saturation_lv2_tbl[] = {
 };
 
 struct OV7692_WREG ov7692_saturation_lv3_tbl[] = {
-	/*Saturation level 3*/
+	/*                  */
 	{0x81, 0x33, INVMASK(0x33)},
 	{0xd8, 0x30, INVMASK(0xff)},
 	{0xd9, 0x30, INVMASK(0xff)},
@@ -275,7 +275,7 @@ struct OV7692_WREG ov7692_saturation_lv3_tbl[] = {
 };
 
 struct OV7692_WREG ov7692_saturation_default_lv4_tbl[] = {
-	/*Saturation level 4 (default)*/
+	/*                            */
 	{0x81, 0x33, INVMASK(0x33)},
 	{0xd8, 0x40, INVMASK(0xff)},
 	{0xd9, 0x40, INVMASK(0xff)},
@@ -283,7 +283,7 @@ struct OV7692_WREG ov7692_saturation_default_lv4_tbl[] = {
 };
 
 struct OV7692_WREG ov7692_saturation_lv5_tbl[] = {
-	/*Saturation level 5*/
+	/*                  */
 	{0x81, 0x33, INVMASK(0x33)},
 	{0xd8, 0x50, INVMASK(0xff)},
 	{0xd9, 0x50, INVMASK(0xff)},
@@ -291,7 +291,7 @@ struct OV7692_WREG ov7692_saturation_lv5_tbl[] = {
 };
 
 struct OV7692_WREG ov7692_saturation_lv6_tbl[] = {
-	/*Saturation level 6*/
+	/*                  */
 	{0x81, 0x33, INVMASK(0x33)},
 	{0xd8, 0x60, INVMASK(0xff)},
 	{0xd9, 0x60, INVMASK(0xff)},
@@ -299,7 +299,7 @@ struct OV7692_WREG ov7692_saturation_lv6_tbl[] = {
 };
 
 struct OV7692_WREG ov7692_saturation_lv7_tbl[] = {
-	/*Saturation level 7*/
+	/*                  */
 	{0x81, 0x33, INVMASK(0x33)},
 	{0xd8, 0x70, INVMASK(0xff)},
 	{0xd9, 0x70, INVMASK(0xff)},
@@ -307,14 +307,14 @@ struct OV7692_WREG ov7692_saturation_lv7_tbl[] = {
 };
 
 struct OV7692_WREG ov7692_saturation_lv8_tbl[] = {
-	/*Saturation level 8*/
+	/*                  */
 	{0x81, 0x33, INVMASK(0x33)},
 	{0xd8, 0x80, INVMASK(0xff)},
 	{0xd9, 0x80, INVMASK(0xff)},
 	{0xd2, 0x02, INVMASK(0xff)},
 };
 
-/*EFFECT*/
+/*      */
 struct OV7692_WREG ov7692_effect_normal_tbl[] = {
 	{0x81, 0x00, INVMASK(0x20)},
 	{0x28, 0x00, },
@@ -379,9 +379,9 @@ struct OV7692_WREG ov7692_effect_negative_tbl[] = {
 	{0xdb, 0x80, },
 };
 
-/*Contrast*/
+/*        */
 struct OV7692_WREG ov7692_contrast_lv0_tbl[] = {
-	/*Contrast -4*/
+	/*           */
 	{0xb2, 0x29},
 	{0xa3, 0x55},
 	{0xa4, 0x5b},
@@ -401,7 +401,7 @@ struct OV7692_WREG ov7692_contrast_lv0_tbl[] = {
 };
 
 struct OV7692_WREG ov7692_contrast_lv1_tbl[] = {
-	/*Contrast -3*/
+	/*           */
 	{0xb2, 0x20},
 	{0xa3, 0x43},
 	{0xa4, 0x4a},
@@ -421,7 +421,7 @@ struct OV7692_WREG ov7692_contrast_lv1_tbl[] = {
 };
 
 struct OV7692_WREG ov7692_contrast_lv2_tbl[] = {
-	/*Contrast -2*/
+	/*           */
 	{0xb2, 0x18},
 	{0xa3, 0x31},
 	{0xa4, 0x39},
@@ -441,7 +441,7 @@ struct OV7692_WREG ov7692_contrast_lv2_tbl[] = {
 };
 
 struct OV7692_WREG ov7692_contrast_lv3_tbl[] = {
-	/*Contrast -1*/
+	/*           */
 	{0xb2, 0x10},
 	{0xa3, 0x1f},
 	{0xa4, 0x28},
@@ -461,7 +461,7 @@ struct OV7692_WREG ov7692_contrast_lv3_tbl[] = {
 };
 
 struct OV7692_WREG ov7692_contrast_default_lv4_tbl[] = {
-	/*Contrast 0*/
+	/*          */
 	{0xb2, 0x6},
 	{0xa3, 0xb},
 	{0xa4, 0x15},
@@ -481,7 +481,7 @@ struct OV7692_WREG ov7692_contrast_default_lv4_tbl[] = {
 };
 
 struct OV7692_WREG ov7692_contrast_lv5_tbl[] = {
-	/*Contrast 1*/
+	/*          */
 	{0xb2, 0xc},
 	{0xa3, 0x4},
 	{0xa4, 0xc},
@@ -501,7 +501,7 @@ struct OV7692_WREG ov7692_contrast_lv5_tbl[] = {
 };
 
 struct OV7692_WREG ov7692_contrast_lv6_tbl[] = {
-	/*Contrast 2*/
+	/*          */
 	{0xb2, 0x1},
 	{0xa3, 0x2},
 	{0xa4, 0x9},
@@ -521,7 +521,7 @@ struct OV7692_WREG ov7692_contrast_lv6_tbl[] = {
 };
 
 struct OV7692_WREG ov7692_contrast_lv7_tbl[] = {
-	/*Contrast 3*/
+	/*          */
 	{0xb2, 0xc},
 	{0xa3, 0x4},
 	{0xa4, 0x8},
@@ -541,7 +541,7 @@ struct OV7692_WREG ov7692_contrast_lv7_tbl[] = {
 };
 
 struct OV7692_WREG ov7692_contrast_lv8_tbl[] = {
-	/*Contrast 4*/
+	/*          */
 	{0xb2, 0x1},
 	{0xa3, 0x4},
 	{0xa4, 0x4},
@@ -560,75 +560,75 @@ struct OV7692_WREG ov7692_contrast_lv8_tbl[] = {
 	{0xb1, 0xff},
 };
 
-	/*Sharpness*/
+	/*         */
 struct OV7692_WREG ov7692_sharpness_lv0_tbl[] = {
-	/*Sharpness 0*/
+	/*           */
 	{0xb4, 0x20, INVMASK(0x20)},
 	{0xb6, 0x00, INVMASK(0x1f)},
 };
 struct OV7692_WREG ov7692_sharpness_lv1_tbl[] = {
-	/*Sharpness 1*/
+	/*           */
 	{0xb4, 0x20, INVMASK(0x20)},
 	{0xb6, 0x01, INVMASK(0x1f)},
 };
 struct OV7692_WREG ov7692_sharpness_default_lv2_tbl[] = {
-	/*Sharpness Auto (Default)*/
+	/*                        */
 	{0xb4, 0x00, INVMASK(0x20)},
 	{0xb6, 0x00, INVMASK(0x1f)},
 };
 struct OV7692_WREG ov7692_sharpness_lv3_tbl[] = {
-	/*Sharpness 3*/
+	/*           */
 	{0xb4, 0x20, INVMASK(0x20)},
 	{0xb6, 0x66, INVMASK(0x04)},
 };
 struct OV7692_WREG ov7692_sharpness_lv4_tbl[] = {
-	/*Sharpness 4*/
+	/*           */
 	{0xb4, 0x20, INVMASK(0x20)},
 	{0xb6, 0x99, INVMASK(0x1f)},
 };
 struct OV7692_WREG ov7692_sharpness_lv5_tbl[] = {
-	/*Sharpness 5*/
+	/*           */
 	{0xb4, 0x20, INVMASK(0x20)},
 	{0xb6, 0xcc, INVMASK(0x1f)},
 };
 struct OV7692_WREG ov7692_sharpness_lv6_tbl[] = {
-	/*Sharpness 6*/
+	/*           */
 	{0xb4, 0x20, INVMASK(0x20)},
 	{0xb6, 0xff, INVMASK(0x1f)},
 };
 
-	/* ISO TYPE*/
+	/*         */
 struct OV7692_WREG ov7692_iso_type_auto[] = {
-	/*@@ISO Auto*/
+	/*          */
 	{0x14, 0x20, INVMASK(0x70)},
 };
 
 struct OV7692_WREG ov7692_iso_type_100[] = {
-	/*@@ISO 100*/
+	/*         */
 	{0x14, 0x00, INVMASK(0x70)},
 };
 
 struct OV7692_WREG ov7692_iso_type_200[] = {
-	/*@@ISO 200*/
+	/*         */
 	{0x14, 0x10, INVMASK(0x70)},
 };
 
 struct OV7692_WREG ov7692_iso_type_400[] = {
-	/*@@ISO 400*/
+	/*         */
 	{0x14, 0x20, INVMASK(0x70)},
 };
 
 struct OV7692_WREG ov7692_iso_type_800[] = {
-	/*@@ISO 800*/
+	/*         */
 	{0x14, 0x30, INVMASK(0x70)},
 };
 
 struct OV7692_WREG ov7692_iso_type_1600[] = {
-	/*@@ISO 1600*/
+	/*          */
 	{0x14, 0x40, INVMASK(0x70)},
 };
 
-	/*Light Mode*/
+	/*          */
 struct OV7692_WREG ov7692_wb_def[] = {
 	{0x13, 0xf7},
 	{0x15, 0x00},

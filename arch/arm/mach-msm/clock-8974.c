@@ -501,7 +501,7 @@ static void __iomem *virt_bases[N_BASES];
 #define APCS_CLOCK_BRANCH_ENA_VOTE 0x1484
 #define APCS_CLOCK_SLEEP_ENA_VOTE  0x1488
 
-/* Mux source select values */
+/*                          */
 #define cxo_source_val	0
 #define gpll0_source_val 1
 #define gpll1_source_val 2
@@ -3008,10 +3008,10 @@ static struct clk hdmipll_clk_src = {
 
 static struct clk_freq_tbl ftbl_mdss_extpclk_clk[] = {
 	/*
-	 * The zero rate is required since suspend/resume wipes out the HDMI PHY
-	 * registers. This entry allows the HDMI driver to switch the cached
-	 * rate to zero before suspend and back to the real rate after resume.
-	 */
+                                                                         
+                                                                     
+                                                                       
+  */
 	F_HDMI(        0, hdmipll, 1, 0, 0),
 	F_HDMI( 25200000, hdmipll, 1, 0, 0),
 	F_HDMI( 27030000, hdmipll, 1, 0, 0),
@@ -3022,8 +3022,8 @@ static struct clk_freq_tbl ftbl_mdss_extpclk_clk[] = {
 };
 
 /*
- * Unlike other clocks, the HDMI rate is adjusted through PLL
- * re-programming. It is also routed through an HID divider.
+                                                             
+                                                            
  */
 static void set_rate_hdmi(struct rcg_clk *rcg, struct clk_freq_tbl *nf)
 {
@@ -3949,7 +3949,7 @@ static struct branch_clk mmss_mmssnoc_axi_clk = {
 static struct branch_clk mmss_s0_axi_clk = {
 	.cbcr_reg = MMSS_S0_AXI_CBCR,
 	.parent = &axi_clk_src.c,
-	/* The bus driver needs set_rate to go through to the parent */
+	/*                                                           */
 	.has_sibling = 0,
 	.base = &virt_bases[MMSS_BASE],
 	.c = {
@@ -4762,9 +4762,9 @@ static int measure_clk_set_parent(struct clk *c, struct clk *parent)
 
 	spin_lock_irqsave(&local_clock_reg_lock, flags);
 	/*
-	 * Program the test vector, measurement period (sample_ticks)
-	 * and scaling multiplier.
-	 */
+                                                              
+                           
+  */
 	clk->sample_ticks = 0x10000;
 	clk->multiplier = 1;
 
@@ -4784,7 +4784,7 @@ static int measure_clk_set_parent(struct clk *c, struct clk *parent)
 		regval = BVAL(11, 0, measure_mux[i].debug_mux);
 		writel_relaxed(regval, MMSS_REG_BASE(MMSS_DEBUG_CLK_CTL_REG));
 
-		/* Activate debug clock output */
+		/*                             */
 		regval |= BIT(16);
 		writel_relaxed(regval, MMSS_REG_BASE(MMSS_DEBUG_CLK_CTL_REG));
 		break;
@@ -4794,7 +4794,7 @@ static int measure_clk_set_parent(struct clk *c, struct clk *parent)
 		regval = BVAL(11, 0, measure_mux[i].debug_mux);
 		writel_relaxed(regval, LPASS_REG_BASE(LPASS_DEBUG_CLK_CTL_REG));
 
-		/* Activate debug clock output */
+		/*                             */
 		regval |= BIT(20);
 		writel_relaxed(regval, LPASS_REG_BASE(LPASS_DEBUG_CLK_CTL_REG));
 		break;
@@ -4816,46 +4816,46 @@ static int measure_clk_set_parent(struct clk *c, struct clk *parent)
 		return -EINVAL;
 	}
 
-	/* Set debug mux clock index */
+	/*                           */
 	regval = BVAL(8, 0, clk_sel);
 	writel_relaxed(regval, GCC_REG_BASE(GCC_DEBUG_CLK_CTL_REG));
 
-	/* Activate debug clock output */
+	/*                             */
 	regval |= BIT(16);
 	writel_relaxed(regval, GCC_REG_BASE(GCC_DEBUG_CLK_CTL_REG));
 
-	/* Make sure test vector is set before starting measurements. */
+	/*                                                            */
 	mb();
 	spin_unlock_irqrestore(&local_clock_reg_lock, flags);
 
 	return 0;
 }
 
-/* Sample clock for 'ticks' reference clock ticks. */
+/*                                                 */
 static u32 run_measurement(unsigned ticks)
 {
-	/* Stop counters and set the XO4 counter start value. */
+	/*                                                    */
 	writel_relaxed(ticks, GCC_REG_BASE(CLOCK_FRQ_MEASURE_CTL_REG));
 
-	/* Wait for timer to become ready. */
+	/*                                 */
 	while ((readl_relaxed(GCC_REG_BASE(CLOCK_FRQ_MEASURE_STATUS_REG)) &
 			BIT(25)) != 0)
 		cpu_relax();
 
-	/* Run measurement and wait for completion. */
+	/*                                          */
 	writel_relaxed(BIT(20)|ticks, GCC_REG_BASE(CLOCK_FRQ_MEASURE_CTL_REG));
 	while ((readl_relaxed(GCC_REG_BASE(CLOCK_FRQ_MEASURE_STATUS_REG)) &
 			BIT(25)) == 0)
 		cpu_relax();
 
-	/* Return measured ticks. */
+	/*                        */
 	return readl_relaxed(GCC_REG_BASE(CLOCK_FRQ_MEASURE_STATUS_REG)) &
 				BM(24, 0);
 }
 
 /*
- * Perform a hardware rate measurement for a given clock.
- * FOR DEBUG USE ONLY: Measurements take ~15 ms!
+                                                         
+                                                
  */
 static unsigned long measure_clk_get_rate(struct clk *c)
 {
@@ -4873,29 +4873,29 @@ static unsigned long measure_clk_get_rate(struct clk *c)
 
 	spin_lock_irqsave(&local_clock_reg_lock, flags);
 
-	/* Enable CXO/4 and RINGOSC branch. */
+	/*                                  */
 	gcc_xo4_reg_backup = readl_relaxed(GCC_REG_BASE(GCC_XO_DIV4_CBCR_REG));
 	writel_relaxed(0x1, GCC_REG_BASE(GCC_XO_DIV4_CBCR_REG));
 
 	/*
-	 * The ring oscillator counter will not reset if the measured clock
-	 * is not running.  To detect this, run a short measurement before
-	 * the full measurement.  If the raw results of the two are the same
-	 * then the clock must be off.
-	 */
+                                                                    
+                                                                   
+                                                                     
+                               
+  */
 
-	/* Run a short measurement. (~1 ms) */
+	/*                                  */
 	raw_count_short = run_measurement(0x1000);
-	/* Run a full measurement. (~14 ms) */
+	/*                                  */
 	raw_count_full = run_measurement(clk->sample_ticks);
 
 	writel_relaxed(gcc_xo4_reg_backup, GCC_REG_BASE(GCC_XO_DIV4_CBCR_REG));
 
-	/* Return 0 if the clock is off. */
+	/*                               */
 	if (raw_count_full == raw_count_short) {
 		ret = 0;
 	} else {
-		/* Compute rate in Hz. */
+		/*                     */
 		raw_count_full = ((raw_count_full * 10) + 15) * 4800000;
 		do_div(raw_count_full, ((clk->sample_ticks * 10) + 35));
 		ret = (raw_count_full * clk->multiplier);
@@ -4908,7 +4908,7 @@ static unsigned long measure_clk_get_rate(struct clk *c)
 
 	return ret;
 }
-#else /* !CONFIG_DEBUG_FS */
+#else /*                  */
 static int measure_clk_set_parent(struct clk *clk, struct clk *parent)
 {
 	return -EINVAL;
@@ -4918,7 +4918,7 @@ static unsigned long measure_clk_get_rate(struct clk *clk)
 {
 	return 0;
 }
-#endif /* CONFIG_DEBUG_FS */
+#endif /*                 */
 
 static struct clk_ops clk_ops_measure = {
 	.set_parent = measure_clk_set_parent,
@@ -5083,7 +5083,7 @@ static struct clk_lookup msm_clocks_8974[] = {
 	CLK_LOOKUP("cal_clk", gcc_usb_hsic_io_cal_clk.c,  "msm_hsic_host"),
 	CLK_LOOKUP("core_clk", gcc_usb_hsic_system_clk.c, "msm_hsic_host"),
 
-	/* Multimedia clocks */
+	/*                   */
 	CLK_LOOKUP("bus_clk_src", axi_clk_src.c, ""),
 	CLK_LOOKUP("bus_clk", mmss_mmssnoc_axi_clk.c, ""),
 	CLK_LOOKUP("core_clk", mdss_edpaux_clk.c, ""),
@@ -5184,7 +5184,7 @@ static struct clk_lookup msm_clocks_8974[] = {
 	CLK_LOOKUP("mem_clk",  venus0_ocmemnoc_clk.c, "fdc00000.qcom,vidc"),
 
 
-	/* LPASS clocks */
+	/*              */
 	CLK_LOOKUP("bus_clk", audio_core_ixfabric_clk.c, ""),
 	CLK_LOOKUP("core_clk", audio_core_slimbus_core_clk.c, "fe12f000.slim"),
 	CLK_LOOKUP("iface_clk", audio_core_slimbus_lfabif_clk.c,
@@ -5362,7 +5362,7 @@ static struct pll_config_regs mmpll0_regs __initdata = {
 	.base = &virt_bases[MMSS_BASE],
 };
 
-/* MMPLL0 at 800 MHz, main output enabled. */
+/*                                         */
 static struct pll_config mmpll0_config __initdata = {
 	.l = 0x29,
 	.m = 0x2,
@@ -5388,7 +5388,7 @@ static struct pll_config_regs mmpll1_regs __initdata = {
 	.base = &virt_bases[MMSS_BASE],
 };
 
-/* MMPLL1 at 1000 MHz, main output enabled. */
+/*                                          */
 static struct pll_config mmpll1_config __initdata = {
 	.l = 0x2C,
 	.m = 0x1,
@@ -5414,7 +5414,7 @@ static struct pll_config_regs mmpll3_regs __initdata = {
 	.base = &virt_bases[MMSS_BASE],
 };
 
-/* MMPLL3 at 820 MHz, main output enabled. */
+/*                                         */
 static struct pll_config mmpll3_config __initdata = {
 	.l = 0x2A,
 	.m = 0x11,
@@ -5440,7 +5440,7 @@ static struct pll_config_regs lpapll0_regs __initdata = {
 	.base = &virt_bases[LPASS_BASE],
 };
 
-/* LPAPLL0 at 491.52 MHz, main output enabled. */
+/*                                             */
 static struct pll_config lpapll0_config __initdata = {
 	.l = 0x33,
 	.m = 0x1,
@@ -5468,7 +5468,7 @@ static struct pll_config lpapll0_config __initdata = {
 #define HW_CONTROL_MASK		BIT(1)
 #define SW_COLLAPSE_MASK	BIT(0)
 
-/* Wait 2^n CXO cycles between all states. Here, n=2 (4 cycles). */
+/*                                                               */
 #define EN_REST_WAIT_VAL	(0x2 << 20)
 #define EN_FEW_WAIT_VAL		(0x2 << 16)
 #define CLK_DIS_WAIT_VAL	(0x2 << 12)
@@ -5503,24 +5503,24 @@ static void __init reg_init(void)
 	writel_relaxed(regval, GCC_REG_BASE(APCS_GPLL_ENA_VOTE_REG));
 
 	/*
-	 * TODO: Confirm that no clocks need to be voted on in this sleep vote
-	 * register.
-	 */
+                                                                       
+             
+  */
 	writel_relaxed(0x0, GCC_REG_BASE(APCS_CLOCK_SLEEP_ENA_VOTE));
 
 	/*
-	 * TODO: The following sequence enables the LPASS audio core GDSC.
-	 * Remove when this becomes unnecessary.
-	 */
+                                                                   
+                                         
+  */
 
 	/*
-	 * Disable HW trigger: collapse/restore occur based on registers writes.
-	 * Disable SW override: Use hardware state-machine for sequencing.
-	 */
+                                                                         
+                                                                   
+  */
 	regval = readl_relaxed(LPASS_REG_BASE(AUDIO_CORE_GDSCR));
 	regval &= ~(HW_CONTROL_MASK | SW_OVERRIDE_MASK);
 
-	/* Configure wait time between states. */
+	/*                                     */
 	regval &= ~(EN_REST_WAIT_MASK | EN_FEW_WAIT_MASK | CLK_DIS_WAIT_MASK);
 	regval |= EN_REST_WAIT_VAL | EN_FEW_WAIT_VAL | CLK_DIS_WAIT_VAL;
 	writel_relaxed(regval, LPASS_REG_BASE(AUDIO_CORE_GDSCR));
@@ -5553,33 +5553,33 @@ static void __init msm8974_clock_post_init(void)
 	clk_set_rate(&ocmemnoc_clk_src.c, 282000000);
 
 	/*
-	 * Hold an active set vote at a rate of 40MHz for the MMSS NOC AHB
-	 * source. Sleep set vote is 0.
-	 */
+                                                                   
+                                
+  */
 	clk_set_rate(&mmssnoc_ahb_a_clk.c, 40000000);
 	clk_prepare_enable(&mmssnoc_ahb_a_clk.c);
 
 	/*
-	 * Hold an active set vote for CXO; this is because CXO is expected
-	 * to remain on whenever CPUs aren't power collapsed.
-	 */
+                                                                    
+                                                      
+  */
 	clk_prepare_enable(&cxo_a_clk_src.c);
 
-	/* TODO: Temporarily enable a clock to allow access to LPASS core
-	 * registers.
-	 */
+	/*                                                               
+              
+  */
 	clk_prepare_enable(&audio_core_ixfabric_clk.c);
 
 	/*
-	 * TODO: Temporarily enable NOC configuration AHB clocks. Remove when
-	 * the bus driver is ready.
-	 */
+                                                                      
+                            
+  */
 	clk_prepare_enable(&gcc_mmss_noc_cfg_ahb_clk.c);
 	clk_prepare_enable(&gcc_ocmem_noc_cfg_ahb_clk.c);
 
 	mdss_clock_setup();
 
-	/* Set rates for single-rate clocks. */
+	/*                                   */
 	clk_set_rate(&usb30_master_clk_src.c,
 			usb30_master_clk_src.freq_tbl[0].freq_hz);
 	clk_set_rate(&tsif_ref_clk_src.c,
@@ -5670,11 +5670,11 @@ static void __init msm8974_clock_pre_init(void)
 		panic("clock-8974: Unable to get the vdd_dig regulator!");
 
 	/*
-	 * TODO: Set a voltage and enable vdd_dig, leaving the voltage high
-	 * until late_init. This may not be necessary with clock handoff;
-	 * Investigate this code on a real non-simulator target to determine
-	 * its necessity.
-	 */
+                                                                    
+                                                                  
+                                                                     
+                  
+  */
 	vote_vdd_level(&vdd_dig, VDD_DIG_HIGH);
 	rpm_regulator_enable(vdd_dig_reg);
 
@@ -5694,7 +5694,7 @@ static void __init msm8974_rumi_clock_pre_init(void)
 	if (!virt_bases[GCC_BASE])
 		panic("clock-8974: Unable to ioremap GCC memory!");
 
-	/* SDCC clocks are partially emulated in the RUMI */
+	/*                                                */
 	sdcc1_apps_clk_src.freq_tbl = ftbl_gcc_sdcc_apps_rumi_clk;
 	sdcc2_apps_clk_src.freq_tbl = ftbl_gcc_sdcc_apps_rumi_clk;
 	sdcc3_apps_clk_src.freq_tbl = ftbl_gcc_sdcc_apps_rumi_clk;
@@ -5705,11 +5705,11 @@ static void __init msm8974_rumi_clock_pre_init(void)
 		panic("clock-8974: Unable to get the vdd_dig regulator!");
 
 	/*
-	 * TODO: Set a voltage and enable vdd_dig, leaving the voltage high
-	 * until late_init. This may not be necessary with clock handoff;
-	 * Investigate this code on a real non-simulator target to determine
-	 * its necessity.
-	 */
+                                                                    
+                                                                  
+                                                                     
+                  
+  */
 	vote_vdd_level(&vdd_dig, VDD_DIG_HIGH);
 	rpm_regulator_enable(vdd_dig_reg);
 }

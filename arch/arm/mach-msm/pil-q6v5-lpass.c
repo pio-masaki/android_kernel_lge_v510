@@ -76,10 +76,10 @@ static int pil_lpass_shutdown(struct pil_desc *pil)
 	pil_q6v5_halt_axi_port(pil, drv->axi_halt_base);
 
 	/*
-	 * If the shutdown function is called before the reset function, clocks
-	 * will not be enabled yet. Enable them here so that register writes
-	 * performed during the shutdown succeed.
-	 */
+                                                                        
+                                                                     
+                                          
+  */
 	if (drv->is_booted == false)
 		pil_lpass_enable_clks(drv);
 
@@ -100,7 +100,7 @@ static int pil_lpass_reset(struct pil_desc *pil)
 	if (ret)
 		return ret;
 
-	/* Program Image Address */
+	/*                       */
 	writel_relaxed(((drv->start_addr >> 4) & 0x0FFFFFF0),
 				drv->reg_base + QDSP6SS_RST_EVB);
 

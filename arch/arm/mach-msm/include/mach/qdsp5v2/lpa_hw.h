@@ -15,7 +15,7 @@
 
 #define LPA_MAX_BUF_SIZE 0x30000
 
-/* LPA Output config registers */
+/*                             */
 enum {
 	LPA_OBUF_CONTROL	= 0x00000000,
 	LPA_OBUF_CODEC		= 0x00000004,
@@ -56,7 +56,7 @@ enum {
 	LPA_OBUF_TESTBUS		= 0x00000094,
 };
 
-/* OBUF_CODEC definition */
+/*                       */
 #define LPA_OBUF_CODEC_RESERVED31_22_BMSK        0xffc00000
 #define LPA_OBUF_CODEC_RESERVED31_22_SHFT        0x16
 #define LPA_OBUF_CODEC_LOAD_BMSK                 0x200000
@@ -74,7 +74,7 @@ enum {
 #define LPA_OBUF_CODEC_NUM_CHAN_BMSK             0xf
 #define LPA_OBUF_CODEC_NUM_CHAN_SHFT             0
 
-/* OBUF_CONTROL definition */
+/*                         */
 #define LPA_OBUF_CONTROL_RESERVED31_9_BMSK       0xfffffe00
 #define LPA_OBUF_CONTROL_RESERVED31_9_SHFT       0x9
 #define LPA_OBUF_CONTROL_TEST_EN_BMSK            0x100
@@ -96,75 +96,75 @@ enum {
 #define LPA_OBUF_CONTROL_SB_EN_BMSK              0x1
 #define LPA_OBUF_CONTROL_SB_EN_SHFT              0
 
-/* OBUF_RESET definition */
+/*                       */
 #define LPA_OBUF_RESETS_MISR_RESET 0x1
 #define LPA_OBUF_RESETS_OVERALL_RESET 0x2
 
-/* OBUF_STATUS definition */
+/*                        */
 #define LPA_OBUF_STATUS_RESET_DONE 0x80000
 #define LPA_OBUF_STATUS_LLB_CLR_BMSK 0x40000
 #define LPA_OBUF_STATUS_LLB_CLR_SHFT 0x12
 
-/* OBUF_HLB_MIN_ADDR definition */
+/*                              */
 #define LPA_OBUF_HLB_MIN_ADDR_LOAD_BMSK 0x40000
 #define LPA_OBUF_HLB_MIN_ADDR_SEG_BMSK 0x3e000
 
-/* OBUF_HLB_MAX_ADDR definition */
+/*                              */
 #define LPA_OBUF_HLB_MAX_ADDR_SEG_BMSK 0x3fff8
 
-/* OBUF_LLB_MIN_ADDR definition */
+/*                              */
 #define LPA_OBUF_LLB_MIN_ADDR_LOAD_BMSK 0x40000
 #define LPA_OBUF_LLB_MIN_ADDR_SEG_BMSK 0x3e000
 
-/* OBUF_LLB_MAX_ADDR definition */
+/*                              */
 #define LPA_OBUF_LLB_MAX_ADDR_SEG_BMSK 0x3ff8
 #define LPA_OBUF_LLB_MAX_ADDR_SEG_SHFT 0x3
 
-/* OBUF_SB_MIN_ADDR definition */
+/*                             */
 #define LPA_OBUF_SB_MIN_ADDR_LOAD_BMSK 0x4000
 #define LPA_OBUF_SB_MIN_ADDR_SEG_BMSK 0x3e00
 
-/* OBUF_SB_MAX_ADDR definition */
+/*                             */
 #define LPA_OBUF_SB_MAX_ADDR_SEG_BMSK 0x3ff8
 
-/* OBUF_MEMORY_CONTROL definition */
+/*                                */
 #define LPA_OBUF_MEM_CTL_PWRUP_BMSK 0xfff
 #define LPA_OBUF_MEM_CTL_PWRUP_SHFT 0x0
 
-/* OBUF_INTR_ENABLE definition */
+/*                             */
 #define LPA_OBUF_INTR_EN_BMSK 0x3
 
-/* OBUF_WMARK_ASSIGN definition */
+/*                              */
 #define LPA_OBUF_WMARK_ASSIGN_BMSK 0xF
 #define LPA_OBUF_WMARK_ASSIGN_DONE 0xF
 
-/* OBUF_WMARK_n_LLB definition */
+/*                             */
 #define LPA_OBUF_WMARK_n_LLB_ADDR(n)  (0x00000034 + 0x4 * (n))
 #define LPA_OBUF_LLB_WMARK_CTRL_BMSK 0xc0000
 #define LPA_OBUF_LLB_WMARK_CTRL_SHFT 0x12
 #define LPA_OBUF_LLB_WMARK_MAP_BMSK  0xf00000
 #define LPA_OBUF_LLB_WMARK_MAP_SHFT  0x14
 
-/* OBUF_WMARK_SB definition */
+/*                          */
 #define LPA_OBUF_SB_WMARK_CTRL_BMSK 0xc0000
 #define LPA_OBUF_SB_WMARK_CTRL_SHFT 0x12
 #define LPA_OBUF_SB_WMARK_MAP_BMSK  0xf00000
 #define LPA_OBUF_SB_WMARK_MAP_SHFT  0x14
 
-/* OBUF_WMARK_HLB definition */
+/*                           */
 #define LPA_OBUF_HLB_WMARK_CTRL_BMSK 0xc0000
 #define LPA_OBUF_HLB_WMARK_CTRL_SHFT 0x12
 #define LPA_OBUF_HLB_WMARK_MAP_BMSK  0xf00000
 #define LPA_OBUF_HLB_WMARK_MAP_SHFT  0x14
 
-/* OBUF_UTC_CONFIG definition */
+/*                            */
 #define LPA_OBUF_UTC_CONFIG_MAP_BMSK 0xf0
 #define LPA_OBUF_UTC_CONFIG_MAP_SHFT 0x4
 #define LPA_OBUF_UTC_CONFIG_EN_BMSK  0x1
 #define LPA_OBUF_UTC_CONFIG_EN_SHFT  0
 #define LPA_OBUF_UTC_CONFIG_NO_INTR 0xF
 
-/* OBUF_ACK definition */
+/*                     */
 #define LPA_OBUF_ACK_RESET_DONE_BMSK   0x80000
 #define LPA_OBUF_ACK_RESET_DONE_SHFT   0x13
 enum {
@@ -194,14 +194,14 @@ enum {
 };
 
 enum {
-	LPA_BUF_ID_HLB,   /* HLB buffer */
-	LPA_BUF_ID_LLB,   /* LLB buffer */
-	LPA_BUF_ID_SB,    /* SB buffer */
+	LPA_BUF_ID_HLB,   /*            */
+	LPA_BUF_ID_LLB,   /*            */
+	LPA_BUF_ID_SB,    /*           */
 	LPA_BUF_ID_UTC,
 };
 
-/* WB_CODEC & SDAC can only support 16bit mono/stereo.
- * MI2S can bit format and number of channel
+/*                                                    
+                                            
  */
 enum {
 	LPA_NUM_CHAN_MONO		= 0x0000,
@@ -219,18 +219,18 @@ enum {
 };
 
 struct lpa_mem_bank_select {
-  u32    b0:1;       /*RAM bank 0 16KB=2Kx64(0) */
-  u32    b1:1;       /*RAM bank 1 16KB=2Kx64(0) */
-  u32    b2:1;       /*RAM bank 2 16KB=2Kx64(0) */
-  u32    b3:1;       /*RAM bank 3 16KB=2Kx64(0) */
-  u32    b4:1;       /*RAM bank 4 16KB=2Kx64(1) */
-  u32    b5:1;       /*RAM bank 5 16KB=2Kx64(1) */
-  u32    b6:1;       /*RAM bank 6 16KB=2Kx64(1) */
-  u32    b7:1;       /*RAM bank 7 16KB=2Kx64(1) */
-  u32    b8:1;       /*RAM bank 8 16KB=4Kx32(0) */
-  u32    b9:1;       /*RAM bank 9 16KB=4Kx32(1) */
-  u32    b10:1;      /*RAM bank 10 16KB=4Kx32(2) */
-  u32    llb:1;      /*RAM bank 11 16KB=4Kx32(3) */
+  u32    b0:1;       /*                         */
+  u32    b1:1;       /*                         */
+  u32    b2:1;       /*                         */
+  u32    b3:1;       /*                         */
+  u32    b4:1;       /*                         */
+  u32    b5:1;       /*                         */
+  u32    b6:1;       /*                         */
+  u32    b7:1;       /*                         */
+  u32    b8:1;       /*                         */
+  u32    b9:1;       /*                         */
+  u32    b10:1;      /*                          */
+  u32    llb:1;      /*                          */
 };
 
 #endif

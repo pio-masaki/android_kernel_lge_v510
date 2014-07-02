@@ -107,7 +107,7 @@ static int q6_qcelp_flowcontrol(void *data)
 			fc->fc_buff[buff_index].actual_size = xfer;
 		}
 		mutex_unlock(&(fc->fc_buff[buff_index].lock));
-		/*wake up client, if any*/
+		/*                      */
 		wake_up(&fc->fc_wq);
 
 		buff_index++;
@@ -182,7 +182,7 @@ static long q6_qcelp_in_ioctl(struct file *file, unsigned int cmd,
 			}
 		}
 
-		/*allocate flow control buffers*/
+		/*                             */
 		fc = qcelp->qcelp_fc;
 		size = qcelp->str_cfg.buffer_size;
 		for (i = 0; i < QCELP_FC_BUFF_CNT; ++i) {
@@ -199,7 +199,7 @@ static long q6_qcelp_in_ioctl(struct file *file, unsigned int cmd,
 			fc->fc_buff[i].actual_size = 0;
 		}
 
-		/*create flow control thread*/
+		/*                          */
 		fc->task = kthread_run(q6_qcelp_flowcontrol,
 				qcelp, "qcelp_flowcontrol");
 		if (IS_ERR(fc->task)) {
@@ -210,7 +210,7 @@ static long q6_qcelp_in_ioctl(struct file *file, unsigned int cmd,
 		}
 		break;
 fc_fail:
-		/*free flow control buffers*/
+		/*                         */
 		--i;
 		for (; i >=  0; i--) {
 			kfree(fc->fc_buff[i].data);
@@ -345,7 +345,7 @@ static int q6_qcelp_in_open(struct inode *inode, struct file *file)
 		fc->fc_buff[i].size = 0;
 		fc->fc_buff[i].actual_size = 0;
 	}
-	/*initialize wait queue head*/
+	/*                          */
 	init_waitqueue_head(&fc->fc_wq);
 	return 0;
 }
@@ -369,7 +369,7 @@ static ssize_t q6_qcelp_in_read(struct file *file, char __user *buf,
 	}
 	fc = qcelp->qcelp_fc;
 	while (count > xfer) {
-		/*wait for buffer to full*/
+		/*                       */
 		if (fc->fc_buff[fc->buff_index].empty != 0) {
 			res = wait_event_interruptible_timeout(fc->fc_wq,
 				(fc->fc_buff[fc->buff_index].empty == 0),
@@ -388,7 +388,7 @@ static ssize_t q6_qcelp_in_read(struct file *file, char __user *buf,
 				goto fail;
 			}
 		}
-		/*lock the buffer*/
+		/*               */
 		mutex_lock(&(fc->fc_buff[fc->buff_index].lock));
 		xfer = fc->fc_buff[fc->buff_index].actual_size;
 
@@ -438,7 +438,7 @@ static int q6_qcelp_in_release(struct inode *inode, struct file *file)
 	kthread_stop(fc->task);
 	fc->task = NULL;
 
-	/*free flow control buffers*/
+	/*                         */
 	for (i = 0; i < QCELP_FC_BUFF_CNT; ++i) {
 		kfree(fc->fc_buff[i].data);
 		fc->fc_buff[i].data = NULL;

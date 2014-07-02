@@ -167,25 +167,25 @@ struct mdss_mdp_format_params {
 	u8 chroma_sample;
 	u8 solid_fill;
 	u8 fetch_planes;
-	u8 unpack_align_msb;	/* 0 to LSB, 1 to MSB */
-	u8 unpack_tight;	/* 0 for loose, 1 for tight */
-	u8 unpack_count;	/* 0 = 1 component, 1 = 2 component ... */
+	u8 unpack_align_msb;	/*                    */
+	u8 unpack_tight;	/*                          */
+	u8 unpack_count;	/*                                      */
 	u8 bpp;
-	u8 alpha_enable;	/*  source has alpha */
+	u8 alpha_enable;	/*                   */
 
 	/*
-	 * number of bits for source component,
-	 * 0 = 1 bit, 1 = 2 bits, 2 = 6 bits, 3 = 8 bits
-	 */
-	u8 a_bit;	/* component 3, alpha */
-	u8 r_bit;	/* component 2, R_Cr */
-	u8 b_bit;	/* component 1, B_Cb */
-	u8 g_bit;	/* component 0, G_lumz */
+                                        
+                                                 
+  */
+	u8 a_bit;	/*                    */
+	u8 r_bit;	/*                   */
+	u8 b_bit;	/*                   */
+	u8 g_bit;	/*                     */
 
 	/*
-	 * unpack pattern
-	 * A = C3, R = C2, B = C1, G = C0
-	 */
+                  
+                                  
+  */
 	u8 element3;
 	u8 element2;
 	u8 element1;
@@ -323,4 +323,4 @@ int mdss_mdp_get_img(struct ion_client *iclient, struct msmfb_data *img,
 int mdss_mdp_wb_kickoff(struct mdss_mdp_ctl *ctl);
 int mdss_mdp_wb_ioctl_handler(struct msm_fb_data_type *mfd, u32 cmd, void *arg);
 
-#endif /* MDSS_MDP_H */
+#endif /*            */

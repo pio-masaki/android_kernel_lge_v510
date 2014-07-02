@@ -157,14 +157,14 @@ struct rpc_audmgr_enable_client_args {
 #define AUDMGR_VERS_COMP_VER3 0x00030001
 
 struct rpc_audmgr_cb_func_ptr {
-	uint32_t cb_id; /* cb_func */
-	uint32_t status; /* Audmgr status */
-	uint32_t set_to_one;  /* Pointer status (1 = valid, 0  = invalid) */
+	uint32_t cb_id; /*         */
+	uint32_t status; /*               */
+	uint32_t set_to_one;  /*                                          */
 	uint32_t disc;
-	/* disc = AUDMGR_STATUS_READY => data=handle
-	   disc = AUDMGR_STATUS_CODEC_CONFIG => data = volume
-	   disc = AUDMGR_STATUS_DISABLED => data =status_disabled
-	   disc = AUDMGR_STATUS_VOLUME_CHANGE => data = volume_change */
+	/*                                          
+                                                      
+                                                          
+                                                               */
 	union {
 		uint32_t handle;
 		uint32_t volume;
@@ -204,14 +204,14 @@ int audmgr_disable(struct audmgr *am);
 typedef void (*audpp_event_func)(void *private, unsigned id, uint16_t *msg);
 typedef void (*audrec_event_func)(void *private, unsigned id, uint16_t *msg);
 
-/* worst case delay of 1sec for response */
+/*                                       */
 #define MSM_AUD_DECODER_WAIT_MS 1000
 #define MSM_AUD_MODE_TUNNEL  0x00000100
 #define MSM_AUD_MODE_NONTUNNEL  0x00000200
 #define MSM_AUD_DECODER_MASK  0x0000FFFF
 #define MSM_AUD_OP_MASK  0xFFFF0000
 
-/*Playback mode*/
+/*             */
 #define NON_TUNNEL_MODE_PLAYBACK 1
 #define TUNNEL_MODE_PLAYBACK 0
 

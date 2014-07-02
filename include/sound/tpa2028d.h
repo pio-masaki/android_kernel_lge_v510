@@ -14,13 +14,13 @@
  */
 
 /*
- * Revision 0.1 -- BJB -- 3/18/10 -- Original Version
- * Revision 0.2 -- BJB -- 3/19/10 -- Corrected dB to DB in Register 0x01, Added function prototypes.
- * Revision 0.3 -- AME -- 5/17/10 -- No changes to TPA2055D3_FDK.h file.
- *
+                                                     
+                                                                                                    
+                                                                        
+  
  */
 
-/* ---- I2C ADDR -----*/
+/*                    */
 #define IC_CONTROL		(char) 0x01
 #define AGC_ATTACK_CONTROL	(char) 0x02
 #define AGC_RELEASE_CONTROL	(char) 0x03
@@ -41,9 +41,8 @@ void set_amp_gain(int amp_no, int num);
 void set_amp_gain(int num);
 #endif
 
-#if defined( CONFIG_ANDROID_SW_IRRC) && defined(CONFIG_MACH_APQ8064_AWIFI)
+#ifdef CONFIG_ANDROID_IRRC
 void irrc_amp_off(int amp_no, int num);
-
 #endif
 
 struct audio_amp_platform_data {
@@ -54,6 +53,6 @@ struct audio_amp_platform_data {
 	char agc_fixed_gain;
 };
 
-/* SPK FUNCTION */
+/*              */
 #define SPK_ON 1
 #define SPK_OFF 0

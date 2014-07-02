@@ -28,7 +28,7 @@ int msm_jpeg_core_reset(uint8_t op_mode, void *base, int size)
 {
 	unsigned long flags;
 	int rc = 0;
-	int tm = 500; /*500ms*/
+	int tm = 500; /*     */
 	memset(&fe_pingpong_buf, 0, sizeof(fe_pingpong_buf));
 	fe_pingpong_buf.is_fe = 1;
 	we_pingpong_index = 0;
@@ -78,7 +78,7 @@ int msm_jpeg_core_fe_start(void)
 	return 0;
 }
 
-/* fetch engine */
+/*              */
 int msm_jpeg_core_fe_buf_update(struct msm_jpeg_core_buf *buf)
 {
 	JPEG_DBG("%s:%d] 0x%08x %d 0x%08x %d\n", __func__, __LINE__,
@@ -92,7 +92,7 @@ void *msm_jpeg_core_fe_pingpong_irq(int jpeg_irq_status, void *context)
 	return msm_jpeg_hw_pingpong_irq(&fe_pingpong_buf);
 }
 
-/* write engine */
+/*              */
 int msm_jpeg_core_we_buf_update(struct msm_jpeg_core_buf *buf)
 {
 	JPEG_DBG("%s:%d] 0x%08x 0x%08x %d\n", __func__, __LINE__,
@@ -142,7 +142,7 @@ void *msm_jpeg_core_framedone_irq(int jpeg_irq_status, void *context)
 
 void *msm_jpeg_core_reset_ack_irq(int jpeg_irq_status, void *context)
 {
-	/* @todo return the status back to msm_jpeg_core_reset */
+	/*                                                     */
 	JPEG_DBG("%s:%d]\n", __func__, __LINE__);
 	return NULL;
 }
@@ -168,7 +168,7 @@ irqreturn_t msm_jpeg_core_irq(int irq_num, void *context)
 	JPEG_DBG("%s:%d] jpeg_irq_status = %0x\n", __func__, __LINE__,
 		jpeg_irq_status);
 
-	/*For reset and framedone IRQs, clear all bits*/
+	/*                                            */
 	if (jpeg_irq_status & 0x10000000) {
 		msm_jpeg_hw_irq_clear(JPEG_IRQ_CLEAR_BMSK,
 			JPEG_IRQ_CLEAR_ALL);
@@ -201,7 +201,7 @@ irqreturn_t msm_jpeg_core_irq(int irq_num, void *context)
 				context, data);
 	}
 
-	/* Unexpected/unintended HW interrupt */
+	/*                                    */
 	if (msm_jpeg_hw_irq_is_err(jpeg_irq_status)) {
 		data = msm_jpeg_core_err_irq(jpeg_irq_status, context);
 		if (msm_jpeg_irq_handler)

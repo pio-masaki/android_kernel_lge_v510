@@ -13,8 +13,8 @@
 
 #include "ov5647.h"
 struct ov5647_i2c_reg_conf ov5647_prev_settings[] = {
-	/*1280*960 Reference Setting 24M MCLK 2lane 280Mbps/lane 30fps
-	for back to preview*/
+	/*                                                            
+                    */
 	{0x3035, 0x21},
 	{0x3036, 0x37},
 	{0x3821, 0x07},
@@ -44,7 +44,7 @@ struct ov5647_i2c_reg_conf ov5647_prev_settings[] = {
 };
 
 struct ov5647_i2c_reg_conf ov5647_snap_settings[] = {
-	/*2608*1952 Reference Setting 24M MCLK 2lane 280Mbps/lane 30fps*/
+	/*                                                             */
 	{0x3035, 0x21},
 	{0x3036, 0x4f},
 	{0x3821, 0x06},
@@ -128,7 +128,7 @@ struct ov5647_i2c_reg_conf ov5647_recommend_settings[] = {
 	{0x3106, 0xf5},
 	{0x3034, 0x18},
 	{0x301c, 0xf8},
-	/*lens setting*/
+	/*            */
 	{0x5000, 0x86},
 	{0x5800, 0x11},
 	{0x5801, 0x0c},
@@ -192,13 +192,13 @@ struct ov5647_i2c_reg_conf ov5647_recommend_settings[] = {
 	{0x583b, 0x26},
 	{0x583c, 0x24},
 	{0x583d, 0xce},
-	/* manual AWB,manual AE,close Lenc,open WBC*/
-	{0x3503, 0x03}, /*manual AE*/
+	/*                                         */
+	{0x3503, 0x03}, /*         */
 	{0x3501, 0x10},
 	{0x3502, 0x80},
 	{0x350a, 0x00},
 	{0x350b, 0x7f},
-	{0x5001, 0x01}, /*manual AWB*/
+	{0x5001, 0x01}, /*          */
 	{0x5180, 0x08},
 	{0x5186, 0x04},
 	{0x5187, 0x00},
@@ -206,7 +206,7 @@ struct ov5647_i2c_reg_conf ov5647_recommend_settings[] = {
 	{0x5189, 0x00},
 	{0x518a, 0x04},
 	{0x518b, 0x00},
-	{0x5000, 0x06}, /*No lenc,WBC on*/
+	{0x5000, 0x06}, /*              */
 };
 
 struct ov5647_reg ov5647_regs = {

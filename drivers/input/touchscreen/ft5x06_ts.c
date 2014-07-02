@@ -29,7 +29,7 @@
 
 #ifdef CONFIG_HAS_EARLYSUSPEND
 #include <linux/earlysuspend.h>
-/* Early-suspend level */
+/*                     */
 #define FT5X06_SUSPEND_LEVEL 1
 #endif
 
@@ -50,13 +50,13 @@
 
 #define POINT_READ_BUF	(3 + FT_TOUCH_STEP * CFG_MAX_TOUCH_POINTS)
 
-/*register address*/
+/*                */
 #define FT5X06_REG_PMODE	0xA5
 #define FT5X06_REG_FW_VER	0xA6
 #define FT5X06_REG_POINT_RATE	0x88
 #define FT5X06_REG_THGROUP	0x80
 
-/* power register bits*/
+/*                    */
 #define FT5X06_PMODE_ACTIVE		0x00
 #define FT5X06_PMODE_MONITOR		0x01
 #define FT5X06_PMODE_STANDBY		0x02
@@ -68,11 +68,11 @@
 #define FT5X06_I2C_VTG_MAX_UV	1800000
 
 struct ts_event {
-	u16 x[CFG_MAX_TOUCH_POINTS];	/*x coordinate */
-	u16 y[CFG_MAX_TOUCH_POINTS];	/*y coordinate */
-	/* touch event: 0 -- down; 1-- contact; 2 -- contact */
+	u16 x[CFG_MAX_TOUCH_POINTS];	/*             */
+	u16 y[CFG_MAX_TOUCH_POINTS];	/*             */
+	/*                                                   */
 	u8 touch_event[CFG_MAX_TOUCH_POINTS];
-	u8 finger_id[CFG_MAX_TOUCH_POINTS];	/*touch ID */
+	u8 finger_id[CFG_MAX_TOUCH_POINTS];	/*         */
 	u16 pressure;
 	u8 touch_point;
 };
@@ -521,10 +521,10 @@ static int ft5x06_ts_probe(struct i2c_client *client,
 		gpio_set_value_cansleep(data->pdata->reset_gpio, 1);
 	}
 
-	/* make sure CTP already finish startup process */
+	/*                                              */
 	msleep(FT_STARTUP_DLY);
 
-	/*get some register information */
+	/*                              */
 	reg_addr = FT5X06_REG_FW_VER;
 	err = ft5x06_i2c_read(client, &reg_addr, 1, &reg_value, 1);
 	if (err)

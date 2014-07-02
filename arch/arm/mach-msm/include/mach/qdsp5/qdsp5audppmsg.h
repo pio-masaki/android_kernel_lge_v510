@@ -26,26 +26,26 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 *====*====*====*====*====*====*====*====*====*====*====*====*====*====*====*/
-/*===========================================================================
+/*                                                                           
 
-                      EDIT HISTORY FOR FILE
+                                           
 
-This section contains comments describing changes made to this file.
-Notice that changes are listed in reverse chronological order.
+                                                                    
+                                                              
   
- $Header: //source/qcom/qct/multimedia2/Audio/drivers/QDSP5Driver/QDSP5Interface/main/latest/qdsp5audppmsg.h#4 $
+                                                                                                                
 
-===========================================================================*/
+                                                                           */
 
 /*
- * AUDPPTASK uses audPPuPRlist to send messages to the ARM
- * Location : MEMA
- * Buffer Size : 45
- * No of Buffers in a queue : 5 for gaming audio and 1 for other images 
+                                                          
+                  
+                   
+                                                                        
  */
 
 /*
- * MSG to Informs the ARM os Success/Failure of bringing up the decoder
+                                                                       
  */
 
 #define AUDPP_MSG_STATUS_MSG		0x0001
@@ -68,7 +68,7 @@ typedef struct{
 } __attribute__((packed)) audpp_msg_status_msg;
 
 /*
- * MSG to communicate the spectrum analyzer output bands to the ARM
+                                                                   
  */
 #define AUDPP_MSG_SPA_BANDS		0x0002
 #define AUDPP_MSG_SPA_BANDS_LEN	\
@@ -111,7 +111,7 @@ typedef struct {
 } __attribute__((packed)) audpp_msg_spa_bands;
 
 /*
- * MSG to communicate the PCM I/O buffer status to ARM
+                                                      
  */
 #define  AUDPP_MSG_HOST_PCM_INTF_MSG		0x0003
 #define  AUDPP_MSG_HOST_PCM_INTF_MSG_LEN	\
@@ -149,8 +149,8 @@ typedef struct{
 
 
 /*
- * MSG to communicate 3D position of the source and listener , source volume
- * source rolloff, source orientation
+                                                                            
+                                     
  */
 
 #define AUDPP_MSG_QAFX_POS		0x0004
@@ -206,7 +206,7 @@ typedef struct {
 } __attribute__((packed)) audpp_msg_qafx_pos;
 
 /*
- * MSG to provide AVSYNC feedback from DSP to ARM
+                                                 
  */
 
 #define AUDPP_MSG_AVSYNC_MSG		0x0005
@@ -246,7 +246,7 @@ typedef struct {
 } __attribute__((packed)) audpp_msg_avsync_msg;
 
 /*
- * MSG to provide PCM DMA Missed feedback from the DSP to ARM
+                                                             
  */
 
 #define  AUDPP_MSG_PCMDMAMISSED	0x0006
@@ -255,22 +255,22 @@ typedef struct {
 
 typedef struct{
   /*
-  ** Bit 0	0 = PCM DMA not missed for object 0
-  **        1 = PCM DMA missed for object0
-  ** Bit 1	0 = PCM DMA not missed for object 1
-  **        1 = PCM DMA missed for object1
-  ** Bit 2	0 = PCM DMA not missed for object 2
-  **        1 = PCM DMA missed for object2
-  ** Bit 3	0 = PCM DMA not missed for object 3
-  **        1 = PCM DMA missed for object3
-  ** Bit 4	0 = PCM DMA not missed for object 4
-  **        1 = PCM DMA missed for object4
+                                              
+                                          
+                                              
+                                          
+                                              
+                                          
+                                              
+                                          
+                                              
+                                          
   */
   unsigned short pcmdmamissed;
 } __attribute__((packed)) audpp_msg_pcmdmamissed;
 
 /*
- * MSG to AUDPP enable or disable feedback form DSP to ARM
+                                                          
  */
 
 #define AUDPP_MSG_CFG_MSG	0x0007  
@@ -281,14 +281,14 @@ typedef struct{
 #define AUDPP_MSG_ENA_DIS	0x0000
 
 typedef struct{
-  /*   Enabled  - 0xffff 
-   **  Disabled - 0
+  /*                     
+                   
    */
   unsigned short enabled;
 } __attribute__((packed)) audpp_msg_cfg_msg;
 
 /*
- * MSG to communicate the reverb  per object volume
+                                                   
  */
 
 #define AUDPP_MSG_QREVERB_VOLUME	0x0008
@@ -318,4 +318,4 @@ struct audpp_msg_routing_ack {
 
 #define ADSP_MESSAGE_ID 0xFFFF
 
-#endif /* QDSP5AUDPPMSG_H */
+#endif /*                 */

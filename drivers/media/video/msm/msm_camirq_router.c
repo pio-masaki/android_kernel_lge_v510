@@ -92,7 +92,7 @@ static int msm_irqrouter_open(struct v4l2_subdev *sd,
 	struct v4l2_subdev_fh *fh)
 {
 	struct irqrouter_ctrl_type *irqrouter_ctrl = v4l2_get_subdevdata(sd);
-	/* Only one object of IRQ Router allowed. */
+	/*                                        */
 	if (atomic_read(&irqrouter_ctrl->active) != 0) {
 		pr_err("%s IRQ router is already opened\n", __func__);
 		return -EINVAL;
@@ -130,12 +130,12 @@ long msm_irqrouter_subdev_ioctl(struct v4l2_subdev *sd,
 	struct intr_table_entry irq_req;
 	int rc = 0;
 
-	/* Handle all IRQ Router Subdev IOCTLs here.
-	 * Userspace sends the composite irq configuration.
-	 * IRQ Router subdev then configures the registers to group
-	 * together individual core hw irqs into a composite IRQ
-	 * to the MSM IRQ controller. It also registers them with
-	 * the irq manager in the camera server. */
+	/*                                          
+                                                    
+                                                            
+                                                         
+                                                          
+                                          */
 	switch (cmd) {
 	case MSM_IRQROUTER_CFG_COMPIRQ:
 		COPY_FROM_USER(rc, &irq_cfg, (void __user *)arg,
@@ -222,7 +222,7 @@ static int __devinit irqrouter_probe(struct platform_device *pdev)
 	sd_info.sdev_type = IRQ_ROUTER_DEV;
 	sd_info.sd_index = 0;
 	sd_info.irq_num = 0;
-	/* Now register this subdev with the camera server. */
+	/*                                                  */
 	rc = msm_cam_register_subdev_node(&irqrouter_ctrl->subdev, &sd_info);
 	if (rc < 0) {
 		pr_err("%s Error registering irqr subdev %d", __func__, rc);

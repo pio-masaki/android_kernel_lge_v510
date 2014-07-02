@@ -163,14 +163,14 @@ static int adsp_pmem_lookup_vaddr(struct msm_adsp_module *module, void **addr,
 
 	*region = NULL;
 
-	/* returns physical address or zero */
+	/*                                  */
 	hlist_for_each_entry(region_elt, node, &module->pmem_regions, list) {
 		if (vaddr >= region_elt->vaddr &&
 		    vaddr < region_elt->vaddr + region_elt->len &&
 		    vaddr + len <= region_elt->vaddr + region_elt->len) {
-			/* offset since we could pass vaddr inside a registerd
-			 * pmem buffer
-			 */
+			/*                                                    
+                 
+    */
 
 			match_count++;
 			if (!*region)
@@ -240,7 +240,7 @@ static int adsp_verify_cmd(struct msm_adsp_module *module,
 			   unsigned int queue_id, void *cmd_data,
 			   size_t cmd_size)
 {
-	/* call the per module verifier */
+	/*                              */
 	if (module->verify_cmd)
 		return module->verify_cmd(module, queue_id, cmd_data,
 					     cmd_size);
@@ -337,7 +337,7 @@ int adsp_pmem_paddr_fixup(struct msm_adsp_module *module, void **addr)
 static int adsp_patch_event(struct msm_adsp_module *module,
 				struct adsp_event *event)
 {
-	/* call the per-module msg verifier */
+	/*                                  */
 	if (module->patch_event)
 		return module->patch_event(module, event);
 	return 0;
@@ -383,11 +383,11 @@ static long adsp_get_event(struct adsp_device *adev, void __user *arg)
 	if (!data)
 		return -EAGAIN;
 
-	/* DSP messages are type 0; they may contain physical addresses */
+	/*                                                              */
 	if (data->type == 0)
 		adsp_patch_event(adev->module, data);
 
-	/* map adsp_event --> adsp_event_t */
+	/*                                 */
 	if (evt.len < data->size) {
 		rc = -ETOOSMALL;
 		goto end;
@@ -406,7 +406,7 @@ static long adsp_get_event(struct adsp_device *adev, void __user *arg)
 		}
 	}
 
-	evt.type = data->type; /* 0 --> from aDSP, 1 --> from ARM9 */
+	evt.type = data->type; /*                                  */
 	evt.msg_id = data->msg_id;
 	evt.flags = data->is16;
 	evt.len = data->size;
@@ -495,7 +495,7 @@ static int adsp_release(struct inode *inode, struct file *filp)
 
 	MM_INFO("release '%s'\n", adev->name);
 
-	/* clear module before putting it to avoid race with open() */
+	/*                                                          */
 	adev->module = NULL;
 
 	rc = adsp_pmem_del(module);

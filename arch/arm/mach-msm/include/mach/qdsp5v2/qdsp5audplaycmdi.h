@@ -33,26 +33,26 @@ GNU General Public License for more details.
 #define AUDPLAY_CMD_BITSTREAM_DATA_AVAIL_LEN	\
 	sizeof(struct audplay_cmd_bitstream_data_avail)
 
-/* Type specification of dec_data_avail message sent to AUDPLAYTASK
+/*                                                                 
 */
 struct audplay_cmd_bitstream_data_avail{
-	/*command ID*/
+	/*          */
 	unsigned int cmd_id;
 
-	/* Decoder ID for which message is being sent */
+	/*                                            */
 	unsigned int decoder_id;
 
-	/* Start address of data in ARM global memory */
+	/*                                            */
 	unsigned int buf_ptr;
 
-	/* Number of 16-bit words of bit-stream data contiguously
-	* available at the above-mentioned address
-	*/
+	/*                                                       
+                                           
+ */
 	unsigned int buf_size;
 
-	/* Partition number used by audPlayTask to communicate with DSP's RTOS
-	* kernel
-	*/
+	/*                                                                    
+         
+ */
 	unsigned int partition_number;
 
 } __attribute__((packed));
@@ -109,29 +109,29 @@ struct audplay_cmd_buffer_refresh {
 #define AUDPLAY_CMD_BITSTREAM_DATA_AVAIL_NT2_LEN    \
 	sizeof(struct audplay_cmd_bitstream_data_avail_nt2)
 
-/* Type specification of dec_data_avail message sent to AUDPLAYTASK
- * for NT2 */
+/*                                                                 
+           */
 struct audplay_cmd_bitstream_data_avail_nt2 {
-	/*command ID*/
+	/*          */
 	unsigned int cmd_id;
 
-	/* Decoder ID for which message is being sent */
+	/*                                            */
 	unsigned int decoder_id;
 
-	/* Start address of data in ARM global memory */
+	/*                                            */
 	unsigned int buf_ptr;
 
-	/* Number of 16-bit words of bit-stream data contiguously
-	*  available at the above-mentioned address
-	*/
+	/*                                                       
+                                            
+ */
 	unsigned int buf_size;
 
-	/* Partition number used by audPlayTask to communicate with DSP's RTOS
-	* kernel
-	*/
+	/*                                                                    
+         
+ */
 	unsigned int partition_number;
 
-	/* bitstream write pointer */
+	/*                         */
 	unsigned int dspBitstreamWritePtr;
 
 } __attribute__((packed));
@@ -142,4 +142,4 @@ struct audplay_cmd_outport_flush {
 	unsigned int cmd_id;
 } __attribute__((packed));
 
-#endif /* QDSP5AUDPLAYCMD_H */
+#endif /*                   */

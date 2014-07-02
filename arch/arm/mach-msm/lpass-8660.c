@@ -38,7 +38,7 @@
 
 static struct subsys_device *subsys_8x60_q6_dev;
 
-/* Subsystem restart: QDSP6 data, functions */
+/*                                          */
 static void *q6_ramdump_dev;
 static void q6_fatal_fn(struct work_struct *);
 static DECLARE_WORK(q6_fatal_work, q6_fatal_fn);
@@ -53,16 +53,16 @@ static void q6_fatal_fn(struct work_struct *work)
 
 static void send_q6_nmi(void)
 {
-	/* Send NMI to QDSP6 via an SCM call. */
+	/*                                    */
 	scm_call_atomic1(SCM_SVC_UTIL, SCM_Q6_NMI_CMD, 0x1);
 
-	/* Wakeup the Q6 */
+	/*               */
 	if (q6_wakeup_intr)
 		writel_relaxed(0x2000, q6_wakeup_intr);
 	else
 		pr_warn("lpass-8660: Unable to send wakeup interrupt to Q6.\n");
 
-	/* Q6 requires atleast 100ms to dump caches etc.*/
+	/*                                              */
 	mdelay(100);
 
 	pr_info("subsystem-fatal-8x60: Q6 NMI was sent.\n");
@@ -75,7 +75,7 @@ int subsys_q6_shutdown(const struct subsys_desc *crashed_subsys)
 
 	send_q6_nmi();
 	writel_relaxed(0x0, q6_wdog_addr);
-	/* The write needs to go through before the q6 is shutdown. */
+	/*                                                          */
 	mb();
 	iounmap(q6_wdog_addr);
 
@@ -92,7 +92,7 @@ int subsys_q6_powerup(const struct subsys_desc *crashed_subsys)
 	return ret;
 }
 
-/* FIXME: Get address, size from PIL */
+/*                                   */
 static struct ramdump_segment q6_segments[] = { {0x46700000, 0x47F00000 -
 					0x46700000}, {0x28400000, 0x12800} };
 static int subsys_q6_ramdump(int enable,

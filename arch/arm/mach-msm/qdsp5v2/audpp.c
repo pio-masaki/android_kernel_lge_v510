@@ -81,7 +81,7 @@ static struct wake_lock audpp_wake_lock;
 
 #define MAX_EVENT_CALLBACK_CLIENTS 	1
 
-#define AUDPP_CONCURRENCY_DEFAULT 0	/* Set default to LPA mode */
+#define AUDPP_CONCURRENCY_DEFAULT 0	/*                         */
 #define AUDPP_MAX_DECODER_CNT 5
 #define AUDPP_CODEC_MASK 0x000000FF
 #define AUDPP_MODE_MASK 0x00000F00
@@ -100,7 +100,7 @@ struct audpp_state {
 	unsigned open_count;
 	unsigned enabled;
 
-	/* Related to decoder allocation */
+	/*                               */
 	struct mutex *lock_dec;
 	struct msm_adspdec_database *dec_database;
 	struct audpp_decoder_info dec_info_table[AUDPP_MAX_DECODER_CNT];
@@ -109,12 +109,12 @@ struct audpp_state {
 
 	struct audpp_event_callback *cb_tbl[MAX_EVENT_CALLBACK_CLIENTS];
 
-	/* Related to decoder instances */
-	uint8_t op_mode; /* Specifies Turbo/Non Turbo mode */
-	uint8_t decoder_count; /* No. of decoders active running */
-	uint8_t codec_max_instances; /* Max codecs allowed currently */
-	uint8_t codec_cnt[MSM_MAX_DEC_CNT]; /* Nr of each codec
-						 type enabled */
+	/*                              */
+	uint8_t op_mode; /*                                */
+	uint8_t decoder_count; /*                                */
+	uint8_t codec_max_instances; /*                              */
+	uint8_t codec_cnt[MSM_MAX_DEC_CNT]; /*                 
+                    */
 
 	wait_queue_head_t event_wait;
 };
@@ -448,8 +448,8 @@ int audpp_restore_avsync(int id, uint16_t *avsync)
 	memset(&cmd, 0, sizeof(cmd));
 	cmd.cmd_id = AUDPP_CMD_AVSYNC;
 	cmd.stream_id = id;
-	cmd.interrupt_interval = 0; /* Setting it to Zero as there won't be
-					periodic update */
+	cmd.interrupt_interval = 0; /*                                     
+                     */
 	cmd.sample_counter_dlsw = avsync[3];
 	cmd.sample_counter_dmsw = avsync[2];
 	cmd.sample_counter_msw = avsync[1];
@@ -479,7 +479,7 @@ EXPORT_SYMBOL(audpp_query_avsync);
 int audpp_set_volume_and_pan(unsigned id, unsigned volume, int pan,
 			enum obj_type objtype)
 {
-	/* cmd, obj_cfg[7], cmd_type, volume, pan */
+	/*                                        */
 	uint16_t cmd[7];
 
 	if (objtype) {
@@ -510,7 +510,7 @@ int audpp_set_volume_and_pan(unsigned id, unsigned volume, int pan,
 }
 EXPORT_SYMBOL(audpp_set_volume_and_pan);
 
-/* Implementation of COPP features */
+/*                                 */
 int audpp_dsp_set_mbadrc(unsigned id, unsigned enable,
 	struct audpp_cmd_cfg_object_params_mbadrc *mbadrc,
 	enum obj_type objtype)
@@ -747,7 +747,7 @@ int audpp_dsp_set_stf(unsigned id, unsigned enable,
 }
 EXPORT_SYMBOL(audpp_dsp_set_stf);
 
-/* Implementation Of COPP + POPP */
+/*                               */
 int audpp_dsp_set_eq(unsigned id, unsigned enable,
 		     struct audpp_cmd_cfg_object_params_eqalizer *eq,
 				enum obj_type objtype)
@@ -824,7 +824,7 @@ EXPORT_SYMBOL(audpp_dsp_set_vol_pan);
 
 int audpp_pause(unsigned id, int pause)
 {
-	/* pause 1 = pause 0 = resume */
+	/*                            */
 	u16 pause_cmd[AUDPP_CMD_DEC_CTRL_LEN / sizeof(unsigned short)];
 
 	if (id >= CH_COUNT)
@@ -862,10 +862,10 @@ int audpp_flush(unsigned id)
 }
 EXPORT_SYMBOL(audpp_flush);
 
-/* dec_attrb = 7:0, 0 - No Decoder, else supported decoder *
- * like mp3, aac, wma etc ... *
- *           =  15:8, bit[8] = 1 - Tunnel, bit[9] = 1 - NonTunnel *
- *           =  31:16, reserved */
+/*                                                          
+                               
+                                                                   
+                                */
 int audpp_adec_alloc(unsigned dec_attrb, const char **module_name,
 		     unsigned *queueid)
 {
@@ -880,20 +880,20 @@ int audpp_adec_alloc(unsigned dec_attrb, const char **module_name,
 				(audpp->dec_database->dec_instance_list);
 
 	mutex_lock(audpp->lock_dec);
-	/* Represents in bit mask */
+	/*                        */
 	mode = ((dec_attrb & AUDPP_MODE_MASK) << 16);
 	codec = (1 << (dec_attrb & AUDPP_CODEC_MASK));
 	codec_type = (dec_attrb & AUDPP_CODEC_MASK);
 
-	/* Find  whether same/different codec instances are running */
+	/*                                                          */
 	audpp->decoder_count++;
 	audpp->codec_cnt[codec_type]++;
 	max_instance = 0;
 
-	/*if different instance of codec*/
+	/*                              */
 	if (audpp->codec_cnt[codec_type] < audpp->decoder_count) {
 		max_instance = audpp->codec_max_instances;
-		/* Get the maximum no. of instances that can be supported */
+		/*                                                        */
 		for (idx = 0; idx < MSM_MAX_DEC_CNT; idx++) {
 			if (audpp->codec_cnt[idx]) {
 				if ((dec_instance_list +
@@ -910,8 +910,8 @@ int audpp_adec_alloc(unsigned dec_attrb, const char **module_name,
 				}
 			}
 		}
-		/* if different codec type, should not cross maximum other
-		   supported */
+		/*                                                        
+               */
 		if (audpp->decoder_count > (max_instance + 1)) {
 			MM_ERR("Can not support, already reached max\n");
 			audpp->decoder_count--;
@@ -925,7 +925,7 @@ int audpp_adec_alloc(unsigned dec_attrb, const char **module_name,
 						MSM_MAX_DEC_CNT +
 						 codec_type)->
 							max_instances_same_dec;
-		/* if same codec type, should not cross maximum supported */
+		/*                                                        */
 		if (audpp->decoder_count > max_instance) {
 			MM_ERR("Can not support, already reached max\n");
 			audpp->decoder_count--;
@@ -936,7 +936,7 @@ int audpp_adec_alloc(unsigned dec_attrb, const char **module_name,
 		MM_DBG("same codec running\n");
 	}
 
-	/* Point to Last entry of the row */
+	/*                                */
 	concurrency_entry = ((audpp->dec_database->dec_concurrency_table +
 			      ((audpp->concurrency + 1) *
 			       (audpp->dec_database->num_dec))) - 1);
@@ -950,7 +950,7 @@ int audpp_adec_alloc(unsigned dec_attrb, const char **module_name,
 		if (!(audpp->dec_inuse & (1 << (idx - 1)))) {
 			if (((mode & *concurrency_entry) == mode) &&
 			    (codec & *concurrency_entry)) {
-				/* Check supports minimum number codecs */
+				/*                                      */
 				codecs_supported =
 				    audpp->dec_database->dec_info_list[idx -
 								       1].
@@ -973,7 +973,7 @@ int audpp_adec_alloc(unsigned dec_attrb, const char **module_name,
 		audpp->dec_info_table[lidx].codec =
 		    (dec_attrb & AUDPP_CODEC_MASK);
 		audpp->dec_info_table[lidx].pid = current->pid;
-		/* point to row to get supported operation */
+		/*                                         */
 		concurrency_entry =
 		    ((audpp->dec_database->dec_concurrency_table +
 		      ((audpp->concurrency) * (audpp->dec_database->num_dec))) +
@@ -1066,7 +1066,7 @@ static ssize_t decoder_info_show(struct device *dev,
 {
 	int cpy_sz = 0;
 	struct audpp_state *audpp = &the_audpp_state;
-	const ptrdiff_t off = attr - dev_attr_decoder;	/* decoder number */
+	const ptrdiff_t off = attr - dev_attr_decoder;	/*                */
 	mutex_lock(audpp->lock_dec);
 	cpy_sz += scnprintf(buf + cpy_sz, PAGE_SIZE - cpy_sz, "%d:",
 			    audpp->dec_info_table[off].codec);
@@ -1112,7 +1112,7 @@ static int audpp_probe(struct platform_device *pdev)
 			goto err;
 	}
 	rc = device_create_file(&pdev->dev, &dev_attr_concurrency);
-	audpp->op_mode = 0; /* Consider as non turbo mode */
+	audpp->op_mode = 0; /*                            */
 	if (rc)
 		goto err;
 	else

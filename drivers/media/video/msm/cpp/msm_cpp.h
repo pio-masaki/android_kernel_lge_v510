@@ -50,16 +50,16 @@ struct cpp_device {
 	struct cpp_subscribe_info cpp_subscribe_list[MAX_ACTIVE_CPP_INSTANCE];
 	uint32_t cpp_open_cnt;
 
-	struct msm_device_queue eventData_q; /*V4L2 Event Payload Queue*/
+	struct msm_device_queue eventData_q; /*                        */
 
-	/*Offline Frame Queue
-	  process when realtime queue is empty*/
+	/*                   
+                                       */
 	struct msm_device_queue offline_q;
-	/*Realtime Frame Queue
-	  process with highest priority*/
+	/*                    
+                                */
 	struct msm_device_queue realtime_q;
-	/*Processing Queue
-	  store frame info for frames sent to microcontroller*/
+	/*                
+                                                      */
 	struct msm_device_queue processing_q;
 };
 

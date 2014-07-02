@@ -22,8 +22,8 @@
 #include <mach/msm_adsp.h>
 #include <mach/debug_mm.h>
 
-#define AFE_MAX_TIMEOUT 500 /* 500 ms */
-#define AFE_MAX_CLNT 6 /* 6 HW path defined so far */
+#define AFE_MAX_TIMEOUT 500 /*        */
+#define AFE_MAX_CLNT 6 /*                          */
 #define GETDEVICEID(x) ((x) - 1)
 
 struct msm_afe_state {
@@ -102,7 +102,7 @@ static void afe_dsp_codec_config(struct msm_afe_state *afe,
 	}
 	afe_send_queue(afe, &cmd, sizeof(cmd));
 }
-/* Function is called after afe module been enabled */
+/*                                                  */
 void afe_loopback(int enable)
 {
 	struct afe_cmd_loopback cmd;
@@ -168,7 +168,7 @@ int afe_enable(u8 path_id, struct msm_afe_config *config)
 	}
 	mutex_lock(&afe->lock);
 	if (!afe->in_use && !afe->aux_conf_flag) {
-		/* enable afe */
+		/*            */
 		rc = msm_adsp_get("AFETASK", &afe->mod, &afe->adsp_ops, afe);
 		if (rc < 0) {
 			MM_ERR("%s: failed to get AFETASK module\n", __func__);
@@ -178,7 +178,7 @@ int afe_enable(u8 path_id, struct msm_afe_config *config)
 		if (rc < 0)
 			goto error_adsp_enable;
 	}
-	/* Issue codec config command */
+	/*                            */
 	afe_dsp_codec_config(afe, path_id, 1, config);
 	rc = wait_event_timeout(afe->wait,
 		afe->codec_config[GETDEVICEID(path_id)],
@@ -191,7 +191,7 @@ int afe_enable(u8 path_id, struct msm_afe_config *config)
 			(afe->aux_conf_flag &&
 			(path_id == AFE_HW_PATH_AUXPCM_RX ||
 			path_id == AFE_HW_PATH_AUXPCM_TX))) {
-				/* clean up if there is no client */
+				/*                                */
 				msm_adsp_disable(afe->mod);
 				msm_adsp_put(afe->mod);
 				afe->aux_conf_flag = 0;
@@ -227,7 +227,7 @@ int afe_config_fm_codec(int fm_enable, uint16_t source)
 	MM_INFO(" configure fm codec\n");
 	mutex_lock(&afe->lock);
 	if (!afe->in_use) {
-		/* enable afe */
+		/*            */
 		rc = msm_adsp_get("AFETASK", &afe->mod, &afe->adsp_ops, afe);
 		if (rc < 0) {
 			MM_ERR("%s: failed to get AFETASK module\n", __func__);
@@ -266,7 +266,7 @@ int afe_config_fm_volume(uint16_t volume)
 	MM_INFO(" configure fm volume\n");
 	mutex_lock(&afe->lock);
 	if (!afe->in_use) {
-		/* enable afe */
+		/*            */
 		rc = msm_adsp_get("AFETASK", &afe->mod, &afe->adsp_ops, afe);
 		if (rc < 0) {
 			MM_ERR("%s: failed to get AFETASK module\n", __func__);
@@ -304,7 +304,7 @@ int afe_config_fm_calibration_gain(uint16_t device_id,
 			calibration_gain);
 	mutex_lock(&afe->lock);
 	if (!afe->in_use) {
-		/* enable afe */
+		/*            */
 		rc = msm_adsp_get("AFETASK", &afe->mod, &afe->adsp_ops, afe);
 		if (rc < 0) {
 			MM_ERR("%s: failed to get AFETASK module\n", __func__);
@@ -342,7 +342,7 @@ int afe_config_aux_codec(int pcm_ctl_value, int aux_codec_intf_value,
 	MM_DBG(" configure aux codec \n");
 	mutex_lock(&afe->lock);
 	if (!afe->in_use && !afe->aux_conf_flag) {
-		/* enable afe */
+		/*            */
 		rc = msm_adsp_get("AFETASK", &afe->mod, &afe->adsp_ops, afe);
 		if (rc < 0) {
 			MM_ERR("%s: failed to get AFETASK module\n", __func__);
@@ -385,7 +385,7 @@ int afe_config_rmc_block(struct acdb_rmc_block *acdb_rmc)
 	MM_DBG(" configure rmc block\n");
 	mutex_lock(&afe->lock);
 	if (!afe->in_use && !afe->mod) {
-		/* enable afe */
+		/*            */
 		rc = msm_adsp_get("AFETASK", &afe->mod, &afe->adsp_ops, afe);
 		if (rc < 0) {
 			MM_DBG("%s: failed to get AFETASK module\n", __func__);

@@ -202,7 +202,7 @@ void msm_camio_camif_pad_reg_reset(void)
 	uint32_t reg;
 	uint32_t mask, value;
 
-	/* select CLKRGM_VFE_SRC_CAM_VFE_SRC:  internal source */
+	/*                                                     */
 	msm_camio_clk_sel(MSM_CAMIO_CLK_SRC_INTERNAL);
 
 	reg = (msm_camera_io_r_mb(mdcbase)) & CAMIF_CFG_RMSK;
@@ -238,7 +238,7 @@ void msm_camio_vfe_blk_reset(void)
 {
 	uint32_t val;
 
-	/* do apps reset */
+	/*               */
 	val = msm_camera_io_r_mb(appbase + 0x00000210);
 	val |= 0x1;
 	msm_camera_io_w_mb(val, appbase + 0x00000210);
@@ -249,7 +249,7 @@ void msm_camio_vfe_blk_reset(void)
 	msm_camera_io_w_mb(val, appbase + 0x00000210);
 	usleep_range(10000, 11000);
 
-	/* do axi reset */
+	/*              */
 	val = msm_camera_io_r_mb(appbase + 0x00000208);
 	val |= 0x1;
 	msm_camera_io_w_mb(val, appbase + 0x00000208);

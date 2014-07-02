@@ -11,14 +11,14 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  */
-/*=======================================================================================
+/*                                                                                       
 
-                   		 WARNING !!
+                                
 
- If you modify this file, it may give rise to serious Factory mass-production problem,
- Sure please contact us security team. [lg-security@lge.com]
+                                                                                      
+                                                            
 
-=======================================================================================*/
+                                                                                       */
 #include <linux/kernel.h>
 #include <linux/module.h>
 #include <linux/device.h>
@@ -33,7 +33,7 @@
 #include <mach/scm.h>
 
 #define LGE_QFPROM_INTERFACE_NAME "lge-apq8064-qfprom"
-/* service ID inside tzbsp */
+/*                         */
 #define QFPROM_SVC_ID           8
 #define TZBSP_SVC_OEM           254
 #define TZBSP_ADDITIONAL_CMD    0x1
@@ -42,18 +42,18 @@
 #define QFPROM_PRNG_CMD         0x7
 #define QFPROM_OVERRIDE_CMD     0x8
 
-/* tzbsp_boot_milestone_status type */
+/*                                  */
 #define TZBSP_MILESTONE_TRUE    0x0132DD1B
 #define TZBSP_MILESTONE_FALSE   0x013302A1
 #define EMILE  0x25
 
-/* qfprom read type */
+/*                  */
 #define QFPROM_ADDR_SPACE_RAW  0
 #define QFPROM_ADDR_SPACE_CORR 1
 
 #define QFPROM_CLOCK           (0x40*1000)
 
-/* QFPROM address to blow */
+/*                        */
 #define QFPROM_SPARE_REGION_22  0x700410
 #define QFPROM_SPARE_REGION_24  0x700428
 #define QFPROM_SPARE_REGION_25  0x700430
@@ -69,7 +69,7 @@
 #define QFPROM_WRITE_PERMISSION	        0x7000B0
 #define QFPROM_OVERRIDE_REG             0x7060C0
 #define QFPROM_CHECK_HW_KEY             0x123456
-/* secondary hw key status flag */
+/*                              */
 #define SEC_HW_KEY_BLOWN  0x00000002
 #define PRIM_HW_KEY_BLOWN 0x00000001
 #define HW_KEYS_BLOCKED   0x00000004
@@ -79,21 +79,21 @@
 #define FUSING_COMPLETED_STATE 0x3F
 #define RANDOM_BY_TZBSP 1
 
-/* command buffer to write */
+/*                         */
 struct qfprom_write_cmd_buffer {
-	u32 qfprom_addr;	/* qfprom address */
-	u32 buf;		/* data to write qfprom */
-	u32 qfprom_clk;		/* qfprom clock */
-	u32 qfprom_status;	/* qfprom status */
+	u32 qfprom_addr;	/*                */
+	u32 buf;		/*                      */
+	u32 qfprom_clk;		/*              */
+	u32 qfprom_status;	/*               */
 };
-/* command buffer to read */
+/*                        */
 struct qfprom_read_cmd_buffer {
 	u32 qfprom_addr;
 	u32 qfprom_addr_type;
 	u32 read_buf;
 	u32 qfprom_status;
 };
-/* blow data structure */
+/*                     */
 struct qfprom_blow_data {
 	u32 qfprom_addr;
 	u32 lsb_data;
@@ -112,21 +112,21 @@ int qfuse_write_single_row(u32 fuse_addr, u32 fuse_lsb, u32 fuse_msb);
 int qfuse_read_single_row(u32 fuse_addr, u32 addr_type, u32 * r_buf);
 
 static struct qfprom_blow_data blow_data[] = {
-	/* addr                        LSB         MSB */
-	{ QFPROM_OEM_CONFIG,         0x00000031, 0x00000000}, /* OEM ID        */
-	{ QFPROM_SECURE_BOOT_ENABLE, 0x00000020, 0x00000000}, /* SECURE ENABLE */
-	{ QFPROM_DEBUG_ENABLE,       0xC1300000, 0x0000006F}, /* JTAG DISABLE */
+	/*                                             */
+	{ QFPROM_OEM_CONFIG,         0x00200031, 0x00000040}, /*                                       */
+	{ QFPROM_SECURE_BOOT_ENABLE, 0x00000020, 0x00000000}, /*               */
+	{ QFPROM_DEBUG_ENABLE,       0xC1300000, 0x0000006F}, /*              */
 	{ QFPROM_CHECK_HW_KEY,       0x0,        0x0},
-	{ QFPROM_READ_PERMISSION,    0x0C000000, 0x00000000}, /* READ PERMISSION */
-	{ QFPROM_WRITE_PERMISSION,   0x54100000, 0x00000000} /* WRITE PERMISSION */
-	//{QFPROM_SPARE_REGION_24, 0x0132DD1B, 0x013302A1},	/* Test Code */
-	//{QFPROM_SPARE_REGION_25, 0x013302A1, 0x0132DD1B}	/* Test Code */
+	{ QFPROM_READ_PERMISSION,    0x0C000000, 0x00000000}, /*                 */
+	{ QFPROM_WRITE_PERMISSION,   0x54100000, 0x00000000} /*                  */
+	//                                                                 
+	//                                                                
 };
 
-/* this api handle diag command(fusing check command) from ATD 
- * if fusing value 0 ==> is not fused
- * if fusing value 1 ==> fused (secure boot enable, jtag disable,
- * oem config, hw secondary key, RW permission)
+/*                                                             
+                                     
+                                                                 
+                                               
  */
 static ssize_t qfusing_show(struct device *dev, struct device_attribute *attr,
 			    char *buf)
@@ -137,9 +137,9 @@ static ssize_t qfusing_show(struct device *dev, struct device_attribute *attr,
 	u32 *p_buf = NULL;
 
 	if(fusing_flag==0) {
-////////////////////////////////////////
-// workaround for apq8064 //
-// hardcoding to understand easily.//
+//                                      
+//                          
+//                                   
 
 			p_buf = kmalloc(sizeof(u32) * 2, GFP_KERNEL);
 			if (!p_buf) {
@@ -180,7 +180,7 @@ static ssize_t qfusing_show(struct device *dev, struct device_attribute *attr,
 			}
 
 
-////////////////////////////////////////
+//                                      
 
 workaround_for_new_apq8064:
 
@@ -211,9 +211,9 @@ workaround_for_old_apq8064:
 				goto err;
 			} else {
 
-////////////////////////////////////////
-// workaround for apq8064 //
-// hardcoding to understand easily.//
+//                                      
+//                          
+//                                   
 if (blow_data[i].qfprom_addr == QFPROM_DEBUG_ENABLE) {
 	if ((p_buf[0] == 0xC1000000) && (p_buf[1] == 0x0000006F)) {
 
@@ -221,7 +221,7 @@ if (blow_data[i].qfprom_addr == QFPROM_DEBUG_ENABLE) {
 		continue;
 	}
 }
-///////////////////////////////////////
+//                                     
 
 
 
@@ -252,10 +252,10 @@ err_mem:
 	return sprintf(buf, "%x\n", fusing);
 }
 
-/* this api handle diag command(fusing command) from ATD 
- * this api fuse secure boot, jtag disable, oem config,
- * secondary hw key, R/W permission
- * this api check secondary hw key status before fusing R/W permission
+/*                                                       
+                                                       
+                                   
+                                                                      
  */
 static ssize_t qfusing_store(struct device *dev, struct device_attribute *attr,
 			     const char *buf, size_t count)
@@ -281,12 +281,12 @@ static ssize_t qfusing_store(struct device *dev, struct device_attribute *attr,
 
 	for(i=0;i<ARRAY_SIZE(blow_data);i++){
 		if(blow_data[i].qfprom_addr==QFPROM_CHECK_HW_KEY) {
-			/* We dont check secondary hw key status 
-			 * But qfprom_blow secondary_hwkey_region api does not create random if qfprom block was written
-			 * The api create random if was not written only
-			 * So HW key region to be written is not written by new random key
-			 * The reason to not check hw key status reg is to check 7 hw key block to be written
-			 */
+			/*                                       
+                                                                                                   
+                                                   
+                                                                     
+                                                                                        
+    */
 			ret = qfprom_blow_secondary_hwkey_region();
 			if (ret < 0) {
 				printk("%s: hw key region blow error\n",
@@ -305,7 +305,7 @@ static ssize_t qfusing_store(struct device *dev, struct device_attribute *attr,
 			goto err_fuse;
 		}
 		printk("%s:read addr 0x%x, lsb 0x%x, msb 0x%x\n",__func__,blow_data[i].qfprom_addr,p_buf[0],p_buf[1]);
-		/* Don't rewrite if value to read is same value to write */
+		/*                                                       */
 		if(((p_buf[0]&blow_data[i].lsb_data)==blow_data[i].lsb_data) &&
 			((p_buf[1]&blow_data[i].msb_data)==blow_data[i].msb_data)) {
 			printk("%s: 0x%x was blown already\n",__func__,blow_data[i].qfprom_addr);
@@ -318,7 +318,7 @@ static ssize_t qfusing_store(struct device *dev, struct device_attribute *attr,
 				ret = -EINVAL;
 				goto err_fuse;
 			} else {
-				/* double check routine*/
+				/*                     */
 				msleep(10);
 				printk("%s: qfprom 0x%x addr write double check routine\n",__func__,blow_data[i].qfprom_addr);
 				ret = qfuse_read_single_row(blow_data[i].qfprom_addr,0,p_buf);
@@ -551,8 +551,8 @@ static const struct attribute_group qfprom_attribute_group = {
 	.attrs = qfprom_attributes,
 };
 
-/* We cant access qfporm address range 0x70xxxxx using qfuse_single_read_row api
- * so we read the range using io read 
+/*                                                                              
+                                      
  */
 u32 qfprom_secondary_hwkey_status(void)
 {
@@ -567,9 +567,9 @@ u32 qfprom_secondary_hwkey_status(void)
 }
 
 #if RANDOM_BY_TZBSP
-/* Create random key(8byte size) by tzbsp
- * if return value =0, error to create random key by tzbsp 
- * if return value >0, success to create random key by bzbsp
+/*                                       
+                                                           
+                                                            
  */
 int qfprom_create_random(u32 *value)
 {
@@ -639,21 +639,21 @@ int qfprom_blow_secondary_hwkey_region(void)
 
 	addr = QFPROM_SECONDARY_HW_KEY;
 	for(i=0;i<7;i++){
-		/* we can read hw secondary key region because before read permission is set */
+		/*                                                                           */
 		/*
-		ret = qfuse_read_single_row(addr, 0, p_buf);
-		if(ret!=0){
-			printk("%s: qfuse addr %x read fail, ret=%d\n",__func__,addr,ret);
-			ret = -EINVAL;
-			goto err;
-		}
-		printk("%s:Currently, secondary key addr=0x%x, lsb=0x%x, msb=0x%x\n",__func__,addr,p_buf[0],p_buf[1]);
-		*/
+                                              
+             
+                                                                     
+                 
+            
+   
+                                                                                                        
+  */
 		msleep(10);
 
-		/* if you have not written ever hw key before, value to read will be zero
-		 * so create random using tzbsp 
-		 * LSB region */
+		/*                                                                       
+                                  
+                */
 		if(!p_buf[0]){
 			
 			if(qfprom_create_random((u32*)&lsb)) {
@@ -662,13 +662,13 @@ int qfprom_blow_secondary_hwkey_region(void)
 			}
 			msleep(5);
 		} else {
-			/* dont create random value and rewrite value to read */
+			/*                                                    */
 			printk("hw lsb key was blow already in 0x%x addr\n",addr);
 			lsb = p_buf[0];
 		}
-		/* if you have not written ever hw key before, value to read will be zero
-		 * so create random using tzbsp 
-		 * MSB region */
+		/*                                                                       
+                                  
+                */
 		if(!p_buf[1]) {
 			if(qfprom_create_random((u32*)&msb)) {
 				ret=-EINVAL;
@@ -680,7 +680,7 @@ int qfprom_blow_secondary_hwkey_region(void)
 			printk("hw msb key was blow already in 0x%x addr\n",addr+4);
 			msb = p_buf[1];
 		}
-		/* must mask FEC bit */
+		/*                   */
 		lsb = lsb&HW_KEY_LSB_FEC_MASK;
 		msb = msb&HW_KEY_MSB_FEC_MASK;
 		printk("We start to writing secondary key !!!\n");
@@ -693,23 +693,23 @@ int qfprom_blow_secondary_hwkey_region(void)
 			goto err;
 		}
 		else {
-			/* write double check routine */
+			/*                            */
 			printk("hw secondary key write successful\n");
 			msleep(10);
 			/*
-			ret = qfuse_read_single_row(addr,0,p_buf);
-			if(ret!=0){
-				printk("%s:read fail when double check routine, ret=%d\n",__func__,ret);
-				goto err;
-			}  
-			if((p_buf[0]==lsb)&&(p_buf[1]==msb))
-				printk("%s: hw key write double check successful!!!!!!!\n",__func__);
-			else {
-				printk("%s: hw key double check error, read_lsb=0x%x,read_msb=0x%x\n",__func__,p_buf[0],p_buf[1]);
-				ret=-EINVAL;
-				goto err;
-			}
-			*/
+                                             
+              
+                                                                            
+             
+      
+                                       
+                                                                         
+         
+                                                                                                      
+                
+             
+    
+   */
 		}
 		addr=addr+8;
 		msleep(10);
@@ -720,10 +720,10 @@ err:
 	return ret;
 }
 
-/* if return value == 0, success 
- * if return value < 0, scm call fail
- * if return value > 0, status error to write qfprom
- * This API can use in range 0x700XXX
+/*                               
+                                     
+                                                    
+                                     
  */
 int qfuse_write_single_row(u32 fuse_addr, u32 fuse_lsb, u32 fuse_msb)
 {
@@ -810,10 +810,10 @@ error_p_status:
 	return ret;
 }
 
-/* if return value == 0, success 
- * if return value < 0, scm call fail
- * if return value > 0, status error to read qfprom
- * This API can use in range 0x700XXX
+/*                               
+                                     
+                                                   
+                                     
  */
 int qfuse_read_single_row(u32 fuse_addr, u32 addr_type, u32 * r_buf)
 {
@@ -921,5 +921,5 @@ module_init(lge_qfprom_interface_init);
 module_exit(lge_qfprom_interface_exit);
 
 MODULE_DESCRIPTION("LGE QFPROM interface driver");
-MODULE_AUTHOR("Taehung <taehung.kim@lge.com>");
+MODULE_AUTHOR("");
 MODULE_LICENSE("GPL");

@@ -1332,13 +1332,13 @@
 #define TAIKO_A_CDC_MAD_BEACON_IIR_CTL_VAL__POR				(0x00)
 
 
-/* SLIMBUS Slave Registers */
+/*                         */
 #define TAIKO_SLIM_PGD_PORT_INT_EN0                     (0x30)
 #define TAIKO_SLIM_PGD_PORT_INT_STATUS0                 (0x34)
 #define TAIKO_SLIM_PGD_PORT_INT_CLR0                    (0x38)
 #define TAIKO_SLIM_PGD_PORT_INT_SOURCE0			(0x60)
 
-/* Macros for Packing Register Writes into a U32 */
+/*                                               */
 #define TAIKO_PACKED_REG_SIZE sizeof(u32)
 
 #define TAIKO_CODEC_PACK_ENTRY(reg, mask, val) ((val & 0xff)|\

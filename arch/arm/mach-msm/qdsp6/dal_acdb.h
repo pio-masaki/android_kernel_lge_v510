@@ -16,7 +16,7 @@
 
 #define ACDB_OP_IOCTL		DAL_OP_FIRST_DEVICE_API
 
-/* ioctls */
+/*        */
 #define ACDB_GET_DEVICE		0x0108bb92
 #define ACDB_SET_DEVICE		0x0108bb93
 #define ACDB_GET_STREAM		0x0108bb95
@@ -39,7 +39,7 @@ struct acdb_cmd_device {
 	uint32_t interface_id;
 	uint32_t algorithm_block_id;
 
-	/* physical page aligned buffer */
+	/*                              */
 	uint32_t total_bytes;
 	uint32_t unmapped_buf;
 } __attribute__((packed));
@@ -52,7 +52,7 @@ struct acdb_cmd_device_table {
 	uint32_t network_id;
 	uint32_t sample_rate_id;
 
-	/* physical page aligned buffer */
+	/*                              */
 	uint32_t total_bytes;
 	uint32_t unmapped_buf;
 

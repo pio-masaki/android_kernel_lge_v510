@@ -20,16 +20,16 @@
 #include <mach/msm_bus.h>
 
 #define KBTOMB(a) (a * 1000ULL)
-/**
- * msm_bus_cl_get_pdata() - Generate bus client data from device tree
- * provided by clients.
- *
- * of_node: Device tree node to extract information from
- *
- * The function returns a valid pointer to the allocated bus-scale-pdata
- * if the vectors were correctly read from the client's device node.
- * Any error in reading or parsing the device node will return NULL
- * to the caller.
+/* 
+                                                                     
+                       
+  
+                                                        
+  
+                                                                        
+                                                                    
+                                                                   
+                 
  */
 struct msm_bus_scale_pdata *msm_bus_cl_get_pdata(struct platform_device *pdev)
 {
@@ -134,9 +134,9 @@ err:
 }
 EXPORT_SYMBOL(msm_bus_cl_get_pdata);
 
-/**
- * msm_bus_cl_clear_pdata() - Clear pdata allocated from device-tree
- * of_node: Device tree node to extract information from
+/* 
+                                                                    
+                                                        
  */
 void msm_bus_cl_clear_pdata(struct msm_bus_scale_pdata *pdata)
 {

@@ -17,19 +17,19 @@ EXTERNALIZED FUNCTIONS
 
 Copyright (c) 2008-2009, The Linux Foundation. All rights reserved.
 *====*====*====*====*====*====*====*====*====*====*====*====*====*====*====*/
-/*===========================================================================
+/*                                                                           
 
-			EDIT HISTORY FOR FILE
+                        
 
-This section contains comments describing changes made to this file.
-Notice that changes are listed in reverse chronological order.
+                                                                    
+                                                              
 
-Revision History:
+                 
 
-when       who     what, where, why
---------   ---     ----------------------------------------------------------
-09/25/08   umeshp      initial version
-===========================================================================*/
+                                   
+                                                                             
+                                      
+                                                                           */
 
   #define VIDENC_CMD_CFG           0x0000
   #define VIDENC_CMD_ACTIVE        0x0001
@@ -50,7 +50,7 @@ when       who     what, where, why
 
 
 /*
- * Command to pass the frame message information to VIDENC
+                                                          
  */
 
 
@@ -79,7 +79,7 @@ typedef struct {
 } __attribute__((packed)) videnc_cmd_frame_start;
 
 /*
- * Command to pass the frame-level digital stabilization parameters to VIDENC
+                                                                             
  */
 
 
@@ -94,7 +94,7 @@ typedef struct {
 } __attribute__((packed)) videnc_cmd_dis;
 
 /*
- * Command to pass the codec related parameters to VIDENC
+                                                         
  */
 
 
@@ -112,7 +112,7 @@ typedef struct {
 } __attribute__((packed)) videnc_cmd_cfg;
 
 /*
- * Command to start the video encoding
+                                      
  */
 
 
@@ -124,7 +124,7 @@ typedef struct {
 } __attribute__((packed)) videnc_cmd_active;
 
 /*
- * Command to stop the video encoding
+                                     
  */
 
 
@@ -136,7 +136,7 @@ typedef struct {
 } __attribute__((packed)) videnc_cmd_idle;
 
 /*
- * Command to query staus of VIDENC
+                                   
  */
 
 
@@ -148,7 +148,7 @@ typedef struct {
 } __attribute__((packed)) videnc_cmd_status_query;
 
 /*
- * Command to set rate control for a frame
+                                          
  */
 
 
@@ -162,7 +162,7 @@ typedef struct {
 } __attribute__((packed)) videnc_cmd_rc_cfg;
 
 /*
- * Command to set intra-refreshing
+                                  
  */
 
 
@@ -176,7 +176,7 @@ typedef struct {
 } __attribute__((packed)) videnc_cmd_intra_refresh;
 
 /*
- * Command to pass digital zoom information to the VIDENC
+                                                         
  */
 #define VIDENC_CMD_DIGITAL_ZOOM_LEN \
     sizeof(videnc_cmd_digital_zoom)
@@ -201,7 +201,7 @@ typedef struct {
 } __attribute__((packed)) videnc_cmd_digital_zoom;
 
 /*
- * Command to configure digital stabilization parameters
+                                                        
  */
 
 #define VIDENC_CMD_DIS_CFG_LEN \
@@ -216,7 +216,7 @@ typedef struct {
 
 
 /*
- * Command to set VIDENC_CMD_VENC_CLOCK
+                                       
  */
 
 

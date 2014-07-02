@@ -23,11 +23,11 @@
 #include <linux/slab.h>
 #include <linux/platform_device.h>
 
-/* Char device */
+/*             */
 #include <linux/cdev.h>
 #include <linux/fs.h>
 
-/* Sdio device */
+/*             */
 #include <linux/mmc/core.h>
 #include <linux/mmc/host.h>
 #include <linux/mmc/card.h>
@@ -58,7 +58,7 @@ static char *host_name;
 static struct csdio_func_t {
 	struct sdio_func   *m_func;
 	int                 m_enabled;
-	struct cdev         m_cdev;      /* char device structure */
+	struct cdev         m_cdev;      /*                       */
 	struct device      *m_device;
 	u32                 m_block_size;
 } *g_csdio_func_table[CSDIO_NUM_OF_SDIO_FUNCTIONS] = {0};
@@ -68,27 +68,27 @@ struct csdio_t {
 	struct device          *m_device;
 	struct class           *m_driver_class;
 	struct fasync_struct   *m_async_queue;
-	unsigned char           m_current_irq_mask; /* currently enabled irqs */
+	unsigned char           m_current_irq_mask; /*                        */
 	struct mmc_host        *m_host;
 	unsigned int            m_num_of_func;
 } g_csdio;
 
 struct csdio_file_descriptor {
 	struct csdio_func_t    *m_port;
-	u32                     m_block_mode;/* data tran. byte(0)/block(1) */
-	u32                     m_op_code;   /* address auto increment flag */
+	u32                     m_block_mode;/*                             */
+	u32                     m_op_code;   /*                             */
 	u32                     m_address;
 };
 
 static void *g_sdio_buffer;
 
 /*
- * Open and release
+                   
  */
 static int csdio_transport_open(struct inode *inode, struct file *filp)
 {
 	int ret = 0;
-	struct csdio_func_t *port = NULL; /*  device information */
+	struct csdio_func_t *port = NULL; /*                     */
 	struct sdio_func *func = NULL;
 	struct csdio_file_descriptor *descriptor = NULL;
 
@@ -143,7 +143,7 @@ static int csdio_transport_release(struct inode *inode, struct file *filp)
 }
 
 /*
- * Data management: read and write
+                                  
  */
 static ssize_t csdio_transport_read(struct file *filp,
 		char __user *buf,
@@ -163,15 +163,15 @@ static ssize_t csdio_transport_read(struct file *filp,
 				descriptor->m_address,
 				count*port->m_block_size,
 				count, port->m_block_size);
-		/* recalculate size */
+		/*                  */
 		count *= port->m_block_size;
 	}
 	sdio_claim_host(func);
 	if (descriptor->m_op_code) {
-		/* auto increment */
+		/*                */
 		ret = sdio_memcpy_fromio(func, g_sdio_buffer,
 				descriptor->m_address, count);
-	} else { /* FIFO */
+	} else { /*      */
 		ret = sdio_readsb(func, g_sdio_buffer,
 				descriptor->m_address, count);
 	}
@@ -212,11 +212,11 @@ static ssize_t csdio_transport_write(struct file *filp,
 	} else {
 		sdio_claim_host(func);
 		if (descriptor->m_op_code) {
-			/* auto increment */
+			/*                */
 			ret = sdio_memcpy_toio(func, descriptor->m_address,
 					g_sdio_buffer, count);
 		} else {
-			/* FIFO */
+			/*      */
 			ret = sdio_writesb(func, descriptor->m_address,
 					g_sdio_buffer, count);
 		}
@@ -233,13 +233,13 @@ static ssize_t csdio_transport_write(struct file *filp,
 	return ret;
 }
 
-/* disable interrupt for sdio client */
+/*                                   */
 static int disable_sdio_client_isr(struct sdio_func *func)
 {
 	int ret;
 
-	/* disable for all functions, to restore interrupts
-	 * use g_csdio.m_current_irq_mask */
+	/*                                                 
+                                   */
 	sdio_f0_writeb(func, 0, SDIO_CCCR_IENx, &ret);
 	if (ret)
 		pr_err(CSDIO_DEV_NAME" Can't sdio_f0_writeb (%d)\n", ret);
@@ -248,7 +248,7 @@ static int disable_sdio_client_isr(struct sdio_func *func)
 }
 
 /*
- * This handles the interrupt from SDIO.
+                                        
  */
 static void csdio_sdio_irq(struct sdio_func *func)
 {
@@ -260,13 +260,13 @@ static void csdio_sdio_irq(struct sdio_func *func)
 		pr_err(CSDIO_DEV_NAME" Can't disable client isr(%d)\n", ret);
 		return;
 	}
-	/*  signal asynchronous readers */
+	/*                              */
 	if (g_csdio.m_async_queue)
 		kill_fasync(&g_csdio.m_async_queue, SIGIO, POLL_IN);
 }
 
 /*
- * The ioctl() implementation
+                             
  */
 static int csdio_transport_ioctl(struct inode *inode,
 		struct file *filp,
@@ -279,10 +279,10 @@ static int csdio_transport_ioctl(struct inode *inode,
 	struct csdio_func_t *port = descriptor->m_port;
 	struct sdio_func *func = port->m_func;
 
-	/*  extract the type and number bitfields
-	    sanity check: return ENOTTY (inappropriate ioctl) before
-	    access_ok()
-	*/
+	/*                                       
+                                                             
+                
+ */
 	if ((_IOC_TYPE(cmd) != CSDIO_IOC_MAGIC) ||
 			(_IOC_NR(cmd) > CSDIO_IOC_MAXNR)) {
 		pr_err(TP_DEV_NAME "Wrong ioctl command parameters\n");
@@ -290,10 +290,10 @@ static int csdio_transport_ioctl(struct inode *inode,
 		goto exit;
 	}
 
-	/*  the direction is a bitmask, and VERIFY_WRITE catches R/W
-	 *  transfers. `Type' is user-oriented, while access_ok is
-	    kernel-oriented, so the concept of "read" and "write" is reversed
-	*/
+	/*                                                          
+                                                           
+                                                                      
+ */
 	if (_IOC_DIR(cmd) & _IOC_READ) {
 		err = !access_ok(VERIFY_WRITE, (void __user *)arg,
 				_IOC_SIZE(cmd));
@@ -438,7 +438,7 @@ static int csdio_transport_ioctl(struct inode *inode,
 				pr_err(CSDIO_DEV_NAME" SDIO_CONNECT_ISR"
 						" claim irq failed(%d)\n", ret);
 			} else {
-				/* update current irq mask for disable/enable */
+				/*                                            */
 				g_csdio.m_current_irq_mask |= (1 << func->num);
 			}
 		}
@@ -450,11 +450,11 @@ static int csdio_transport_ioctl(struct inode *inode,
 			sdio_claim_host(func);
 			sdio_release_irq(func);
 			sdio_release_host(func);
-			/* update current irq mask for disable/enable */
+			/*                                            */
 			g_csdio.m_current_irq_mask &= ~(1 << func->num);
 		}
 		break;
-	default:  /*  redundant, as cmd was checked against MAXNR */
+	default:  /*                                              */
 		pr_warning(TP_DEV_NAME"%d: Redundant IOCTL\n",
 				func->num);
 		ret = -ENOTTY;
@@ -534,13 +534,13 @@ static struct device *csdio_cdev_init(struct cdev *char_dev,
 	struct device *new_device = NULL;
 	dev_t devno = MKDEV(csdio_major, dev_minor);
 
-	/*  Initialize transport device */
+	/*                              */
 	cdev_init(char_dev, file_op);
 	char_dev->owner = THIS_MODULE;
 	char_dev->ops = file_op;
 	ret = cdev_add(char_dev, devno, 1);
 
-	/*  Fail gracefully if need be */
+	/*                             */
 	if (ret) {
 		pr_warning("Error %d adding CSDIO char device '%s%d'",
 				ret, devname, dev_minor);
@@ -548,7 +548,7 @@ static struct device *csdio_cdev_init(struct cdev *char_dev,
 	}
 	pr_info("'%s%d' char driver registered\n", devname, dev_minor);
 
-	/*  create a /dev entry for transport drivers */
+	/*                                            */
 	new_device = device_create(g_csdio.m_driver_class, parent, devno, NULL,
 			"%s%d", devname, dev_minor);
 	if (!new_device) {
@@ -556,7 +556,7 @@ static struct device *csdio_cdev_init(struct cdev *char_dev,
 				devname, dev_minor);
 		goto cleanup;
 	}
-	/* no irq attached */
+	/*                 */
 	g_csdio.m_current_irq_mask = 0;
 
 	if (csdio_cdev_update_permissions(devname, dev_minor)) {
@@ -574,7 +574,7 @@ exit:
 	return new_device;
 }
 
-/* Looks for first non empty function, returns NULL otherwise */
+/*                                                            */
 static struct sdio_func *get_active_func(void)
 {
 	int i;
@@ -638,7 +638,7 @@ static struct attribute_group dev_attr_grp = {
 };
 
 /*
- * The ioctl() implementation for control device
+                                                
  */
 static int csdio_ctrl_ioctl(struct inode *inode, struct file *filp,
 		unsigned int cmd, unsigned long arg)
@@ -648,10 +648,10 @@ static int csdio_ctrl_ioctl(struct inode *inode, struct file *filp,
 
 	pr_info("CSDIO ctrl ioctl.\n");
 
-	/*  extract the type and number bitfields
-	    sanity check: return ENOTTY (inappropriate ioctl) before
-	    access_ok()
-	*/
+	/*                                       
+                                                             
+                
+ */
 	if ((_IOC_TYPE(cmd) != CSDIO_IOC_MAGIC) ||
 			(_IOC_NR(cmd) > CSDIO_IOC_MAXNR)) {
 		pr_err(CSDIO_DEV_NAME "Wrong ioctl command parameters\n");
@@ -659,10 +659,10 @@ static int csdio_ctrl_ioctl(struct inode *inode, struct file *filp,
 		goto exit;
 	}
 
-	/*  the direction is a bitmask, and VERIFY_WRITE catches R/W
-	  transfers. `Type' is user-oriented, while access_ok is
-	  kernel-oriented, so the concept of "read" and "write" is reversed
-	  */
+	/*                                                          
+                                                         
+                                                                    
+   */
 	if (_IOC_DIR(cmd) & _IOC_READ) {
 		err = !access_ok(VERIFY_WRITE, (void __user *)arg,
 				_IOC_SIZE(cmd));
@@ -801,7 +801,7 @@ static int csdio_ctrl_ioctl(struct inode *inode, struct file *filp,
 			}
 		}
 	break;
-	default:  /*  redundant, as cmd was checked against MAXNR */
+	default:  /*                                              */
 		pr_warning(CSDIO_DEV_NAME" Redundant IOCTL\n");
 		ret = -ENOTTY;
 	}
@@ -818,23 +818,23 @@ static int csdio_ctrl_fasync(int fd, struct file *filp, int mode)
 }
 
 /*
- * Open and close
+                 
  */
 static int csdio_ctrl_open(struct inode *inode, struct file *filp)
 {
 	int ret = 0;
-	struct csdio_t *csdio_ctrl_drv = NULL; /*  device information */
+	struct csdio_t *csdio_ctrl_drv = NULL; /*                     */
 
 	pr_info("CSDIO ctrl open.\n");
 	csdio_ctrl_drv = container_of(inode->i_cdev, struct csdio_t, m_cdev);
-	filp->private_data = csdio_ctrl_drv; /*  for other methods */
+	filp->private_data = csdio_ctrl_drv; /*                    */
 	return ret;
 }
 
 static int csdio_ctrl_release(struct inode *inode, struct file *filp)
 {
 	pr_info("CSDIO ctrl release.\n");
-	/*  remove this filp from the asynchronously notified filp's */
+	/*                                                           */
 	csdio_ctrl_fasync(-1, filp, 0);
 	return 0;
 }
@@ -861,7 +861,7 @@ static int csdio_probe(struct sdio_func *func,
 		goto exit;
 	}
 
-	/* enforce single instance policy */
+	/*                                */
 	if (g_csdio_func_table[func->num-1]) {
 		pr_err("%s - only single SDIO device supported",
 				sdio_func_id(func));
@@ -876,7 +876,7 @@ static int csdio_probe(struct sdio_func *func,
 		goto exit;
 	}
 
-	/* initialize SDIO side */
+	/*                      */
 	port->m_func = func;
 	sdio_set_drvdata(func, port);
 
@@ -887,7 +887,7 @@ static int csdio_probe(struct sdio_func *func,
 			csdio_minor + port->m_func->num,
 			TP_DEV_NAME, &port->m_func->dev);
 
-	/* create appropriate char device */
+	/*                                */
 	if (!port->m_device)
 		goto free;
 
@@ -921,12 +921,12 @@ static void csdio_remove(struct sdio_func *func)
 		CSDIO_DEV_NAME, func->num, sdio_func_id(func), func->num);
 }
 
-/* CONFIG_CSDIO_VENDOR_ID and CONFIG_CSDIO_DEVICE_ID are defined in Kconfig.
- * Use kernel configuration to change the values or overwrite them through
- * module parameters */
+/*                                                                          
+                                                                          
+                     */
 static struct sdio_device_id csdio_ids[] = {
 	{ SDIO_DEVICE(CONFIG_CSDIO_VENDOR_ID, CONFIG_CSDIO_DEVICE_ID) },
-	{ /* end: all zeroes */},
+	{ /*                 */},
 };
 
 MODULE_DEVICE_TABLE(sdio, csdio_ids);
@@ -965,8 +965,8 @@ static int __init csdio_init(void)
 
 	pr_info("Init CSDIO driver module.\n");
 
-	/*  Get a range of minor numbers to work with, asking for a dynamic */
-	/*  major unless directed otherwise at load time. */
+	/*                                                                  */
+	/*                                                */
 	if (csdio_major) {
 		devno = MKDEV(csdio_major, csdio_minor);
 		ret = register_chrdev_region(devno, csdio_transport_nr_devs,
@@ -982,13 +982,13 @@ static int __init csdio_init(void)
 	}
 	pr_info("CSDIO char driver major number is %d\n", csdio_major);
 
-	/* kernel module got parameters: overwrite vendor and device id's */
+	/*                                                                */
 	if ((csdio_vendor_id != 0) && (csdio_device_id != 0)) {
 		csdio_ids[0].vendor = (u16)csdio_vendor_id;
 		csdio_ids[0].device = (u16)csdio_device_id;
 	}
 
-	/*  prepare create /dev/... instance */
+	/*                                   */
 	g_csdio.m_driver_class = class_create(THIS_MODULE, CSDIO_DEV_NAME);
 	if (IS_ERR(g_csdio.m_driver_class)) {
 		ret = -ENOMEM;
@@ -997,7 +997,7 @@ static int __init csdio_init(void)
 	}
 	g_csdio.m_driver_class->devnode = csdio_devnode;
 
-	/*  create CSDIO ctrl driver */
+	/*                           */
 	g_csdio.m_device = csdio_cdev_init(&g_csdio.m_cdev,
 		&csdio_ctrl_fops, csdio_minor, CSDIO_DEV_NAME, NULL);
 	if (!g_csdio.m_device) {
@@ -1038,7 +1038,7 @@ static int __init csdio_init(void)
 		CSDIO_DEV_NAME, csdio_device_id, csdio_vendor_id,
 		(NULL == host_name) ? "Any" : host_name);
 
-	/* register sdio driver */
+	/*                      */
 	ret = sdio_register_driver(&csdio_driver);
 	if (ret) {
 		pr_err("%s: Unable to register as SDIO driver\n",

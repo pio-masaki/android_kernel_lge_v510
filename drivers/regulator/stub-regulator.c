@@ -116,7 +116,7 @@ static int regulator_stub_is_enabled(struct regulator_dev *rdev)
 	return vreg_priv->enabled;
 }
 
-/* Real regulator operations. */
+/*                            */
 static struct regulator_ops regulator_stub_ops = {
 	.enable			= regulator_stub_enable,
 	.disable		= regulator_stub_disable,
@@ -164,10 +164,10 @@ static int __devinit regulator_stub_probe(struct platform_device *pdev)
 	rdesc->ops = &regulator_stub_ops;
 
 	/*
-	 * Ensure that voltage set points are handled correctly for regulators
-	 * which have a specified voltage constraint range, as well as those
-	 * that do not.
-	 */
+                                                                       
+                                                                     
+                
+  */
 	if (vreg_pdata->init_data.constraints.min_uV == 0 &&
 	    vreg_pdata->init_data.constraints.max_uV == 0)
 		rdesc->n_voltages = 0;

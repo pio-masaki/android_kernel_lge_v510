@@ -16,7 +16,7 @@
 
 #include <mach/camera.h>
 
-/***********  start of register offset *********************/
+/*                                                         */
 #define VPE_INTR_ENABLE_OFFSET                0x0020
 #define VPE_INTR_STATUS_OFFSET                0x0024
 #define VPE_INTR_CLEAR_OFFSET                 0x0028
@@ -67,11 +67,11 @@
 #define VPE_SCALE_COEFF_MSBn(n)	(0x50404 + 8 * (n))
 #define VPE_SCALE_COEFF_NUM			32
 
-/*********** end of register offset ********************/
+/*                                                     */
 
 
 #define VPE_HARDWARE_VERSION          0x00080308
-#define VPE_SW_RESET_VALUE            0x00000010  /* bit 4 for PPP*/
+#define VPE_SW_RESET_VALUE            0x00000010  /*              */
 #define VPE_AXI_RD_ARB_CONFIG_VALUE   0x124924
 #define VPE_CMD_MODE_VALUE            0x1
 #define VPE_DEFAULT_OP_MODE_VALUE     0x40FC0004
@@ -82,9 +82,9 @@
 #define VPE_TURBO_MODE_CLOCK_RATE    200000000
 #define VPE_SUBDEV_MAX_EVENTS        30
 
-/**************************************************/
-/*********** End of command id ********************/
-/**************************************************/
+/*                                                */
+/*                                                */
+/*                                                */
 
 enum vpe_state {
 	VPE_STATE_IDLE,
@@ -100,8 +100,8 @@ struct vpe_ctrl_type {
 	void              *extdata;
 	uint32_t          extlen;
 	struct msm_vpe_callback *resp;
-	uint32_t          out_h;  /* this is BEFORE rotation. */
-	uint32_t          out_w;  /* this is BEFORE rotation. */
+	uint32_t          out_h;  /*                          */
+	uint32_t          out_w;  /*                          */
 	struct timespec   ts;
 	int               output_type;
 	int               frame_pack;
@@ -120,17 +120,17 @@ struct vpe_ctrl_type {
 	struct clk	*vpe_clk[2];
 	struct msm_mctl_pp_frame_info *pp_frame_info;
 	atomic_t active;
-	struct msm_device_queue eventData_q; /*V4L2 Event Payload Queue*/
-	struct device *iommu_ctx_src;
-	struct device *iommu_ctx_dst;
+	struct msm_device_queue eventData_q; /*                        */
+    struct device *iommu_ctx_src;
+    struct device *iommu_ctx_dst;
 };
 
 /*
-* vpe_input_update
-*
-* Define the parameters for output plane
+                  
+ 
+                                        
 */
-/* this is the dimension of ROI.  width / height. */
+/*                                                */
 struct vpe_src_size_packed {
 	uint32_t        src_w;
 	uint32_t        src_h;
@@ -143,9 +143,9 @@ struct vpe_src_xy_packed {
 
 struct vpe_input_plane_update_type {
 	struct vpe_src_size_packed             src_roi_size;
-	/* crop updates this set. */
+	/*                        */
 	struct vpe_src_xy_packed               src_roi_offset;
-	/* input address*/
+	/*              */
 	uint8_t                         *src_p0_addr;
 	uint8_t                         *src_p1_addr;
 };
@@ -182,5 +182,5 @@ struct phase_val_t {
 	int32_t phase_step_y;
 };
 
-#endif /*_MSM_VPE_H_*/
+#endif /*           */
 

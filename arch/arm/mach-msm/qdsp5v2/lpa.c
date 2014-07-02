@@ -25,7 +25,7 @@
 #define LPA_REG_WRITEL(drv, val, reg)  writel(val, drv->baseaddr + reg)
 #define LPA_REG_READL(drv, reg)  readl(drv->baseaddr + reg)
 
-/* bit 2:0 is reserved because watermarks have to be 64-bit aligned */
+/*                                                                  */
 #define LLB_WATERMARK_VAL_MASK 0x00000003
 
 #define LPA_STATUS_SBUF_EN 0x01
@@ -44,7 +44,7 @@ struct lpa_drv {
 };
 
 struct lpa_state {
-	struct lpa_drv lpa_drv; /* One instance for now */
+	struct lpa_drv lpa_drv; /*                      */
 	u32 assigned;
 	struct mutex lpa_lock;
 };
@@ -67,7 +67,7 @@ static void lpa_reset(struct lpa_drv *lpa)
 {
 	u32 status;
 	struct clk *adsp_clk;
-	/* Need to make sure not disable clock while other device is enabled */
+	/*                                                                   */
 	adsp_clk = clk_get(NULL, "adsp_clk");
 	if (!adsp_clk) {
 		MM_ERR("failed to get adsp clk\n");
@@ -289,15 +289,15 @@ struct lpa_drv *lpa_get(void)
 		ret_lpa = ERR_PTR(-EBUSY);
 		goto error;
 	}
-	/* perform initialization */
+	/*                        */
 	lpa_reset(ret_lpa);
-	/* Config adec param */
-	/* Initialize LLB/SB min/max address */
+	/*                   */
+	/*                                   */
 	lpa_switch_sb(ret_lpa);
-	/* Config HLB minx/max address */
+	/*                             */
 	lpa_config_hlb_addr(ret_lpa);
 
-	/* Power up all memory bank for now */
+	/*                                  */
 	mem_bank.b0 = 1;
 	mem_bank.b1 = 1;
 	mem_bank.b2 = 1;
@@ -356,7 +356,7 @@ void lpa_put(struct lpa_drv *lpa)
 		MM_ERR("invalid arg\n");
 		goto error;
 	}
-	/* Deinitialize */
+	/*              */
 	the_lpa_state.assigned--;
 error:
 	mutex_unlock(&the_lpa_state.lpa_lock);
@@ -500,7 +500,7 @@ int lpa_cmd_enable_codec(struct lpa_drv *lpa, bool enable)
 	if (enable) {
 		if (val & LPA_OBUF_CODEC_CODEC_INTF_EN_BMSK)
 			return -EBUSY;
-		/* Power up all memory bank for now */
+		/*                                  */
 		mem_bank.b0 = 1;
 		mem_bank.b1 = 1;
 		mem_bank.b2 = 1;
@@ -515,7 +515,7 @@ int lpa_cmd_enable_codec(struct lpa_drv *lpa, bool enable)
 		mem_bank.llb = 1;
 		lpa_powerup_mem_bank(lpa, &mem_bank);
 
-		/*clear LLB*/
+		/*         */
 		lpa_clear_llb(lpa);
 
 		lpa_enable_codec(lpa, 1);
@@ -566,7 +566,7 @@ static int lpa_probe(struct platform_device *pdev)
 	the_lpa_state.lpa_drv.app_proc_id = pdata->app_proc_id;
 	the_lpa_state.lpa_drv.nosb_config = pdata->nosb_config;
 	the_lpa_state.lpa_drv.sb_config = pdata->sb_config;
-	/* default to enable summing buffer */
+	/*                                  */
 	the_lpa_state.lpa_drv.status = LPA_STATUS_SBUF_EN;
 
 error:

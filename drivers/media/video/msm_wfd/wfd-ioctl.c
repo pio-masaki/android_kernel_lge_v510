@@ -1,4 +1,4 @@
-/* Copyright (c) 2011-2013, The Linux Foundation. All rights reserved.
+/* Copyright (c) 2011-2012, The Linux Foundation. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -197,7 +197,7 @@ alloc_fail:
 	return rc;
 }
 
-/* Doesn't do iommu unmap */
+/*                        */
 static int wfd_free_ion_buffer(struct ion_client *client,
 		struct mem_region *mregion)
 {
@@ -266,15 +266,11 @@ int wfd_allocate_input_buffers(struct wfd_device *wfd_dev,
 		mmap_context.ion_client = wfd_dev->ion_client;
 		rc = v4l2_subdev_call(&wfd_dev->enc_sdev, core, ioctl,
 				ENC_MMAP, &mmap_context);
-		if (rc) {
+		if (rc || !enc_mregion->paddr) {
 			WFD_MSG_ERR("Failed to map input memory\n");
 			goto alloc_fail;
-		} else if (!enc_mregion->paddr) {
-			WFD_MSG_ERR("ENC_MMAP returned success" \
-				"but failed to map input memory\n");
-			rc = -EINVAL;
-			goto alloc_fail;
 		}
+
 		WFD_MSG_DBG("NOTE: enc paddr = [%p->%p], kvaddr = %p\n",
 				enc_mregion->paddr, (int8_t *)
 				enc_mregion->paddr + enc_mregion->size,
@@ -287,7 +283,7 @@ int wfd_allocate_input_buffers(struct wfd_device *wfd_dev,
 			goto set_input_fail;
 		}
 
-		/* map the buffer from encoder to mdp */
+		/*                                    */
 		mdp_mregion->kvaddr = enc_mregion->kvaddr;
 		mdp_mregion->size = enc_mregion->size;
 		mdp_mregion->offset = enc_mregion->offset;
@@ -302,18 +298,10 @@ int wfd_allocate_input_buffers(struct wfd_device *wfd_dev,
 		rc = v4l2_subdev_call(&wfd_dev->mdp_sdev, core, ioctl,
 				MDP_MMAP, (void *)&mmap_context);
 
-		if (rc) {
+		if (rc || !mdp_mregion->paddr) {
 			WFD_MSG_ERR(
 				"Failed to map to mdp, rc = %d, paddr = 0x%p\n",
 				rc, mdp_mregion->paddr);
-			mdp_mregion->kvaddr = NULL;
-			mdp_mregion->paddr = NULL;
-			mdp_mregion->ion_handle = NULL;
-			goto mdp_mmap_fail;
-		} else if (!mdp_mregion->paddr) {
-			WFD_MSG_ERR("MDP_MMAP returned success" \
-				"but failed to map to MDP\n");
-			rc = -EINVAL;
 			mdp_mregion->kvaddr = NULL;
 			mdp_mregion->paddr = NULL;
 			mdp_mregion->ion_handle = NULL;
@@ -357,9 +345,9 @@ int wfd_allocate_input_buffers(struct wfd_device *wfd_dev,
 	return rc;
 
 	/*
-	 * Clean up only the buffer that we failed in setting up.
-	 * Caller will clean up the rest by calling free_input_buffers()
-	 */
+                                                          
+                                                                 
+  */
 mdp_q_fail:
 	memset(&mmap_context, 0, sizeof(mmap_context));
 	mmap_context.mregion = mdp_mregion;
@@ -501,16 +489,10 @@ int wfd_vidbuf_buf_init(struct vb2_buffer *vb)
 		(struct wfd_device *)video_drvdata(priv_data);
 	struct mem_info *minfo = vb2_plane_cookie(vb, 0);
 	struct mem_region mregion;
-/* LGE_CHANGE_S : youngwook.song@lge.com ; this is for WBT */
-	if (minfo == NULL) {
-		WFD_MSG_ERR("wfd_vidbuf_buf_init has been failed, since allocation failed");
-		return -EINVAL;
-	}
-/* LGE_CHANGE_E : youngwook.song@lge.com ; this is for WBT */
 	mregion.fd = minfo->fd;
 	mregion.offset = minfo->offset;
 	mregion.cookie = (u32)vb;
-	/*TODO: should be fixed in kernel 3.2*/
+	/*                                   */
 	mregion.size =  inst->out_buf_size;
 
 	if (inst && !inst->vid_bufq.streaming) {
@@ -717,12 +699,6 @@ void wfd_vidbuf_buf_queue(struct vb2_buffer *vb)
 	struct wfd_inst *inst = (struct wfd_inst *)priv_data->private_data;
 	struct mem_region mregion;
 	struct mem_info *minfo = vb2_plane_cookie(vb, 0);
-/* LGE_CHANGE_S : youngwook.song@lge.com ; this is for WBT */
-	if (minfo == NULL) {
-		WFD_MSG_ERR("wfd_vidbuf_buf_init has been failed, since allocation failed");
-		return;
-	}
-/* LGE_CHANGE_E : youngwook.song@lge.com ; this is for WBT */
 	mregion.fd = minfo->fd;
 	mregion.offset = minfo->offset;
 	mregion.cookie = (u32)vb;
@@ -1042,7 +1018,7 @@ static int wfdioc_g_parm(struct file *filp, void *fh,
 	struct wfd_device *wfd_dev = video_drvdata(filp);
 	struct wfd_inst *inst = filp->private_data;
 	int64_t frame_interval = 0,
-		max_frame_interval = 0; /* both in nsecs*/
+		max_frame_interval = 0; /*              */
 	struct v4l2_qcom_frameskip frameskip, *usr_frameskip;
 
 	usr_frameskip = (struct v4l2_qcom_frameskip *)
@@ -1314,7 +1290,7 @@ void *wfd_vb2_mem_ops_get_userptr(void *alloc_ctx, unsigned long vaddr,
 
 void wfd_vb2_mem_ops_put_userptr(void *buf_priv)
 {
-	/*TODO: Free the list*/
+	/*                   */
 }
 
 void *wfd_vb2_mem_ops_cookie(void *buf_priv)
@@ -1564,7 +1540,7 @@ err_v4l2_registration:
 static int __devinit __wfd_probe(struct platform_device *pdev)
 {
 	int rc = 0, c = 0;
-	struct wfd_device *wfd_dev; /* Should be taken as an array*/
+	struct wfd_device *wfd_dev; /*                            */
 	struct ion_client *ion_client = NULL;
 	struct msm_wfd_platform_data *wfd_priv;
 
@@ -1586,7 +1562,7 @@ static int __devinit __wfd_probe(struct platform_device *pdev)
 	rc = wfd_stats_setup();
 	if (rc) {
 		WFD_MSG_ERR("No debugfs support: %d\n", rc);
-		/* Don't treat this as a fatal err */
+		/*                                 */
 		rc = 0;
 	}
 
@@ -1601,7 +1577,7 @@ static int __devinit __wfd_probe(struct platform_device *pdev)
 			WFD_DEVICE_NUMBER_BASE + c, pdev);
 
 		if (rc) {
-			/* Clear out old devices */
+			/*                       */
 			for (--c; c >= 0; --c) {
 				v4l2_device_unregister_subdev(
 						&wfd_dev[c].vsg_sdev);
@@ -1617,7 +1593,7 @@ static int __devinit __wfd_probe(struct platform_device *pdev)
 			goto err_v4l2_probe;
 		}
 
-		/* Other device specific stuff */
+		/*                             */
 		mutex_init(&wfd_dev[c].dev_lock);
 		wfd_dev[c].ion_client = ion_client;
 		wfd_dev[c].in_use = false;

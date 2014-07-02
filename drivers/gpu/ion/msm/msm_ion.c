@@ -51,11 +51,6 @@ static struct ion_heap_desc ion_heap_meta[] = {
 		.name	= ION_VMALLOC_HEAP_NAME,
 	},
 	{
-		.id	= ION_SYSTEM_CONTIG_HEAP_ID,
-		.type	= ION_HEAP_TYPE_SYSTEM_CONTIG,
-		.name	= ION_KMALLOC_HEAP_NAME,
-	},
-	{
 		.id	= ION_CP_MM_HEAP_ID,
 		.type	= ION_HEAP_TYPE_CP,
 		.name	= ION_MM_HEAP_NAME,
@@ -241,14 +236,14 @@ static void allocate_co_memory(struct ion_platform_heap *heap,
 	}
 }
 
-/* Fixup heaps in board file to support two heaps being adjacent to each other.
- * A flag (adjacent_mem_id) in the platform data tells us that the heap phy
- * memory location must be adjacent to the specified heap. We do this by
- * carving out memory for both heaps and then splitting up the memory to the
- * two heaps. The heap specifying the "adjacent_mem_id" get the base of the
- * memory while heap specified in "adjacent_mem_id" get base+size as its
- * base address.
- * Note: Modifies platform data and allocates memory.
+/*                                                                             
+                                                                           
+                                                                        
+                                                                            
+                                                                           
+                                                                        
+                
+                                                     
  */
 static void msm_ion_heap_fixup(struct ion_platform_heap heap_data[],
 			       unsigned int nr_heaps)
@@ -533,11 +528,11 @@ static struct ion_platform_data *msm_ion_parse_dt(
 	pdata->nr = num_heaps;
 
 	for_each_child_of_node(dt_node, node) {
-		/**
-		 * TODO: Replace this with of_get_address() when this patch
-		 * gets merged: http://
-		 * permalink.gmane.org/gmane.linux.drivers.devicetree/18614
-		*/
+		/* 
+                                                             
+                         
+                                                             
+  */
 		ret = of_property_read_u32(node, "reg", &val);
 		if (ret) {
 			pr_err("%s: Unable to find reg key", __func__);
@@ -612,7 +607,7 @@ static long msm_ion_custom_ioctl(struct ion_client *client,
 		start = (unsigned long) data.vaddr;
 		end = (unsigned long) data.vaddr + data.length;
 
-		if (start && check_vaddr_bounds(start, end)) {
+		if (check_vaddr_bounds(start, end)) {
 			pr_err("%s: virtual address %p is out of bounds\n",
 				__func__, data.vaddr);
 			return -EINVAL;
@@ -697,7 +692,7 @@ static int msm_ion_probe(struct platform_device *pdev)
 
 	msm_ion_heap_fixup(pdata->heaps, num_heaps);
 
-	/* create the heaps as specified in the board file */
+	/*                                                 */
 	for (i = 0; i < num_heaps; i++) {
 		struct ion_platform_heap *heap_data = &pdata->heaps[i];
 		msm_ion_allocate(heap_data);

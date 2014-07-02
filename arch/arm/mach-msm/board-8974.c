@@ -87,37 +87,37 @@ static void __init reserve_ebi_memory(void)
 static struct resource smd_resource[] = {
 	{
 		.name	= "modem_smd_in",
-		.start	= 32 + 25,		/* mss_sw_to_kpss_ipc_irq0  */
+		.start	= 32 + 25,		/*                          */
 		.flags	= IORESOURCE_IRQ,
 	},
 	{
 		.name	= "modem_smsm_in",
-		.start	= 32 + 26,		/* mss_sw_to_kpss_ipc_irq1  */
+		.start	= 32 + 26,		/*                          */
 		.flags	= IORESOURCE_IRQ,
 	},
 	{
 		.name	= "adsp_smd_in",
-		.start	= 32 + 156,		/* lpass_to_kpss_ipc_irq0  */
+		.start	= 32 + 156,		/*                         */
 		.flags	= IORESOURCE_IRQ,
 	},
 	{
 		.name	= "adsp_smsm_in",
-		.start	= 32 + 157,		/* lpass_to_kpss_ipc_irq1  */
+		.start	= 32 + 157,		/*                         */
 		.flags	= IORESOURCE_IRQ,
 	},
 	{
 		.name	= "wcnss_smd_in",
-		.start	= 32 + 142,		/* WcnssAppsSmdMedIrq  */
+		.start	= 32 + 142,		/*                     */
 		.flags	= IORESOURCE_IRQ,
 	},
 	{
 		.name	= "wcnss_smsm_in",
-		.start	= 32 + 144,		/* RivaAppsWlanSmsmIrq  */
+		.start	= 32 + 144,		/*                      */
 		.flags	= IORESOURCE_IRQ,
 	},
 	{
 		.name	= "rpm_smd_in",
-		.start	= 32 + 168,		/* rpm_to_kpss_ipc_irq4  */
+		.start	= 32 + 168,		/*                       */
 		.flags	= IORESOURCE_IRQ,
 	},
 };
@@ -194,7 +194,7 @@ static struct smd_subsystem_config smd_config_list[] = {
 	},
 	{
 		.irq_config_id = SMD_RPM,
-		.subsys_name = NULL, /* do not use PIL to load RPM */
+		.subsys_name = NULL, /*                            */
 		.edge = SMD_APPS_RPM,
 
 		.smd_int.irq_name = "rpm_smd_in",
@@ -206,7 +206,7 @@ static struct smd_subsystem_config smd_config_list[] = {
 		.smd_int.out_base = (void __iomem *)MSM_APCS_GCC_BASE,
 		.smd_int.out_offset = 0x8,
 
-		.smsm_int.irq_name = NULL, /* RPM does not support SMSM */
+		.smsm_int.irq_name = NULL, /*                           */
 		.smsm_int.flags = 0,
 		.smsm_int.irq_id = 0,
 		.smsm_int.device_name = NULL,
@@ -422,10 +422,10 @@ void __init msm_8974_add_devices(void)
 }
 
 /*
- * Used to satisfy dependencies for devices that need to be
- * run early or in a particular order. Most likely your device doesn't fall
- * into this category, and thus the driver should not be added here. The
- * EPROBE_DEFER can satisfy most dependency problems.
+                                                           
+                                                                           
+                                                                        
+                                                     
  */
 void __init msm_8974_add_drivers(void)
 {

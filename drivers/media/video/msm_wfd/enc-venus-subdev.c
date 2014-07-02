@@ -32,7 +32,7 @@ static struct ion_client *venc_ion_client;
 struct index_bitmap {
 	unsigned long *bitmap;
 	int size;
-	int size_bits; /*Size in bits, not necessarily size/8 */
+	int size_bits; /*                                     */
 };
 
 struct venc_inst {
@@ -51,7 +51,7 @@ struct venc_inst {
 
 int venc_load_fw(struct v4l2_subdev *sd)
 {
-	/*No need to explicitly load the fw */
+	/*                                  */
 	return 0;
 }
 
@@ -390,7 +390,7 @@ static long venc_get_buffer_req(struct v4l2_subdev *sd, void *arg)
 	}
 
 	inst = (struct venc_inst *)sd->dev_priv;
-	/* Get buffer count */
+	/*                  */
 	v4l2_bufreq = (struct v4l2_requestbuffers) {
 		.count = bufreq->count,
 		.type = BUF_TYPE_OUTPUT,
@@ -403,7 +403,7 @@ static long venc_get_buffer_req(struct v4l2_subdev *sd, void *arg)
 		goto venc_buf_req_fail;
 	}
 
-	/* Get buffer size */
+	/*                 */
 	v4l2_format.type = BUF_TYPE_OUTPUT;
 	rc = msm_vidc_g_fmt(inst->vidc_context, &v4l2_format);
 	if (rc) {
@@ -443,7 +443,7 @@ static long venc_set_buffer_req(struct v4l2_subdev *sd, void *arg)
 
 	inst = (struct venc_inst *)sd->dev_priv;
 
-	/* Attempt to set buffer count */
+	/*                             */
 	v4l2_bufreq = (struct v4l2_requestbuffers) {
 		.count = bufreq->count,
 		.type = BUF_TYPE_INPUT,
@@ -456,7 +456,7 @@ static long venc_set_buffer_req(struct v4l2_subdev *sd, void *arg)
 		goto venc_buf_req_fail;
 	}
 
-	/* Get buffer size */
+	/*                 */
 	v4l2_format.type = BUF_TYPE_INPUT;
 	rc = msm_vidc_g_fmt(inst->vidc_context, &v4l2_format);
 	if (rc) {
@@ -689,7 +689,7 @@ static long venc_set_output_buffer(struct v4l2_subdev *sd, void *arg)
 
 	inst = (struct venc_inst *)sd->dev_priv;
 
-	/* Check if buf already registered */
+	/*                                 */
 	if (get_registered_mregion(&inst->registered_output_bufs, mregion)) {
 		WFD_MSG_ERR("Duplicate output buffer\n");
 		rc = -EEXIST;
@@ -938,7 +938,7 @@ static long venc_encode_frame(struct v4l2_subdev *sd, void *arg)
 
 static long venc_alloc_recon_buffers(struct v4l2_subdev *sd, void *arg)
 {
-	/* vidc driver allocates internally on streamon */
+	/*                                              */
 	return 0;
 }
 
@@ -1042,7 +1042,7 @@ venc_free_input_buffer_fail:
 
 static long venc_free_recon_buffers(struct v4l2_subdev *sd, void *arg)
 {
-	/* vidc driver takes care of this */
+	/*                                */
 	return 0;
 }
 
@@ -1058,9 +1058,9 @@ static long venc_set_property(struct v4l2_subdev *sd, void *arg)
 
 	inst = (struct venc_inst *)sd->dev_priv;
 	if (ctrl->id == V4L2_CID_MPEG_VIDEO_HEADER_MODE) {
-		/* XXX: We don't support this yet, but to prevent unncessary
-		 * target specific code for the client, we'll not error out.
-		 * The client ideally shouldn't notice this */
+		/*                                                          
+                                                              
+                                              */
 		return 0;
 	}
 
@@ -1144,9 +1144,9 @@ long venc_munmap(struct v4l2_subdev *sd, void *arg)
 static long venc_set_framerate_mode(struct v4l2_subdev *sd,
 				void *arg)
 {
-	/* TODO: Unsupported for now, but return false success
-	 * to preserve binary compatibility for userspace apps
-	 * across targets */
+	/*                                                    
+                                                       
+                   */
 	return 0;
 }
 

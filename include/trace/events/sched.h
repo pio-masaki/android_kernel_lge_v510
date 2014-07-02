@@ -9,7 +9,7 @@
 #include <linux/binfmts.h>
 
 /*
- * Tracepoint for calling kthread_stop, performed to end a kthread:
+                                                                   
  */
 TRACE_EVENT(sched_kthread_stop,
 
@@ -31,7 +31,7 @@ TRACE_EVENT(sched_kthread_stop,
 );
 
 /*
- * Tracepoint for the return value of the kthread stopping:
+                                                           
  */
 TRACE_EVENT(sched_kthread_stop_ret,
 
@@ -51,7 +51,7 @@ TRACE_EVENT(sched_kthread_stop_ret,
 );
 
 /*
- * Tracepoint for waking up a task:
+                                   
  */
 DECLARE_EVENT_CLASS(sched_wakeup_template,
 
@@ -85,7 +85,7 @@ DEFINE_EVENT(sched_wakeup_template, sched_wakeup,
 	     TP_ARGS(p, success));
 
 /*
- * Tracepoint for waking up a new task:
+                                       
  */
 DEFINE_EVENT(sched_wakeup_template, sched_wakeup_new,
 	     TP_PROTO(struct task_struct *p, int success),
@@ -98,8 +98,8 @@ static inline long __trace_sched_switch_state(struct task_struct *p)
 
 #ifdef CONFIG_PREEMPT
 	/*
-	 * For all intents and purposes a preempted task is a running task.
-	 */
+                                                                    
+  */
 	if (task_thread_info(p)->preempt_count & PREEMPT_ACTIVE)
 		state = TASK_RUNNING | TASK_STATE_MAX;
 #endif
@@ -109,7 +109,7 @@ static inline long __trace_sched_switch_state(struct task_struct *p)
 #endif
 
 /*
- * Tracepoint for task switches, performed by the scheduler:
+                                                            
  */
 TRACE_EVENT(sched_switch,
 
@@ -150,7 +150,7 @@ TRACE_EVENT(sched_switch,
 );
 
 /*
- * Tracepoint for a task being migrated:
+                                        
  */
 TRACE_EVENT(sched_migrate_task,
 
@@ -179,31 +179,6 @@ TRACE_EVENT(sched_migrate_task,
 		  __entry->orig_cpu, __entry->dest_cpu)
 );
 
-/*
- * Tracepoint for a CPU going offline/online:
- */
-TRACE_EVENT(sched_cpu_hotplug,
-
-	TP_PROTO(int affected_cpu, int error, int status),
-
-	TP_ARGS(affected_cpu, error, status),
-
-	TP_STRUCT__entry(
-		__field(	int,	affected_cpu		)
-		__field(	int,	error			)
-		__field(	int,	status			)
-	),
-
-	TP_fast_assign(
-		__entry->affected_cpu	= affected_cpu;
-		__entry->error		= error;
-		__entry->status		= status;
-	),
-
-	TP_printk("cpu %d %s error=%d", __entry->affected_cpu,
-		__entry->status ? "online" : "offline", __entry->error)
-);
-
 DECLARE_EVENT_CLASS(sched_process_template,
 
 	TP_PROTO(struct task_struct *p),
@@ -227,7 +202,7 @@ DECLARE_EVENT_CLASS(sched_process_template,
 );
 
 /*
- * Tracepoint for freeing a task:
+                                 
  */
 DEFINE_EVENT(sched_process_template, sched_process_free,
 	     TP_PROTO(struct task_struct *p),
@@ -235,21 +210,21 @@ DEFINE_EVENT(sched_process_template, sched_process_free,
 	     
 
 /*
- * Tracepoint for a task exiting:
+                                 
  */
 DEFINE_EVENT(sched_process_template, sched_process_exit,
 	     TP_PROTO(struct task_struct *p),
 	     TP_ARGS(p));
 
 /*
- * Tracepoint for waiting on task to unschedule:
+                                                
  */
 DEFINE_EVENT(sched_process_template, sched_wait_task,
 	TP_PROTO(struct task_struct *p),
 	TP_ARGS(p));
 
 /*
- * Tracepoint for a waiting task:
+                                 
  */
 TRACE_EVENT(sched_process_wait,
 
@@ -274,7 +249,7 @@ TRACE_EVENT(sched_process_wait,
 );
 
 /*
- * Tracepoint for do_fork:
+                          
  */
 TRACE_EVENT(sched_process_fork,
 
@@ -302,7 +277,7 @@ TRACE_EVENT(sched_process_fork,
 );
 
 /*
- * Tracepoint for exec:
+                       
  */
 TRACE_EVENT(sched_process_exec,
 
@@ -328,8 +303,8 @@ TRACE_EVENT(sched_process_exec,
 );
 
 /*
- * XXX the below sched_stat tracepoints only apply to SCHED_OTHER/BATCH/IDLE
- *     adding sched_stat support to SCHED_FIFO/RR would be welcome.
+                                                                            
+                                                                   
  */
 DECLARE_EVENT_CLASS(sched_stat_template,
 
@@ -359,39 +334,39 @@ DECLARE_EVENT_CLASS(sched_stat_template,
 
 
 /*
- * Tracepoint for accounting wait time (time the task is runnable
- * but not actually running due to scheduler contention).
+                                                                 
+                                                         
  */
 DEFINE_EVENT(sched_stat_template, sched_stat_wait,
 	     TP_PROTO(struct task_struct *tsk, u64 delay),
 	     TP_ARGS(tsk, delay));
 
 /*
- * Tracepoint for accounting sleep time (time the task is not runnable,
- * including iowait, see below).
+                                                                       
+                                
  */
 DEFINE_EVENT(sched_stat_template, sched_stat_sleep,
 	     TP_PROTO(struct task_struct *tsk, u64 delay),
 	     TP_ARGS(tsk, delay));
 
 /*
- * Tracepoint for accounting iowait time (time the task is not runnable
- * due to waiting on IO to complete).
+                                                                       
+                                     
  */
 DEFINE_EVENT(sched_stat_template, sched_stat_iowait,
 	     TP_PROTO(struct task_struct *tsk, u64 delay),
 	     TP_ARGS(tsk, delay));
 
 /*
- * Tracepoint for accounting blocked time (time the task is in uninterruptible).
+                                                                                
  */
 DEFINE_EVENT(sched_stat_template, sched_stat_blocked,
 	     TP_PROTO(struct task_struct *tsk, u64 delay),
 	     TP_ARGS(tsk, delay));
 
 /*
- * Tracepoint for accounting runtime (time the task is executing
- * on a CPU).
+                                                                
+             
  */
 TRACE_EVENT(sched_stat_runtime,
 
@@ -423,8 +398,8 @@ TRACE_EVENT(sched_stat_runtime,
 );
 
 /*
- * Tracepoint for showing priority inheritance modifying a tasks
- * priority.
+                                                                
+            
  */
 TRACE_EVENT(sched_pi_setprio,
 
@@ -451,7 +426,7 @@ TRACE_EVENT(sched_pi_setprio,
 			__entry->oldprio, __entry->newprio)
 );
 
-#endif /* _TRACE_SCHED_H */
+#endif /*                */
 
-/* This part must be outside protection */
+/*                                      */
 #include <trace/define_trace.h>

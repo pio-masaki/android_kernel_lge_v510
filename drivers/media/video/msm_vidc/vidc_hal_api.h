@@ -492,16 +492,16 @@ struct hal_profile_level {
 	u32 level;
 };
 /*
-struct hal_profile_level_range {
-	u32 profile;
-	u32 min_level;
-	u32 max_level;
-}
+                                
+             
+               
+               
+ 
 
-struct hal_profile_level_supported {
-	u32 profile_count;
-	struct hal_profile_level_range profile_level[1];
-};
+                                    
+                   
+                                                 
+  
 */
 enum hal_h264_entropy {
 	HAL_H264_ENTROPY_CAVLC,
@@ -634,7 +634,7 @@ struct hal_buffer_requirements {
 	u32 buffer_alignment;
 };
 
-enum hal_priority {/* Priority increases with number */
+enum hal_priority {/*                                */
 	HAL_PRIORITY_LOW = 10,
 	HAL_PRIOIRTY_MEDIUM = 20,
 	HAL_PRIORITY_HIGH = 30,
@@ -799,10 +799,10 @@ enum hal_event_type {
 	HAL_UNUSED_SEQCHG = 0x10000000,
 };
 
-/* HAL Response */
+/*              */
 
 enum command_response {
-/* SYSTEM COMMANDS_DONE*/
+/*                     */
 	VIDC_EVENT_CHANGE,
 	SYS_INIT_DONE,
 	SET_RESOURCE_DONE,
@@ -811,7 +811,7 @@ enum command_response {
 	PC_PREP_DONE,
 	SYS_IDLE,
 	SYS_DEBUG,
-/* SESSION COMMANDS_DONE */
+/*                       */
 	SESSION_LOAD_RESOURCE_DONE,
 	SESSION_INIT_DONE,
 	SESSION_END_DONE,
@@ -833,7 +833,7 @@ enum command_response {
 	RESPONSE_UNUSED = 0x10000000,
 };
 
-/* Command Callback structure */
+/*                            */
 
 struct msm_vidc_cb_cmd_done {
 	u32 device_id;
@@ -852,7 +852,7 @@ struct msm_vidc_cb_event {
 	u32 hal_event_type;
 };
 
-/* Data callback structure */
+/*                         */
 
 struct vidc_hal_ebd {
 	u32 timestamp_hi;
@@ -932,8 +932,8 @@ struct vidc_hal_session_init_done {
 	struct hal_uncompressed_format_supported uncomp_format;
 	struct hal_interlace_format_supported HAL_format;
 	struct hal_nal_stream_format_supported nal_stream_format;
-/*	struct hal_profile_level_supported profile_level;
-	// allocate and released memory for above. */
+/*                                                  
+                                            */
 	struct hal_intra_refresh intra_refresh;
 	struct hal_seq_header_info seq_hdr_info;
 };
@@ -942,7 +942,7 @@ struct buffer_requirements {
 	struct hal_buffer_requirements buffer[8];
 };
 
-/* VIDC_HAL CORE API's */
+/*                     */
 int vidc_hal_core_init(void *device, int domain);
 int vidc_hal_core_release(void *device);
 int vidc_hal_core_pc_prep(void *device);
@@ -952,7 +952,7 @@ int vidc_hal_core_release_resource(void *device,
 	struct vidc_resource_hdr *resource_hdr);
 int vidc_hal_core_ping(void *device);
 
-/* VIDC_HAL SESSION API's */
+/*                        */
 void *vidc_hal_session_init(void *device, u32 session_id,
 	enum hal_domain session_type, enum hal_video_codec codec_type);
 int vidc_hal_session_end(void *session);
@@ -986,4 +986,4 @@ void *vidc_hal_add_device(u32 device_id, u32 base_addr,
 	void (*callback) (enum command_response cmd, void *data));
 void vidc_hal_delete_device(void *device);
 
-#endif /*__VIDC_HAL_API_H__ */
+#endif /*                   */

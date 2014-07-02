@@ -15,7 +15,7 @@
 
 #include <mach/msm_iomap.h>
 #include "external_common.h"
-/* #define PORT_DEBUG */
+/*                    */
 
 #ifdef PORT_DEBUG
 const char *hdmi_msm_name(uint32 offset);
@@ -35,8 +35,8 @@ uint32 hdmi_inp(uint32 offset);
 
 
 /*
- * Ref. HDMI 1.4a
- * Supplement-1 CEC Section 6, 7
+                 
+                                
  */
 struct hdmi_msm_cec_msg {
 	uint8 sender_id;
@@ -86,15 +86,15 @@ struct hdmi_msm_state_type {
 	boolean fsm_reset_done;
 
 	/*
-	 * CECT 9-5-1
-	 */
+              
+  */
 	struct completion cec_line_latch_wait;
 	struct work_struct cec_latch_detect_work;
 
 #define CEC_QUEUE_SIZE		16
 #define CEC_QUEUE_END	 (hdmi_msm_state->cec_queue_start + CEC_QUEUE_SIZE)
 #define RETRANSMIT_MAX_NUM	5
-#endif /* CONFIG_FB_MSM_HDMI_MSM_PANEL_CEC_SUPPORT */
+#endif /*                                          */
 
 	int irq;
 	struct msm_hdmi_platform_data *pd;
@@ -120,7 +120,7 @@ void hdmi_phy_reset(void);
 void hdmi_msm_reset_core(void);
 void hdmi_msm_init_phy(int video_format);
 void hdmi_msm_powerdown_phy(void);
-void hdmi_frame_ctrl_cfg(const struct msm_hdmi_mode_timing_info *timing);
+void hdmi_frame_ctrl_cfg(const struct hdmi_disp_mode_timing_type *timing);
 void hdmi_msm_phy_status_poll(void);
 #endif
 
@@ -130,23 +130,6 @@ void hdmi_msm_cec_write_logical_addr(int addr);
 void hdmi_msm_cec_msg_recv(void);
 void hdmi_msm_cec_one_touch_play(void);
 void hdmi_msm_cec_msg_send(struct hdmi_msm_cec_msg *msg);
-#endif /* CONFIG_FB_MSM_HDMI_MSM_PANEL_CEC_SUPPORT */
+#endif /*                                          */
 void mhl_connect_api(boolean on);
-
-/* LGE_CHANGE
- * default video resolution for each target
- * 2012-09-22, chaeuk.lee@lge.com
- */
-#ifdef CONFIG_MACH_LGE
-
-/* FULL HD (MHL) */
-#if defined(CONFIG_MACH_APQ8064_GVAR_CMCC)
-#define LGE_DEFAULT_HDMI_VIDEO_RESOLUTION HDMI_VFRMT_1920x1080p60_16_9
-/* HD (Default) */
-#else
-#define LGE_DEFAULT_HDMI_VIDEO_RESOLUTION HDMI_VFRMT_1280x720p60_16_9
-#endif
-
-#endif /* CONFIG_MACH_LGE */
-
-#endif /* __HDMI_MSM_H__ */
+#endif /*                */

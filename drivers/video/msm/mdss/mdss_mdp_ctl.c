@@ -20,9 +20,9 @@
 #include "mdss_fb.h"
 #include "mdss_mdp.h"
 
-/* 1.10 bus fudge factor */
+/*                       */
 #define MDSS_MDP_BUS_FUDGE_FACTOR(val) ALIGN((((val) * 11) / 10), SZ_16M)
-/* 1.25 clock fudge factor */
+/*                         */
 #define MDSS_MDP_CLK_FUDGE_FACTOR(val) (((val) * 5) / 4)
 
 enum {
@@ -97,7 +97,7 @@ static void mdss_mdp_perf_mixer_update(struct mdss_mdp_mixer *mixer,
 			pinfo->lcdc.v_front_porch + pinfo->lcdc.v_pulse_width);
 		v_active = pinfo->yres;
 	} else if (mixer->rotator_mode) {
-		pipe = mixer->stage_pipe[0]; /* rotator pipe */
+		pipe = mixer->stage_pipe[0]; /*              */
 		v_total = pipe->flags & MDP_ROT_90 ? pipe->dst.w : pipe->dst.h;
 		v_active = v_total;
 	} else {
@@ -120,7 +120,7 @@ static void mdss_mdp_perf_mixer_update(struct mdss_mdp_mixer *mixer,
 		if (mixer->type == MDSS_MDP_MIXER_TYPE_INTF)
 			quota = (quota / v_active) * v_total;
 		else
-			quota *= 2; /* bus read + write */
+			quota *= 2; /*                  */
 
 		rate = pipe->dst.w;
 		if (pipe->src.h > pipe->dst.h) {
@@ -131,7 +131,7 @@ static void mdss_mdp_perf_mixer_update(struct mdss_mdp_mixer *mixer,
 		}
 		rate *= v_total * fps;
 		if (mixer->rotator_mode)
-			rate /= 4; /* block mode fetch at 4 pix/clk */
+			rate /= 4; /*                               */
 
 		*bus_ab_quota += quota;
 		*bus_ib_quota += ib_quota;
@@ -644,7 +644,7 @@ static int mdss_mdp_mixer_setup(struct mdss_mdp_ctl *ctl,
 			}
 			blend_op = (MDSS_MDP_BLEND_FG_ALPHA_FG_CONST |
 				    MDSS_MDP_BLEND_BG_ALPHA_BG_CONST);
-			/* keep fg alpha */
+			/*               */
 			blend_color_out |= 1 << (blend_stage + 1);
 
 			pr_debug("pnum=%d stg=%d alpha=IS_FG\n", pipe->num,
@@ -653,7 +653,7 @@ static int mdss_mdp_mixer_setup(struct mdss_mdp_ctl *ctl,
 			bgalpha = 0;
 			blend_op = (MDSS_MDP_BLEND_BG_ALPHA_FG_PIXEL |
 				    MDSS_MDP_BLEND_BG_INV_ALPHA);
-			/* keep fg alpha */
+			/*               */
 			blend_color_out |= 1 << (blend_stage + 1);
 
 			pr_debug("pnum=%d stg=%d alpha=FG PIXEL\n", pipe->num,
@@ -662,7 +662,7 @@ static int mdss_mdp_mixer_setup(struct mdss_mdp_ctl *ctl,
 			blend_op = (MDSS_MDP_BLEND_BG_ALPHA_BG_PIXEL |
 				    MDSS_MDP_BLEND_FG_ALPHA_BG_PIXEL |
 				    MDSS_MDP_BLEND_FG_INV_ALPHA);
-			/* keep bg alpha */
+			/*               */
 			pr_debug("pnum=%d stg=%d alpha=BG_PIXEL\n", pipe->num,
 					stage);
 		} else {
@@ -684,7 +684,7 @@ static int mdss_mdp_mixer_setup(struct mdss_mdp_ctl *ctl,
 
 	pr_debug("mixer=%d mixer_cfg=%x\n", mixer->num, mixercfg);
 
-	ctl->flush_bits |= BIT(6) << mixer->num;	/* LAYER_MIXER */
+	ctl->flush_bits |= BIT(6) << mixer->num;	/*             */
 
 	off = MDSS_MDP_REG_LM_OFFSET(mixer->num);
 	MDSS_MDP_REG_WRITE(off + MDSS_MDP_REG_LM_OP_MODE, blend_color_out);
@@ -763,7 +763,7 @@ int mdss_mdp_mixer_pipe_update(struct mdss_mdp_pipe *pipe, int params_changed)
 
 	if (pipe->type == MDSS_MDP_PIPE_TYPE_DMA)
 		ctl->flush_bits |= BIT(pipe->num) << 5;
-	else /* RGB/VIG pipe */
+	else /*              */
 		ctl->flush_bits |= BIT(pipe->num);
 
 	mutex_unlock(&ctl->lock);
@@ -806,7 +806,7 @@ static int mdss_mdp_mixer_update(struct mdss_mdp_mixer *mixer)
 	if (mixer->type == MDSS_MDP_MIXER_TYPE_INTF)
 		mdss_mdp_dspp_setup(mixer->ctl, mixer);
 
-	/* skip mixer setup for rotator */
+	/*                              */
 	if (!mixer->rotator_mode)
 		mdss_mdp_mixer_setup(mixer->ctl, mixer);
 
@@ -856,7 +856,7 @@ int mdss_mdp_display_commit(struct mdss_mdp_ctl *ctl, void *arg)
 			mdss_mdp_mixer_update(ctl->mixer_right);
 
 		mdss_mdp_ctl_write(ctl, MDSS_MDP_REG_CTL_TOP, ctl->opmode);
-		ctl->flush_bits |= BIT(17);	/* CTL */
+		ctl->flush_bits |= BIT(17);	/*     */
 	}
 
 	mdss_mdp_ctl_write(ctl, MDSS_MDP_REG_CTL_FLUSH, ctl->flush_bits);
@@ -864,7 +864,7 @@ int mdss_mdp_display_commit(struct mdss_mdp_ctl *ctl, void *arg)
 	ctl->flush_bits = 0;
 
 	if (ctl->display_fnc)
-		ret = ctl->display_fnc(ctl, arg); /* kickoff */
+		ret = ctl->display_fnc(ctl, arg); /*         */
 	if (ret)
 		pr_warn("error displaying frame\n");
 

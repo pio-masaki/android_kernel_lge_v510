@@ -47,40 +47,40 @@
 unsigned int enableuartsleep = 1;
 module_param(enableuartsleep, uint, 0644);
 /*
- * Global variables
+                   
  */
-/** Global state flags */
+/*                     */
 static unsigned long flags;
 
-/** Tasklet to respond to change in hostwake line */
+/*                                                */
 static struct tasklet_struct hostwake_task;
 
-/** Transmission timer */
+/*                     */
 static void bluesleep_tx_timer_expire(unsigned long data);
 static DEFINE_TIMER(tx_timer, bluesleep_tx_timer_expire, 0, 0);
 
-/** Lock for state transitions */
+/*                             */
 static spinlock_t rw_lock;
 
 #define POLARITY_LOW 0
 #define POLARITY_HIGH 1
 
 struct bluesleep_info {
-	unsigned host_wake;			/* wake up host */
-	unsigned ext_wake;			/* wake up device */
+	unsigned host_wake;			/*              */
+	unsigned ext_wake;			/*                */
 	unsigned host_wake_irq;
 	int irq_polarity;
 };
 
-/* 1 second timeout */
+/*                  */
 #define TX_TIMER_INTERVAL  1
 
-/* state variable names and bit positions */
+/*                                        */
 #define BT_TXEXPIRED    0x01
 #define BT_SLEEPENABLE  0x02
 #define BT_SLEEPCMD	0x03
 
-/* global pointer to a single hci device. */
+/*                                        */
 static struct bluesleep_info *bsi;
 
 struct ath_struct {
@@ -130,17 +130,17 @@ static void ath_hci_uart_work(struct work_struct *work)
 	hu = ath->hu;
 	tty = hu->tty;
 
-	/* verify and wake up controller */
+	/*                               */
 	if (test_bit(BT_SLEEPENABLE, &flags))
 		status = ath_wakeup_ar3k(tty);
-	/* Ready to send Data */
+	/*                    */
 	clear_bit(HCI_UART_SENDING, &hu->tx_state);
 	hci_uart_tx_wakeup(hu);
 }
 
 static irqreturn_t bluesleep_hostwake_isr(int irq, void *dev_id)
 {
-	/* schedule a tasklet to handle the change in the host wake line */
+	/*                                                               */
 	tasklet_schedule(&hostwake_task);
 	return IRQ_HANDLED;
 }
@@ -163,7 +163,7 @@ static int ath_bluesleep_gpio_config(int on)
 		goto gpio_config_failed;
 	}
 
-	/* configure host_wake as input */
+	/*                              */
 	ret = gpio_direction_input(bsi->host_wake);
 	if (ret < 0) {
 		BT_ERR("failed to config GPIO %d as input pin, err %d\n",
@@ -187,15 +187,15 @@ static int ath_bluesleep_gpio_config(int on)
 
 	gpio_set_value(bsi->ext_wake, 1);
 
-	/* Initialize spinlock. */
+	/*                      */
 	spin_lock_init(&rw_lock);
 
-	/* Initialize timer */
+	/*                  */
 	init_timer(&tx_timer);
 	tx_timer.function = bluesleep_tx_timer_expire;
 	tx_timer.data = 0;
 
-	/* initialize host wake tasklet */
+	/*                              */
 	tasklet_init(&hostwake_task, hostwake_interrupt, 0);
 
 	if (bsi->irq_polarity == POLARITY_LOW) {
@@ -232,7 +232,7 @@ gpio_config_failed:
 	return ret;
 }
 
-/* Initialize protocol */
+/*                     */
 static int ath_open(struct hci_uart *hu)
 {
 	struct ath_struct *ath;
@@ -266,7 +266,7 @@ static int ath_open(struct hci_uart *hu)
 	return 0;
 }
 
-/* Flush protocol data */
+/*                     */
 static int ath_flush(struct hci_uart *hu)
 {
 	struct ath_struct *ath = hu->priv;
@@ -278,7 +278,7 @@ static int ath_flush(struct hci_uart *hu)
 	return 0;
 }
 
-/* Close protocol */
+/*                */
 static int ath_close(struct hci_uart *hu)
 {
 	struct ath_struct *ath = hu->priv;
@@ -300,7 +300,7 @@ static int ath_close(struct hci_uart *hu)
 
 #define HCI_OP_ATH_SLEEP 0xFC04
 
-/* Enqueue frame for transmittion */
+/*                                */
 static int ath_enqueue(struct hci_uart *hu, struct sk_buff *skb)
 {
 	struct ath_struct *ath = hu->priv;
@@ -313,9 +313,9 @@ static int ath_enqueue(struct hci_uart *hu, struct sk_buff *skb)
 	}
 
 	/*
-	 * Update power management enable flag with parameters of
-	 * HCI sleep enable vendor specific HCI command.
-	 */
+                                                          
+                                                 
+  */
 	if (bt_cb(skb)->pkt_type == HCI_COMMAND_PKT) {
 		struct hci_command_hdr *hdr = (void *)skb->data;
 		if (__le16_to_cpu(hdr->opcode) == HCI_OP_ATH_SLEEP) {
@@ -326,7 +326,7 @@ static int ath_enqueue(struct hci_uart *hu, struct sk_buff *skb)
 
 	BT_DBG("hu %p skb %p", hu, skb);
 
-	/* Prepend skb with frame type */
+	/*                             */
 	memcpy(skb_push(skb, 1), &bt_cb(skb)->pkt_type, 1);
 
 	skb_queue_tail(&ath->txq, skb);
@@ -344,7 +344,7 @@ static struct sk_buff *ath_dequeue(struct hci_uart *hu)
 	return skb_dequeue(&ath->txq);
 }
 
-/* Recv data */
+/*           */
 static int ath_recv(struct hci_uart *hu, void *data, int count)
 {
 	struct ath_struct *ath = hu->priv;
@@ -361,7 +361,7 @@ static int ath_recv(struct hci_uart *hu, void *data, int count)
 		if (!skb) {
 			struct { char type; } *pkt;
 
-			/* Start of the frame */
+			/*                    */
 			pkt = data;
 			type = pkt->type;
 		} else
@@ -438,7 +438,7 @@ static int __init bluesleep_probe(struct platform_device *pdev)
 		goto free_bsi;
 	}
 
-	bsi->irq_polarity = POLARITY_LOW;	/* low edge (falling edge) */
+	bsi->irq_polarity = POLARITY_LOW;	/*                         */
 
 	return 0;
 

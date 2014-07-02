@@ -14,122 +14,122 @@
 #include "mt9p012.h"
 #include <linux/kernel.h>
 
-/*Micron settings from Applications for lower power consumption.*/
+/*                                                              */
 struct reg_struct const mt9p012_reg_pat[2] = {
-	{ /* Preview */
-		/* vt_pix_clk_div          REG=0x0300 */
-		6,  /* 5 */
+	{ /*         */
+		/*                                    */
+		6,  /*   */
 
-		/* vt_sys_clk_div          REG=0x0302 */
+		/*                                    */
 		1,
-		/* pre_pll_clk_div         REG=0x0304 */
+		/*                                    */
 		2,
-		/* pll_multiplier          REG=0x0306 */
+		/*                                    */
 		60,
 
-		/* op_pix_clk_div          REG=0x0308 */
-		8,  /* 10 */
+		/*                                    */
+		8,  /*    */
 
-		/* op_sys_clk_div          REG=0x030A */
+		/*                                    */
 		1,
 
-		/* scale_m                 REG=0x0404 */
+		/*                                    */
 		16,
 
-		/* row_speed               REG=0x3016 */
+		/*                                    */
 		0x0111,
 
-		/* x_addr_start            REG=0x3004 */
+		/*                                    */
 		8,
 
-		/* x_addr_end              REG=0x3008 */
+		/*                                    */
 		2597,
 
-		/* y_addr_start            REG=0x3002 */
+		/*                                    */
 		8,
 
-		/* y_addr_end              REG=0x3006 */
+		/*                                    */
 		1949,
 
-		/* read_mode               REG=0x3040
-		 * Preview 2x2 skipping */
+		/*                                   
+                          */
 		0x00C3,
 
-		/* x_output_size           REG=0x034C */
+		/*                                    */
 		1296,
 
-		/* y_output_size           REG=0x034E */
+		/*                                    */
 		972,
 
-		/* line_length_pck         REG=0x300C */
+		/*                                    */
 		3659,
 
-		/* frame_length_lines      REG=0x300A */
+		/*                                    */
 		1074,
 
-		/* coarse_integration_time REG=0x3012 */
+		/*                                    */
 		16,
 
-		/* fine_integration_time   REG=0x3014 */
+		/*                                    */
 		1764
 	},
-	{ /* Snapshot */
-		/* vt_pix_clk_div          REG=0x0300 */
+	{ /*          */
+		/*                                    */
 		6,
 
-		/* vt_sys_clk_div          REG=0x0302 */
+		/*                                    */
 		1,
 
-		/* pre_pll_clk_div         REG=0x0304 */
+		/*                                    */
 		2,
 
-		/* pll_multiplier          REG=0x0306
-		 * 60 for 10fps snapshot */
+		/*                                   
+                           */
 		60,
 
-		/* op_pix_clk_div          REG=0x0308 */
+		/*                                    */
 		8,
 
-		/* op_sys_clk_div          REG=0x030A */
+		/*                                    */
 		1,
 
-		/* scale_m                 REG=0x0404 */
+		/*                                    */
 		16,
 
-		/* row_speed               REG=0x3016 */
+		/*                                    */
 		0x0111,
 
-		/* x_addr_start            REG=0x3004 */
+		/*                                    */
 		8,
 
-		/* x_addr_end              REG=0x3008 */
+		/*                                    */
 		2615,
 
-		/* y_addr_start            REG=0x3002 */
+		/*                                    */
 		8,
 
-		/* y_addr_end              REG=0x3006 */
+		/*                                    */
 		1967,
 
-		/* read_mode               REG=0x3040 */
+		/*                                    */
 		0x0041,
 
-		/* x_output_size           REG=0x034C */
+		/*                                    */
 		2608,
 
-		/* y_output_size           REG=0x034E */
+		/*                                    */
 		1960,
 
-		/* line_length_pck         REG=0x300C */
+		/*                                    */
 		3911,
 
-		/* frame_length_lines      REG=0x300A 10 fps snapshot */
+		/*                                                    */
 		2045,
 
-		/* coarse_integration_time REG=0x3012 */
+		/*                                    */
 		16,
 
-		/* fine_integration_time   REG=0x3014 */
+		/*                                    */
 		882
 	}
 };

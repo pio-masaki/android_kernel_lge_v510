@@ -52,14 +52,14 @@
 #include <mach/qdsp5/qdsp5audrecmsg.h>
 #include <mach/debug_mm.h>
 
-#define FRAME_HEADER_SIZE	8 /* 8 bytes frame header */
-#define NT_FRAME_HEADER_SIZE	24 /* 24 bytes frame header */
-/* FRAME_NUM must be a power of two */
+#define FRAME_HEADER_SIZE	8 /*                      */
+#define NT_FRAME_HEADER_SIZE	24 /*                       */
+/*                                  */
 #define FRAME_NUM	8
-#define EVRC_FRAME_SIZE	36 /* 36 bytes data */
-/*Tunnel mode : 36 bytes data + 8 byte header*/
+#define EVRC_FRAME_SIZE	36 /*               */
+/*                                           */
 #define FRAME_SIZE	(EVRC_FRAME_SIZE + FRAME_HEADER_SIZE)
- /* 36 bytes data  + 24 meta field*/
+ /*                               */
 #define NT_FRAME_SIZE	(EVRC_FRAME_SIZE + NT_FRAME_HEADER_SIZE)
 #define DMASZ		(FRAME_SIZE * FRAME_NUM)
 #define NT_DMASZ	(NT_FRAME_SIZE * FRAME_NUM)
@@ -67,10 +67,10 @@
 #define OUT_BUFFER_SIZE (4 * 1024 + NT_FRAME_HEADER_SIZE)
 #define BUFFER_SIZE	(OUT_BUFFER_SIZE * OUT_FRAME_NUM)
 
-#define AUDPREPROC_EVRC_EOS_FLG_OFFSET 0x0A /* Offset from beginning of buffer*/
+#define AUDPREPROC_EVRC_EOS_FLG_OFFSET 0x0A /*                                */
 #define AUDPREPROC_EVRC_EOS_FLG_MASK 0x01
-#define AUDPREPROC_EVRC_EOS_NONE 0x0 /* No EOS detected */
-#define AUDPREPROC_EVRC_EOS_SET 0x1 /* EOS set in meta field */
+#define AUDPREPROC_EVRC_EOS_NONE 0x0 /*                 */
+#define AUDPREPROC_EVRC_EOS_SET 0x1 /*                       */
 
 struct buffer {
 	void *data;
@@ -93,54 +93,54 @@ struct audio_evrc_in {
 	struct mutex read_lock;
 	wait_queue_head_t wait;
 	wait_queue_head_t wait_enable;
-	/*write section*/
+	/*             */
 	struct buffer out[OUT_FRAME_NUM];
 
 	uint8_t out_head;
 	uint8_t out_tail;
-	uint8_t out_needed;	/* number of buffers the dsp is waiting for */
+	uint8_t out_needed;	/*                                          */
 	uint32_t out_count;
 
 	struct mutex write_lock;
 	wait_queue_head_t write_wait;
-	int32_t out_phys; /* physical address of write buffer */
+	int32_t out_phys; /*                                  */
 	char *out_data;
-	int mfield; /* meta field embedded in data */
-	int wflush; /*write flush */
-	int rflush; /*read flush*/
+	int mfield; /*                             */
+	int wflush; /*            */
+	int rflush; /*          */
 	int out_frame_cnt;
 
 	struct msm_adsp_module *audrec;
 	struct msm_adsp_module *audpre;
 
 
-	/* configuration to use on next enable */
+	/*                                     */
 	uint32_t samp_rate;
 	uint32_t channel_mode;
-	uint32_t buffer_size; /* Frame size (36 bytes) */
-	uint32_t enc_type; /* 11 for EVRC */
-	uint32_t mode; /* T or NT Mode*/
+	uint32_t buffer_size; /*                       */
+	uint32_t enc_type; /*             */
+	uint32_t mode; /*             */
 
 	struct msm_audio_evrc_enc_config cfg;
 
 	uint32_t dsp_cnt;
-	uint32_t in_head; /* next buffer dsp will write */
-	uint32_t in_tail; /* next buffer read() will read */
-	uint32_t in_count; /* number of buffers available to read() */
+	uint32_t in_head; /*                            */
+	uint32_t in_tail; /*                              */
+	uint32_t in_count; /*                                       */
 
 	uint32_t eos_ack;
 	uint32_t flush_ack;
 
 	const char *module_name;
 	unsigned queue_ids;
-	uint16_t enc_id; /* Session Id */
+	uint16_t enc_id; /*            */
 
 	unsigned short samp_rate_index;
 	uint32_t audrec_obj_idx ;
 
 	struct audmgr audmgr;
 
-	/* data allocated for various buffers */
+	/*                                    */
 	char *data;
 	dma_addr_t phys;
 
@@ -150,7 +150,7 @@ struct audio_evrc_in {
 	int opened;
 	int enabled;
 	int running;
-	int stopped; /* set when stopped, cleared on flush */
+	int stopped; /*                                    */
 	struct ion_client *client;
 	struct ion_handle *input_buff_handle;
 	struct ion_handle *output_buff_handle;
@@ -177,7 +177,7 @@ struct audio_frame_nt {
 	uint16_t time_stamp_msw;
 	uint16_t nflag_lsw;
 	uint16_t nflag_msw;
-	unsigned char raw_bitstream[]; /* samples */
+	unsigned char raw_bitstream[]; /*         */
 } __packed;
 
 struct evrc_encoded_meta_out {
@@ -190,7 +190,7 @@ struct evrc_encoded_meta_out {
 	uint16_t nflag_msw;
 };
 
-/* Audrec Queue command sent macro's */
+/*                                   */
 #define audio_send_queue_pre(audio, cmd, len) \
 	msm_adsp_write(audio->audpre, QDSP_uPAudPreProcCmdQueue, cmd, len)
 
@@ -232,7 +232,7 @@ static unsigned convert_samp_index(unsigned index)
 	}
 }
 
-/* must be called with audio->lock held */
+/*                                      */
 static int audevrc_in_enable(struct audio_evrc_in *audio)
 {
 	struct audmgr_config cfg;
@@ -273,7 +273,7 @@ static int audevrc_in_enable(struct audio_evrc_in *audio)
 	return 0;
 }
 
-/* must be called with audio->lock held */
+/*                                      */
 static int audevrc_in_disable(struct audio_evrc_in *audio)
 {
 	if (audio->enabled) {
@@ -295,7 +295,7 @@ static int audevrc_in_disable(struct audio_evrc_in *audio)
 	return 0;
 }
 
-/* ------------------- dsp --------------------- */
+/*                                               */
 static void audpre_dsp_event(void *data, unsigned id, size_t len,
 			    void (*getevent)(void *ptr, size_t len))
 {
@@ -330,13 +330,13 @@ static void audevrc_in_get_dsp_frames(struct audio_evrc_in *audio)
 	spin_lock_irqsave(&audio->dsp_lock, flags);
 	audio->in[index].size = frame->frame_length;
 
-	/* statistics of read */
+	/*                    */
 	atomic_add(audio->in[index].size, &audio->in_bytes);
 	atomic_add(1, &audio->in_samples);
 
 	audio->in_head = (audio->in_head + 1) & (FRAME_NUM - 1);
 
-	/* If overflow, move the tail index foward. */
+	/*                                          */
 	if (audio->in_head == audio->in_tail) {
 		MM_ERR("Error! not able to keep up the read\n");
 		audio->in_tail = (audio->in_tail + 1) & (FRAME_NUM - 1);
@@ -361,13 +361,13 @@ static void audevrc_nt_in_get_dsp_frames(struct audio_evrc_in *audio)
 				sizeof(struct audio_frame_nt));
 	spin_lock_irqsave(&audio->dsp_lock, flags);
 	audio->in[index].size = nt_frame->frame_length;
-	/* statistics of read */
+	/*                    */
 	atomic_add(audio->in[index].size, &audio->in_bytes);
 	atomic_add(1, &audio->in_samples);
 
 	audio->in_head = (audio->in_head + 1) & (FRAME_NUM - 1);
 
-	/* If overflow, move the tail index foward. */
+	/*                                          */
 	if (audio->in_head == audio->in_tail)
 		MM_DBG("Error! not able to keep up the read\n");
 	else
@@ -573,7 +573,7 @@ static int audevrc_in_dsp_enable(struct audio_evrc_in *audio, int enable)
 	cmd.cmd_id = AUDREC_CMD_ENC_CFG;
 	cmd.audrec_enc_type = (audio->enc_type & 0xFF) |
 			(enable ? AUDREC_CMD_ENC_ENA : AUDREC_CMD_ENC_DIS);
-	/* Don't care */
+	/*            */
 	cmd.audrec_obj_idx = audio->audrec_obj_idx;
 
 	return audio_send_queue_rec(audio, &cmd, sizeof(cmd));
@@ -590,17 +590,17 @@ static int audevrc_in_encmem_config(struct audio_evrc_in *audio)
 
 	cmd.cmd_id = AUDREC_CMD_ARECMEM_CFG;
 	cmd.audrec_obj_idx = audio->audrec_obj_idx;
-	/* Rate at which packet complete message comes */
+	/*                                             */
 	cmd.audrec_up_pkt_intm_cnt = 1;
 	cmd.audrec_extpkt_buffer_msw = audio->phys >> 16;
 	cmd.audrec_extpkt_buffer_lsw = audio->phys;
-	/* Max Buffer no available for frames */
+	/*                                    */
 	cmd.audrec_extpkt_buffer_num = FRAME_NUM;
 
-	/* prepare buffer pointers:
-	 * T:36 bytes evrc packet + 4 halfword header
-	 * NT:36 bytes evrc packet + 12 halfword header
-	 */
+	/*                         
+                                              
+                                                
+  */
 	if (audio->mode == MSM_AUD_ENC_MODE_TUNNEL)
 		header_len = FRAME_HEADER_SIZE/2;
 	else
@@ -624,7 +624,7 @@ static int audevrc_in_encparam_config(struct audio_evrc_in *audio)
 	cmd.common.audrec_obj_idx = audio->audrec_obj_idx;
 	cmd.enc_min_rate = audio->cfg.min_bit_rate;
 	cmd.enc_max_rate = audio->cfg.max_bit_rate;
-	cmd.rate_modulation_cmd = 0;  /* Default set to 0 */
+	cmd.rate_modulation_cmd = 0;  /*                  */
 
 	return audio_send_queue_rec(audio, &cmd, sizeof(cmd));
 }
@@ -652,14 +652,14 @@ static int audevrc_in_dsp_read_buffer(struct audio_evrc_in *audio,
 	return audio_send_queue_recbs(audio, &cmd, sizeof(cmd));
 }
 
-/* ------------------- device --------------------- */
+/*                                                  */
 
 static void audevrc_ioport_reset(struct audio_evrc_in *audio)
 {
-	/* Make sure read/write thread are free from
-	 * sleep and knowing that system is not able
-	 * to process io request at the moment
-	 */
+	/*                                          
+                                             
+                                       
+  */
 	wake_up(&audio->wait);
 	mutex_lock(&audio->read_lock);
 	audevrc_in_flush(audio);
@@ -709,7 +709,7 @@ static void audevrc_out_flush(struct audio_evrc_in *audio)
 	spin_unlock_irqrestore(&audio->dsp_lock, flags);
 }
 
-/* ------------------- device --------------------- */
+/*                                                  */
 static long audevrc_in_ioctl(struct file *file,
 				unsigned int cmd, unsigned long arg)
 {
@@ -801,7 +801,7 @@ static long audevrc_in_ioctl(struct file *file,
 			rc = -EFAULT;
 			break;
 		}
-		/* Allow only single frame */
+		/*                         */
 		if (audio->mode == MSM_AUD_ENC_MODE_TUNNEL) {
 			if (cfg.buffer_size != (FRAME_SIZE - 8)) {
 				rc = -EINVAL;
@@ -841,7 +841,7 @@ static long audevrc_in_ioctl(struct file *file,
 			rc = -EFAULT;
 			break;
 		}
-		/* Recording Does not support Erase and Blank */
+		/*                                            */
 		if (cfg.cdma_rate > CDMA_RATE_FULL ||
 			cfg.cdma_rate < CDMA_RATE_EIGHTH) {
 			MM_ERR("invalid qcelp cdma rate\n");
@@ -886,7 +886,7 @@ static ssize_t audevrc_in_read(struct file *file,
 		}
 		if (audio->stopped && !audio->in_count) {
 			MM_DBG("Driver in stop state, No more buffer to read");
-			rc = 0;/* End of File */
+			rc = 0;/*             */
 			break;
 		}
 
@@ -916,7 +916,7 @@ static ssize_t audevrc_in_read(struct file *file,
 			count -= sizeof(struct evrc_encoded_meta_out);
 		}
 		if (count >= size) {
-			/* order the reads on the buffer */
+			/*                               */
 			dma_coherent_post_ops();
 			if (copy_to_user(buf, data, size)) {
 				rc = -EFAULT;
@@ -924,8 +924,8 @@ static ssize_t audevrc_in_read(struct file *file,
 			}
 			spin_lock_irqsave(&audio->dsp_lock, flags);
 			if (index != audio->in_tail) {
-				/* overrun -- data is
-				 * invalid and we need to retry */
+				/*                   
+                                    */
 				spin_unlock_irqrestore(&audio->dsp_lock, flags);
 				continue;
 			}
@@ -969,12 +969,12 @@ static void audrec_pcm_send_data(struct audio_evrc_in *audio, unsigned needed)
 		goto done;
 
 	if (needed && !audio->wflush) {
-		/* We were called from the callback because the DSP
-		 * requested more data.  Note that the DSP does want
-		 * more data, and if a buffer was in-flight, mark it
-		 * as available (since the DSP must now be done with
-		 * it).
-		 */
+		/*                                                 
+                                                      
+                                                      
+                                                      
+         
+   */
 		audio->out_needed = 1;
 		frame = audio->out + audio->out_tail;
 		if (frame->used == 0xffffffff) {
@@ -986,12 +986,12 @@ static void audrec_pcm_send_data(struct audio_evrc_in *audio, unsigned needed)
 	}
 
 	if (audio->out_needed) {
-		/* If the DSP currently wants data and we have a
-		 * buffer available, we will send it and reset
-		 * the needed flag.  We'll mark the buffer as in-flight
-		 * so that it won't be recycled until the next buffer
-		 * is requested
-		 */
+		/*                                              
+                                                
+                                                         
+                                                       
+                 
+   */
 
 		frame = audio->out + audio->out_tail;
 		if (frame->used) {
@@ -1014,7 +1014,7 @@ static int audevrc_in_fsync(struct file *file, loff_t a, loff_t b,
 	struct audio_evrc_in *audio = file->private_data;
 	int rc = 0;
 
-	MM_DBG("\n"); /* Macro prints the file name and function */
+	MM_DBG("\n"); /*                                         */
 	if (!audio->running || (audio->mode == MSM_AUD_ENC_MODE_TUNNEL)) {
 		rc = -EINVAL;
 		goto done_nolock;
@@ -1095,9 +1095,9 @@ static ssize_t audevrc_in_write(struct file *file,
 
 	mutex_lock(&audio->write_lock);
 	frame = audio->out + audio->out_head;
-	/* if supplied count is more than driver buffer size
-	 * then only copy driver buffer size
-	 */
+	/*                                                  
+                                     
+  */
 	if (count > frame->size)
 		count = frame->size;
 
@@ -1116,7 +1116,7 @@ static ssize_t audevrc_in_write(struct file *file,
 	}
 	if (audio->mfield) {
 		if (buf == start) {
-			/* Processing beginning of user buffer */
+			/*                                     */
 			if (__get_user(mfield_size,
 				(unsigned short __user *) buf)) {
 				rc = -EFAULT;
@@ -1130,9 +1130,9 @@ static ssize_t audevrc_in_write(struct file *file,
 				rc = -EFAULT;
 				goto error;
 			}
-			/* Check if EOS flag is set and buffer has
-			 * contains just meta field
-			 */
+			/*                                        
+                              
+    */
 			if (cpy_ptr[AUDPREPROC_EVRC_EOS_FLG_OFFSET] &
 					AUDPREPROC_EVRC_EOS_FLG_MASK) {
 				eos_condition = AUDPREPROC_EVRC_EOS_SET;
@@ -1244,9 +1244,9 @@ static int audevrc_in_open(struct inode *inode, struct file *file)
 		goto done;
 	}
 
-	/* Settings will be re-config at AUDIO_SET_CONFIG,
-	 * but at least we need to have initial config
-	 */
+	/*                                                
+                                               
+  */
 	audio->samp_rate = RPC_AUD_DEF_SAMPLE_RATE_8000,
 	audio->samp_rate_index = AUDREC_CMD_SAMP_RATE_INDX_8000;
 	audio->channel_mode = AUDREC_CMD_STEREO_MODE_MONO;
@@ -1395,7 +1395,7 @@ static int audevrc_in_open(struct inode *inode, struct file *file)
 					(unsigned int)addr,
 					(unsigned int)audio->out_data);
 
-		/* Initialize buffer */
+		/*                   */
 		audio->out[0].data = audio->out_data + 0;
 		audio->out[0].addr = audio->out_phys + 0;
 		audio->out[0].size = OUT_BUFFER_SIZE;

@@ -20,34 +20,34 @@
 #include <mach/camera.h>
 #include "ov7692.h"
 
-/*=============================================================
-	SENSOR REGISTER DEFINES
-==============================================================*/
+/*                                                             
+                        
+                                                              */
 #define Q8    0x00000100
 
-/* Omnivision8810 product ID register address */
+/*                                            */
 #define REG_OV7692_MODEL_ID_MSB                       0x0A
 #define REG_OV7692_MODEL_ID_LSB                       0x0B
 
 #define OV7692_MODEL_ID                       0x7692
-/* Omnivision8810 product ID */
+/*                           */
 
-/* Time in milisecs for waiting for the sensor to reset */
+/*                                                      */
 #define OV7692_RESET_DELAY_MSECS    66
 #define OV7692_DEFAULT_CLOCK_RATE   24000000
-/* Registers*/
+/*          */
 
-/* Color bar pattern selection */
+/*                             */
 #define OV7692_COLOR_BAR_PATTERN_SEL_REG     0x82
-/* Color bar enabling control */
+/*                            */
 #define OV7692_COLOR_BAR_ENABLE_REG           0x601
-/* Time in milisecs for waiting for the sensor to reset*/
+/*                                                     */
 #define OV7692_RESET_DELAY_MSECS    66
 
-/*============================================================================
-							DATA DECLARATIONS
-============================================================================*/
-/*  96MHz PCLK @ 24MHz MCLK */
+/*                                                                            
+                        
+                                                                            */
+/*                          */
 struct reg_addr_val_pair_struct ov7692_init_settings_array[] = {
     {0x12, 0x80},
     {0x0e, 0x08},
@@ -171,7 +171,7 @@ struct reg_addr_val_pair_struct ov7692_init_settings_array[] = {
 };
 
 static bool OV7692_CSI_CONFIG;
-/* 816x612, 24MHz MCLK 96MHz PCLK */
+/*                                */
 uint32_t OV7692_FULL_SIZE_WIDTH        = 640;
 uint32_t OV7692_FULL_SIZE_HEIGHT       = 480;
 
@@ -191,8 +191,8 @@ static struct  i2c_client *ov7692_client;
 struct ov7692_ctrl_t {
 	const struct  msm_camera_sensor_info *sensordata;
 	uint32_t sensormode;
-	uint32_t fps_divider;		/* init to 1 * 0x00000400 */
-	uint32_t pict_fps_divider;	/* init to 1 * 0x00000400 */
+	uint32_t fps_divider;		/*                        */
+	uint32_t pict_fps_divider;	/*                        */
 	uint32_t fps;
 	int32_t  curr_lens_pos;
 	uint32_t curr_step_pos;
@@ -209,7 +209,7 @@ static struct ov7692_ctrl_t *ov7692_ctrl;
 static DECLARE_WAIT_QUEUE_HEAD(ov7692_wait_queue);
 DEFINE_MUTEX(ov7692_mut);
 
-/*=============================================================*/
+/*                                                             */
 
 static int ov7692_i2c_rxdata(unsigned short saddr,
 	unsigned char *rxdata, int length)
@@ -331,7 +331,7 @@ static int32_t ov7692_video_config(int mode)
 {
 	int32_t rc = 0;
 	int rt;
-	/* change sensor resolution if needed */
+	/*                                    */
 	rt = RES_PREVIEW;
 
 	if (ov7692_sensor_setting(UPDATE_PERIODIC, rt) < 0)
@@ -368,11 +368,11 @@ static int ov7692_probe_init_sensor(const struct msm_camera_sensor_info *data)
 	uint8_t model_id_msb, model_id_lsb = 0;
 	uint16_t model_id;
 	int32_t rc = 0;
-	/*The reset pin is not physically connected to the sensor.
-	The standby pin will do the reset hence there is no need
-	to request the gpio reset*/
+	/*                                                        
+                                                         
+                          */
 
-	/* Read sensor Model ID: */
+	/*                       */
 	rc = ov7692_i2c_read(REG_OV7692_MODEL_ID_MSB, &model_id_msb, 1);
 	if (rc < 0)
 		goto init_probe_fail;
@@ -382,7 +382,7 @@ static int ov7692_probe_init_sensor(const struct msm_camera_sensor_info *data)
 	model_id = (model_id_msb << 8) | ((model_id_lsb & 0x00FF)) ;
 	CDBG("ov7692 model_id = 0x%x, 0x%x, 0x%x\n",
 		 model_id, model_id_msb, model_id_lsb);
-	/* 4. Compare sensor ID to OV7692 ID: */
+	/*                                    */
 	if (model_id != OV7692_MODEL_ID) {
 		rc = -ENODEV;
 		goto init_probe_fail;
@@ -418,7 +418,7 @@ int ov7692_sensor_open_init(const struct msm_camera_sensor_info *data)
 	if (data)
 		ov7692_ctrl->sensordata = data;
 
-	/* enable mclk first */
+	/*                   */
 
 	msm_camio_clk_rate_set(24000000);
 	msleep(20);
@@ -445,7 +445,7 @@ init_done:
 
 static int ov7692_init_client(struct i2c_client *client)
 {
-	/* Initialize the MSM_CAMI2C Chip */
+	/*                                */
 	init_waitqueue_head(&ov7692_wait_queue);
 	return 0;
 }

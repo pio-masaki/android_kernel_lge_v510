@@ -160,15 +160,15 @@ int videobuf2_pmem_contig_mmap_get(struct videobuf2_contig_pmem *mem,
 }
 EXPORT_SYMBOL_GPL(videobuf2_pmem_contig_mmap_get);
 
-/**
- * videobuf_pmem_contig_user_get() - setup user space memory pointer
- * @mem: per-buffer private videobuf-contig-pmem data
- * @vb: video buffer to map
- *
- * This function validates and sets up a pointer to user space memory.
- * Only physically contiguous pfn-mapped memory is accepted.
- *
- * Returns 0 if successful.
+/* 
+                                                                    
+                                                     
+                           
+  
+                                                                      
+                                                            
+  
+                           
  */
 int videobuf2_pmem_contig_user_get(struct videobuf2_contig_pmem *mem,
 					struct videobuf2_msm_offset *offset,
@@ -191,16 +191,8 @@ int videobuf2_pmem_contig_user_get(struct videobuf2_contig_pmem *mem,
 		pr_err("%s ION import failed\n", __func__);
 		return PTR_ERR(mem->ion_handle);
 	}
-/* LGE_CHANGE_S, Fixed IOMMU fault , 2013.1.16, jungki.kim[Start] */
-#if defined(CONFIG_LGE_GK_CAMERA)
-	//use delayed unmapping.. because iommu fault is occured...
-	rc = ion_map_iommu(client, mem->ion_handle, domain_num, 0,
-		SZ_4K, 0, (unsigned long *)&mem->phyaddr, &len, 0, ION_IOMMU_UNMAP_DELAYED);
-#else
 	rc = ion_map_iommu(client, mem->ion_handle, domain_num, 0,
 		SZ_4K, 0, (unsigned long *)&mem->phyaddr, &len, 0, 0);
-#endif
-/* LGE_CHANGE_E, Fixed IOMMU fault , 2013.1.16, jungki.kim[End] */
 	if (rc < 0)
 		ion_free(client, mem->ion_handle);
 #elif CONFIG_ANDROID_PMEM
@@ -228,24 +220,14 @@ int videobuf2_pmem_contig_user_get(struct videobuf2_contig_pmem *mem,
 }
 EXPORT_SYMBOL_GPL(videobuf2_pmem_contig_user_get);
 
-#if defined(CONFIG_LGE_GK_CAMERA)
-void videobuf2_pmem_contig_user_put(struct videobuf2_contig_pmem *mem,
-       struct ion_client *client, int domain_num, int is_closing)
-#else
 void videobuf2_pmem_contig_user_put(struct videobuf2_contig_pmem *mem,
 				struct ion_client *client, int domain_num)
-#endif
 {
 	if (mem->is_userptr) {
 #ifdef CONFIG_MSM_MULTIMEDIA_USE_ION
 		ion_unmap_iommu(client, mem->ion_handle,
 				domain_num, 0);
-/* LGE_CHANGE_S, Fixed IOMMU fault, 2013.1.16, jungki.kim[Start] */
-#if defined(CONFIG_LGE_GK_CAMERA)
-		if (is_closing != 1)
-#endif
 		ion_free(client, mem->ion_handle);
-/* LGE_CHANGE_E, Fixed IOMMU fault, 2013.1.16, jungki.kim[End] */
 #elif CONFIG_ANDROID_PMEM
 		put_pmem_file(mem->file);
 #endif
@@ -301,7 +283,7 @@ static int msm_vb2_mem_ops_mmap(void *buf_priv, struct vm_area_struct *vma)
 	D("mem = 0x%x\n", (u32)mem);
 	BUG_ON(!mem);
 	MAGIC_CHECK(mem->magic, MAGIC_PMEM);
-	/* Try to remap memory */
+	/*                     */
 	size = vma->vm_end - vma->vm_start;
 	size = (size < mem->size) ? size : mem->size;
 	vma->vm_page_prot = pgprot_noncached(vma->vm_page_prot);
@@ -360,12 +342,6 @@ unsigned long videobuf2_to_pmem_contig(struct vb2_buffer *vb,
 {
 	struct videobuf2_contig_pmem *mem;
 	mem = vb2_plane_cookie(vb, plane_no);
-//Start LGE_BSP_CAMERA : Fixed WBT - jonghwan.ko@lge.com
-		if(mem == NULL){
-			pr_err("%s:mem is NULL \n",__func__);
-			return 0;
-		}
-//End  LGE_BSP_CAMERA : Fixed WBT - jonghwan.ko@lge.com
 	BUG_ON(!mem);
 	MAGIC_CHECK(mem->magic, MAGIC_PMEM);
 	return mem->mapped_phyaddr;

@@ -59,21 +59,21 @@
 #define AUDDEC_DEC_PCM 0
 #define AUDDEC_DEC_MP3 2
 
-#define PCM_BUFSZ_MIN 4800	/* Hold one stereo MP3 frame */
+#define PCM_BUFSZ_MIN 4800	/*                           */
 
-/* Decoder status received from AUDPPTASK */
+/*                                        */
 #define  AUDPP_DEC_STATUS_SLEEP	0
 #define	 AUDPP_DEC_STATUS_INIT  1
 #define  AUDPP_DEC_STATUS_CFG   2
 #define  AUDPP_DEC_STATUS_PLAY  3
 
 #define AUDMP3_METAFIELD_MASK 0xFFFF0000
-#define AUDMP3_EOS_FLG_OFFSET 0x0A /* Offset from beginning of buffer */
+#define AUDMP3_EOS_FLG_OFFSET 0x0A /*                                 */
 #define AUDMP3_EOS_FLG_MASK 0x01
-#define AUDMP3_EOS_NONE 0x0 /* No EOS detected */
-#define AUDMP3_EOS_SET 0x1 /* EOS set in meta field */
+#define AUDMP3_EOS_NONE 0x0 /*                 */
+#define AUDMP3_EOS_SET 0x1 /*                       */
 
-#define AUDLPA_EVENT_NUM 10 /* Default number of pre-allocated event packets */
+#define AUDLPA_EVENT_NUM 10 /*                                               */
 
 #define MASK_32BITS     0xFFFFFFFF
 
@@ -111,14 +111,14 @@
 	res;							\
 })
 
-/* payload[7]; -1 indicates error, 0 indicates no error */
+/*                                                      */
 #define CHECK_ERROR(v) (!v[7])
 
-/* calculates avsync_info from payload */
+/*                                     */
 #define CALCULATE_AVSYNC_FROM_PAYLOAD(v) ((uint64_t)((((uint64_t)v[10]) \
 					<< 32) | (v[11] & MASK_32BITS)))
 
-/* calculates avsync_info from avsync_info stored in audio */
+/*                                                         */
 #define CALCULATE_AVSYNC(v)					   \
 			((uint64_t)((((uint64_t)v[4]) << 32) | 	   \
 			 (v[5] << 16) | (v[6])))
@@ -183,9 +183,9 @@ static void lpa_listner(u32 evt_id, union auddev_evt_data *evt_payload,
 	case AUDDEV_EVT_DEV_RDY:
 		MM_DBG(":AUDDEV_EVT_DEV_RDY routing id = %d\n",
 		evt_payload->routing_id);
-		/* Do not select HLB path for icodec, if there is already COPP3
-		 * routing exists. DSP can not support concurrency of HLB path
-		 * and COPP3 routing as it involves different buffer Path */
+		/*                                                             
+                                                                
+                                                            */
 		if (((0x1 << evt_payload->routing_id) == AUDPP_MIXER_ICODEC) &&
 			!(audio->source & AUDPP_MIXER_3)) {
 			audio->source |= AUDPP_MIXER_HLB;
@@ -202,14 +202,14 @@ static void lpa_listner(u32 evt_id, union auddev_evt_data *evt_payload,
 					AUDPP_CMD_CFG_DEV_MIXER_ID_4,
 					&audio->vol_pan,
 					COPP);
-					/*restore the POPP gain to 0x2000
-					this is needed to avoid use cases
-					where POPP volume is lowered during
-					NON HLB playback, when device moved
-					from NON HLB to HLB POPP is not
-					disabled but POPP gain will be retained
-					as the old one which result
-					in lower volume*/
+					/*                               
+                                      
+                                        
+                                        
+                                    
+                                            
+                                
+                    */
 					audio->vol_pan.volume = 0x2000;
 					audpp_dsp_set_vol_pan(
 						audio->dec_id,
@@ -240,8 +240,8 @@ static void lpa_listner(u32 evt_id, union auddev_evt_data *evt_payload,
 		break;
 	case AUDDEV_EVT_REL_PENDING:
 		MM_DBG(":AUDDEV_EVT_REL_PENDING\n");
-		/* If route to multiple devices like COPP3, not need to
-		 * handle device switch */
+		/*                                                     
+                          */
 		if ((audio->running == 1) && (audio->enabled == 1) &&
 			!(audio->source & AUDPP_MIXER_3)) {
 			if (audio->device_switch == DEVICE_SWITCH_STATE_NONE) {
@@ -269,8 +269,8 @@ static void lpa_listner(u32 evt_id, union auddev_evt_data *evt_payload,
 		}
 		break;
 	case AUDDEV_EVT_DEV_RLS:
-		/* If there is already COPP3 routing exists. icodec route
-		 * was not having HLB path. */
+		/*                                                       
+                              */
 		MM_DBG(":AUDDEV_EVT_DEV_RLS routing id = %d\n",
 			evt_payload->routing_id);
 		if (((0x1 << evt_payload->routing_id) == AUDPP_MIXER_ICODEC) &&
@@ -306,10 +306,10 @@ static void lpa_listner(u32 evt_id, union auddev_evt_data *evt_payload,
 	}
 }
 
-/* must be called with audio->lock held */
+/*                                      */
 static int audio_enable(struct audio *audio)
 {
-	MM_DBG("\n"); /* Macro prints the file name and function */
+	MM_DBG("\n"); /*                                         */
 
 	if (audio->enabled)
 		return 0;
@@ -332,11 +332,11 @@ static int audio_enable(struct audio *audio)
 	return 0;
 }
 
-/* must be called with audio->lock held */
+/*                                      */
 static int audio_disable(struct audio *audio)
 {
 	int rc = 0;
-	MM_DBG("\n"); /* Macro prints the file name and function */
+	MM_DBG("\n"); /*                                         */
 	if (audio->enabled) {
 		audio->enabled = 0;
 		audio->dec_state = MSM_AUD_DECODER_STATE_NONE;
@@ -358,7 +358,7 @@ static int audio_disable(struct audio *audio)
 	return rc;
 }
 
-/* ------------------- dsp --------------------- */
+/*                                               */
 static void audplay_dsp_event(void *data, unsigned id, size_t len,
 			      void (*getevent) (void *ptr, size_t len))
 {
@@ -401,7 +401,7 @@ static void audio_dsp_event(void *private, unsigned id, uint16_t *msg)
 						MSM_AUD_DECODER_STATE_FAILURE;
 					wake_up(&audio->wait);
 				} else if (reason == AUDPP_MSG_REASON_NONE) {
-					/* decoder is in disable state */
+					/*                             */
 					audio->dec_state =
 						MSM_AUD_DECODER_STATE_CLOSE;
 					wake_up(&audio->wait);
@@ -417,7 +417,7 @@ static void audio_dsp_event(void *private, unsigned id, uint16_t *msg)
 				break;
 			case AUDPP_DEC_STATUS_PLAY:
 				MM_DBG("decoder status: play\n");
-				/* send  mixer command */
+				/*                     */
 				audpp_route_stream(audio->dec_id,
 						audio->source);
 				audio->dec_state =
@@ -647,14 +647,14 @@ done:
 	spin_unlock_irqrestore(&audio->dsp_lock, flags);
 }
 
-/* ------------------- device --------------------- */
+/*                                                  */
 static void audlpa_async_flush(struct audio *audio)
 {
 	struct audlpa_buffer_node *buf_node;
 	struct list_head *ptr, *next;
 	union msm_audio_event_payload payload;
 
-	MM_DBG("\n"); /* Macro prints the file name and function */
+	MM_DBG("\n"); /*                                         */
 	list_for_each_safe(ptr, next, &audio->out_queue) {
 		buf_node = list_entry(ptr, struct audlpa_buffer_node, list);
 		list_del(&buf_node->list);
@@ -676,10 +676,10 @@ static void audlpa_async_flush(struct audio *audio)
 
 static void audio_ioport_reset(struct audio *audio)
 {
-	/* If fsync is in progress, make sure
-	 * return value of fsync indicates
-	 * abort due to flush
-	 */
+	/*                                   
+                                   
+                      
+  */
 	if (audio->drv_status & ADRV_STATUS_FSYNC) {
 		MM_DBG("fsync in progress\n");
 		wake_up(&audio->write_wait);
@@ -819,7 +819,7 @@ static int audlpa_pmem_add(struct audio *audio,
 	struct audlpa_pmem_region *region;
 	int rc = -EINVAL;
 
-	MM_DBG("\n"); /* Macro prints the file name and function */
+	MM_DBG("\n"); /*                                         */
 	region = kmalloc(sizeof(*region), GFP_KERNEL);
 
 	if (!region) {
@@ -894,15 +894,15 @@ static int audlpa_pmem_lookup_vaddr(struct audio *audio, void *addr,
 
 	*region = NULL;
 
-	/* returns physical address or zero */
+	/*                                  */
 	list_for_each_entry(region_elt, &audio->pmem_region_queue,
 		list) {
 		if (addr >= region_elt->vaddr &&
 		    addr < region_elt->vaddr + region_elt->len &&
 		    addr + len <= region_elt->vaddr + region_elt->len) {
-			/* offset since we could pass vaddr inside a registerd
-			 * pmem buffer
-			 */
+			/*                                                    
+                 
+    */
 
 			match_count++;
 			if (!*region)
@@ -947,7 +947,7 @@ unsigned long audlpa_pmem_fixup(struct audio *audio, void *addr,
 	return paddr;
 }
 
-/* audio -> lock must be held at this point */
+/*                                          */
 static int audlpa_aio_buf_add(struct audio *audio, unsigned dir,
 	void __user *arg)
 {
@@ -974,7 +974,7 @@ static int audlpa_aio_buf_add(struct audio *audio, unsigned dir,
 		buf_node->buf.buf_len, 1);
 
 	if (dir) {
-		/* write */
+		/*       */
 		if (!buf_node->paddr ||
 		    (buf_node->paddr & 0x1) ||
 		    (buf_node->buf.data_len & 0x1)) {
@@ -986,7 +986,7 @@ static int audlpa_aio_buf_add(struct audio *audio, unsigned dir,
 		spin_unlock_irqrestore(&audio->dsp_lock, flags);
 		audlpa_async_send_data(audio, 0, 0);
 	} else {
-		/* read */
+		/*      */
 	}
 
 	MM_DBG("Add buf_node %p paddr %lx\n", buf_node, buf_node->paddr);
@@ -1016,11 +1016,11 @@ static int audio_get_avsync_data(struct audio *audio,
 
 	local_irq_save(flags);
 	if (audio->dec_id == audio->avsync[0] && audio->avsync_flag) {
-		/* av_sync sample count */
+		/*                      */
 		stats->sample_count = (audio->avsync[2] << 16) |
 						(audio->avsync[3]);
 
-		/* av_sync byte_count */
+		/*                    */
 		stats->byte_count = (audio->avsync[5] << 16) |
 						(audio->avsync[6]);
 
@@ -1309,15 +1309,15 @@ static long audio_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 	return rc;
 }
 
-/* Only useful in tunnel-mode */
+/*                            */
 int audlpa_async_fsync(struct audio *audio)
 {
 	int rc = 0, empty = 0;
 	struct audlpa_buffer_node *buf_node;
 
-	MM_DBG("\n"); /* Macro prints the file name and function */
+	MM_DBG("\n"); /*                                         */
 
-	/* Blocking client sends more data */
+	/*                                 */
 	mutex_lock(&audio->lock);
 	audio->drv_status |= ADRV_STATUS_FSYNC;
 	mutex_unlock(&audio->lock);
@@ -1346,7 +1346,7 @@ int audlpa_async_fsync(struct audio *audio)
 		goto done;
 
 	if (audio->teos == 1) {
-		/* Releasing all the pending buffers to user */
+		/*                                           */
 		audio->teos = 0;
 		audlpa_async_flush(audio);
 	}
@@ -1392,7 +1392,7 @@ static int audio_release(struct inode *inode, struct file *file)
 {
 	struct audio *audio = file->private_data;
 
-	MM_DBG("\n"); /* Macro prints the file name and function */
+	MM_DBG("\n"); /*                                         */
 
 	MM_INFO("audio instance 0x%08x freeing\n", (int)audio);
 	mutex_lock(&audio->lock);
@@ -1456,7 +1456,7 @@ static void audlpa_suspend(struct early_suspend *h)
 		container_of(h, struct audlpa_suspend_ctl, node);
 	union msm_audio_event_payload payload;
 
-	MM_DBG("\n"); /* Macro prints the file name and function */
+	MM_DBG("\n"); /*                                         */
 	audlpa_post_event(ctl->audio, AUDIO_EVENT_SUSPEND, payload);
 }
 
@@ -1466,7 +1466,7 @@ static void audlpa_resume(struct early_suspend *h)
 		container_of(h, struct audlpa_suspend_ctl, node);
 	union msm_audio_event_payload payload;
 
-	MM_DBG("\n"); /* Macro prints the file name and function */
+	MM_DBG("\n"); /*                                         */
 	audlpa_post_event(ctl->audio, AUDIO_EVENT_RESUME, payload);
 }
 #endif
@@ -1501,10 +1501,10 @@ static ssize_t audlpa_debug_read(struct file *file, char __user *buf,
 					"channel mode %d\n",
 					audio->out_channel_mode);
 	mutex_unlock(&audio->lock);
-	/* Following variables are only useful for debugging when
-	 * when playback halts unexpectedly. Thus, no mutual exclusion
-	 * enforced
-	 */
+	/*                                                       
+                                                               
+            
+  */
 	n += scnprintf(buffer + n, debug_bufmax - n,
 					"wflush %d\n", audio->wflush);
 	n += scnprintf(buffer + n, debug_bufmax - n,
@@ -1529,11 +1529,11 @@ static int audio_open(struct inode *inode, struct file *file)
 	int rc, i, dec_attrb = 0, decid;
 	struct audlpa_event *e_node = NULL;
 #ifdef CONFIG_DEBUG_FS
-	/* 4 bytes represents decoder number, 1 byte for terminate string */
+	/*                                                                */
 	char name[sizeof "msm_lpa_" + 5];
 #endif
 
-	/* Allocate audio instance, set to zero */
+	/*                                      */
 	audio = kzalloc(sizeof(struct audio), GFP_KERNEL);
 	if (!audio) {
 		MM_ERR("no memory to allocate audio instance\n");
@@ -1550,7 +1550,7 @@ static int audio_open(struct inode *inode, struct file *file)
 		goto done;
 	}
 
-	/* Allocate the decoder based on inode minor number*/
+	/*                                                 */
 	audio->minor_no = iminor(inode);
 	dec_attrb |= audlpa_decs[audio->minor_no].dec_attrb;
 	audio->codec_ops.ioctl = audlpa_decs[audio->minor_no].ioctl;
@@ -1582,7 +1582,7 @@ static int audio_open(struct inode *inode, struct file *file)
 		goto err;
 	}
 
-	/* Initialize all locks of audio instance */
+	/*                                        */
 	mutex_init(&audio->lock);
 	mutex_init(&audio->write_lock);
 	mutex_init(&audio->get_event_lock);

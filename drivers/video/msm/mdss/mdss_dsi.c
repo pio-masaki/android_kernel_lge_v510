@@ -47,7 +47,7 @@ static int mdss_dsi_off(struct mdss_panel_data *pdata)
 	spin_lock_bh(&dsi_clk_lock);
 	mdss_dsi_clk_disable();
 
-	/* disable dsi engine */
+	/*                    */
 	MIPI_OUTP(mdss_dsi_base + 0x0004, 0);
 
 	spin_unlock_bh(&dsi_clk_lock);
@@ -114,7 +114,7 @@ static int mdss_dsi_on(struct mdss_panel_data *pdata)
 		MIPI_OUTP(mdss_dsi_base + 0x34, 0);
 		MIPI_OUTP(mdss_dsi_base + 0x38, (vspw << 16));
 
-	} else {		/* command mode */
+	} else {		/*              */
 		if (mipi->dst_format == DSI_CMD_DST_FORMAT_RGB888)
 			bpp = 3;
 		else if (mipi->dst_format == DSI_CMD_DST_FORMAT_RGB666)
@@ -122,16 +122,16 @@ static int mdss_dsi_on(struct mdss_panel_data *pdata)
 		else if (mipi->dst_format == DSI_CMD_DST_FORMAT_RGB565)
 			bpp = 2;
 		else
-			bpp = 3;	/* Default format set to RGB888 */
+			bpp = 3;	/*                              */
 
 		ystride = width * bpp + 1;
 
-		/* DSI_COMMAND_MODE_MDP_STREAM_CTRL */
+		/*                                  */
 		data = (ystride << 16) | (mipi->vc << 8) | DTYPE_DCS_LWRITE;
 		MIPI_OUTP(mdss_dsi_base + 0x60, data);
 		MIPI_OUTP(mdss_dsi_base + 0x58, data);
 
-		/* DSI_COMMAND_MODE_MDP_STREAM_TOTAL */
+		/*                                   */
 		data = height << 16 | width;
 		MIPI_OUTP(mdss_dsi_base + 0x64, data);
 		MIPI_OUTP(mdss_dsi_base + 0x5C, data);
@@ -276,7 +276,7 @@ int dsi_panel_device_register(struct platform_device *pdev,
 		 || (mipi->dst_format == DSI_VIDEO_DST_FORMAT_RGB565))
 		bpp = 2;
 	else
-		bpp = 3;		/* Default format set to RGB888 */
+		bpp = 3;		/*                              */
 
 	if (panel_pdata->panel_info.type == MIPI_VIDEO_PANEL &&
 		!panel_pdata->panel_info.clk_rate) {
@@ -307,8 +307,8 @@ int dsi_panel_device_register(struct platform_device *pdev,
 	mipi->dsi_pclk_rate = dsi_pclk_rate;
 
 	/*
-	 * data chain
-	 */
+              
+  */
 	pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
 	if (!pdata)
 		return -ENOMEM;
@@ -321,8 +321,8 @@ int dsi_panel_device_register(struct platform_device *pdev,
 	pdata->dsi_base = mdss_dsi_base;
 
 	/*
-	 * register in mdp driver
-	 */
+                          
+  */
 	rc = mdss_register_panel(pdata);
 	if (rc) {
 		dev_err(&pdev->dev, "unable to register MIPI DSI panel\n");

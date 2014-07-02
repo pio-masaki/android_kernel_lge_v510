@@ -46,7 +46,7 @@ struct msm_mercury_device {
 		char      open_count;
 		uint8_t       op_mode;
 
-		/* event queue including frame done & err indications*/
+		/*                                                   */
 		struct msm_mercury_q evt_q;
 		struct v4l2_subdev subdev;
 
@@ -64,4 +64,4 @@ int msm_mercury_ioctl_hw_cmds(struct msm_mercury_device *pmcry_dev,
 	void * __user arg);
 int msm_mercury_ioctl_hw_cmds_wo(struct msm_mercury_device *pmcry_dev,
 	void * __user arg);
-#endif /* MSM_MERCURY_SYNC_H */
+#endif /*                    */

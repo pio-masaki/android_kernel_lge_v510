@@ -25,10 +25,10 @@
 #ifdef CONFIG_TOUCHSCREEN_ATMEL_KNOCK_ON
 #define MXT_LATEST_FW_VERSION       0x10
 #define MXT_LATEST_FW_BUILD         0xAA
-#else //CONFIG_TOUCHSCREEN_ATMEL_KNOCK_ON
+#else
 #define MXT_LATEST_FW_VERSION       0x21
 #define MXT_LATEST_FW_BUILD         0xAA
-#endif //CONFIG_TOUCHSCREEN_ATMEL_KNOCK_ON
+#endif
 
 enum { MXT_RESERVED_T0 = 0,
 	MXT_RESERVED_T1,
@@ -122,15 +122,15 @@ enum{
 };
 #endif
 
-/* The platform data for the Atmel maXTouch touchscreen driver */
+/*                                                             */
 struct mxt_platform_data {
-	u8    numtouch;	/* Number of touches to report	*/
+	u8    numtouch;	/*                             */
 	int   display_res_x;
 	int   display_res_y;
 	int   min_x;
 	int   min_y;
-	int   max_x;    /* The default reported X range   */
-	int   max_y;    /* The default reported Y range   */
+	int   max_x;    /*                                */
+	int   max_y;    /*                                */
 	bool wakeup;
 
 	unsigned long irqflags;
@@ -157,7 +157,11 @@ struct mxt_platform_data {
 	int		accuracy_filter_enable;
 	int		ghost_detection_enable;
 #endif
+#ifdef CONFIG_TOUCHSCREEN_ATMEL_KNOCK_ON
+	bool knock_on_enable;
+#endif
+	bool smart_cover_enable;
 };
 
-#endif /* __LINUX_ATMEL_MXT_TS_H */
+#endif /*                        */
 

@@ -36,7 +36,7 @@
 #define VIDC_CPU_CS_A2HSOFTINTCLR	(VIDC_CPU_CS_BASE_OFFS + 0x1C)
 #define VIDC_CPU_CS_SCIACMD			(VIDC_CPU_CS_BASE_OFFS + 0x48)
 
-/* HFI_CTRL_STATUS */
+/*                 */
 #define VIDC_CPU_CS_SCIACMDARG0		(VIDC_CPU_CS_BASE_OFFS + 0x4C)
 #define VIDC_CPU_CS_SCIACMDARG0_BMSK	0xff
 #define VIDC_CPU_CS_SCIACMDARG0_SHFT	0x0
@@ -45,13 +45,13 @@
 #define VIDC_CPU_CS_SCIACMDARG0_HFI_CTRL_INIT_STATUS_BMSK	0x1
 #define VIDC_CPU_CS_SCIACMDARG0_HFI_CTRL_INIT_STATUS_SHFT	0x0
 
-/* HFI_QTBL_INFO */
+/*               */
 #define VIDC_CPU_CS_SCIACMDARG1		(VIDC_CPU_CS_BASE_OFFS + 0x50)
 
-/* HFI_QTBL_ADDR */
+/*               */
 #define VIDC_CPU_CS_SCIACMDARG2		(VIDC_CPU_CS_BASE_OFFS + 0x54)
 
-/* HFI_VERSION_INFO */
+/*                  */
 #define VIDC_CPU_CS_SCIACMDARG3		(VIDC_CPU_CS_BASE_OFFS + 0x58)
 #define VIDC_CPU_IC_IRQSTATUS		(VIDC_CPU_IC_BASE_OFFS + 0x00)
 #define VIDC_CPU_IC_FIQSTATUS		(VIDC_CPU_IC_BASE_OFFS + 0x04)
@@ -64,9 +64,9 @@
 #define VIDC_CPU_IC_SOFTINT_H2A_SHFT	0xF
 #define VIDC_CPU_IC_SOFTINTCLEAR	(VIDC_CPU_IC_BASE_OFFS + 0x1C)
 
-/*---------------------------------------------------------------------------
- * MODULE: vidc_wrapper
- *--------------------------------------------------------------------------*/
+/*                                                                           
+                       
+                                                                            */
 #define VIDC_WRAPPER_BASE_OFFS		0x000E0000
 
 #define VIDC_WRAPPER_HW_VERSION		(VIDC_WRAPPER_BASE_OFFS + 0x00)

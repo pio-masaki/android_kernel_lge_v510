@@ -121,7 +121,7 @@ static int mdss_mdp_csc_setup_data(u32 block, u32 blk_idx, u32 tbl_idx,
 			val = data->csc_mv[i];
 		}
 	}
-	MDSS_MDP_REG_WRITE(off, val); /* COEFF_33 */
+	MDSS_MDP_REG_WRITE(off, val); /*          */
 
 	off = (u32 *) (base + CSC_BV_OFF);
 	for (i = 0; i < 3; i++) {
@@ -169,7 +169,7 @@ int mdss_mdp_dspp_setup(struct mdss_mdp_ctl *ctl, struct mdss_mdp_mixer *mixer)
 
 	dspp_num = mixer->num;
 
-	ctl->flush_bits |= BIT(13 + dspp_num);	/* DSPP */
+	ctl->flush_bits |= BIT(13 + dspp_num);	/*      */
 
 	return 0;
 }

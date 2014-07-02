@@ -20,19 +20,19 @@
 #include <linux/delay.h>
 #include <mach/debug_mm.h>
 
-/*----------------------------------------------------------------------------
- * Preprocessor Definitions and Constants
- * -------------------------------------------------------------------------*/
+/*                                                                            
+                                         
+                                                                            */
 
-/* define offset of registers here, may put them into platform data */
+/*                                                                  */
 #define AUX_CODEC_CTL_OFFSET 0x00
 #define PCM_PATH_CTL_OFFSET 0x04
 #define AUX_CODEC_CTL_OUT_OFFSET 0x08
 
-/* define some bit values in PCM_PATH_CTL register */
+/*                                                 */
 #define PCM_PATH_CTL__ADSP_CTL_EN_BMSK 0x8
 
-/* mask and shift */
+/*                */
 #define AUX_CODEC_CTL_ADSP_CODEC_CTL_EN_BMSK 0x800
 #define AUX_CODEC_CTL_PCM_SYNC_LONG_BMSK 0x400
 #define AUX_CODEC_CTL_PCM_SYNC_SHORT_BMSK 0x200
@@ -43,13 +43,13 @@
 #define AUX_CODEC_CTL_AUX_PCM_MODE_BMSK 0x0b
 #define AUX_CODEC_CTL_AUX_CODEC_MODE_BMSK 0x02
 
-/* AUX PCM MODE */
+/*              */
 #define MASTER_PRIM_PCM_SHORT 0
 #define MASTER_AUX_PCM_LONG 1
 #define SLAVE_PRIM_PCM_SHORT 2
 
 struct aux_pcm_state {
-	void __iomem *aux_pcm_base;  /* configure aux pcm through Scorpion */
+	void __iomem *aux_pcm_base;  /*                                    */
 	int     dout;
 	int     din;
 	int     syncout;
@@ -63,7 +63,7 @@ static void __iomem *get_base_addr(struct aux_pcm_state *aux_pcm)
 	return aux_pcm->aux_pcm_base;
 }
 
-/* Set who control aux pcm : adsp or MSM */
+/*                                       */
 void aux_codec_adsp_codec_ctl_en(bool msm_adsp_en)
 {
 	void __iomem *baddr = get_base_addr(&the_aux_pcm_state);
@@ -71,12 +71,12 @@ void aux_codec_adsp_codec_ctl_en(bool msm_adsp_en)
 
 	if (!IS_ERR(baddr)) {
 		val = readl(baddr + AUX_CODEC_CTL_OFFSET);
-		if (msm_adsp_en) { /* adsp */
+		if (msm_adsp_en) { /*      */
 			writel(
 			((val & ~AUX_CODEC_CTL_ADSP_CODEC_CTL_EN_BMSK) |
 			AUX_CODEC_CTL__ADSP_CODEC_CTL_EN__ADSP_V),
 			baddr + AUX_CODEC_CTL_OFFSET);
-		} else { /* MSM */
+		} else { /*     */
 			writel(
 			((val & ~AUX_CODEC_CTL_ADSP_CODEC_CTL_EN_BMSK) |
 			AUX_CODEC_CTL__ADSP_CODEC_CTL_EN__MSM_V),
@@ -86,7 +86,7 @@ void aux_codec_adsp_codec_ctl_en(bool msm_adsp_en)
 	mb();
 }
 
-/* Set who control aux pcm path: adsp or MSM */
+/*                                           */
 void aux_codec_pcm_path_ctl_en(bool msm_adsp_en)
 {
 	void __iomem *baddr = get_base_addr(&the_aux_pcm_state);
@@ -94,12 +94,12 @@ void aux_codec_pcm_path_ctl_en(bool msm_adsp_en)
 
 	 if (!IS_ERR(baddr)) {
 		val = readl(baddr + PCM_PATH_CTL_OFFSET);
-		if (msm_adsp_en) { /* adsp */
+		if (msm_adsp_en) { /*      */
 			writel(
 			((val & ~PCM_PATH_CTL__ADSP_CTL_EN_BMSK) |
 			PCM_PATH_CTL__ADSP_CTL_EN__ADSP_V),
 			baddr + PCM_PATH_CTL_OFFSET);
-		} else { /* MSM */
+		} else { /*     */
 			writel(
 			((val & ~PCM_PATH_CTL__ADSP_CTL_EN_BMSK) |
 			PCM_PATH_CTL__ADSP_CTL_EN__MSM_V),
@@ -156,9 +156,9 @@ void aux_pcm_gpios_free(void)
 	MM_DBG(" aux_pcm_gpios_free \n");
 
 	/*
-	 * Feed silence frames before close to prevent buzzing sound in BT at
-	 * call end. This fix is applicable only to Marimba BT.
-	 */
+                                                                      
+                                                        
+  */
 	gpio_tlmm_config(GPIO_CFG(the_aux_pcm_state.dout, 0, GPIO_CFG_OUTPUT,
 		GPIO_CFG_NO_PULL, GPIO_CFG_2MA), GPIO_CFG_ENABLE);
 	gpio_set_value(the_aux_pcm_state.dout, 0);
@@ -179,7 +179,7 @@ static int get_aux_pcm_gpios(struct platform_device *pdev)
 	int rc = 0;
 	struct resource         *res;
 
-	/* Claim all of the GPIOs. */
+	/*                         */
 	res = platform_get_resource_byname(pdev, IORESOURCE_IO,
 					"aux_pcm_dout");
 	if  (!res) {

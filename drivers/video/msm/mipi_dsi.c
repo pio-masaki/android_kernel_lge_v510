@@ -84,33 +84,26 @@ static int mipi_dsi_off(struct platform_device *pdev)
 	mfd = platform_get_drvdata(pdev);
 	pinfo = &mfd->panel_info;
 
-	printk(KERN_INFO "%s is started.. \n", __func__);
-
 	if (mdp_rev >= MDP_REV_41)
 		mutex_lock(&mfd->dma->ov_mutex);
 	else
 		down(&mfd->dma->mutex);
 
 	if (mfd->panel_info.type == MIPI_CMD_PANEL) {
-		mipi_dsi_prepare_ahb_clocks();
+		mipi_dsi_prepare_clocks();
 		mipi_dsi_ahb_ctrl(1);
 		mipi_dsi_clk_enable();
 
-		/* make sure dsi_cmd_mdp is idle */
+		/*                               */
 		mipi_dsi_cmd_mdp_busy();
 	}
 
 	/*
-	 * Desctiption: change to DSI_CMD_MODE since it needed to
-	 * tx DCS dsiplay off comamnd to panel
-	 */
-#if defined(CONFIG_FB_MSM_MIPI_LGIT_VIDEO_HD_PT)\
-       || defined(CONFIG_FB_MSM_MIPI_DSI_LGIT_FHD) \
-       || defined(CONFIG_FB_MSM_MIPI_DSI_LGIT_WUXGA)
-	/* For power sequence of LGIT Panel.  */
-#else /* QCT Orignial */
+                                                          
+                                       
+  */
 	mipi_dsi_op_mode_config(DSI_CMD_MODE);
-#endif
+
 	if (mfd->panel_info.type == MIPI_CMD_PANEL) {
 		if (pinfo->lcd.vsync_enable) {
 			if (pinfo->lcd.hw_vsync_mode && vsync_gpio >= 0) {
@@ -121,19 +114,13 @@ static int mipi_dsi_off(struct platform_device *pdev)
 		}
 	}
 
-#if defined(CONFIG_FB_MSM_MIPI_LGIT_VIDEO_HD_PT) \
-       || defined(CONFIG_FB_MSM_MIPI_DSI_LGIT_FHD) \
-       || defined(CONFIG_FB_MSM_MIPI_DSI_LGIT_WUXGA)
-	/* For power sequence of LGIT Panel */
-#else /* QCT Original */
 	ret = panel_next_off(pdev);
-#endif
 
 	spin_lock_bh(&dsi_clk_lock);
 
 	mipi_dsi_clk_disable();
 
-	/* disbale dsi engine */
+	/*                    */
 	MIPI_OUTP(MIPI_DSI_BASE + 0x0000, 0);
 
 	mipi_dsi_phy_ctrl(0);
@@ -142,7 +129,6 @@ static int mipi_dsi_off(struct platform_device *pdev)
 	spin_unlock_bh(&dsi_clk_lock);
 
 	mipi_dsi_unprepare_clocks();
-	mipi_dsi_unprepare_ahb_clocks();
 	if (mipi_dsi_pdata && mipi_dsi_pdata->dsi_power_save)
 		mipi_dsi_pdata->dsi_power_save(0);
 
@@ -153,7 +139,6 @@ static int mipi_dsi_off(struct platform_device *pdev)
 
 	pr_debug("%s-:\n", __func__);
 
-	printk(KERN_INFO "%s is ended.. \n", __func__);
 	return ret;
 }
 
@@ -177,13 +162,13 @@ static int mipi_dsi_on(struct platform_device *pdev)
 	fbi = mfd->fbi;
 	var = &fbi->var;
 	pinfo = &mfd->panel_info;
-	printk(KERN_INFO "%s is started.. \n", __func__);
+	esc_byte_ratio = pinfo->mipi.esc_byte_ratio;
 
 	if (mipi_dsi_pdata && mipi_dsi_pdata->dsi_power_save)
 		mipi_dsi_pdata->dsi_power_save(1);
 
 	cont_splash_clk_ctrl(0);
-	mipi_dsi_prepare_ahb_clocks();
+	mipi_dsi_prepare_clocks();
 
 	mipi_dsi_ahb_ctrl(1);
 
@@ -228,7 +213,7 @@ static int mipi_dsi_on(struct platform_device *pdev)
 					vfp - 1) << 16 | (hspw + hbp +
 					width + dummy_xres + hfp - 1));
 		} else {
-			/* DSI_LAN_SWAP_CTRL */
+			/*                   */
 			MIPI_OUTP(MIPI_DSI_BASE + 0x00ac, mipi->dlane_swap);
 
 			MIPI_OUTP(MIPI_DSI_BASE + 0x20,
@@ -244,7 +229,7 @@ static int mipi_dsi_on(struct platform_device *pdev)
 		MIPI_OUTP(MIPI_DSI_BASE + 0x30, 0);
 		MIPI_OUTP(MIPI_DSI_BASE + 0x34, (vspw << 16));
 
-	} else {		/* command mode */
+	} else {		/*              */
 		if (mipi->dst_format == DSI_CMD_DST_FORMAT_RGB888)
 			bpp = 3;
 		else if (mipi->dst_format == DSI_CMD_DST_FORMAT_RGB666)
@@ -252,16 +237,16 @@ static int mipi_dsi_on(struct platform_device *pdev)
 		else if (mipi->dst_format == DSI_CMD_DST_FORMAT_RGB565)
 			bpp = 2;
 		else
-			bpp = 3;	/* Default format set to RGB888 */
+			bpp = 3;	/*                              */
 
 		ystride = width * bpp + 1;
 
-		/* DSI_COMMAND_MODE_MDP_STREAM_CTRL */
+		/*                                  */
 		data = (ystride << 16) | (mipi->vc << 8) | DTYPE_DCS_LWRITE;
 		MIPI_OUTP(MIPI_DSI_BASE + 0x5c, data);
 		MIPI_OUTP(MIPI_DSI_BASE + 0x54, data);
 
-		/* DSI_COMMAND_MODE_MDP_STREAM_TOTAL */
+		/*                                   */
 		data = height << 16 | width;
 		MIPI_OUTP(MIPI_DSI_BASE + 0x60, data);
 		MIPI_OUTP(MIPI_DSI_BASE + 0x58, data);
@@ -282,27 +267,12 @@ static int mipi_dsi_on(struct platform_device *pdev)
 		mutex_lock(&mfd->dma->ov_mutex);
 	else
 		down(&mfd->dma->mutex);
-#if defined(CONFIG_MACH_LGE)
-	ret = panel_next_on(pdev);
-	if (ret < 0)
-	{
-		if (mdp_rev >= MDP_REV_41)
-			mutex_unlock(&mfd->dma->ov_mutex);
-		else
-			up(&mfd->dma->mutex);
 
-		return ret;
-	} else {
-		ret = 0;
-	}
-	#if defined(CONFIG_FB_MSM_MIPI_HITACHI_VIDEO_HD_PT)|| defined(CONFIG_FB_MSM_MIPI_DSI_LGIT_FHD) || defined(CONFIG_FB_MSM_MIPI_DSI_LGIT_WUXGA)
-	mipi_dsi_op_mode_config(mipi->mode);
-	#endif
-#else /*  QCT Original */
-	ret = panel_next_on(pdev);
+	if (mfd->op_enable)
+		ret = panel_next_on(pdev);
 
 	mipi_dsi_op_mode_config(mipi->mode);
-#endif
+
 	if (mfd->panel_info.type == MIPI_CMD_PANEL) {
 		if (pinfo->lcd.vsync_enable) {
 			if (pinfo->lcd.hw_vsync_mode && vsync_gpio >= 0) {
@@ -349,9 +319,8 @@ static int mipi_dsi_on(struct platform_device *pdev)
 			mipi_dsi_set_tear_on(mfd);
 		}
 		mipi_dsi_clk_disable();
-		mipi_dsi_unprepare_clocks();
 		mipi_dsi_ahb_ctrl(0);
-		mipi_dsi_unprepare_ahb_clocks();
+		mipi_dsi_unprepare_clocks();
 	}
 
 	if (mdp_rev >= MDP_REV_41)
@@ -360,7 +329,6 @@ static int mipi_dsi_on(struct platform_device *pdev)
 		up(&mfd->dma->mutex);
 
 	pr_debug("%s-:\n", __func__);
-	printk(KERN_INFO "%s is ended.. \n", __func__);
 
 	return ret;
 }
@@ -432,11 +400,11 @@ static int mipi_dsi_probe(struct platform_device *pdev)
 
 		if (mdp_rev == MDP_REV_42 && mipi_dsi_pdata &&
 			mipi_dsi_pdata->target_type == 1) {
-			/* Target type is 1 for device with (De)serializer
-			 * 0x4f00000 is the base for TV Encoder.
-			 * Unused Offset 0x1000 is used for
-			 * (de)serializer on emulation platform
-			 */
+			/*                                                
+                                           
+                                      
+                                          
+    */
 			periph_base = ioremap(MMSS_SERDES_BASE_PHY, 0x100);
 
 			if (periph_base) {
@@ -470,13 +438,13 @@ static int mipi_dsi_probe(struct platform_device *pdev)
 
 		if (mipi_dsi_pdata->splash_is_enabled &&
 			!mipi_dsi_pdata->splash_is_enabled()) {
-			mipi_dsi_prepare_ahb_clocks();
+			mipi_dsi_prepare_clocks();
 			mipi_dsi_ahb_ctrl(1);
 			MIPI_OUTP(MIPI_DSI_BASE + 0x118, 0);
 			MIPI_OUTP(MIPI_DSI_BASE + 0x0, 0);
 			MIPI_OUTP(MIPI_DSI_BASE + 0x200, 0);
 			mipi_dsi_ahb_ctrl(0);
-			mipi_dsi_unprepare_ahb_clocks();
+			mipi_dsi_unprepare_clocks();
 		}
 		mipi_dsi_resource_initialized = 1;
 
@@ -497,18 +465,21 @@ static int mipi_dsi_probe(struct platform_device *pdev)
 	if (pdev_list_cnt >= MSM_FB_MAX_DEV_LIST)
 		return -ENOMEM;
 
+	if (!mfd->cont_splash_done)
+		cont_splash_clk_ctrl(1);
+
 	mdp_dev = platform_device_alloc("mdp", pdev->id);
 	if (!mdp_dev)
 		return -ENOMEM;
 
 	/*
-	 * link to the latest pdev
-	 */
+                           
+  */
 	mfd->pdev = mdp_dev;
 
 	/*
-	 * alloc panel device data
-	 */
+                           
+  */
 	if (platform_device_add_data
 	    (mdp_dev, pdev->dev.platform_data,
 	     sizeof(struct msm_fb_panel_data))) {
@@ -517,8 +488,8 @@ static int mipi_dsi_probe(struct platform_device *pdev)
 		return -ENOMEM;
 	}
 	/*
-	 * data chain
-	 */
+              
+  */
 	pdata = mdp_dev->dev.platform_data;
 	pdata->on = mipi_dsi_on;
 	pdata->off = mipi_dsi_off;
@@ -528,8 +499,8 @@ static int mipi_dsi_probe(struct platform_device *pdev)
 	pdata->next = pdev;
 
 	/*
-	 * get/set panel specific fb info
-	 */
+                                  
+  */
 	mfd->panel_info = pdata->panel_info;
 	pinfo = &mfd->panel_info;
 
@@ -591,7 +562,7 @@ static int mipi_dsi_probe(struct platform_device *pdev)
 		 || (mipi->dst_format == DSI_VIDEO_DST_FORMAT_RGB565))
 		bpp = 2;
 	else
-		bpp = 3;		/* Default format set to RGB888 */
+		bpp = 3;		/*                              */
 
 	if (mfd->panel_info.type == MIPI_VIDEO_PANEL &&
 		!mfd->panel_info.clk_rate) {
@@ -622,23 +593,18 @@ static int mipi_dsi_probe(struct platform_device *pdev)
 	mipi->dsi_pclk_rate = dsi_pclk_rate;
 
 	/*
-	 * set driver data
-	 */
+                   
+  */
 	platform_set_drvdata(mdp_dev, mfd);
 
 	/*
-	 * register in mdp driver
-	 */
+                          
+  */
 	rc = platform_device_add(mdp_dev);
 	if (rc)
 		goto mipi_dsi_probe_err;
 
 	pdev_list[pdev_list_cnt++] = pdev;
-
-	esc_byte_ratio = pinfo->mipi.esc_byte_ratio;
-
-	if (!mfd->cont_splash_done)
-		cont_splash_clk_ctrl(1);
 
 return 0;
 

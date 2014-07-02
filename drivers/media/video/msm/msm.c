@@ -39,7 +39,7 @@ static int vnode_count;
 module_param(msm_camera_v4l2_nr, uint, 0644);
 MODULE_PARM_DESC(msm_camera_v4l2_nr, "videoX start number, -1 is autodetect");
 
-/* callback function from all subdevices of a msm_cam_v4l2_device */
+/*                                                                */
 static void msm_cam_v4l2_subdev_notify(struct v4l2_subdev *sd,
 				unsigned int notification, void *arg)
 {
@@ -60,9 +60,9 @@ static void msm_cam_v4l2_subdev_notify(struct v4l2_subdev *sd,
 }
 
 /*
- *
- * implementation of v4l2_ioctl_ops
- *
+  
+                                   
+  
  */
 static int msm_camera_v4l2_querycap(struct file *f, void *pctx,
 				struct v4l2_capability *pcaps)
@@ -71,8 +71,8 @@ static int msm_camera_v4l2_querycap(struct file *f, void *pctx,
 	D("%s\n", __func__);
 	WARN_ON(pctx != f->private_data);
 
-	/* some other day, some other time */
-	/*cap->version = LINUX_VERSION_CODE; */
+	/*                                 */
+	/*                                   */
 	pcaps->capabilities = V4L2_CAP_VIDEO_CAPTURE | V4L2_CAP_STREAMING;
 	return 0;
 }
@@ -215,6 +215,7 @@ static int msm_camera_v4l2_reqbufs(struct file *f, void *pctx,
 		pmctl = msm_cam_server_get_mctl(pcam->mctl_handle);
 		if (pmctl == NULL) {
 			pr_err("%s Invalid mctl ptr", __func__);
+			mutex_unlock(&pcam_inst->inst_lock);
 			return -EINVAL;
 		}
 		pmctl->mctl_vbqueue_init(pcam_inst, &pcam_inst->vid_bufq,
@@ -229,7 +230,7 @@ static int msm_camera_v4l2_reqbufs(struct file *f, void *pctx,
 		return rc;
 	}
 	if (!pb->count) {
-		/* Deallocation. free buf_offset array */
+		/*                                     */
 		D("%s Inst %p freeing buffer offsets array",
 			__func__, pcam_inst);
 		for (j = 0 ; j < pcam_inst->buf_count ; j++) {
@@ -238,8 +239,8 @@ static int msm_camera_v4l2_reqbufs(struct file *f, void *pctx,
 		}
 		kfree(pcam_inst->buf_offset);
 		pcam_inst->buf_offset = NULL;
-		/* If the userspace has deallocated all the
-		 * buffers, then release the vb2 queue */
+		/*                                         
+                                         */
 		if (pcam_inst->vbqueue_initialized) {
 			vb2_queue_release(&pcam_inst->vid_bufq);
 			pcam_inst->vbqueue_initialized = 0;
@@ -247,7 +248,7 @@ static int msm_camera_v4l2_reqbufs(struct file *f, void *pctx,
 	} else {
 		D("%s Inst %p Allocating buf_offset array",
 			__func__, pcam_inst);
-		/* Allocation. allocate buf_offset array */
+		/*                                       */
 		pcam_inst->buf_offset = (struct msm_cam_buf_offset **)
 			kzalloc(pb->count * sizeof(struct msm_cam_buf_offset *),
 							GFP_KERNEL);
@@ -281,7 +282,7 @@ static int msm_camera_v4l2_reqbufs(struct file *f, void *pctx,
 static int msm_camera_v4l2_querybuf(struct file *f, void *pctx,
 					struct v4l2_buffer *pb)
 {
-	/* get the video device */
+	/*                      */
 	int rc = 0;
 	struct msm_cam_v4l2_dev_inst *pcam_inst;
 	pcam_inst = container_of(f->private_data,
@@ -299,7 +300,7 @@ static int msm_camera_v4l2_qbuf(struct file *f, void *pctx,
 					struct v4l2_buffer *pb)
 {
 	int rc = 0, i = 0;
-	/* get the camera device */
+	/*                       */
 	struct msm_cam_v4l2_dev_inst *pcam_inst;
 	pcam_inst = container_of(f->private_data,
 		struct msm_cam_v4l2_dev_inst, eventHandle);
@@ -316,7 +317,7 @@ static int msm_camera_v4l2_qbuf(struct file *f, void *pctx,
 	}
 
 	if (pb->type == V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE) {
-		/* Reject the buffer if planes array was not allocated */
+		/*                                                     */
 		if (pb->m.planes == NULL) {
 			pr_err("%s Planes array is null\n", __func__);
 			mutex_unlock(&pcam_inst->inst_lock);
@@ -348,7 +349,7 @@ static int msm_camera_v4l2_dqbuf(struct file *f, void *pctx,
 					struct v4l2_buffer *pb)
 {
 	int rc = 0, i = 0;
-	/* get the camera device */
+	/*                       */
 	struct msm_cam_v4l2_dev_inst *pcam_inst;
 	pcam_inst = container_of(f->private_data,
 		struct msm_cam_v4l2_dev_inst, eventHandle);
@@ -365,7 +366,7 @@ static int msm_camera_v4l2_dqbuf(struct file *f, void *pctx,
 	D("%s, videobuf_dqbuf returns %d\n", __func__, rc);
 
 	if (pb->type == V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE) {
-		/* Reject the buffer if planes array was not allocated */
+		/*                                                     */
 		if (pb->m.planes == NULL) {
 			pr_err("%s Planes array is null\n", __func__);
 			mutex_unlock(&pcam_inst->inst_lock);
@@ -394,7 +395,7 @@ static int msm_camera_v4l2_streamon(struct file *f, void *pctx,
 					enum v4l2_buf_type buf_type)
 {
 	int rc = 0;
-	/* get the camera device */
+	/*                       */
 	struct msm_cam_v4l2_device *pcam  = video_drvdata(f);
 	struct msm_cam_v4l2_dev_inst *pcam_inst;
 	pcam_inst = container_of(f->private_data,
@@ -414,11 +415,11 @@ static int msm_camera_v4l2_streamon(struct file *f, void *pctx,
 	}
 
 	D("%s Calling videobuf_streamon", __func__);
-	/* if HW streaming on is successful, start buffer streaming */
+	/*                                                          */
 	rc = vb2_streamon(&pcam_inst->vid_bufq, buf_type);
 	D("%s, videobuf_streamon returns %d\n", __func__, rc);
 
-	/* turn HW (VFE/sensor) streaming */
+	/*                                */
 	pcam_inst->streamon = 1;
 	rc = msm_server_streamon(pcam, pcam_inst->my_index);
 	mutex_unlock(&pcam_inst->inst_lock);
@@ -431,7 +432,7 @@ static int msm_camera_v4l2_streamoff(struct file *f, void *pctx,
 					enum v4l2_buf_type buf_type)
 {
 	int rc = 0;
-	/* get the camera device */
+	/*                       */
 	struct msm_cam_v4l2_device *pcam  = video_drvdata(f);
 	struct msm_cam_v4l2_dev_inst *pcam_inst;
 	pcam_inst = container_of(f->private_data,
@@ -446,8 +447,8 @@ static int msm_camera_v4l2_streamoff(struct file *f, void *pctx,
 		return -EINVAL;
 	}
 
-	/* first turn of HW (VFE/sensor) streaming so that buffers are
-		not in use when we free the buffers */
+	/*                                                            
+                                      */
 	mutex_lock(&pcam->vid_lock);
 	mutex_lock(&pcam_inst->inst_lock);
 	pcam_inst->streamon = 0;
@@ -457,8 +458,8 @@ static int msm_camera_v4l2_streamoff(struct file *f, void *pctx,
 	if (rc < 0)
 		pr_err("%s: hw failed to stop streaming\n", __func__);
 
-	/* stop buffer streaming */
-	rc = vb2_streamoff(&pcam_inst->vid_bufq, buf_type);
+	/*                       */
+	vb2_streamoff(&pcam_inst->vid_bufq, buf_type);
 	D("%s, videobuf_streamoff returns %d\n", __func__, rc);
 
 	mutex_unlock(&pcam_inst->inst_lock);
@@ -469,7 +470,7 @@ static int msm_camera_v4l2_streamoff(struct file *f, void *pctx,
 static int msm_camera_v4l2_enum_fmt_cap(struct file *f, void *pctx,
 					struct v4l2_fmtdesc *pfmtdesc)
 {
-	/* get the video device */
+	/*                      */
 	struct msm_cam_v4l2_device *pcam  = video_drvdata(f);
 	const struct msm_isp_color_fmt *isp_fmt;
 
@@ -499,7 +500,7 @@ static int msm_camera_v4l2_g_fmt_cap(struct file *f,
 		void *pctx, struct v4l2_format *pfmt)
 {
 	int rc = 0;
-	/* get the video device */
+	/*                      */
 	struct msm_cam_v4l2_device *pcam  = video_drvdata(f);
 	struct msm_cam_v4l2_dev_inst *pcam_inst;
 	pcam_inst = container_of(f->private_data,
@@ -521,7 +522,7 @@ static int msm_camera_v4l2_g_fmt_cap_mplane(struct file *f,
 		void *pctx, struct v4l2_format *pfmt)
 {
 	int rc = 0;
-	/* get the video device */
+	/*                      */
 	struct msm_cam_v4l2_device *pcam  = video_drvdata(f);
 	struct msm_cam_v4l2_dev_inst *pcam_inst;
 	pcam_inst = container_of(f->private_data,
@@ -539,14 +540,14 @@ static int msm_camera_v4l2_g_fmt_cap_mplane(struct file *f,
 	return rc;
 }
 
-/* This function will readjust the format parameters based in HW
-  capabilities. Called by s_fmt_cap
+/*                                                              
+                                   
 */
 static int msm_camera_v4l2_try_fmt_cap(struct file *f, void *pctx,
 					struct v4l2_format *pfmt)
 {
 	int rc = 0;
-	/* get the video device */
+	/*                      */
 	struct msm_cam_v4l2_device *pcam  = video_drvdata(f);
 
 	D("%s\n", __func__);
@@ -566,7 +567,7 @@ static int msm_camera_v4l2_try_fmt_cap_mplane(struct file *f, void *pctx,
 					struct v4l2_format *pfmt)
 {
 	int rc = 0;
-	/* get the video device */
+	/*                      */
 	struct msm_cam_v4l2_device *pcam  = video_drvdata(f);
 
 	D("%s\n", __func__);
@@ -582,14 +583,14 @@ static int msm_camera_v4l2_try_fmt_cap_mplane(struct file *f, void *pctx,
 	return rc;
 }
 
-/* This function will reconfig the v4l2 driver and HW device, it should be
-   called after the streaming is stopped.
+/*                                                                        
+                                         
 */
 static int msm_camera_v4l2_s_fmt_cap(struct file *f, void *pctx,
 					struct v4l2_format *pfmt)
 {
 	int rc;
-	/* get the video device */
+	/*                      */
 	struct msm_cam_v4l2_device *pcam  = video_drvdata(f);
 	struct msm_cam_v4l2_dev_inst *pcam_inst;
 	pcam_inst = container_of(f->private_data,
@@ -684,7 +685,7 @@ static int msm_camera_v4l2_s_crop(struct file *f, void *pctx,
 	return rc;
 }
 
-/* Stream type-dependent parameter ioctls */
+/*                                        */
 static int msm_camera_v4l2_g_parm(struct file *f, void *pctx,
 				struct v4l2_streamparm *a)
 {
@@ -756,14 +757,16 @@ static int msm_camera_v4l2_subscribe_event(struct v4l2_fh *fh,
 		(struct msm_cam_v4l2_dev_inst *)container_of(fh,
 		struct msm_cam_v4l2_dev_inst, eventHandle);
 
-	D("%s:fh = 0x%x, type = 0x%x\n", __func__, (u32)fh, sub->type);
-	if (pcam_inst->my_index != 0)
+	D("%s:fh = 0x%x, type = 0x%x \n", __func__, (u32)fh, sub->type);
+	if (pcam_inst->my_index != 0){
+		pr_err("%s: my_index = %d\n", __func__, pcam_inst->my_index);
 		return -EINVAL;
+	}
 	if (sub->type == V4L2_EVENT_ALL)
 		sub->type = V4L2_EVENT_PRIVATE_START+MSM_CAM_APP_NOTIFY_EVENT;
 	rc = v4l2_event_subscribe(fh, sub, 30);
 	if (rc < 0)
-		D("%s: failed for evtType = 0x%x, rc = %d\n",
+		pr_err("%s: failed for evtType = 0x%x, rc = %d\n",
 						__func__, sub->type, rc);
 	return rc;
 }
@@ -850,7 +853,7 @@ static long msm_camera_v4l2_private_ioctl(struct file *file, void *fh,
 	return rc;
 }
 
-/* v4l2_ioctl_ops */
+/*                */
 static const struct v4l2_ioctl_ops g_msm_ioctl_ops = {
 	.vidioc_querycap = msm_camera_v4l2_querycap,
 
@@ -869,7 +872,7 @@ static const struct v4l2_ioctl_ops g_msm_ioctl_ops = {
 	.vidioc_streamon = msm_camera_v4l2_streamon,
 	.vidioc_streamoff = msm_camera_v4l2_streamoff,
 
-	/* format ioctls */
+	/*               */
 	.vidioc_enum_fmt_vid_cap = msm_camera_v4l2_enum_fmt_cap,
 	.vidioc_enum_fmt_vid_cap_mplane = msm_camera_v4l2_enum_fmt_cap,
 	.vidioc_try_fmt_vid_cap = msm_camera_v4l2_try_fmt_cap,
@@ -882,17 +885,17 @@ static const struct v4l2_ioctl_ops g_msm_ioctl_ops = {
 	.vidioc_g_jpegcomp = msm_camera_v4l2_g_jpegcomp,
 	.vidioc_s_jpegcomp = msm_camera_v4l2_s_jpegcomp,
 
-	/* Stream type-dependent parameter ioctls */
+	/*                                        */
 	.vidioc_g_parm =  msm_camera_v4l2_g_parm,
 	.vidioc_s_parm =  msm_camera_v4l2_s_parm,
 
-	/* event subscribe/unsubscribe */
+	/*                             */
 	.vidioc_subscribe_event = msm_camera_v4l2_subscribe_event,
 	.vidioc_unsubscribe_event = msm_camera_v4l2_unsubscribe_event,
 	.vidioc_default = msm_camera_v4l2_private_ioctl,
 };
 
-/* v4l2_file_operations */
+/*                      */
 static int msm_open(struct file *f)
 {
 	int i, rc = -EINVAL;
@@ -900,7 +903,7 @@ static int msm_open(struct file *f)
 	int ion_client_created = 0;
 #endif
 	int server_q_idx = 0;
-	/* get the video device */
+	/*                      */
 	struct msm_cam_v4l2_device *pcam  = video_drvdata(f);
 	struct msm_cam_v4l2_dev_inst *pcam_inst;
 	struct msm_cam_media_controller *pmctl = NULL;
@@ -921,7 +924,7 @@ static int msm_open(struct file *f)
 			break;
 	}
 
-	/* if no instance is available, return error */
+	/*                                           */
 	if (i == MSM_DEV_INST_MAX) {
 		mutex_unlock(&pcam->vid_lock);
 		return rc;
@@ -957,8 +960,8 @@ static int msm_open(struct file *f)
 			goto msm_cam_server_begin_session_failed;
 		}
 #ifdef CONFIG_MSM_MULTIMEDIA_USE_ION
-/* LGE_CHANGE_S, Patch for ION free, 2013.1.8, gayoung85.lee[Start] */
-#if defined(CONFIG_LGE_GK_CAMERA) ||defined(CONFIG_MACH_APQ8064_AWIFI)
+/*                                                                  */
+#if defined(CONFIG_MACH_APQ8064_PALMAN)
 		pmctl->client = msm_camera_v4l2_get_ion_client(pcam);
 		if(pmctl->client != NULL)
 			ion_client_created = 1;
@@ -969,46 +972,32 @@ static int msm_open(struct file *f)
 		}
 		ion_client_created = 1;		
 #endif
-/* LGE_CHANGE_E, Patch for ION free, 2013.1.8, gayoung85.lee[End] */
+/*                                                                */
 #endif
 
-		/* Should be set to sensor ops if any but right now its OK!! */
+		/*                                                           */
 		if (!pmctl->mctl_open) {
 			D("%s: media contoller is not inited\n", __func__);
 			rc = -ENODEV;
 			goto mctl_open_failed;
 		}
 
-		/* Now we really have to activate the camera */
+		/*                                           */
 		D("%s: call mctl_open\n", __func__);
 		rc = pmctl->mctl_open(pmctl, MSM_APPS_ID_V4L2);
 		if (rc < 0) {
 			pr_err("%s: HW open failed rc = 0x%x\n",  __func__, rc);
-			rc = -EIO;  /* LGE_CHANGE, To block kernel crash, 2013-08-22, gayoung85.lee@lge.com */
+			rc = -EIO;  /*                                                                      */
 			goto mctl_open_failed;
 		}
 		pmctl->pcam_ptr = pcam;
-    
-/* LGE_CHANGE_S, To block kernel crash on GK/GV camera, 2012.12.16, elin.lee@lge.com */    
-#if defined(CONFIG_LGE_GK_CAMERA)
-#else
+		
 		msm_setup_v4l2_event_queue(&pcam_inst->eventHandle,
 			pcam->pvdev);
-#endif
-/* LGE_CHANGE_E, To block kernel crash on GK/GV camera, 2012.12.16, elin.lee@lge.com */    
+		
 		mutex_init(&pcam->event_lock);
 		msm_queue_init(&pcam->eventData_q, "eventData");
 	}
-  
-/* LGE_CHANGE_S, To block kernel crash on GK/GV camera, 2012.12.16, elin.lee@lge.com */     
-#if defined(CONFIG_LGE_GK_CAMERA)
-   if (pcam_inst->my_index == 0) {
-       msm_setup_v4l2_event_queue(&pcam_inst->eventHandle,
-       pcam->pvdev);
-    }
-#endif
-/* LGE_CHANGE_E, To block kernel crash on GK/GV camera, 2012.12.16, elin.lee@lge.com */    
-
 	pcam_inst->vbqueue_initialized = 0;
 	pcam_inst->sequence = 0;
 	rc = 0;
@@ -1039,8 +1028,7 @@ msm_send_open_server_failed:
 mctl_open_failed:
 	if (pcam->use_count == 1) {
 #ifdef CONFIG_MSM_MULTIMEDIA_USE_ION
-/* LGE_CHANGE_S, Patch for ION free, 2013.1.8, gayoung85.lee[Start] */
-#if defined(CONFIG_LGE_GK_CAMERA) ||defined(CONFIG_MACH_APQ8064_AWIFI)
+#if defined(CONFIG_MACH_APQ8064_PALMAN)
 		if(ion_client_created == 1)
 			msm_camera_v4l2_put_ion_client(pcam);
 #else
@@ -1049,7 +1037,7 @@ mctl_open_failed:
 			kref_put(&pmctl->refcount, msm_release_ion_client);
 		}
 #endif
-/* LGE_CHANGE_E, Patch for ION free, 2013.1.8, gayoung85.lee[End] */
+/*                                                                */
 #endif
 		if (msm_server_end_session(pcam) < 0)
 			pr_err("%s: msm_server_end_session failed\n",
@@ -1132,7 +1120,6 @@ static int msm_mmap(struct file *f, struct vm_area_struct *vma)
 	return rc;
 }
 
-#if !defined(CONFIG_LGE_GK_CAMERA)
 void msm_release_ion_client(struct kref *ref)
 {
 	struct msm_cam_media_controller *mctl = container_of(ref,
@@ -1141,7 +1128,6 @@ void msm_release_ion_client(struct kref *ref)
 	ion_client_destroy(mctl->client);
 	mctl->client = NULL;
 }
-#endif
 
 static int msm_close(struct file *f)
 {
@@ -1160,51 +1146,23 @@ static int msm_close(struct file *f)
 	pmctl = msm_cam_server_get_mctl(pcam->mctl_handle);
 	if (!pmctl) {
 		pr_err("%s NULL mctl pointer\n", __func__);
-/* LGE_CHANGE_S, camera recovery patch, 2013.2.1, jungki.kim[Start] */
-#if !defined(CONFIG_LGE_GK_CAMERA)
 		return -EINVAL;
-#endif
-/* LGE_CHANGE_E, camera recovery patch, 2013.2.1, jungki.kim[End] */
 	}
 
 	mutex_lock(&pcam->vid_lock);
 	mutex_lock(&pcam_inst->inst_lock);
 
 	if (pcam_inst->streamon) {
-		/*something went wrong since instance
-		is closing without streamoff*/
-//LGE_UPDATE_S 0828 add messages to debug timeout error yt.jeon@lge.com
-		printk("%s OO pcam_inst->streamon \n",__func__);
-//LGE_UPDATE_E 0828 add messages to debug timeout error yt.jeon@lge.com
-		// Start LGE_BSP_CAMERA::seongjo.kim@lge.com 2012-08-10 handle server daemon crash elegantly
-/* LGE_CHANGE_S, To block kernel crash on GK/GV camera, 2012.12.16, elin.lee@lge.com */    
-#if defined(CONFIG_LGE_GK_CAMERA)
-#else
-//Start LGE_BSP_CAMERA : mediaserver recovery patch from QCT - jonghwan.ko@lge.com
-		//msm_cam_stop_hardware(pcam);
-			if(pmctl->mctl_release)
-				pmctl->mctl_release(pmctl);
-			pmctl->mctl_release = NULL;
-//End  LGE_BSP_CAMERA : mediaserver recovery patch from QCT - jonghwan.ko@lge.com
-#endif
-/* LGE_CHANGE_E, To block kernel crash on GK/GV camera, 2012.12.16, elin.lee@lge.com */    
-		// End LGE_BSP_CAMERA::seongjo.kim@lge.com 2012-08-10 handle server daemon crash elegantly
-//LGE_UPDATE_S 0828 add messages to debug timeout error yt.jeon@lge.com
-	}
-	else
-	{
-		printk("%s XX pcam_inst->streamon \n",__func__);
-//LGE_UPDATE_E 0828 add messages to debug timeout error yt.jeon@lge.com
+		/*                                   
+                              */
+		if (pmctl->mctl_release)
+			pmctl->mctl_release(pmctl);
+		pmctl->mctl_release = NULL;/*                             */
 	}
 
 	pcam_inst->streamon = 0;
 	pcam->use_count--;
 	pcam->dev_inst_map[pcam_inst->image_mode] = NULL;
-/* LGE_CHANGE_S, ion leakage patch, 2013.1.23, jungki.kim[Start] */
-#if defined(CONFIG_LGE_GK_CAMERA)
-	pcam_inst->is_closing = 1;
-#endif
-/* LGE_CHANGE_E, ion leakage patch, 2013.1.23, jungki.kim[End] */
 	if (pcam_inst->vbqueue_initialized)
 		vb2_queue_release(&pcam_inst->vid_bufq);
 	D("%s Closing down instance %p ", __func__, pcam_inst);
@@ -1215,12 +1173,7 @@ static int msm_close(struct file *f)
 		mutex_lock(&pcam->event_lock);
 		msm_drain_eventq(&pcam->eventData_q);
 		mutex_unlock(&pcam->event_lock);
-/* LGE_CHANGE_S, To block kernel crash on GK/GV camera, 2012.12.16, elin.lee@lge.com */    
-#if defined(CONFIG_LGE_GK_CAMERA)
-#else
 		mutex_destroy(&pcam->event_lock);
-#endif
-/* LGE_CHANGE_E, To block kernel crash on GK/GV camera, 2012.12.16, elin.lee@lge.com */    
 		msm_destroy_v4l2_event_queue(&pcam_inst->eventHandle);
 	}
 
@@ -1233,48 +1186,32 @@ static int msm_close(struct file *f)
 	f->private_data = NULL;
 
 	if (pcam->use_count == 0) {
-/* LGE_CHANGE_S, Patch for ION free, 2013.1.8, gayoung85.lee[Start] */
-#if defined(CONFIG_LGE_GK_CAMERA) ||defined(CONFIG_MACH_APQ8064_AWIFI)
+/*                                                                  */
+#if defined(CONFIG_MACH_APQ8064_PALMAN)
 #ifdef CONFIG_MSM_MULTIMEDIA_USE_ION
 		msm_camera_v4l2_put_ion_client(pcam);
 #endif
 #endif
-/* LGE_CHANGE_E, Patch for ION free, 2013.1.8, gayoung85.lee[End] */
-
+/*                                                                */
 		if (msm_server_get_usecount() > 0) {
 			rc = msm_send_close_server(pcam);
 			if (rc < 0)
 				pr_err("msm_send_close_server failed %d\n", rc);
 		}
 
-/* LGE_CHANGE_S, camera recovery patch, 2013.2.1, jungki.kim[Start] */
-#if defined(CONFIG_LGE_GK_CAMERA)
-		if (pmctl != NULL && pmctl->mctl_release)
-#else
 		if (pmctl->mctl_release)
-#endif
-/* LGE_CHANGE_E, camera recovery patch, 2013.2.1, jungki.kim[End] */
 			pmctl->mctl_release(pmctl);
-//Start LGE_BSP_CAMERA : mediaserver recovery patch from QCT - jonghwan.ko@lge.com
-#if !defined(CONFIG_LGE_GK_CAMERA)
-		pmctl->mctl_release = NULL;
-#endif
-//End  LGE_BSP_CAMERA : mediaserver recovery patch from QCT - jonghwan.ko@lge.com
-/* LGE_CHANGE_S, Patch for ION free, 2013.1.8, gayoung85.lee[Start] */
-#if !defined(CONFIG_LGE_GK_CAMERA) && !defined(CONFIG_MACH_APQ8064_AWIFI)
+    		pmctl->mctl_release = NULL;
+
+#if !defined(CONFIG_MACH_APQ8064_PALMAN)
 #ifdef CONFIG_MSM_MULTIMEDIA_USE_ION
 		kref_put(&pmctl->refcount, msm_release_ion_client);
 #endif
 #endif
-/* LGE_CHANGE_E, Patch for ION free, 2013.1.8, gayoung85.lee[End] */
+/*                                                                */
 		rc = msm_server_end_session(pcam);
 		if (rc < 0)
 			pr_err("msm_server_end_session fails %d\n", rc);
- /* LGE_CHANGE_S, To block kernel crash on GK/GV camera, 2012.12.16, elin.lee@lge.com */    
-#if defined(CONFIG_LGE_GK_CAMERA)
-          mutex_destroy(&pcam->event_lock);
-#endif
-/* LGE_CHANGE_E, To block kernel crash on GK/GV camera, 2012.12.16, elin.lee@lge.com */    
 	}
 	mutex_unlock(&pcam->vid_lock);
 	return rc;
@@ -1338,26 +1275,26 @@ long msm_v4l2_evt_notify(struct msm_cam_media_controller *mctl,
 	}
 	ktime_get_ts(&v4l2_ev.timestamp);
 	if (evt_payload.payload_length > 0 && evt_payload.payload != NULL) {
-//Start LGE_BSP_CAMERA : Dont use G model - jonghwan.ko@lge.com
+//                                                             
 		pr_err(" %s : payload_length %d \n",__func__,evt_payload.payload_length);
-//End  LGE_BSP_CAMERA : Dont use G model - jonghwan.ko@lge.com
+//                                                            
 		mutex_lock(&pcam->event_lock);
 		event_qcmd = kzalloc(sizeof(struct msm_queue_cmd), GFP_KERNEL);
 		if (!event_qcmd) {
 			pr_err("%s Insufficient event_qcmd memory. return", __func__);
 			rc = -ENOMEM;
-//Start LGE_BSP_CAMERA : sync mutex_unlock - jonghwan.ko@lge.com
+//                                                              
 			mutex_unlock(&pcam->event_lock);
-//End  LGE_BSP_CAMERA : sync mutex_unlock - jonghwan.ko@lge.com
+//                                                             
 			goto event_qcmd_alloc_fail;
 		}
 		payload = kzalloc(evt_payload.payload_length, GFP_KERNEL);
 		if (!payload) {
 			pr_err("%s Insufficient payload memory. return", __func__);
 			rc = -ENOMEM;
-//Start LGE_BSP_CAMERA : sync mutex_unlock - jonghwan.ko@lge.com
+//                                                              
 			mutex_unlock(&pcam->event_lock);
-//End  LGE_BSP_CAMERA : sync mutex_unlock - jonghwan.ko@lge.com
+//                                                             
 			goto payload_alloc_fail;
 		}
 		if (copy_from_user(payload,
@@ -1365,9 +1302,9 @@ long msm_v4l2_evt_notify(struct msm_cam_media_controller *mctl,
 				evt_payload.payload_length)) {
 			ERR_COPY_FROM_USER();
 			rc = -EFAULT;
-//Start LGE_BSP_CAMERA : sync mutex_unlock - jonghwan.ko@lge.com
+//                                                              
 			mutex_unlock(&pcam->event_lock);
-//End  LGE_BSP_CAMERA : sync mutex_unlock - jonghwan.ko@lge.com
+//                                                             
 			goto copy_from_user_failed;
 		}
 		event_qcmd->command = payload;
@@ -1403,7 +1340,7 @@ static int msm_cam_dev_init(struct msm_cam_v4l2_device *pcam)
 	struct platform_device *pdev = NULL;
 	D("%s\n", __func__);
 
-	/* first register the v4l2 device */
+	/*                                */
 	if (pcam->sensor_sdev->flags & V4L2_SUBDEV_FL_IS_I2C) {
 		client = v4l2_get_subdevdata(pcam->sensor_sdev);
 		pcam->v4l2_dev.dev = &client->dev;
@@ -1421,7 +1358,7 @@ static int msm_cam_dev_init(struct msm_cam_v4l2_device *pcam)
 		pcam->v4l2_dev.notify = msm_cam_v4l2_subdev_notify;
 
 
-	/* now setup video device */
+	/*                        */
 	pvdev = video_device_alloc();
 	if (pvdev == NULL) {
 		pr_err("%s: video_device_alloc failed\n", __func__);
@@ -1434,12 +1371,12 @@ static int msm_cam_dev_init(struct msm_cam_v4l2_device *pcam)
 	pvdev->v4l2_dev = &pcam->v4l2_dev;
 	pcam->v4l2_dev.mdev = &pcam->media_dev;
 
-	/* init video device's driver interface */
+	/*                                      */
 	D("sensor name = %s, sizeof(pvdev->name)=%d\n",
 		pcam->sensor_sdev->name, sizeof(pvdev->name));
 
-	/* device info - strlcpy is safer than strncpy but
-	   only if architecture supports*/
+	/*                                                
+                                 */
 	strlcpy(pvdev->name, pcam->sensor_sdev->name, sizeof(pvdev->name));
 
 	pvdev->release   = video_device_release;
@@ -1452,7 +1389,7 @@ static int msm_cam_dev_init(struct msm_cam_v4l2_device *pcam)
 	pvdev->entity.type = MEDIA_ENT_T_DEVNODE_V4L;
 	pvdev->entity.group_id = QCAMERA_VNODE_GROUP_ID;
 
-	/* register v4l2 video device to kernel as /dev/videoXX */
+	/*                                                      */
 	D("video_register_device\n");
 	rc = video_register_device(pvdev,
 					VFL_TYPE_GRABBER,
@@ -1465,7 +1402,7 @@ static int msm_cam_dev_init(struct msm_cam_v4l2_device *pcam)
 	D("%s: video device registered as /dev/video%d\n",
 		__func__, pvdev->num);
 
-	/* connect pcam and video dev to each other */
+	/*                                          */
 	pcam->pvdev	= pvdev;
 	video_set_drvdata(pcam->pvdev, pcam);
 
@@ -1559,8 +1496,8 @@ probe_fail:
 	return NULL;
 }
 
-/* LGE_CHANGE_S, Patch for ION free, 2013.1.8, gayoung85.lee[Start] */
-#if defined(CONFIG_LGE_GK_CAMERA) ||defined(CONFIG_MACH_APQ8064_AWIFI)
+/*                                                                  */
+#if defined(CONFIG_MACH_APQ8064_PALMAN)
 #ifdef CONFIG_MSM_MULTIMEDIA_USE_ION
 void msm_camera_v4l2_release_ion_client(struct kref *ref)
 {
@@ -1625,11 +1562,11 @@ int msm_camera_v4l2_put_ion_client(struct msm_cam_v4l2_device *pcam)
 }
 #endif
 #endif
-/* LGE_CHANGE_E, Patch for ION free, 2013.1.8, gayoung85.lee[End] */
+/*                                                                */
 
-/* register a msm sensor into the msm device, which will probe the
- * sensor HW. if the HW exist then create a video device (/dev/videoX/)
- * to represent this sensor */
+/*                                                                
+                                                                       
+                            */
 int msm_sensor_register(struct v4l2_subdev *sensor_sd)
 {
 	int rc = -EINVAL;
@@ -1640,7 +1577,7 @@ int msm_sensor_register(struct v4l2_subdev *sensor_sd)
 
 	D("%s for %s\n", __func__, sensor_sd->name);
 
-	/* allocate the memory for the camera device first */
+	/*                                                 */
 	pcam = kzalloc(sizeof(*pcam), GFP_KERNEL);
 	if (!pcam) {
 		pr_err("%s: could not allocate mem for msm_cam_v4l2_device\n",
@@ -1659,12 +1596,12 @@ int msm_sensor_register(struct v4l2_subdev *sensor_sd)
 
 	pcam->sdata = sdata;
 
-	/* init the user count and lock*/
+	/*                             */
 	pcam->use_count = 0;
 	mutex_init(&pcam->vid_lock);
 	mutex_init(&pcam->mctl_node.dev_lock);
 
-	/* Initialize the formats supported */
+	/*                                  */
 	rc  = msm_mctl_init_user_formats(pcam);
 	if (rc < 0)
 		goto failure;
@@ -1684,7 +1621,7 @@ int msm_sensor_register(struct v4l2_subdev *sensor_sd)
 	sd_info.sdev_type = SENSOR_DEV;
 	sd_info.sd_index = vnode_count;
 	sd_info.irq_num = 0;
-	/* register the subdevice, must be done for callbacks */
+	/*                                                    */
 	rc = msm_cam_register_subdev_node(sensor_sd, &sd_info);
 	if (rc < 0) {
 		D("%s sensor sub device register failed\n",
@@ -1712,13 +1649,13 @@ int msm_sensor_register(struct v4l2_subdev *sensor_sd)
 	}
 
 	pcam->vnode_id = vnode_count++;
-/* LGE_CHANGE_S, Patch for ION free, 2013.1.8, gayoung85.lee[Start] */
-#if defined(CONFIG_LGE_GK_CAMERA) ||defined(CONFIG_MACH_APQ8064_AWIFI)
+/*                                                                  */
+#if defined(CONFIG_MACH_APQ8064_PALMAN)
 #ifdef CONFIG_MSM_MULTIMEDIA_USE_ION
     spin_lock_init(&pcam->ion_lock);
 #endif
 #endif
-/* LGE_CHANGE_E, Patch for ION free, 2013.1.8, gayoung85.lee[End] */
+/*                                                                */
 	return rc;
 
 failure:

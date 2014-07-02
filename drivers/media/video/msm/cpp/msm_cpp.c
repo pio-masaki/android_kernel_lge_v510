@@ -139,7 +139,7 @@ static int msm_cpp_send_frame_to_hardware(struct cpp_device *cpp_dev)
 				break;
 			}
 			frame_qcmd = msm_dequeue(queue, list_frame);
-			/*TBD Code to actually sending to harware*/
+			/*                                       */
 			process_frame = frame_qcmd->command;
 
 			msm_enqueue(&cpp_dev->processing_q,

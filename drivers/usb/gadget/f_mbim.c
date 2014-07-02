@@ -19,18 +19,17 @@
 #include <linux/usb/cdc.h>
 
 #include <linux/usb/composite.h>
-#include <linux/usb/android_composite.h>
 #include <linux/platform_device.h>
 
 #include <linux/spinlock.h>
 
 /*
- * This function is a "Mobile Broadband Interface Model" (MBIM) link.
- * MBIM is intended to be used with high-speed network attachments.
- *
- * Note that MBIM requires the use of "alternate settings" for its data
- * interface.  This means that the set_alt() method has real work to do,
- * and also means that a get_alt() method is required.
+                                                                     
+                                                                   
+  
+                                                                       
+                                                                        
+                                                      
  */
 
 #define MBIM_BULK_BUFFER_SIZE		4096
@@ -109,7 +108,7 @@ struct mbim_ntb_input_size {
 	u16	reserved;
 };
 
-/* temporary variable used between mbim_open() and mbim_gadget_bind() */
+/*                                                                    */
 static struct f_mbim *_mbim_dev;
 
 static unsigned int nr_mbim_ports;
@@ -124,7 +123,7 @@ static inline struct f_mbim *func_to_mbim(struct usb_function *f)
 	return container_of(f, struct f_mbim, function);
 }
 
-/* peak (theoretical) bulk transfer rate in bits-per-second */
+/*                                                          */
 static inline unsigned mbim_bitrate(struct usb_gadget *g)
 {
 	if (gadget_is_dualspeed(g) && g->speed == USB_SPEED_HIGH)
@@ -133,7 +132,7 @@ static inline unsigned mbim_bitrate(struct usb_gadget *g)
 		return 19 *  64 * 1 * 1000 * 8;
 }
 
-/*-------------------------------------------------------------------------*/
+/*                                                                         */
 
 #define NTB_DEFAULT_IN_SIZE	(0x4000)
 #define NTB_OUT_SIZE		(0x1000)
@@ -157,37 +156,37 @@ static struct usb_cdc_ncm_ntb_parameters ntb_parameters = {
 };
 
 /*
- * Use wMaxPacketSize big enough to fit CDC_NOTIFY_SPEED_CHANGE in one
- * packet, to simplify cancellation; and a big transfer interval, to
- * waste less bandwidth.
+                                                                      
+                                                                    
+                        
  */
 
-#define LOG2_STATUS_INTERVAL_MSEC	5	/* 1 << 5 == 32 msec */
-#define NCM_STATUS_BYTECOUNT		16	/* 8 byte header + data */
+#define LOG2_STATUS_INTERVAL_MSEC	5	/*                   */
+#define NCM_STATUS_BYTECOUNT		16	/*                      */
 
 static struct usb_interface_assoc_descriptor mbim_iad_desc = {
 	.bLength =		sizeof mbim_iad_desc,
 	.bDescriptorType =	USB_DT_INTERFACE_ASSOCIATION,
 
-	/* .bFirstInterface =	DYNAMIC, */
-	.bInterfaceCount =	2,	/* control + data */
+	/*                             */
+	.bInterfaceCount =	2,	/*                */
 	.bFunctionClass =	2,
 	.bFunctionSubClass =	0x0e,
 	.bFunctionProtocol =	0,
-	/* .iFunction =		DYNAMIC */
+	/*                       */
 };
 
-/* interface descriptor: */
+/*                       */
 static struct usb_interface_descriptor mbim_control_intf = {
 	.bLength =		sizeof mbim_control_intf,
 	.bDescriptorType =	USB_DT_INTERFACE,
 
-	/* .bInterfaceNumber = DYNAMIC */
+	/*                             */
 	.bNumEndpoints =	1,
 	.bInterfaceClass =	0x02,
 	.bInterfaceSubClass =	0x0e,
 	.bInterfaceProtocol =	0,
-	/* .iInterface = DYNAMIC */
+	/*                       */
 };
 
 static struct usb_cdc_header_desc mbim_header_desc = {
@@ -202,8 +201,8 @@ static struct usb_cdc_union_desc mbim_union_desc = {
 	.bLength =		sizeof(mbim_union_desc),
 	.bDescriptorType =	USB_DT_CS_INTERFACE,
 	.bDescriptorSubType =	USB_CDC_UNION_TYPE,
-	/* .bMasterInterface0 =	DYNAMIC */
-	/* .bSlaveInterface0 =	DYNAMIC */
+	/*                              */
+	/*                             */
 };
 
 static struct usb_cdc_mbb_desc mbb_desc = {
@@ -220,35 +219,35 @@ static struct usb_cdc_mbb_desc mbb_desc = {
 	.bmNetworkCapabilities = 0x20,
 };
 
-/* the default data interface has no endpoints ... */
+/*                                                 */
 static struct usb_interface_descriptor mbim_data_nop_intf = {
 	.bLength =		sizeof mbim_data_nop_intf,
 	.bDescriptorType =	USB_DT_INTERFACE,
 
-	/* .bInterfaceNumber = DYNAMIC */
+	/*                             */
 	.bAlternateSetting =	0,
 	.bNumEndpoints =	0,
 	.bInterfaceClass =	0x0a,
 	.bInterfaceSubClass =	0,
 	.bInterfaceProtocol =	0x02,
-	/* .iInterface = DYNAMIC */
+	/*                       */
 };
 
-/* ... but the "real" data interface has two bulk endpoints */
+/*                                                          */
 static struct usb_interface_descriptor mbim_data_intf = {
 	.bLength =		sizeof mbim_data_intf,
 	.bDescriptorType =	USB_DT_INTERFACE,
 
-	/* .bInterfaceNumber = DYNAMIC */
+	/*                             */
 	.bAlternateSetting =	1,
 	.bNumEndpoints =	2,
 	.bInterfaceClass =	0x0a,
 	.bInterfaceSubClass =	0,
 	.bInterfaceProtocol =	0x02,
-	/* .iInterface = DYNAMIC */
+	/*                       */
 };
 
-/* full speed support: */
+/*                     */
 
 static struct usb_endpoint_descriptor fs_mbim_notify_desc = {
 	.bLength =		USB_DT_ENDPOINT_SIZE,
@@ -278,12 +277,12 @@ static struct usb_endpoint_descriptor fs_mbim_out_desc = {
 
 static struct usb_descriptor_header *mbim_fs_function[] = {
 	(struct usb_descriptor_header *) &mbim_iad_desc,
-	/* MBIM control descriptors */
+	/*                          */
 	(struct usb_descriptor_header *) &mbim_control_intf,
 	(struct usb_descriptor_header *) &mbim_header_desc,
 	(struct usb_descriptor_header *) &mbb_desc,
 	(struct usb_descriptor_header *) &fs_mbim_notify_desc,
-	/* data interface, altsettings 0 and 1 */
+	/*                                     */
 	(struct usb_descriptor_header *) &mbim_data_nop_intf,
 	(struct usb_descriptor_header *) &mbim_data_intf,
 	(struct usb_descriptor_header *) &fs_mbim_in_desc,
@@ -291,7 +290,7 @@ static struct usb_descriptor_header *mbim_fs_function[] = {
 	NULL,
 };
 
-/* high speed support: */
+/*                     */
 
 static struct usb_endpoint_descriptor hs_mbim_notify_desc = {
 	.bLength =		USB_DT_ENDPOINT_SIZE,
@@ -322,12 +321,12 @@ static struct usb_endpoint_descriptor hs_mbim_out_desc = {
 
 static struct usb_descriptor_header *mbim_hs_function[] = {
 	(struct usb_descriptor_header *) &mbim_iad_desc,
-	/* MBIM control descriptors */
+	/*                          */
 	(struct usb_descriptor_header *) &mbim_control_intf,
 	(struct usb_descriptor_header *) &mbim_header_desc,
 	(struct usb_descriptor_header *) &mbb_desc,
 	(struct usb_descriptor_header *) &hs_mbim_notify_desc,
-	/* data interface, altsettings 0 and 1 */
+	/*                                     */
 	(struct usb_descriptor_header *) &mbim_data_nop_intf,
 	(struct usb_descriptor_header *) &mbim_data_intf,
 	(struct usb_descriptor_header *) &hs_mbim_in_desc,
@@ -335,7 +334,7 @@ static struct usb_descriptor_header *mbim_hs_function[] = {
 	NULL,
 };
 
-/* string descriptors: */
+/*                     */
 
 #define STRING_CTRL_IDX	0
 #define STRING_DATA_IDX	1
@@ -343,11 +342,11 @@ static struct usb_descriptor_header *mbim_hs_function[] = {
 static struct usb_string mbim_string_defs[] = {
 	[STRING_CTRL_IDX].s = "MBIM Control",
 	[STRING_DATA_IDX].s = "MBIM Data",
-	{  } /* end of list */
+	{  } /*             */
 };
 
 static struct usb_gadget_strings mbim_string_table = {
-	.language =		0x0409,	/* en-us */
+	.language =		0x0409,	/*       */
 	.strings =		mbim_string_defs,
 };
 
@@ -357,12 +356,12 @@ static struct usb_gadget_strings *mbim_strings[] = {
 };
 
 /*
- * Here are options for the Datagram Pointer table (NDP) parser.
- * There are 2 different formats: NDP16 and NDP32 in the spec (ch. 3),
- * in NDP16 offsets and sizes fields are 1 16bit word wide,
- * in NDP32 -- 2 16bit words wide. Also signatures are different.
- * To make the parser code the same, put the differences in the structure,
- * and switch pointers to the structures when the format is changed.
+                                                                
+                                                                      
+                                                           
+                                                                 
+                                                                          
+                                                                    
  */
 
 struct ndp_parser_opts {
@@ -371,8 +370,8 @@ struct ndp_parser_opts {
 	unsigned	nth_size;
 	unsigned	ndp_size;
 	unsigned	ndplen_align;
-	/* sizes in u16 units */
-	unsigned	dgram_item_len; /* index or length */
+	/*                    */
+	unsigned	dgram_item_len; /*                 */
 	unsigned	block_length;
 	unsigned	fp_index;
 	unsigned	reserved1;
@@ -559,7 +558,7 @@ fmbim_send_cpkt_response(struct f_mbim *gr, struct ctrl_pkt *cpkt)
 	return 0;
 }
 
-/* ---------------------------- BAM INTERFACE ----------------------------- */
+/*                                                                          */
 
 static int mbim_bam_setup(int no_ports)
 {
@@ -600,12 +599,12 @@ static int mbim_bam_disconnect(struct f_mbim *dev)
 	pr_info("dev:%p port:%d. Do nothing.\n",
 			dev, dev->port_num);
 
-	/* bam_data_disconnect(&dev->bam_port, dev->port_num); */
+	/*                                                     */
 
 	return 0;
 }
 
-/* -------------------------------------------------------------------------*/
+/*                                                                          */
 
 static inline void mbim_reset_values(struct f_mbim *mbim)
 {
@@ -671,7 +670,7 @@ static void mbim_clear_queues(struct f_mbim *mbim)
 }
 
 /*
- * Context: mbim->lock held
+                           
  */
 static void mbim_do_notify(struct f_mbim *mbim)
 {
@@ -713,7 +712,7 @@ static void mbim_do_notify(struct f_mbim *mbim)
 		event->wLength = cpu_to_le16(8);
 		req->length = NCM_STATUS_BYTECOUNT;
 
-		/* SPEED_CHANGE data is up/down speeds in bits/sec */
+		/*                                                 */
 		data = req->buf + sizeof *event;
 		data[0] = cpu_to_le32(mbim_bitrate(cdev->gadget));
 		data[1] = data[0];
@@ -728,10 +727,10 @@ static void mbim_do_notify(struct f_mbim *mbim)
 
 	mbim->not_port.notify_req = NULL;
 	/*
-	 * In double buffering if there is a space in FIFO,
-	 * completion callback can be called right after the call,
-	 * so unlocking
-	 */
+                                                    
+                                                           
+                
+  */
 	spin_unlock(&mbim->lock);
 	status = usb_ep_queue(mbim->not_port.notify, req, GFP_ATOMIC);
 	spin_lock(&mbim->lock);
@@ -743,15 +742,15 @@ static void mbim_do_notify(struct f_mbim *mbim)
 }
 
 /*
- * Context: mbim->lock held
+                           
  */
 static void mbim_notify(struct f_mbim *mbim)
 {
 	/*
-	 * If mbim_notify() is called before the second (CONNECT)
-	 * notification is sent, then it will reset to send the SPEED
-	 * notificaion again (and again, and again), but it's not a problem
-	 */
+                                                          
+                                                              
+                                                                    
+  */
 	pr_info("dev:%p\n", mbim);
 
 	mbim->not_port.notify_state = NCM_NOTIFY_SPEED;
@@ -788,7 +787,7 @@ static void mbim_notify_complete(struct usb_ep *ep, struct usb_request *req)
 
 	case -ECONNRESET:
 	case -ESHUTDOWN:
-		/* connection gone */
+		/*                 */
 		mbim->not_port.notify_state = NCM_NOTIFY_NONE;
 		atomic_set(&mbim->not_port.notify_count, 0);
 		pr_info("ESHUTDOWN/ECONNRESET, connection gone");
@@ -813,7 +812,7 @@ static void mbim_notify_complete(struct usb_ep *ep, struct usb_request *req)
 
 static void mbim_ep0out_complete(struct usb_ep *ep, struct usb_request *req)
 {
-	/* now for SET_NTB_INPUT_SIZE only */
+	/*                                 */
 	unsigned		in_size = 0;
 	struct usb_function	*f = req->context;
 	struct f_mbim		*mbim = func_to_mbim(f);
@@ -900,7 +899,7 @@ fmbim_cmd_complete(struct usb_ep *ep, struct usb_request *req)
 	list_add_tail(&cpkt->list, &dev->cpkt_req_q);
 	spin_unlock(&dev->lock);
 
-	/* wakeup read thread */
+	/*                    */
 	pr_info("Wake up read queue");
 	wake_up(&dev->read_wq);
 
@@ -920,9 +919,9 @@ mbim_setup(struct usb_function *f, const struct usb_ctrlrequest *ctrl)
 	u16	w_length = le16_to_cpu(ctrl->wLength);
 
 	/*
-	 * composite driver infrastructure handles everything except
-	 * CDC class messages; interface activation uses set_alt().
-	 */
+                                                             
+                                                            
+  */
 
 	if (!atomic_read(&mbim->online)) {
 		pr_info("usb cable is not connected\n");
@@ -1075,9 +1074,9 @@ mbim_setup(struct usb_function *f, const struct usb_ctrlrequest *ctrl)
 		break;
 	}
 
-	/* optional in mbim descriptor: */
-	/* case USB_CDC_GET_MAX_DATAGRAM_SIZE: */
-	/* case USB_CDC_SET_MAX_DATAGRAM_SIZE: */
+	/*                              */
+	/*                                     */
+	/*                                     */
 
 	default:
 	pr_err("invalid control req: %02x.%02x v%04x i%04x l%d\n",
@@ -1085,7 +1084,7 @@ mbim_setup(struct usb_function *f, const struct usb_ctrlrequest *ctrl)
 		w_value, w_index, w_length);
 	}
 
-	 /* respond with data transfer or status phase? */
+	 /*                                             */
 	if (value >= 0) {
 		pr_info("control request: %02x.%02x v%04x i%04x l%d\n",
 			ctrl->bRequestType, ctrl->bRequest,
@@ -1104,7 +1103,7 @@ mbim_setup(struct usb_function *f, const struct usb_ctrlrequest *ctrl)
 			w_value, w_index, w_length);
 	}
 
-	/* device either stalls (value < 0) or reports success */
+	/*                                                     */
 	return value;
 }
 
@@ -1114,7 +1113,7 @@ static int mbim_set_alt(struct usb_function *f, unsigned intf, unsigned alt)
 	struct usb_composite_dev *cdev = mbim->cdev;
 	int ret = 0;
 
-	/* Control interface has only altsetting 0 */
+	/*                                         */
 	if (intf == mbim->ctrl_id) {
 
 		pr_info("CONTROL_INTERFACE");
@@ -1144,7 +1143,7 @@ static int mbim_set_alt(struct usb_function *f, unsigned intf, unsigned alt)
 		}
 		mbim->not_port.notify->driver_data = mbim;
 
-	/* Data interface has two altsettings, 0 and 1 */
+	/*                                             */
 	} else if (intf == mbim->data_id) {
 
 		pr_info("DATA_INTERFACE");
@@ -1159,9 +1158,9 @@ static int mbim_set_alt(struct usb_function *f, unsigned intf, unsigned alt)
 		}
 
 		/*
-		 * CDC Network only sends data in non-default altsettings.
-		 * Changing altsettings resets filters, statistics, etc.
-		 */
+                                                            
+                                                          
+   */
 		if (alt == 1) {
 			pr_info("Alt set 1, initialize ports");
 
@@ -1211,7 +1210,7 @@ static int mbim_set_alt(struct usb_function *f, unsigned intf, unsigned alt)
 
 	pr_info("SET DEVICE ONLINE");
 
-	/* wakeup file threads */
+	/*                     */
 	wake_up(&mbim->read_wq);
 	wake_up(&mbim->write_wq);
 
@@ -1223,8 +1222,8 @@ fail:
 }
 
 /*
- * Because the data interface supports multiple altsettings,
- * this MBIM function *MUST* implement a get_alt() method.
+                                                            
+                                                          
  */
 static int mbim_get_alt(struct usb_function *f, unsigned intf)
 {
@@ -1255,7 +1254,7 @@ static void mbim_disable(struct usb_function *f)
 	pr_info("mbim deactivated\n");
 }
 
-/*---------------------- function driver setup/binding ---------------------*/
+/*                                                                          */
 
 static int
 mbim_bind(struct usb_configuration *c, struct usb_function *f)
@@ -1269,7 +1268,7 @@ mbim_bind(struct usb_configuration *c, struct usb_function *f)
 
 	mbim->cdev = cdev;
 
-	/* allocate instance-specific interface IDs */
+	/*                                          */
 	status = usb_interface_id(c, f);
 	if (status < 0)
 		goto fail;
@@ -1290,14 +1289,14 @@ mbim_bind(struct usb_configuration *c, struct usb_function *f)
 
 	status = -ENODEV;
 
-	/* allocate instance-specific endpoints */
+	/*                                      */
 	ep = usb_ep_autoconfig(cdev->gadget, &fs_mbim_in_desc);
 	if (!ep) {
 		pr_err("usb epin autoconfig failed\n");
 		goto fail;
 	}
 	pr_info("usb epin autoconfig succeeded\n");
-	ep->driver_data = cdev;	/* claim */
+	ep->driver_data = cdev;	/*       */
 	mbim->bam_port.in = ep;
 
 	ep = usb_ep_autoconfig(cdev->gadget, &fs_mbim_out_desc);
@@ -1306,7 +1305,7 @@ mbim_bind(struct usb_configuration *c, struct usb_function *f)
 		goto fail;
 	}
 	pr_info("usb epout autoconfig succeeded\n");
-	ep->driver_data = cdev;	/* claim */
+	ep->driver_data = cdev;	/*       */
 	mbim->bam_port.out = ep;
 
 	ep = usb_ep_autoconfig(cdev->gadget, &fs_mbim_notify_desc);
@@ -1316,11 +1315,11 @@ mbim_bind(struct usb_configuration *c, struct usb_function *f)
 	}
 	pr_info("usb notify ep autoconfig succeeded\n");
 	mbim->not_port.notify = ep;
-	ep->driver_data = cdev;	/* claim */
+	ep->driver_data = cdev;	/*       */
 
 	status = -ENOMEM;
 
-	/* allocate notification request and buffer */
+	/*                                          */
 	mbim->not_port.notify_req = mbim_alloc_req(ep, NCM_STATUS_BYTECOUNT);
 	if (!mbim->not_port.notify_req) {
 		pr_info("failed to allocate notify request\n");
@@ -1331,16 +1330,16 @@ mbim_bind(struct usb_configuration *c, struct usb_function *f)
 	mbim->not_port.notify_req->context = mbim;
 	mbim->not_port.notify_req->complete = mbim_notify_complete;
 
-	/* copy descriptors, and track endpoint copies */
+	/*                                             */
 	f->descriptors = usb_copy_descriptors(mbim_fs_function);
 	if (!f->descriptors)
 		goto fail;
 
 	/*
-	 * support all relevant hardware speeds... we expect that when
-	 * hardware is dual speed, all bulk-capable endpoints work at
-	 * both speeds
-	 */
+                                                               
+                                                              
+               
+  */
 	if (gadget_is_dualspeed(c->cdev->gadget)) {
 		hs_mbim_in_desc.bEndpointAddress =
 				fs_mbim_in_desc.bEndpointAddress;
@@ -1349,7 +1348,7 @@ mbim_bind(struct usb_configuration *c, struct usb_function *f)
 		hs_mbim_notify_desc.bEndpointAddress =
 				fs_mbim_notify_desc.bEndpointAddress;
 
-		/* copy descriptors, and track endpoint copies */
+		/*                                             */
 		f->hs_descriptors = usb_copy_descriptors(mbim_hs_function);
 		if (!f->hs_descriptors)
 			goto fail;
@@ -1375,7 +1374,7 @@ fail:
 				    mbim->not_port.notify_req);
 	}
 
-	/* we might as well release our claims on endpoints */
+	/*                                                  */
 	if (mbim->not_port.notify)
 		mbim->not_port.notify->driver_data = NULL;
 	if (mbim->bam_port.out)
@@ -1398,11 +1397,11 @@ static void mbim_unbind(struct usb_configuration *c, struct usb_function *f)
 	usb_ep_free_request(mbim->not_port.notify, mbim->not_port.notify_req);
 }
 
-/**
- * mbim_bind_config - add MBIM link to a configuration
- * @c: the configuration to support the network link
- * Context: single threaded during gadget setup
- * Returns zero on success, else negative errno.
+/* 
+                                                      
+                                                    
+                                               
+                                                
  */
 int mbim_bind_config(struct usb_configuration *c, unsigned portno)
 {
@@ -1423,17 +1422,17 @@ int mbim_bind_config(struct usb_configuration *c, unsigned portno)
 		return status;
 	}
 
-	/* maybe allocate device-global string IDs */
+	/*                                         */
 	if (mbim_string_defs[0].id == 0) {
 
-		/* control interface label */
+		/*                         */
 		status = usb_string_id(c->cdev);
 		if (status < 0)
 			return status;
 		mbim_string_defs[STRING_CTRL_IDX].id = status;
 		mbim_control_intf.iInterface = status;
 
-		/* data interface label */
+		/*                      */
 		status = usb_string_id(c->cdev);
 		if (status < 0)
 			return status;
@@ -1442,7 +1441,7 @@ int mbim_bind_config(struct usb_configuration *c, unsigned portno)
 		mbim_data_intf.iInterface = status;
 	}
 
-	/* allocate and initialize one new instance */
+	/*                                          */
 	mbim = mbim_ports[0].port;
 	if (!mbim) {
 		pr_info("mbim struct not allocated");
@@ -1472,7 +1471,7 @@ int mbim_bind_config(struct usb_configuration *c, unsigned portno)
 	return status;
 }
 
-/* ------------ MBIM DRIVER File Operations API for USER SPACE ------------ */
+/*                                                                          */
 
 static ssize_t
 mbim_read(struct file *fp, char __user *buf, size_t count, loff_t *pos)
@@ -1499,7 +1498,7 @@ mbim_read(struct file *fp, char __user *buf, size_t count, loff_t *pos)
 		return -EBUSY;
 	}
 
-	/* block until mbim online */
+	/*                         */
 	while (!(atomic_read(&dev->online) || atomic_read(&dev->error))) {
 		pr_err("USB cable not connected. Wait.\n");
 		ret = wait_event_interruptible(dev->read_wq,
@@ -1707,7 +1706,7 @@ static long mbim_ioctl(struct file *fp, unsigned cmd, unsigned long arg)
 	return ret;
 }
 
-/* file operations for MBIM device /dev/android_mbim */
+/*                                                   */
 static const struct file_operations mbim_fops = {
 	.owner = THIS_MODULE,
 	.open = mbim_open,

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2013, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2011, Code Aurora Forum. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -24,11 +24,11 @@
 #define MAX_CURRENT_UA(n)	(n)
 #define MAX_CURRENT_MA(n)	(n * MAX_CURRENT_UA(1000))
 
-/**
- * ltc4088_max_current - A typical current values supported by the charger
- * @LTC4088_MAX_CURRENT_100mA:  100mA current
- * @LTC4088_MAX_CURRENT_500mA:  500mA current
- * @LTC4088_MAX_CURRENT_1A:     1A current
+/* 
+                                                                          
+                                             
+                                             
+                                          
  */
 enum ltc4088_max_current {
 	LTC4088_MAX_CURRENT_100mA = 100,
@@ -36,15 +36,15 @@ enum ltc4088_max_current {
 	LTC4088_MAX_CURRENT_1A = 1000,
 };
 
-/**
- * struct ltc4088_chg_chip - Device information
- * @dev:			Device pointer to access the parent
- * @lock:			Enable mutual exclusion
- * @usb_psy:			USB device information
- * @gpio_mode_select_d0:	GPIO #pin for D0 charger line
- * @gpio_mode_select_d1:	GPIO #pin for D1 charger line
- * @gpio_mode_select_d2:	GPIO #pin for D2 charger line
- * @max_current:		Maximum current that is supplied at this time
+/* 
+                                               
+                                              
+                                   
+                                     
+                                                      
+                                                      
+                                                      
+                                                               
  */
 struct ltc4088_chg_chip {
 	struct device		*dev;
@@ -72,7 +72,7 @@ static int ltc4088_set_charging(struct ltc4088_chg_chip *chip, bool enable)
 	if (enable) {
 		gpio_set_value_cansleep(chip->gpio_mode_select_d2, 0);
 	} else {
-		/* When disabling charger, set the max current to 0 also */
+		/*                                                       */
 		chip->max_current = 0;
 		gpio_set_value_cansleep(chip->gpio_mode_select_d0, 1);
 		gpio_set_value_cansleep(chip->gpio_mode_select_d1, 1);
@@ -88,7 +88,7 @@ static void ltc4088_set_max_current(struct ltc4088_chg_chip *chip, int value)
 {
 	mutex_lock(&chip->lock);
 
-	/* If current is less than 100mA, we can not support that granularity */
+	/*                                                                    */
 	if (value <  MAX_CURRENT_MA(LTC4088_MAX_CURRENT_100mA)) {
 		chip->max_current = 0;
 		gpio_set_value_cansleep(chip->gpio_mode_select_d0, 1);
@@ -206,11 +206,9 @@ static int pm_power_set_property(struct power_supply *psy,
 	struct ltc4088_chg_chip *chip;
 
 	if (psy->type == POWER_SUPPLY_TYPE_USB) {
-		chip = container_of(psy, struct ltc4088_chg_chip, usb_psy);
+		chip = container_of(psy, struct ltc4088_chg_chip,
+						usb_psy);
 		switch (psp) {
-		case POWER_SUPPLY_PROP_TYPE:
-			psy.type = val->intval;
-			break;
 		case POWER_SUPPLY_PROP_ONLINE:
 			ltc4088_set_charging(chip, val->intval);
 			break;

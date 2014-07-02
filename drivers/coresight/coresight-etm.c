@@ -60,9 +60,9 @@
 
 #define ETM_LOCK(drvdata)						\
 do {									\
-	/* recommended by spec to ensure ETM writes are committed prior
-	 * to resuming execution
-	 */								\
+	/*                                                             
+                         
+  */								\
 	mb();								\
 	isb();								\
 	etm_writel_mm(drvdata, 0x0, CORESIGHT_LAR);			\
@@ -70,27 +70,27 @@ do {									\
 #define ETM_UNLOCK(drvdata)						\
 do {									\
 	etm_writel_mm(drvdata, CORESIGHT_UNLOCK, CORESIGHT_LAR);	\
-	/* ensure unlock and any pending writes are committed prior to
-	 * programming ETM registers
-	 */								\
+	/*                                                            
+                             
+  */								\
 	mb();								\
 	isb();								\
 } while (0)
 
 /*
- * Device registers:
- * 0x000 - 0x2FC: Trace		registers
- * 0x300 - 0x314: Management	registers
- * 0x318 - 0xEFC: Trace		registers
- *
- * Coresight registers
- * 0xF00 - 0xF9C: Management	registers
- * 0xFA0 - 0xFA4: Management	registers in PFTv1.0
- *		  Trace		registers in PFTv1.1
- * 0xFA8 - 0xFFC: Management	registers
+                    
+                                  
+                                      
+                                  
+  
+                      
+                                      
+                                                 
+                                 
+                                      
  */
 
-/* Trace registers (0x000-0x2FC) */
+/*                               */
 #define ETMCR				(0x000)
 #define ETMCCR				(0x004)
 #define ETMTRIGGER			(0x008)
@@ -142,7 +142,7 @@ do {									\
 #define ETMTRACEIDR			(0x200)
 #define ETMIDR2				(0x208)
 #define ETMVMIDCVR			(0x240)
-/* Management registers (0x300-0x314) */
+/*                                    */
 #define ETMOSLAR			(0x300)
 #define ETMOSLSR			(0x304)
 #define ETMOSSRR			(0x308)
@@ -264,9 +264,9 @@ struct etm_drvdata {
 static struct etm_drvdata *etmdrvdata[NR_CPUS];
 
 /*
- * Memory mapped writes to clear os lock are not supported on Krait v1, v2
- * and OS lock must be unlocked before any memory mapped access, otherwise
- * memory mapped reads/writes will be invalid.
+                                                                          
+                                                                          
+                                              
  */
 static void etm_os_unlock(void *info)
 {
@@ -277,26 +277,26 @@ static void etm_os_unlock(void *info)
 }
 
 /*
- * ETM clock is derived from the processor clock and gets enabled on a
- * logical OR of below items on Krait (v2 onwards):
- * 1.CPMR[ETMCLKEN] is 1
- * 2.ETMCR[PD] is 0
- * 3.ETMPDCR[PU] is 1
- * 4.Reset is asserted (core or debug)
- * 5.APB memory mapped requests (eg. EDAP access)
- *
- * 1., 2. and 3. above are permanent enables whereas 4. and 5. are temporary
- * enables
- *
- * We rely on 5. to be able to access ETMCR/ETMPDCR and then use 2./3. above
- * for ETM clock vote in the driver and the save-restore code uses 1. above
- * for its vote
+                                                                      
+                                                   
+                        
+                   
+                     
+                                      
+                                                 
+  
+                                                                            
+          
+  
+                                                                            
+                                                                           
+               
  */
 static void etm_set_pwrdwn(struct etm_drvdata *drvdata)
 {
 	uint32_t etmcr;
 
-	/* ensure pending cp14 accesses complete before setting pwrdwn */
+	/*                                                             */
 	mb();
 	isb();
 	etmcr = etm_readl(drvdata, ETMCR);
@@ -311,7 +311,7 @@ static void etm_clr_pwrdwn(struct etm_drvdata *drvdata)
 	etmcr = etm_readl(drvdata, ETMCR);
 	etmcr &= ~BIT(0);
 	etm_writel(drvdata, etmcr, ETMCR);
-	/* ensure pwrup completes before subsequent cp14 accesses */
+	/*                                                        */
 	mb();
 	isb();
 }
@@ -323,7 +323,7 @@ static void etm_set_pwrup(struct etm_drvdata *drvdata)
 	etmpdcr = etm_readl_mm(drvdata, ETMPDCR);
 	etmpdcr |= BIT(3);
 	etm_writel_mm(drvdata, etmpdcr, ETMPDCR);
-	/* ensure pwrup completes before subsequent cp14 accesses */
+	/*                                                        */
 	mb();
 	isb();
 }
@@ -332,7 +332,7 @@ static void etm_clr_pwrup(struct etm_drvdata *drvdata)
 {
 	uint32_t etmpdcr;
 
-	/* ensure pending cp14 accesses complete before clearing pwrup */
+	/*                                                             */
 	mb();
 	isb();
 	etmpdcr = etm_readl_mm(drvdata, ETMPDCR);
@@ -348,9 +348,9 @@ static void etm_set_prog(struct etm_drvdata *drvdata)
 	etmcr = etm_readl(drvdata, ETMCR);
 	etmcr |= BIT(10);
 	etm_writel(drvdata, etmcr, ETMCR);
-	/* recommended by spec for cp14 accesses to ensure etmcr write is
-	 * complete before polling etmsr
-	 */
+	/*                                                               
+                                 
+  */
 	isb();
 	for (count = TIMEOUT_US; BVAL(etm_readl(drvdata, ETMSR), 1) != 1
 				&& count > 0; count--)
@@ -367,9 +367,9 @@ static void etm_clr_prog(struct etm_drvdata *drvdata)
 	etmcr = etm_readl(drvdata, ETMCR);
 	etmcr &= ~BIT(10);
 	etm_writel(drvdata, etmcr, ETMCR);
-	/* recommended by spec for cp14 accesses to ensure etmcr write is
-	 * complete before polling etmsr
-	 */
+	/*                                                               
+                                 
+  */
 	isb();
 	for (count = TIMEOUT_US; BVAL(etm_readl(drvdata, ETMSR), 1) != 0
 				&& count > 0; count--)
@@ -385,9 +385,9 @@ static void etm_enable_pcsave(void *info)
 	ETM_UNLOCK(drvdata);
 
 	/*
-	 * ETMPDCR is only accessible via memory mapped interface and so use
-	 * it first to enable power/clock to allow subsequent cp14 accesses.
-	 */
+                                                                     
+                                                                     
+  */
 	etm_set_pwrup(drvdata);
 	etm_clr_pwrdwn(drvdata);
 	etm_clr_pwrup(drvdata);
@@ -423,16 +423,16 @@ static void __etm_enable(void *info)
 
 	ETM_UNLOCK(drvdata);
 	/*
-	 * Vote for ETM power/clock enable. ETMPDCR is only accessible via
-	 * memory mapped interface and so use it first to enable power/clock
-	 * to allow subsequent cp14 accesses.
-	 */
+                                                                   
+                                                                     
+                                      
+  */
 	etm_set_pwrup(drvdata);
 	/*
-	 * Clear power down bit since when this bit is set writes to
-	 * certain registers might be ignored. This is also a pre-requisite
-	 * for trace enable.
-	 */
+                                                             
+                                                                    
+                     
+  */
 	etm_clr_pwrdwn(drvdata);
 	etm_clr_pwrup(drvdata);
 	etm_set_prog(drvdata);
@@ -506,9 +506,9 @@ static int etm_enable(struct coresight_device *csdev)
 	spin_lock(&drvdata->spinlock);
 
 	/*
-	 * Executing __etm_enable on the cpu whose ETM is being enabled
-	 * ensures that register writes occur when cpu is powered.
-	 */
+                                                                
+                                                           
+  */
 	ret = smp_call_function_single(drvdata->cpu, __etm_enable, drvdata, 1);
 	if (ret)
 		goto err;
@@ -536,7 +536,7 @@ static void __etm_disable(void *info)
 	ETM_UNLOCK(drvdata);
 	etm_set_prog(drvdata);
 
-	/* program trace enable to low by using always false event */
+	/*                                                         */
 	etm_writel(drvdata, 0x6F | BIT(14), ETMTEEVR);
 
 	if (!drvdata->pcsave_enable)
@@ -553,18 +553,18 @@ static void etm_disable(struct coresight_device *csdev)
 	wake_lock(&drvdata->wake_lock);
 
 	/*
-	 * Taking hotplug lock here protects from clocks getting disabled
-	 * with tracing being left on (crash scenario) if user disable occurs
-	 * after cpu online mask indicates the cpu is offline but before the
-	 * DYING hotplug callback is serviced by the ETM driver.
-	 */
+                                                                  
+                                                                      
+                                                                     
+                                                         
+  */
 	get_online_cpus();
 	spin_lock(&drvdata->spinlock);
 
 	/*
-	 * Executing __etm_disable on the cpu whose ETM is being disabled
-	 * ensures that register writes occur when cpu is powered.
-	 */
+                                                                  
+                                                           
+  */
 	smp_call_function_single(drvdata->cpu, __etm_disable, drvdata, 1);
 	drvdata->enable = false;
 
@@ -626,7 +626,7 @@ static ssize_t etm_show_reset(struct device *dev, struct device_attribute *attr,
 	return scnprintf(buf, PAGE_SIZE, "%#lx\n", val);
 }
 
-/* Reset to trace everything i.e. exclude nothing. */
+/*                                                 */
 static ssize_t etm_store_reset(struct device *dev,
 			       struct device_attribute *attr, const char *buf,
 			       size_t size)
@@ -691,7 +691,7 @@ static ssize_t etm_store_reset(struct device *dev,
 		for (i = 0; i < drvdata->nr_ctxid_cmp; i++)
 			drvdata->ctxid_val[i] = 0x0;
 		drvdata->ctxid_mask = 0x0;
-		/* Bits[7:0] of ETMSYNCFR are reserved on Krait pass3 onwards */
+		/*                                                            */
 		if (cpu_is_krait() && !cpu_is_krait_v1() && !cpu_is_krait_v2())
 			drvdata->sync_freq = 0x100;
 		else
@@ -862,9 +862,9 @@ static ssize_t etm_store_addr_idx(struct device *dev,
 		return -EINVAL;
 
 	/*
-	 * Use spinlock to ensure index doesn't change while it gets
-	 * dereferenced multiple times within a spinlock block elsewhere.
-	 */
+                                                             
+                                                                  
+  */
 	spin_lock(&drvdata->spinlock);
 	drvdata->addr_idx = val;
 	spin_unlock(&drvdata->spinlock);
@@ -959,7 +959,7 @@ static ssize_t etm_store_addr_range(struct device *dev,
 
 	if (sscanf(buf, "%lx %lx", &val1, &val2) != 2)
 		return -EINVAL;
-	/* lower address comparator cannot have a higher address value */
+	/*                                                             */
 	if (val1 > val2)
 		return -EINVAL;
 
@@ -1153,9 +1153,9 @@ static ssize_t etm_store_data_val(struct device *dev,
 
 	spin_lock(&drvdata->spinlock);
 	idx = drvdata->addr_idx;
-	/* Adjust index to use the correct data comparator */
+	/*                                                 */
 	data_idx = idx >> 1;
-	/* Only idx = 0, 2, 4, 6... are valid */
+	/*                                    */
 	if (idx % 2 != 0) {
 		spin_unlock(&drvdata->spinlock);
 		return -EPERM;
@@ -1219,9 +1219,9 @@ static ssize_t etm_store_data_mask(struct device *dev,
 
 	spin_lock(&drvdata->spinlock);
 	idx = drvdata->addr_idx;
-	/* Adjust index to use the correct data comparator */
+	/*                                                 */
 	data_idx = idx >> 1;
-	/* Only idx = 0, 2, 4, 6... are valid */
+	/*                                    */
 	if (idx % 2 != 0) {
 		spin_unlock(&drvdata->spinlock);
 		return -EPERM;
@@ -1270,9 +1270,9 @@ static ssize_t etm_store_cntr_idx(struct device *dev,
 		return -EINVAL;
 
 	/*
-	 * Use spinlock to ensure index doesn't change while it gets
-	 * dereferenced multiple times within a spinlock block elsewhere.
-	 */
+                                                             
+                                                                  
+  */
 	spin_lock(&drvdata->spinlock);
 	drvdata->cntr_idx = val;
 	spin_unlock(&drvdata->spinlock);
@@ -1600,9 +1600,9 @@ static ssize_t etm_store_ctxid_idx(struct device *dev,
 		return -EINVAL;
 
 	/*
-	 * Use spinlock to ensure index doesn't change while it gets
-	 * dereferenced multiple times within a spinlock block elsewhere.
-	 */
+                                                             
+                                                                  
+  */
 	spin_lock(&drvdata->spinlock);
 	drvdata->ctxid_idx = val;
 	spin_unlock(&drvdata->spinlock);
@@ -1901,23 +1901,23 @@ static void __devinit etm_init_arch_data(void *info)
 
 	ETM_UNLOCK(drvdata);
 	/*
-	 * Vote for ETM power/clock enable. ETMPDCR is only accessible via
-	 * memory mapped interface and so use it first to enable power/clock
-	 * to allow subsequent cp14 accesses.
-	 */
+                                                                   
+                                                                     
+                                      
+  */
 	etm_set_pwrup(drvdata);
 	/*
-	 * Clear power down bit since when this bit is set writes to
-	 * certain registers might be ignored.
-	 */
+                                                             
+                                       
+  */
 	etm_clr_pwrdwn(drvdata);
 	etm_clr_pwrup(drvdata);
-	/* Set prog bit. It will be set from reset but this is included to
-	 * ensure it is set
-	 */
+	/*                                                                
+                    
+  */
 	etm_set_prog(drvdata);
 
-	/* find all capabilities */
+	/*                       */
 	etmidr = etm_readl(drvdata, ETMIDR);
 	drvdata->arch = BMVAL(etmidr, 4, 11);
 
@@ -1985,18 +1985,18 @@ static void __devinit etm_init_default_data(struct etm_drvdata *drvdata)
 	drvdata->seq_31_event = 0x406F;
 	drvdata->seq_32_event = 0x406F;
 	drvdata->seq_13_event = 0x406F;
-	/* Bits[7:0] of ETMSYNCFR are reserved on Krait pass3 onwards */
+	/*                                                            */
 	if (cpu_is_krait() && !cpu_is_krait_v1() && !cpu_is_krait_v2())
 		drvdata->sync_freq = 0x100;
 	else
 		drvdata->sync_freq = 0x80;
 	drvdata->timestamp_event = 0x406F;
 
-	/* Overrides for Krait pass1 */
+	/*                           */
 	if (cpu_is_krait_v1()) {
-		/* Krait pass1 doesn't support include filtering and non-cycle
-		 * accurate tracing
-		 */
+		/*                                                            
+                     
+   */
 		drvdata->mode = (ETM_MODE_EXCLUDE | ETM_MODE_CYCACC);
 		drvdata->ctrl = 0x1000;
 		drvdata->enable_ctrl1 = 0x1000000;
@@ -2045,6 +2045,11 @@ static int __devinit etm_probe(struct platform_device *pdev)
 		pdev->dev.platform_data = pdata;
 	}
 
+#ifdef CONFIG_SMP
+	if (count >= setup_max_cpus)
+		return -ENODEV;
+#endif
+
 	drvdata = devm_kzalloc(dev, sizeof(*drvdata), GFP_KERNEL);
 	if (!drvdata)
 		return -ENOMEM;
@@ -2085,9 +2090,9 @@ static int __devinit etm_probe(struct platform_device *pdev)
 	if (!smp_call_function_single(drvdata->cpu, etm_os_unlock, NULL, 1))
 		drvdata->os_unlock = true;
 	/*
-	 * Use CPU0 to populate read-only configuration data for ETM0. For
-	 * other ETMs copy it over from ETM0.
-	 */
+                                                                   
+                                      
+  */
 	if (drvdata->cpu == 0) {
 		register_hotcpu_notifier(&etm_cpu_notifier);
 		if (smp_call_function_single(drvdata->cpu, etm_init_arch_data,

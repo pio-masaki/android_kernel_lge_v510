@@ -38,7 +38,7 @@ static struct msm_camera_i2c_reg_conf imx111_groupoff_settings[] = {
 };
 
 static struct msm_camera_i2c_reg_conf imx111_prev_settings[] = {
-	{0x0101, 0x00}, /* read out direction */
+	{0x0101, 0x00}, /*                    */
 	{0x0305, 0x02},
 	{0x0307, 0x38},
 	{0x30A4, 0x02},
@@ -114,7 +114,7 @@ static struct msm_camera_i2c_reg_conf imx111_prev_settings[] = {
 };
 
 static struct msm_camera_i2c_reg_conf imx111_video_settings[] = {
-	{0x0101, 0x00}, /* read out direction */
+	{0x0101, 0x00}, /*                    */
 	{0x0305, 0x02},
 	{0x0307, 0x32},
 	{0x30A4, 0x02},
@@ -184,7 +184,7 @@ static struct msm_camera_i2c_reg_conf imx111_video_settings[] = {
 };
 
 static struct msm_camera_i2c_reg_conf imx111_snap_settings[] = {
-	{0x0101, 0x00}, /* read out direction */
+	{0x0101, 0x00}, /*                    */
 	{0x0305, 0x02},
 	{0x0307, 0x53},
 	{0x30A4, 0x02},
@@ -350,7 +350,7 @@ static struct v4l2_subdev_info imx111_subdev_info[] = {
 	.fmt    = 1,
 	.order    = 0,
 	},
-	/* more can be supported, to be added later */
+	/*                                          */
 };
 
 static struct msm_camera_i2c_conf_array imx111_init_conf[] = {
@@ -371,25 +371,25 @@ static struct msm_camera_i2c_conf_array imx111_confs[] = {
 
 static struct msm_sensor_output_info_t imx111_dimensions[] = {
 	{
-		/* 22.5 fps */
-		.x_output = 0x0CD0, /* 3280 */
-		.y_output = 0x9A0, /* 2464 */
-		.line_length_pclk = 0xDD0, /* 3536 */
-		.frame_length_lines = 0x9D4, /* 2516 */
+		/*          */
+		.x_output = 0x0CD0, /*      */
+		.y_output = 0x9A0, /*      */
+		.line_length_pclk = 0xDD0, /*      */
+		.frame_length_lines = 0x9D4, /*      */
 		.vt_pixel_clk = 199200000,
 		.op_pixel_clk = 199200000,
 	},
 	{
-		/* 30 fps preview */
-		.x_output = 0x668, /* 1640 */
-		.y_output = 0x4D0, /* 1232 */
-		.line_length_pclk = 0xDD0, /* 3536 */
-		.frame_length_lines = 0x4E6, /* 1254 */
+		/*                */
+		.x_output = 0x668, /*      */
+		.y_output = 0x4D0, /*      */
+		.line_length_pclk = 0xDD0, /*      */
+		.frame_length_lines = 0x4E6, /*      */
 		.vt_pixel_clk = 134400000,
 		.op_pixel_clk = 134400000,
 	},
 	{
-		/* 30 fps video */
+		/*              */
 		.x_output = 0x7A0,
 		.y_output = 0x44A,
 		.line_length_pclk = 0xDAC,
@@ -398,11 +398,11 @@ static struct msm_sensor_output_info_t imx111_dimensions[] = {
 		.op_pixel_clk = 200000000,
 	},
 	{
-		/* 22.5 fps */
-		.x_output = 0x0CD0, /* 3280 */
-		.y_output = 0x9A0, /* 2464 */
-		.line_length_pclk = 0xDD0, /* 3536 */
-		.frame_length_lines = 0x9D4, /* 2516 */
+		/*          */
+		.x_output = 0x0CD0, /*      */
+		.y_output = 0x9A0, /*      */
+		.line_length_pclk = 0xDD0, /*      */
+		.frame_length_lines = 0x9D4, /*      */
 		.vt_pixel_clk = 199200000,
 		.op_pixel_clk = 199200000,
 	},
@@ -676,21 +676,21 @@ static int imx111_read_eeprom_data(struct msm_sensor_ctrl_t *s_ctrl, struct sens
 {
 	int32_t rc = 0;
 	uint8_t eepromdata[IMX111_EEPROM_PAGE_SIZE];
-	uint32_t crc_5100= 0 /*, crc_2850 = 0*/;
+	uint32_t crc_5100= 0 /*              */;
 	int i;
 
 	CDBG("%s: E\n", __func__);
 
 	memset(eepromdata, 0, sizeof(eepromdata));
-	// for LSC data
-	if(imx_i2c_read_eeprom_burst(IMX111_EEPROM_SADDR | 0x0 /* page_no:0 */,
+	//             
+	if(imx_i2c_read_eeprom_burst(IMX111_EEPROM_SADDR | 0x0 /*           */,
 		eepromdata, IMX111_EEPROM_PAGE_SIZE) < 0) {
 		pr_err("%s: Error Reading EEPROM : page_no:0 \n", __func__);
 		return rc;
 	}
 
 #ifdef CONFIG_SEKONIX_LENS_ACT
-	// for AF Cal Data
+	//                
 	imx111_afcalib_data[0] = eepromdata[7];
 	imx111_afcalib_data[1] = eepromdata[6];
 	imx111_afcalib_data[2] = eepromdata[9];
@@ -701,38 +701,38 @@ static int imx111_read_eeprom_data(struct msm_sensor_ctrl_t *s_ctrl, struct sens
 	for (i = 0; i < ROLLOFF_CALDATA_SIZE; i++) {
 		cfg->cfg.calib_info.rolloff.r_gain[i] = eepromdata[RED_START + i];
 		crc_5100 += eepromdata[RED_START + i];
-		//CDBG("[QCTK_EEPROM] R (0x%x, %d)\n", RED_START + i, eepromdata[RED_START + i]);
+		//                                                                               
 	}
 
 	for (i = 0; i < IMX111_EEPROM_PAGE_SIZE - GR_START; i++) {
 		cfg->cfg.calib_info.rolloff.gr_gain[i] = eepromdata[GR_START + i];
 		crc_5100 += eepromdata[GR_START + i];
-		//CDBG("[QCTK_EEPROM] GR (0x%x, %d)\n", GR_START + i, eepromdata[GR_START + i]);
+		//                                                                              
 	}
 
 	memset(eepromdata, 0, sizeof(eepromdata));
-	if(imx_i2c_read_eeprom_burst(IMX111_EEPROM_SADDR | 0x1 /* page_no:1 */,
+	if(imx_i2c_read_eeprom_burst(IMX111_EEPROM_SADDR | 0x1 /*           */,
 		eepromdata, IMX111_EEPROM_PAGE_SIZE) < 0) {
 		pr_err("%s: Error Reading EEPROM : page_no:1 \n", __func__);
 		return rc;
 	}
 
-	// rolloff_size : 221, Gr_start: 231, eep_page_size: 256
-	// i < 221 +231 - 256 (= 196) ==> in 2nd page of eeprom
+	//                                                      
+	//                                                     
 	for (i = 0; i < ROLLOFF_CALDATA_SIZE + GR_START - IMX111_EEPROM_PAGE_SIZE; i++) {
 		cfg->cfg.calib_info.rolloff.gr_gain[IMX111_EEPROM_PAGE_SIZE - GR_START + i] = eepromdata[i];
 		crc_5100 += eepromdata[i];
-		//CDBG("[QCTK_EEPROM] GR (0x%x, %d)\n", i, eepromdata[i]);
+		//                                                        
 	}
 
 	for (i = 0; i < IMX111_EEPROM_PAGE_SIZE - GB_START; i++) {
 		cfg->cfg.calib_info.rolloff.gb_gain[i] = eepromdata[GB_START + i];
 		crc_5100 += eepromdata[GB_START + i];
-		//CDBG("[QCTK_EEPROM] GB (0x%x, %d)\n", GB_START + i, eepromdata[GB_START + i]);
+		//                                                                              
 	}
 
 	memset(eepromdata, 0, sizeof(eepromdata));
-	if(imx_i2c_read_eeprom_burst(IMX111_EEPROM_SADDR | 0x2 /* page_no:2 */,
+	if(imx_i2c_read_eeprom_burst(IMX111_EEPROM_SADDR | 0x2 /*           */,
 		eepromdata, IMX111_EEPROM_PAGE_SIZE) < 0) {
 		pr_err("%s: Error Reading EEPROM : page_no:2 \n", __func__);
 		return rc;
@@ -740,18 +740,18 @@ static int imx111_read_eeprom_data(struct msm_sensor_ctrl_t *s_ctrl, struct sens
 	for (i = 0; i < ROLLOFF_CALDATA_SIZE + GB_START - IMX111_EEPROM_PAGE_SIZE; i++) {
 		cfg->cfg.calib_info.rolloff.gb_gain[IMX111_EEPROM_PAGE_SIZE - GB_START + i] = eepromdata[i];
 		crc_5100 += eepromdata[i];
-		//CDBG("[QCTK_EEPROM] GB (0x%x, %d)\n", i, eepromdata[i]);
+		//                                                        
 	}
 
 	for (i = 0; i < IMX111_EEPROM_PAGE_SIZE - BLUE_START; i++) {
 		cfg->cfg.calib_info.rolloff.b_gain[i] = eepromdata[BLUE_START + i];
 		crc_5100 += eepromdata[BLUE_START + i];
-		//CDBG("[QCTK_EEPROM] B (0x%x, %d)\n", BLUE_START + i, eepromdata[BLUE_START + i]);
+		//                                                                                 
 	}
 
 	memset(eepromdata, 0, sizeof(eepromdata));
 
-	if(imx_i2c_read_eeprom_burst(IMX111_EEPROM_SADDR | 0x3 /* page_no:3 */,
+	if(imx_i2c_read_eeprom_burst(IMX111_EEPROM_SADDR | 0x3 /*           */,
 		eepromdata, IMX111_EEPROM_PAGE_SIZE) < 0) {
 			pr_err("%s: Error Reading EEPROM : page_no:3 \n", __func__);
 			return rc;
@@ -760,7 +760,7 @@ static int imx111_read_eeprom_data(struct msm_sensor_ctrl_t *s_ctrl, struct sens
 	for (i = 0; i < ROLLOFF_CALDATA_SIZE + BLUE_START - IMX111_EEPROM_PAGE_SIZE; i++) {
 		cfg->cfg.calib_info.rolloff.b_gain[IMX111_EEPROM_PAGE_SIZE - BLUE_START + i] = eepromdata[i];
 		crc_5100 += eepromdata[i];
-		//CDBG("[QCTK_EEPROM] B(0x%x, %d)\n", i, eepromdata[i]);
+		//                                                      
 	}
 
 	if (eepromdata[0xCA] != 1) {
@@ -780,7 +780,7 @@ static int imx111_read_eeprom_data(struct msm_sensor_ctrl_t *s_ctrl, struct sens
 	CDBG("%s: crc_from_eeprom(0x%x), cal_crc(0x%x)\n", __func__,
 		(eepromdata[CRC_ADDR] << 8) | eepromdata[CRC_ADDR+1], crc_5100& 0xFFFF);
 
-	// for AWB data - from Rolloff data
+	//                                 
 	cfg->cfg.calib_info.r_over_g = (uint16_t)(((((uint32_t)cfg->cfg.calib_info.rolloff.r_gain[ROLLOFF_CALDATA_SIZE / 2])<<10)
 						+ ((uint32_t)(cfg->cfg.calib_info.rolloff.gr_gain[ROLLOFF_CALDATA_SIZE / 2]) >> 1))
 						/ (uint32_t)cfg->cfg.calib_info.rolloff.gr_gain[ROLLOFF_CALDATA_SIZE / 2]);
@@ -859,7 +859,7 @@ static struct msm_sensor_ctrl_t imx111_s_ctrl = {
 	.sensor_v4l2_subdev_info_size = ARRAY_SIZE(imx111_subdev_info),
 	.sensor_v4l2_subdev_ops = &imx111_subdev_ops,
 	.func_tbl = &imx111_func_tbl,
-	.clk_rate = MSM_SENSOR_MCLK_24HZ, // ADD
+	.clk_rate = MSM_SENSOR_MCLK_24HZ, //    
 };
 
 module_init(msm_sensor_init_module);

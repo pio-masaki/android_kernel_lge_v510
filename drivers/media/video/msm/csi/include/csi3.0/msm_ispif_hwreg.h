@@ -14,7 +14,7 @@
 #define MSM_ISPIF_HWREG_H
 
 
-/* ISPIF registers */
+/*                 */
 
 #define ISPIF_RST_CMD_ADDR                        0x08
 #define ISPIF_RST_CMD_1_ADDR                      0x0C
@@ -43,7 +43,7 @@
 #define ISPIF_IRQ_STATUS_2_ADDR                  0x224
 #define ISPIF_IRQ_GLOBAL_CLEAR_CMD_ADDR           0x1C
 
-/* new */
+/*     */
 #define ISPIF_VFE_m_CTRL_0_ADDR                  0x200
 #define ISPIF_VFE_m_IRQ_MASK_0                   0x208
 #define ISPIF_VFE_m_IRQ_MASK_1                   0x20C
@@ -55,7 +55,7 @@
 #define ISPIF_VFE_m_IRQ_CLEAR_1                  0x234
 #define ISPIF_VFE_m_IRQ_CLEAR_2                  0x238
 
-/*ISPIF RESET BITS*/
+/*                */
 
 #define VFE_CLK_DOMAIN_RST           31
 #define RDI_CLK_DOMAIN_RST           26

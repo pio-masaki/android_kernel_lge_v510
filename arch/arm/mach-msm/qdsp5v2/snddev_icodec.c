@@ -38,8 +38,8 @@
 #define SMPS_AUDIO_PLAYBACK_ID	"AUPB"
 #define SMPS_AUDIO_RECORD_ID	"AURC"
 
-#define SNDDEV_ICODEC_PCM_SZ 32 /* 16 bit / sample stereo mode */
-#define SNDDEV_ICODEC_MUL_FACTOR 3 /* Multi by 8 Shift by 3  */
+#define SNDDEV_ICODEC_PCM_SZ 32 /*                             */
+#define SNDDEV_ICODEC_MUL_FACTOR 3 /*                        */
 #define SNDDEV_ICODEC_CLK_RATE(freq) \
 	(((freq) * (SNDDEV_ICODEC_PCM_SZ)) << (SNDDEV_ICODEC_MUL_FACTOR))
 
@@ -76,7 +76,7 @@ static struct adie_codec_action_unit debug_tx_lb_actions[] = {
 	{ ADIE_CODEC_ACTION_ENTRY,
 	ADIE_CODEC_PACK_ENTRY(0x8A, 0x50, 0x40)},
 	{ ADIE_CODEC_ACTION_ENTRY,
-	ADIE_CODEC_PACK_ENTRY(0x91, 0xFF, 0x01)}, /* Start loop back */
+	ADIE_CODEC_PACK_ENTRY(0x91, 0xFF, 0x01)}, /*                 */
 	{ ADIE_CODEC_ACTION_STAGE_REACHED, ADIE_CODEC_DIGITAL_ANALOG_READY},
 	{ ADIE_CODEC_ACTION_ENTRY,
 	ADIE_CODEC_PACK_ENTRY(0x8A, 0x10, 0x30)},
@@ -136,9 +136,9 @@ static struct adie_codec_dev_profile debug_tx_lb_profile = {
 	.settings = debug_tx_lb_settings,
 	.setting_sz = ARRAY_SIZE(debug_tx_lb_settings),
 };
-#endif /* CONFIG_DEBUG_FS */
+#endif /*                 */
 
-/* Context for each internal codec sound device */
+/*                                              */
 struct snddev_icodec_state {
 	struct snddev_icodec_data *data;
 	struct adie_codec_path *adie_path;
@@ -146,13 +146,13 @@ struct snddev_icodec_state {
 	u32 enabled;
 };
 
-/* Global state for the driver */
+/*                             */
 struct snddev_icodec_drv_state {
 	struct mutex rx_lock;
 	struct mutex lb_lock;
 	struct mutex tx_lock;
-	u32 rx_active; /* ensure one rx device at a time */
-	u32 tx_active; /* ensure one tx device at a time */
+	u32 rx_active; /*                                */
+	u32 tx_active; /*                                */
 	struct clk *rx_mclk;
 	struct clk *rx_sclk;
 	struct clk *tx_mclk;
@@ -181,33 +181,33 @@ static int snddev_icodec_open_rx(struct snddev_icodec_state *icodec)
 
 	if ((icodec->data->acdb_id == ACDB_ID_HEADSET_SPKR_MONO) ||
 		(icodec->data->acdb_id == ACDB_ID_HEADSET_SPKR_STEREO)) {
-		/* Vote PMAPP_SMPS_MODE_VOTE_PFM for headset */
+		/*                                           */
 		smps_mode = PMAPP_SMPS_MODE_VOTE_PFM;
 		MM_DBG("snddev_icodec_open_rx: PMAPP_SMPS_MODE_VOTE_PFM \n");
 	} else
 		MM_DBG("snddev_icodec_open_rx: PMAPP_SMPS_MODE_VOTE_PWM \n");
 
-	/* Vote for SMPS mode*/
+	/*                   */
 	err = pmapp_smps_mode_vote(SMPS_AUDIO_PLAYBACK_ID,
 				PMAPP_VREG_S4, smps_mode);
 	if (err != 0)
 		MM_ERR("pmapp_smps_mode_vote error %d\n", err);
 
-	/* enable MI2S RX master block */
-	/* enable MI2S RX bit clock */
+	/*                             */
+	/*                          */
 	trc = clk_set_rate(drv->rx_mclk,
 		SNDDEV_ICODEC_CLK_RATE(icodec->sample_rate));
 	if (IS_ERR_VALUE(trc))
 		goto error_invalid_freq;
 	clk_prepare_enable(drv->rx_mclk);
 	clk_prepare_enable(drv->rx_sclk);
-	/* clk_set_rate(drv->lpa_codec_clk, 1); */ /* Remove if use pcom */
+	/*                                      */ /*                    */
 	clk_prepare_enable(drv->lpa_p_clk);
 	clk_prepare_enable(drv->lpa_codec_clk);
 	clk_prepare_enable(drv->lpa_core_clk);
 
-	/* Enable LPA sub system
-	 */
+	/*                      
+  */
 	drv->lpa = lpa_get();
 	if (!drv->lpa)
 		goto error_lpa;
@@ -217,25 +217,25 @@ static int snddev_icodec_open_rx(struct snddev_icodec_state *icodec)
 	lpa_config.num_channels = icodec->data->channel_mode;
 	lpa_cmd_codec_config(drv->lpa, &lpa_config);
 
-	/* Set audio interconnect reg to LPA */
+	/*                                   */
 	audio_interct_codec(AUDIO_INTERCT_LPA);
 
-	/* Set MI2S */
+	/*          */
 	mi2s_set_codec_output_path((icodec->data->channel_mode == 2 ?
 	MI2S_CHAN_STEREO : MI2S_CHAN_MONO_PACKED), WT_16_BIT);
 
 	if (icodec->data->voltage_on)
 		icodec->data->voltage_on();
 
-	/* Configure ADIE */
+	/*                */
 	trc = adie_codec_open(icodec->data->profile, &icodec->adie_path);
 	if (IS_ERR_VALUE(trc))
 		goto error_adie;
-	/* OSR default to 256, can be changed for power optimization
-	 * If OSR is to be changed, need clock API for setting the divider
-	 */
+	/*                                                          
+                                                                   
+  */
 	adie_codec_setpath(icodec->adie_path, icodec->sample_rate, 256);
-	/* Start AFE */
+	/*           */
 	afe_config.sample_rate = icodec->sample_rate / 1000;
 	afe_config.channel_mode = icodec->data->channel_mode;
 	afe_config.volume = AFE_VOLUME_UNITY;
@@ -243,12 +243,12 @@ static int snddev_icodec_open_rx(struct snddev_icodec_state *icodec)
 	if (IS_ERR_VALUE(trc))
 		goto error_afe;
 	lpa_cmd_enable_codec(drv->lpa, 1);
-	/* Enable ADIE */
+	/*             */
 	adie_codec_proceed_stage(icodec->adie_path, ADIE_CODEC_DIGITAL_READY);
 	adie_codec_proceed_stage(icodec->adie_path,
 					ADIE_CODEC_DIGITAL_ANALOG_READY);
 
-	/* Enable power amplifier */
+	/*                        */
 	if (icodec->data->pamp_on)
 		icodec->data->pamp_on();
 
@@ -286,13 +286,13 @@ static int snddev_icodec_open_tx(struct snddev_icodec_state *icodec)
 	pm_qos_update_request(&drv->tx_pm_qos_req,
 			      msm_cpuidle_get_deep_idle_latency());
 
-	/* Vote for PWM mode*/
+	/*                  */
 	err = pmapp_smps_mode_vote(SMPS_AUDIO_RECORD_ID,
 			PMAPP_VREG_S4, PMAPP_SMPS_MODE_VOTE_PWM);
 	if (err != 0)
 		MM_ERR("pmapp_smps_mode_vote error %d\n", err);
 
-	/* Reuse pamp_on for TX platform-specific setup  */
+	/*                                               */
 	if (icodec->data->pamp_on)
 		icodec->data->pamp_on();
 
@@ -301,8 +301,8 @@ static int snddev_icodec_open_tx(struct snddev_icodec_state *icodec)
 			 PM_HSED_ENABLE_PWM_TCXO);
 	}
 
-	/* enable MI2S TX master block */
-	/* enable MI2S TX bit clock */
+	/*                             */
+	/*                          */
 	trc = clk_set_rate(drv->tx_mclk,
 		SNDDEV_ICODEC_CLK_RATE(icodec->sample_rate));
 	if (IS_ERR_VALUE(trc))
@@ -310,23 +310,23 @@ static int snddev_icodec_open_tx(struct snddev_icodec_state *icodec)
 	clk_prepare_enable(drv->tx_mclk);
 	clk_prepare_enable(drv->tx_sclk);
 
-	/* Set MI2S */
+	/*          */
 	mi2s_set_codec_input_path((icodec->data->channel_mode ==
 				REAL_STEREO_CHANNEL_MODE ? MI2S_CHAN_STEREO :
 				(icodec->data->channel_mode == 2 ?
 				 MI2S_CHAN_STEREO : MI2S_CHAN_MONO_RAW)),
 				WT_16_BIT);
-	/* Configure ADIE */
+	/*                */
 	trc = adie_codec_open(icodec->data->profile, &icodec->adie_path);
 	if (IS_ERR_VALUE(trc))
 		goto error_adie;
-	/* Enable ADIE */
+	/*             */
 	adie_codec_setpath(icodec->adie_path, icodec->sample_rate, 256);
 	adie_codec_proceed_stage(icodec->adie_path, ADIE_CODEC_DIGITAL_READY);
 	adie_codec_proceed_stage(icodec->adie_path,
 	ADIE_CODEC_DIGITAL_ANALOG_READY);
 
-	/* Start AFE */
+	/*           */
 	afe_config.sample_rate = icodec->sample_rate / 1000;
 	afe_config.channel_mode = icodec->data->channel_mode;
 	afe_config.volume = AFE_VOLUME_UNITY;
@@ -348,7 +348,7 @@ error_adie:
 	clk_disable_unprepare(drv->tx_mclk);
 error_invalid_freq:
 
-	/* Disable mic bias */
+	/*                  */
 	for (i = 0; i < icodec->data->pmctl_id_sz; i++) {
 		pmic_hsed_enable(icodec->data->pmctl_id[i],
 			 PM_HSED_ENABLE_OFF);
@@ -365,7 +365,7 @@ error_invalid_freq:
 
 static int snddev_icodec_close_lb(struct snddev_icodec_state *icodec)
 {
-	/* Disable power amplifier */
+	/*                         */
 	if (icodec->data->pamp_off)
 		icodec->data->pamp_off();
 
@@ -389,17 +389,17 @@ static int snddev_icodec_close_rx(struct snddev_icodec_state *icodec)
 	pm_qos_update_request(&drv->rx_pm_qos_req,
 			      msm_cpuidle_get_deep_idle_latency());
 
-	/* Remove the vote for SMPS mode*/
+	/*                              */
 	err = pmapp_smps_mode_vote(SMPS_AUDIO_PLAYBACK_ID,
 			PMAPP_VREG_S4, PMAPP_SMPS_MODE_VOTE_DONTCARE);
 	if (err != 0)
 		MM_ERR("pmapp_smps_mode_vote error %d\n", err);
 
-	/* Disable power amplifier */
+	/*                         */
 	if (icodec->data->pamp_off)
 		icodec->data->pamp_off();
 
-	/* Disable ADIE */
+	/*              */
 	adie_codec_proceed_stage(icodec->adie_path, ADIE_CODEC_DIGITAL_OFF);
 	adie_codec_close(icodec->adie_path);
 	icodec->adie_path = NULL;
@@ -409,17 +409,17 @@ static int snddev_icodec_close_rx(struct snddev_icodec_state *icodec)
 	if (icodec->data->voltage_off)
 		icodec->data->voltage_off();
 
-	/* Disable LPA Sub system */
+	/*                        */
 	lpa_cmd_enable_codec(drv->lpa, 0);
 	lpa_put(drv->lpa);
 
-	/* Disable LPA clocks */
+	/*                    */
 	clk_disable_unprepare(drv->lpa_p_clk);
 	clk_disable_unprepare(drv->lpa_codec_clk);
 	clk_disable_unprepare(drv->lpa_core_clk);
 
-	/* Disable MI2S RX master block */
-	/* Disable MI2S RX bit clock */
+	/*                              */
+	/*                           */
 	clk_disable_unprepare(drv->rx_sclk);
 	clk_disable_unprepare(drv->rx_mclk);
 
@@ -437,7 +437,7 @@ static int snddev_icodec_close_tx(struct snddev_icodec_state *icodec)
 	pm_qos_update_request(&drv->tx_pm_qos_req,
 			      msm_cpuidle_get_deep_idle_latency());
 
-	/* Remove the vote for SMPS mode*/
+	/*                              */
 	err = pmapp_smps_mode_vote(SMPS_AUDIO_RECORD_ID,
 			PMAPP_VREG_S4, PMAPP_SMPS_MODE_VOTE_DONTCARE);
 	if (err != 0)
@@ -445,23 +445,23 @@ static int snddev_icodec_close_tx(struct snddev_icodec_state *icodec)
 
 	afe_disable(AFE_HW_PATH_CODEC_TX);
 
-	/* Disable ADIE */
+	/*              */
 	adie_codec_proceed_stage(icodec->adie_path, ADIE_CODEC_DIGITAL_OFF);
 	adie_codec_close(icodec->adie_path);
 	icodec->adie_path = NULL;
 
-	/* Disable MI2S TX master block */
-	/* Disable MI2S TX bit clock */
+	/*                              */
+	/*                           */
 	clk_disable_unprepare(drv->tx_sclk);
 	clk_disable_unprepare(drv->tx_mclk);
 
-	/* Disable mic bias */
+	/*                  */
 	for (i = 0; i < icodec->data->pmctl_id_sz; i++) {
 		pmic_hsed_enable(icodec->data->pmctl_id[i],
 			 PM_HSED_ENABLE_OFF);
 	}
 
-	/* Reuse pamp_off for TX platform-specific setup  */
+	/*                                                */
 	if (icodec->data->pamp_off)
 		icodec->data->pamp_off();
 
@@ -839,8 +839,8 @@ static int snddev_icodec_probe(struct platform_device *pdev)
 			dev_info->min_voc_rx_vol[i] =
 				pdata->min_voice_rx_vol[i];
 		}
-		/*sidetone is enabled only for  the device which
-		property set for side tone*/
+		/*                                              
+                            */
 		if (pdata->property & SIDE_TONE_MASK)
 			dev_info->dev_ops.enable_sidetone =
 				snddev_icodec_enable_sidetone;
@@ -885,15 +885,15 @@ static void debugfs_adie_loopback(u32 loop)
 
 	if (loop) {
 
-		/* enable MI2S RX master block */
-		/* enable MI2S RX bit clock */
+		/*                             */
+		/*                          */
 		clk_set_rate(drv->rx_mclk,
 			SNDDEV_ICODEC_CLK_RATE(8000));
 		clk_prepare_enable(drv->rx_mclk);
 		clk_prepare_enable(drv->rx_sclk);
 
 		MM_INFO("configure ADIE RX path\n");
-		/* Configure ADIE */
+		/*                */
 		adie_codec_open(&debug_rx_profile, &debugfs_rx_adie);
 		adie_codec_setpath(debugfs_rx_adie, 8000, 256);
 		adie_codec_proceed_stage(debugfs_rx_adie,
@@ -901,21 +901,21 @@ static void debugfs_adie_loopback(u32 loop)
 
 		MM_INFO("Enable Handset Mic bias\n");
 		pmic_hsed_enable(PM_HSED_CONTROLLER_0, PM_HSED_ENABLE_PWM_TCXO);
-		/* enable MI2S TX master block */
-		/* enable MI2S TX bit clock */
+		/*                             */
+		/*                          */
 		clk_set_rate(drv->tx_mclk,
 			SNDDEV_ICODEC_CLK_RATE(8000));
 		clk_prepare_enable(drv->tx_mclk);
 		clk_prepare_enable(drv->tx_sclk);
 
 		MM_INFO("configure ADIE TX path\n");
-		/* Configure ADIE */
+		/*                */
 		adie_codec_open(&debug_tx_lb_profile, &debugfs_tx_adie);
 		adie_codec_setpath(debugfs_tx_adie, 8000, 256);
 		adie_codec_proceed_stage(debugfs_tx_adie,
 		ADIE_CODEC_DIGITAL_ANALOG_READY);
 	} else {
-		/* Disable ADIE */
+		/*              */
 		adie_codec_proceed_stage(debugfs_rx_adie,
 		ADIE_CODEC_DIGITAL_OFF);
 		adie_codec_close(debugfs_rx_adie);
@@ -925,13 +925,13 @@ static void debugfs_adie_loopback(u32 loop)
 
 		pmic_hsed_enable(PM_HSED_CONTROLLER_0, PM_HSED_ENABLE_OFF);
 
-		/* Disable MI2S RX master block */
-		/* Disable MI2S RX bit clock */
+		/*                              */
+		/*                           */
 		clk_disable_unprepare(drv->rx_sclk);
 		clk_disable_unprepare(drv->rx_mclk);
 
-		/* Disable MI2S TX master block */
-		/* Disable MI2S TX bit clock */
+		/*                              */
+		/*                           */
 		clk_disable_unprepare(drv->tx_sclk);
 		clk_disable_unprepare(drv->tx_mclk);
 	}
@@ -945,12 +945,12 @@ static void debugfs_afe_loopback(u32 loop)
 	struct lpa_codec_config lpa_config;
 
 	if (loop) {
-		/* Vote for SMPS mode*/
+		/*                   */
 		pmapp_smps_mode_vote(SMPS_AUDIO_PLAYBACK_ID,
 				PMAPP_VREG_S4, PMAPP_SMPS_MODE_VOTE_PWM);
 
-		/* enable MI2S RX master block */
-		/* enable MI2S RX bit clock */
+		/*                             */
+		/*                          */
 		trc = clk_set_rate(drv->rx_mclk,
 		SNDDEV_ICODEC_CLK_RATE(8000));
 		if (IS_ERR_VALUE(trc))
@@ -960,8 +960,8 @@ static void debugfs_afe_loopback(u32 loop)
 		clk_prepare_enable(drv->lpa_p_clk);
 		clk_prepare_enable(drv->lpa_codec_clk);
 		clk_prepare_enable(drv->lpa_core_clk);
-		/* Enable LPA sub system
-		 */
+		/*                      
+   */
 		drv->lpa = lpa_get();
 		if (!drv->lpa)
 			MM_ERR("failed to enable lpa\n");
@@ -970,16 +970,16 @@ static void debugfs_afe_loopback(u32 loop)
 		lpa_config.output_interface = LPA_OUTPUT_INTF_WB_CODEC;
 		lpa_config.num_channels = 1;
 		lpa_cmd_codec_config(drv->lpa, &lpa_config);
-		/* Set audio interconnect reg to LPA */
+		/*                                   */
 		audio_interct_codec(AUDIO_INTERCT_LPA);
 		mi2s_set_codec_output_path(MI2S_CHAN_MONO_PACKED, WT_16_BIT);
 		MM_INFO("configure ADIE RX path\n");
-		/* Configure ADIE */
+		/*                */
 		adie_codec_open(&debug_rx_profile, &debugfs_rx_adie);
 		adie_codec_setpath(debugfs_rx_adie, 8000, 256);
 		lpa_cmd_enable_codec(drv->lpa, 1);
 
-		/* Start AFE for RX */
+		/*                  */
 		afe_config.sample_rate = 0x8;
 		afe_config.channel_mode = 1;
 		afe_config.volume = AFE_VOLUME_UNITY;
@@ -992,83 +992,83 @@ static void debugfs_afe_loopback(u32 loop)
 		adie_codec_proceed_stage(debugfs_rx_adie,
 		ADIE_CODEC_DIGITAL_ANALOG_READY);
 
-		/* Vote for PWM mode*/
+		/*                  */
 		pmapp_smps_mode_vote(SMPS_AUDIO_RECORD_ID,
 			PMAPP_VREG_S4, PMAPP_SMPS_MODE_VOTE_PWM);
 
 		MM_INFO("Enable Handset Mic bias\n");
 		pmic_hsed_enable(PM_HSED_CONTROLLER_0, PM_HSED_ENABLE_PWM_TCXO);
 
-		/* enable MI2S TX master block */
-		/* enable MI2S TX bit clock */
+		/*                             */
+		/*                          */
 		clk_set_rate(drv->tx_mclk,
 			SNDDEV_ICODEC_CLK_RATE(8000));
 		clk_prepare_enable(drv->tx_mclk);
 		clk_prepare_enable(drv->tx_sclk);
-		/* Set MI2S */
+		/*          */
 		mi2s_set_codec_input_path(MI2S_CHAN_MONO_PACKED, WT_16_BIT);
 		MM_INFO("configure ADIE TX path\n");
-		/* Configure ADIE */
+		/*                */
 		adie_codec_open(&debug_tx_profile, &debugfs_tx_adie);
 		adie_codec_setpath(debugfs_tx_adie, 8000, 256);
 		adie_codec_proceed_stage(debugfs_tx_adie,
 		ADIE_CODEC_DIGITAL_READY);
 		adie_codec_proceed_stage(debugfs_tx_adie,
 		ADIE_CODEC_DIGITAL_ANALOG_READY);
-		/* Start AFE for TX */
+		/*                  */
 		afe_config.sample_rate = 0x8;
 		afe_config.channel_mode = 1;
 		afe_config.volume = AFE_VOLUME_UNITY;
 		trc = afe_enable(AFE_HW_PATH_CODEC_TX, &afe_config);
 		if (IS_ERR_VALUE(trc))
 			MM_ERR("failed to enable AFE TX\n");
-		/* Set the volume level to non unity, to avoid
-		   loopback effect */
+		/*                                            
+                     */
 		afe_device_volume_ctrl(AFE_HW_PATH_CODEC_RX, 0x0500);
 
-		/* enable afe loopback */
+		/*                     */
 		afe_loopback(1);
 		MM_INFO("AFE loopback enabled\n");
 	} else {
-		/* disable afe loopback */
+		/*                      */
 		afe_loopback(0);
-		/* Remove the vote for SMPS mode*/
+		/*                              */
 		pmapp_smps_mode_vote(SMPS_AUDIO_PLAYBACK_ID,
 			PMAPP_VREG_S4, PMAPP_SMPS_MODE_VOTE_DONTCARE);
 
-		/* Disable ADIE */
+		/*              */
 		adie_codec_proceed_stage(debugfs_rx_adie,
 		ADIE_CODEC_DIGITAL_OFF);
 		adie_codec_close(debugfs_rx_adie);
-		/* Disable AFE for RX */
+		/*                    */
 		afe_disable(AFE_HW_PATH_CODEC_RX);
 
-		/* Disable LPA Sub system */
+		/*                        */
 		lpa_cmd_enable_codec(drv->lpa, 0);
 		lpa_put(drv->lpa);
 
-		/* Disable LPA clocks */
+		/*                    */
 		clk_disable_unprepare(drv->lpa_p_clk);
 		clk_disable_unprepare(drv->lpa_codec_clk);
 		clk_disable_unprepare(drv->lpa_core_clk);
 
-		/* Disable MI2S RX master block */
-		/* Disable MI2S RX bit clock */
+		/*                              */
+		/*                           */
 		clk_disable_unprepare(drv->rx_sclk);
 		clk_disable_unprepare(drv->rx_mclk);
 
 		pmapp_smps_mode_vote(SMPS_AUDIO_RECORD_ID,
 			PMAPP_VREG_S4, PMAPP_SMPS_MODE_VOTE_DONTCARE);
 
-		/* Disable AFE for TX */
+		/*                    */
 		afe_disable(AFE_HW_PATH_CODEC_TX);
 
-		/* Disable ADIE */
+		/*              */
 		adie_codec_proceed_stage(debugfs_tx_adie,
 		ADIE_CODEC_DIGITAL_OFF);
 		adie_codec_close(debugfs_tx_adie);
-		/* Disable MI2S TX master block */
-		/* Disable MI2S TX bit clock */
+		/*                              */
+		/*                           */
 		clk_disable_unprepare(drv->tx_sclk);
 		clk_disable_unprepare(drv->tx_mclk);
 		pmic_hsed_enable(PM_HSED_CONTROLLER_0, PM_HSED_ENABLE_OFF);

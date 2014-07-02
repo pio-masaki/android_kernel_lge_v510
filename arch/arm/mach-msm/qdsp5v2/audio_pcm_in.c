@@ -43,22 +43,22 @@
 #include <mach/debug_mm.h>
 #include <mach/qdsp5v2/audio_acdbi.h>
 
-/* FRAME_NUM must be a power of two */
+/*                                  */
 #define FRAME_NUM		(8)
-#define FRAME_HEADER_SIZE       (8) /*4 half words*/
-/* size of a mono frame with 256 samples */
-#define MONO_DATA_SIZE_256	(512) /* in bytes*/
-/*size of a mono frame with 512 samples */
-#define MONO_DATA_SIZE_512	(1024) /* in bytes*/
-/*size of a mono frame with 1024 samples */
-#define MONO_DATA_SIZE_1024	(2048) /* in bytes */
+#define FRAME_HEADER_SIZE       (8) /*            */
+/*                                       */
+#define MONO_DATA_SIZE_256	(512) /*         */
+/*                                      */
+#define MONO_DATA_SIZE_512	(1024) /*         */
+/*                                       */
+#define MONO_DATA_SIZE_1024	(2048) /*          */
 
-/*size of a stereo frame with 256 samples per channel */
-#define STEREO_DATA_SIZE_256	(1024) /* in bytes*/
-/*size of a stereo frame with 512 samples per channel */
-#define STEREO_DATA_SIZE_512	(2048) /* in bytes*/
-/*size of a stereo frame with 1024 samples per channel */
-#define STEREO_DATA_SIZE_1024	(4096) /* in bytes */
+/*                                                    */
+#define STEREO_DATA_SIZE_256	(1024) /*         */
+/*                                                    */
+#define STEREO_DATA_SIZE_512	(2048) /*         */
+/*                                                     */
+#define STEREO_DATA_SIZE_1024	(4096) /*          */
 
 #define MAX_FRAME_SIZE		((STEREO_DATA_SIZE_1024) + FRAME_HEADER_SIZE)
 #define DMASZ			(MAX_FRAME_SIZE * FRAME_NUM)
@@ -85,31 +85,31 @@ struct audio_in {
 
 	struct msm_adsp_module *audrec;
 
-	/* configuration to use on next enable */
+	/*                                     */
 	uint32_t samp_rate;
 	uint32_t channel_mode;
-	uint32_t buffer_size; /* 2048 for mono, 4096 for stereo */
+	uint32_t buffer_size; /*                                */
 	uint32_t enc_type;
 
 	uint32_t dsp_cnt;
-	uint32_t in_head; /* next buffer dsp will write */
-	uint32_t in_tail; /* next buffer read() will read */
-	uint32_t in_count; /* number of buffers available to read() */
+	uint32_t in_head; /*                            */
+	uint32_t in_tail; /*                              */
+	uint32_t in_count; /*                                       */
 	uint32_t mode;
 
 	const char *module_name;
 	unsigned queue_ids;
-	uint16_t enc_id; /* Session Id */
+	uint16_t enc_id; /*            */
 
-	uint16_t source; /* Encoding source bit mask */
-	uint32_t device_events; /* device events interested in */
+	uint16_t source; /*                          */
+	uint32_t device_events; /*                             */
 	uint32_t in_call;
 	uint32_t dev_cnt;
 	int voice_state;
 	spinlock_t dev_lock;
 
-	struct audrec_session_info session_info; /*audrec session info*/
-	/* data allocated for various buffers */
+	struct audrec_session_info session_info; /*                   */
+	/*                                    */
 	char *data;
 	dma_addr_t phys;
 	void *map_v_read;
@@ -117,8 +117,8 @@ struct audio_in {
 	int opened;
 	int enabled;
 	int running;
-	int stopped; /* set when stopped, cleared on flush */
-	int abort; /* set when error, like sample rate mismatch */
+	int stopped; /*                                    */
+	int abort; /*                                           */
 	int dual_mic_config;
 	char *build_id;
 };
@@ -130,10 +130,10 @@ struct audio_frame {
 	uint16_t frame_count_msw;
 	uint16_t frame_length;
 	uint16_t erased_pcm;
-	unsigned char raw_bitstream[]; /* samples */
+	unsigned char raw_bitstream[]; /*         */
 } __attribute__((packed));
 
-/* Audrec Queue command sent macro's */
+/*                                   */
 #define audrec_send_bitstreamqueue(audio, cmd, len) \
 	msm_adsp_write(audio->audrec, ((audio->queue_ids & 0xFFFF0000) >> 16),\
 			cmd, len)
@@ -142,7 +142,7 @@ struct audio_frame {
 	msm_adsp_write(audio->audrec, (audio->queue_ids & 0x0000FFFF),\
 			cmd, len)
 
-/* DSP command send functions */
+/*                            */
 static int audpcm_in_enc_config(struct audio_in *audio, int enable);
 static int audpcm_in_param_config(struct audio_in *audio);
 static int audpcm_in_mem_config(struct audio_in *audio);
@@ -185,11 +185,11 @@ static void pcm_in_listener(u32 evt_id, union auddev_evt_data *evt_payload,
 		if (!audio->running || !audio->enabled)
 			break;
 
-		/* Turn of as per source */
+		/*                       */
 		if (audio->source)
 			audpcm_in_record_config(audio, 1);
 		else
-			/* Turn off all */
+			/*              */
 			audpcm_in_record_config(audio, 0);
 
 		break;
@@ -214,8 +214,8 @@ static void pcm_in_listener(u32 evt_id, union auddev_evt_data *evt_payload,
 		MM_DBG("dev_type %d\n", evt_payload->freq_info.dev_type);
 		MM_DBG("acdb_dev_id %d\n", evt_payload->freq_info.acdb_dev_id);
 		if (audio->running == 1) {
-			/* Stop Recording sample rate does not match
-			   with device sample rate */
+			/*                                          
+                              */
 			if (evt_payload->freq_info.sample_rate !=
 				audio->samp_rate) {
 				audpcm_in_record_config(audio, 0);
@@ -231,7 +231,7 @@ static void pcm_in_listener(u32 evt_id, union auddev_evt_data *evt_payload,
 	}
 }
 
-/* ------------------- dsp preproc event handler--------------------- */
+/*                                                                    */
 static void audpreproc_dsp_event(void *data, unsigned id,  void *msg)
 {
 	struct audio_in *audio = data;
@@ -242,7 +242,7 @@ static void audpreproc_dsp_event(void *data, unsigned id,  void *msg)
 
 		MM_ERR("ERROR_MSG: stream id %d err idx %d\n",
 		err_msg->stream_id, err_msg->aud_preproc_err_idx);
-		/* Error case */
+		/*            */
 		wake_up(&audio->wait_enable);
 		break;
 	}
@@ -256,10 +256,10 @@ static void audpreproc_dsp_event(void *data, unsigned id,  void *msg)
 		MM_DBG("CMD_ENC_CFG_DONE_MSG: stream id %d enc type \
 			0x%8x\n", enc_cfg_msg->stream_id,
 			enc_cfg_msg->rec_enc_type);
-		/* Encoder enable success */
+		/*                        */
 		if (enc_cfg_msg->rec_enc_type & ENCODE_ENABLE)
 			audpcm_in_param_config(audio);
-		else { /* Encoder disable success */
+		else { /*                         */
 			audio->running = 0;
 			audpcm_in_record_config(audio, 0);
 		}
@@ -280,7 +280,7 @@ static void audpreproc_dsp_event(void *data, unsigned id,  void *msg)
 	}
 }
 
-/* ------------------- dsp audrec event handler--------------------- */
+/*                                                                   */
 static void audrec_dsp_event(void *data, unsigned id, size_t len,
 			    void (*getevent)(void *ptr, size_t len))
 {
@@ -302,7 +302,7 @@ static void audrec_dsp_event(void *data, unsigned id, size_t len,
 		getevent(&fatal_err_msg, AUDREC_FATAL_ERR_MSG_LEN);
 		MM_ERR("FATAL_ERR_MSG: err id %d\n",
 				fatal_err_msg.audrec_err_id);
-		/* Error stop the encoder */
+		/*                        */
 		audio->stopped = 1;
 		wake_up(&audio->wait);
 		break;
@@ -344,13 +344,13 @@ static void audpcm_in_get_dsp_frames(struct audio_in *audio)
 	spin_lock_irqsave(&audio->dsp_lock, flags);
 	audio->in[index].size = frame->frame_length;
 
-	/* statistics of read */
+	/*                    */
 	atomic_add(audio->in[index].size, &audio->in_bytes);
 	atomic_add(1, &audio->in_samples);
 
 	audio->in_head = (audio->in_head + 1) & (FRAME_NUM - 1);
 
-	/* If overflow, move the tail index foward. */
+	/*                                          */
 	if (audio->in_head == audio->in_tail)
 		audio->in_tail = (audio->in_tail + 1) & (FRAME_NUM - 1);
 	else
@@ -409,7 +409,7 @@ static int audpcm_in_param_config(struct audio_in *audio)
 	return audpreproc_send_audreccmdqueue(&cmd, sizeof(cmd));
 }
 
-/* To Do: msm_snddev_route_enc(audio->enc_id); */
+/*                                             */
 static int audpcm_in_record_config(struct audio_in *audio, int enable)
 {
 	struct audpreproc_afe_cmd_audio_record_cfg cmd;
@@ -452,12 +452,12 @@ static int audpcm_in_mem_config(struct audio_in *audio)
 	cmd.audrec_ext_pkt_start_addr_lsw = audio->phys;
 	cmd.audrec_ext_pkt_buf_number = FRAME_NUM;
 
-	/* prepare buffer pointers:
-	 * Mono: 1024 samples + 4 halfword header
-	 * Stereo: 2048 samples + 4 halfword header
-	 */
+	/*                         
+                                          
+                                            
+  */
 	for (n = 0; n < FRAME_NUM; n++) {
-		/* word increment*/
+		/*               */
 		audio->in[n].data = data + (FRAME_HEADER_SIZE/2);
 		data += ((FRAME_HEADER_SIZE/2) + (audio->buffer_size/2));
 		MM_DBG("0x%8x\n", (int)(audio->in[n].data - FRAME_HEADER_SIZE));
@@ -478,7 +478,7 @@ static int audpcm_dsp_read_buffer(struct audio_in *audio, uint32_t read_cnt)
 	return audrec_send_bitstreamqueue(audio, &cmd, sizeof(cmd));
 }
 
-/* must be called with audio->lock held */
+/*                                      */
 static int audpcm_in_enable(struct audio_in *audio)
 {
 	if (audio->enabled)
@@ -500,7 +500,7 @@ static int audpcm_in_enable(struct audio_in *audio)
 	return 0;
 }
 
-/* must be called with audio->lock held */
+/*                                      */
 static int audpcm_in_disable(struct audio_in *audio)
 {
 	if (audio->enabled) {
@@ -533,7 +533,7 @@ static void audpcm_in_flush(struct audio_in *audio)
 	atomic_set(&audio->in_samples, 0);
 }
 
-/* ------------------- device --------------------- */
+/*                                                  */
 static long audpcm_in_ioctl(struct file *file,
 				unsigned int cmd, unsigned long arg)
 {
@@ -553,7 +553,7 @@ static long audpcm_in_ioctl(struct file *file,
 	switch (cmd) {
 	case AUDIO_START: {
 		uint32_t freq;
-		/* Poll at 48KHz always */
+		/*                      */
 		freq = 48000;
 		MM_DBG("AUDIO_START\n");
 		if (audio->in_call && (audio->voice_state !=
@@ -574,19 +574,19 @@ static long audpcm_in_ioctl(struct file *file,
 			break;
 		}
 		audio->dual_mic_config = msm_get_dual_mic_config(audio->enc_id);
-		/*DSP supports fluence block and by default ACDB layer will
-		applies the fluence pre-processing feature, if dual MIC config
-		is enabled implies client want to record pure dual MIC sample
-		for this we need to over ride the fluence pre processing
-		feature at ACDB layer to not to apply if fluence preprocessing
-		feature supported*/
+		/*                                                         
+                                                                
+                                                               
+                                                          
+                                                                
+                   */
 		if (audio->dual_mic_config) {
 			MM_INFO("dual MIC config = %d, over ride the fluence "
 			"feature\n", audio->dual_mic_config);
 			fluence_feature_update(audio->dual_mic_config,
 							audio->enc_id);
 		}
-		/*update aurec session info in audpreproc layer*/
+		/*                                             */
 		audio->session_info.session_id = audio->enc_id;
 		audio->session_info.sampling_freq = audio->samp_rate;
 		audpreproc_update_audrec_info(&audio->session_info);
@@ -606,7 +606,7 @@ static long audpcm_in_ioctl(struct file *file,
 		break;
 	}
 	case AUDIO_STOP: {
-		/*reset the sampling frequency information at audpreproc layer*/
+		/*                                                            */
 		audio->session_info.sampling_freq = 0;
 		audpreproc_update_audrec_info(&audio->session_info);
 		rc = audpcm_in_disable(audio);
@@ -619,11 +619,11 @@ static long audpcm_in_ioctl(struct file *file,
 	}
 	case AUDIO_FLUSH: {
 		if (audio->stopped) {
-			/* Make sure we're stopped and we wake any threads
-			 * that might be blocked holding the read_lock.
-			 * While audio->stopped read threads will always
-			 * exit immediately.
-			 */
+			/*                                                
+                                                  
+                                                   
+                       
+    */
 			wake_up(&audio->wait);
 			mutex_lock(&audio->read_lock);
 			audpcm_in_flush(audio);
@@ -765,18 +765,18 @@ static ssize_t audpcm_in_read(struct file *file,
 			if (audio->stopped) {
 				MM_DBG("Driver in stop state, No more \
 						buffer to read");
-				rc = 0;/* End of File */
+				rc = 0;/*             */
 				break;
 			} else if (audio->in_call && audio->running &&
 				(audio->voice_state == VOICE_STATE_OFFCALL)) {
 				MM_DBG("Not Permitted Voice Terminated\n");
-				rc = -EPERM; /* Voice Call stopped */
+				rc = -EPERM; /*                    */
 				break;
 			}
 		}
 
 		if (audio->abort) {
-			rc = -EPERM; /* Not permitted due to abort */
+			rc = -EPERM; /*                            */
 			break;
 		}
 
@@ -790,8 +790,8 @@ static ssize_t audpcm_in_read(struct file *file,
 			}
 			spin_lock_irqsave(&audio->dsp_lock, flags);
 			if (index != audio->in_tail) {
-				/* overrun -- data is
-				 * invalid and we need to retry */
+				/*                   
+                                    */
 				spin_unlock_irqrestore(&audio->dsp_lock, flags);
 				continue;
 			}
@@ -827,12 +827,12 @@ static int audpcm_in_release(struct inode *inode, struct file *file)
 
 	mutex_lock(&audio->lock);
 	audio->in_call = 0;
-	/* with draw frequency for session
-	   incase not stopped the driver */
+	/*                                
+                                  */
 	msm_snddev_withdraw_freq(audio->enc_id, SNDDEV_CAP_TX,
 					AUDDEV_CLNT_ENC);
 	auddev_unregister_evt_listner(AUDDEV_CLNT_ENC, audio->enc_id);
-	/*reset the sampling frequency information at audpreproc layer*/
+	/*                                                            */
 	audio->session_info.sampling_freq = 0;
 	audpreproc_update_audrec_info(&audio->session_info);
 	audpcm_in_disable(audio);
@@ -891,9 +891,9 @@ static int audpcm_in_open(struct inode *inode, struct file *file)
 		rc = -EACCES;
 		goto done;
 	}
-	/* Settings will be re-config at AUDIO_SET_CONFIG,
-	 * but at least we need to have initial config
-	 */
+	/*                                                
+                                               
+  */
 	audio->channel_mode = AUDREC_CMD_MODE_MONO;
 	audio->buffer_size = MONO_DATA_SIZE_1024;
 	audio->samp_rate = 8000;

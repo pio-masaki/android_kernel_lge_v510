@@ -19,8 +19,8 @@
 #include <mach/msm_memory_dump.h>
 
 
-/*TODO: Needs to be set to correct value */
-#define DUMP_TABLE_OFFSET	0x14
+/*                                       */
+#define DUMP_TABLE_OFFSET	0x20
 #define MSM_DUMP_TABLE_VERSION	MK_TABLE(1, 0)
 
 static struct msm_memory_dump mem_dump_data;
@@ -48,7 +48,7 @@ int msm_dump_table_register(struct msm_client_dump *client_entry)
 	entry->start_addr = client_entry->start_addr;
 	entry->end_addr = client_entry->end_addr;
 	table->num_entries++;
-	/* flush cache */
+	/*             */
 	dmac_flush_range(table, table + sizeof(struct msm_dump_table));
 	return 0;
 }
@@ -67,8 +67,7 @@ static int __init init_memory_dump(void)
 	table = mem_dump_data.dump_table_ptr;
 	table->version = MSM_DUMP_TABLE_VERSION;
 	mem_dump_data.dump_table_phys = virt_to_phys(table);
-	writel_relaxed(mem_dump_data.dump_table_phys,
-				MSM_IMEM_BASE + DUMP_TABLE_OFFSET);
+	/*                                                       */
 	atomic_notifier_chain_register(&panic_notifier_list,
 						&msm_memory_dump_blk);
 	printk(KERN_INFO "MSM Memory Dump table set up\n");

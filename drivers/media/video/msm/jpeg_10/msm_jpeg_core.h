@@ -32,4 +32,4 @@ int msm_jpeg_core_fe_start(void);
 
 void msm_jpeg_core_release(int, int);
 void msm_jpeg_core_init(void);
-#endif /* MSM_JPEG_CORE_H */
+#endif /*                 */

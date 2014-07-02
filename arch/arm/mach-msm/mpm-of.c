@@ -139,18 +139,18 @@ static inline void msm_mpm_send_interrupt(void)
 {
 	__raw_writel(msm_mpm_dev_data.mpm_apps_ipc_val,
 			msm_mpm_dev_data.mpm_apps_ipc_reg);
-	/* Ensure the write is complete before returning. */
+	/*                                                */
 	wmb();
 }
 
 static irqreturn_t msm_mpm_irq(int irq, void *dev_id)
 {
 	/*
-	 * When the system resumes from deep sleep mode, the RPM hardware wakes
-	 * up the Apps processor by triggering this interrupt. This interrupt
-	 * has to be enabled and set as wake for the irq to get SPM out of
-	 * sleep. Handle the interrupt here to make sure that it gets cleared.
-	 */
+                                                                        
+                                                                      
+                                                                   
+                                                                       
+  */
 	return IRQ_HANDLED;
 }
 
@@ -182,9 +182,9 @@ static void msm_mpm_set(cycle_t wakeup, bool wakeset)
 	}
 
 	/*
-	 * Ensure that the set operation is complete before sending the
-	 * interrupt
-	 */
+                                                                
+             
+  */
 	wmb();
 	msm_mpm_send_interrupt();
 }
@@ -202,7 +202,7 @@ static inline uint16_t msm_mpm_get_irq_a2m(struct irq_data *d)
 	hlist_for_each_entry(node, elem, &irq_hash[hashfn(d->hwirq)], node) {
 		if ((node->hwirq == d->hwirq)
 				&& (d->domain == node->domain)) {
-			/* Update the linux irq mapping */
+			/*                              */
 			msm_mpm_irqs_m2a[node->pin] = d->irq;
 			break;
 		}
@@ -360,9 +360,9 @@ static int msm_mpm_set_irq_type(struct irq_data *d, unsigned int flow_type)
 	return rc;
 }
 
-/******************************************************************************
- * Public functions
- *****************************************************************************/
+/*                                                                             
+                   
+                                                                             */
 int msm_mpm_enable_pin(unsigned int pin, unsigned int enable)
 {
 	uint32_t index = MSM_MPM_IRQ_INDEX(pin);
@@ -436,9 +436,9 @@ int msm_mpm_set_pin_type(unsigned int pin, unsigned int flow_type)
 
 bool msm_mpm_irqs_detectable(bool from_idle)
 {
-	/* TODO:
-	 * Return true if unlisted irqs is empty
-	 */
+	/*      
+                                         
+  */
 
 	if (!msm_mpm_is_initialized())
 		return false;
@@ -448,9 +448,9 @@ bool msm_mpm_irqs_detectable(bool from_idle)
 
 bool msm_mpm_gpio_irqs_detectable(bool from_idle)
 {
-	/* TODO:
-	 * Return true if unlisted irqs is empty
-	 */
+	/*      
+                                         
+  */
 	if (!msm_mpm_is_initialized())
 		return false;
 	return true;
@@ -687,15 +687,15 @@ void __init of_mpm_init(struct device_node *node)
 		}
 
 		/*
-		 * Size is in bytes. Convert to size of uint32_t
-		 */
+                                                  
+   */
 		size /= sizeof(*list);
 
 		/*
-		 * The data is represented by a tuple mapping hwirq to a MPM
-		 * pin. The number of mappings in the device tree would be
-		 * size/2
-		 */
+                                                              
+                                                            
+           
+   */
 		mpm_node = kzalloc(sizeof(struct mpm_irqs_a2m) * size / 2,
 				GFP_KERNEL);
 		if (!mpm_node)

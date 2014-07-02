@@ -13,12 +13,12 @@
 #ifndef __ASM_ARCH_MSM_IRQS_8226_H
 #define __ASM_ARCH_MSM_IRQS_8226_H
 
-/* MSM ACPU Interrupt Numbers */
+/*                            */
 
 /*
- * 0-15:  STI/SGI (software triggered/generated interrupts)
- * 16-31: PPI (private peripheral interrupts)
- * 32+:   SPI (shared peripheral interrupts)
+                                                           
+                                             
+                                            
  */
 
 #define GIC_PPI_START 16
@@ -27,7 +27,7 @@
 #define AVS_SVICINT				(GIC_PPI_START + 6)
 #define AVS_SVICINTSWDONE			(GIC_PPI_START + 7)
 #define INT_ARMQC_PERFMON			(GIC_PPI_START + 10)
-/* PPI 15 is unused */
+/*                  */
 
 #define APCC_QGICL2PERFMONIRPTREQ	(GIC_SPI_START + 1)
 #define SC_SICL2PERFMONIRPTREQ		APCC_QGICL2PERFMONIRPTREQ
@@ -36,7 +36,7 @@
 
 #define NR_MSM_IRQS 256
 #define NR_GPIO_IRQS 146
-#define NR_QPNP_IRQS 32768 /* SPARSE_IRQ is required to support this */
+#define NR_QPNP_IRQS 32768 /*                                        */
 #define NR_BOARD_IRQS NR_QPNP_IRQS
 #define NR_TLMM_MSM_DIR_CONN_IRQ 8
 #define NR_MSM_GPIOS NR_GPIO_IRQS

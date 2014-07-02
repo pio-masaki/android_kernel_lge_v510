@@ -90,8 +90,8 @@ static void mdss_fb_set_bl_brightness(struct led_classdev *led_cdev,
 	if (value > MAX_BACKLIGHT_BRIGHTNESS)
 		value = MAX_BACKLIGHT_BRIGHTNESS;
 
-	/* This maps android backlight level 0 to 255 into
-	   driver backlight level 0 to bl_max with rounding */
+	/*                                                
+                                                     */
 	bl_lvl = (2 * value * mfd->panel_info.bl_max + MAX_BACKLIGHT_BRIGHTNESS)
 		 /(2 * MAX_BACKLIGHT_BRIGHTNESS);
 
@@ -184,8 +184,8 @@ static int mdss_fb_probe(struct platform_device *pdev)
 		return -ENODEV;
 
 	/*
-	 * alloc framebuffer info + par data
-	 */
+                                     
+  */
 	fbi = framebuffer_alloc(sizeof(struct msm_fb_data_type), &pdev->dev);
 	if (fbi == NULL) {
 		pr_err("can't allocate framebuffer info data!\n");
@@ -225,7 +225,7 @@ static int mdss_fb_probe(struct platform_device *pdev)
 		pr_err("pm_runtime: fail to set active.\n");
 	pm_runtime_enable(mfd->fbi->dev);
 
-	/* android supports only one lcd-backlight/lcd for now */
+	/*                                                     */
 	if (!lcd_backlight_registered) {
 		if (led_classdev_register(&pdev->dev, &backlight_led))
 			pr_err("led_classdev_register failed\n");
@@ -258,7 +258,7 @@ static int mdss_fb_remove(struct platform_device *pdev)
 		pr_err("msm_fb_remove: can't stop the device %d\n",
 			    mfd->index);
 
-	/* remove /dev/fb* */
+	/*                 */
 	unregister_framebuffer(mfd->fbi);
 
 	if (lcd_backlight_registered) {
@@ -303,7 +303,7 @@ static int mdss_fb_resume_sub(struct msm_fb_data_type *mfd)
 
 	pr_debug("mdss_fb resume index=%d\n", mfd->index);
 
-	/* resume state var recover */
+	/*                          */
 	mfd->op_enable = mfd->suspend.op_enable;
 
 	if (mfd->suspend.panel_power_on) {
@@ -501,20 +501,20 @@ static int mdss_fb_blank(int blank_mode, struct fb_info *info)
 }
 
 /*
- * Custom Framebuffer mmap() function for MSM driver.
- * Differs from standard mmap() function by allowing for customized
- * page-protection.
+                                                     
+                                                                   
+                   
  */
 static int mdss_fb_mmap(struct fb_info *info, struct vm_area_struct *vma)
 {
-	/* Get frame buffer memory range. */
+	/*                                */
 	unsigned long start = info->fix.smem_start;
 	u32 len = PAGE_ALIGN((start & ~PAGE_MASK) + info->fix.smem_len);
 	unsigned long off = vma->vm_pgoff << PAGE_SHIFT;
 	struct msm_fb_data_type *mfd = (struct msm_fb_data_type *)info->par;
 
 	if (off >= len) {
-		/* memory mapped io */
+		/*                  */
 		off -= len;
 		if (info->var.accel_flags) {
 			mutex_unlock(&info->lock);
@@ -524,16 +524,16 @@ static int mdss_fb_mmap(struct fb_info *info, struct vm_area_struct *vma)
 		len = PAGE_ALIGN((start & ~PAGE_MASK) + info->fix.mmio_len);
 	}
 
-	/* Set VM flags. */
+	/*               */
 	start &= PAGE_MASK;
 	if ((vma->vm_end - vma->vm_start + off) > len)
 		return -EINVAL;
 	off += start;
 	vma->vm_pgoff = off >> PAGE_SHIFT;
-	/* This is an IO map - tell maydump to skip this VMA */
+	/*                                                   */
 	vma->vm_flags |= VM_IO | VM_RESERVED;
 
-	/* Set VM page protection */
+	/*                        */
 	if (mfd->mdp_fb_page_protection == MDP_FB_PAGE_PROTECTION_WRITECOMBINE)
 		vma->vm_page_prot = pgprot_writecombine(vma->vm_page_prot);
 	else if (mfd->mdp_fb_page_protection ==
@@ -548,7 +548,7 @@ static int mdss_fb_mmap(struct fb_info *info, struct vm_area_struct *vma)
 	else
 		vma->vm_page_prot = pgprot_noncached(vma->vm_page_prot);
 
-	/* Remap the frame buffer I/O range */
+	/*                                  */
 	if (io_remap_pfn_range(vma, vma->vm_start, off >> PAGE_SHIFT,
 			       vma->vm_end - vma->vm_start,
 			       vma->vm_page_prot))
@@ -561,20 +561,20 @@ static struct fb_ops mdss_fb_ops = {
 	.owner = THIS_MODULE,
 	.fb_open = mdss_fb_open,
 	.fb_release = mdss_fb_release,
-	.fb_check_var = mdss_fb_check_var,	/* vinfo check */
-	.fb_set_par = mdss_fb_set_par,	/* set the video mode */
-	.fb_blank = mdss_fb_blank,	/* blank display */
-	.fb_pan_display = mdss_fb_pan_display,	/* pan display */
-	.fb_ioctl = mdss_fb_ioctl,	/* perform fb specific ioctl */
+	.fb_check_var = mdss_fb_check_var,	/*             */
+	.fb_set_par = mdss_fb_set_par,	/*                    */
+	.fb_blank = mdss_fb_blank,	/*               */
+	.fb_pan_display = mdss_fb_pan_display,	/*             */
+	.fb_ioctl = mdss_fb_ioctl,	/*                           */
 	.fb_mmap = mdss_fb_mmap,
 };
 
 static u32 mdss_fb_line_length(u32 fb_index, u32 xres, int bpp)
 {
-	/* The adreno GPU hardware requires that the pitch be aligned to
-	   32 pixels for color buffers, so for the cases where the GPU
-	   is writing directly to fb0, the framebuffer pitch
-	   also needs to be 32 pixel aligned */
+	/*                                                              
+                                                               
+                                                     
+                                      */
 
 	if (fb_index == 0)
 		return ALIGN(xres, 32) * bpp;
@@ -640,28 +640,28 @@ static int mdss_fb_register(struct msm_fb_data_type *mfd)
 	int *id;
 
 	/*
-	 * fb info initialization
-	 */
+                          
+  */
 	fix = &fbi->fix;
 	var = &fbi->var;
 
-	fix->type_aux = 0;	/* if type == FB_TYPE_INTERLEAVED_PLANES */
-	fix->visual = FB_VISUAL_TRUECOLOR;	/* True Color */
-	fix->ywrapstep = 0;	/* No support */
-	fix->mmio_start = 0;	/* No MMIO Address */
-	fix->mmio_len = 0;	/* No MMIO Address */
-	fix->accel = FB_ACCEL_NONE;/* FB_ACCEL_MSM needes to be added in fb.h */
+	fix->type_aux = 0;	/*                                       */
+	fix->visual = FB_VISUAL_TRUECOLOR;	/*            */
+	fix->ywrapstep = 0;	/*            */
+	fix->mmio_start = 0;	/*                 */
+	fix->mmio_len = 0;	/*                 */
+	fix->accel = FB_ACCEL_NONE;/*                                         */
 
-	var->xoffset = 0,	/* Offset from virtual to visible */
-	var->yoffset = 0,	/* resolution */
-	var->grayscale = 0,	/* No graylevels */
-	var->nonstd = 0,	/* standard pixel format */
-	var->activate = FB_ACTIVATE_VBL,	/* activate it at vsync */
-	var->height = -1,	/* height of picture in mm */
-	var->width = -1,	/* width of picture in mm */
-	var->accel_flags = 0,	/* acceleration flags */
-	var->sync = 0,	/* see FB_SYNC_* */
-	var->rotate = 0,	/* angle we rotate counter clockwise */
+	var->xoffset = 0,	/*                                */
+	var->yoffset = 0,	/*            */
+	var->grayscale = 0,	/*               */
+	var->nonstd = 0,	/*                       */
+	var->activate = FB_ACTIVATE_VBL,	/*                      */
+	var->height = -1,	/*                         */
+	var->width = -1,	/*                        */
+	var->accel_flags = 0,	/*                    */
+	var->sync = 0,	/*               */
+	var->rotate = 0,	/*                                   */
 	mfd->op_enable = false;
 
 	switch (mfd->fb_imgType) {
@@ -747,7 +747,7 @@ static int mdss_fb_register(struct msm_fb_data_type *mfd)
 		fix->ypanstep = 1;
 		var->vmode = FB_VMODE_NONINTERLACED;
 
-		/* how about R/G/B offset? */
+		/*                         */
 		var->blue.offset = 0;
 		var->green.offset = 5;
 		var->red.offset = 11;
@@ -776,7 +776,7 @@ static int mdss_fb_register(struct msm_fb_data_type *mfd)
 	var->yres = panel_info->yres;
 	var->xres_virtual = panel_info->xres;
 	var->yres_virtual = panel_info->yres * mfd->fb_page;
-	var->bits_per_pixel = bpp * 8;	/* FrameBuffer color depth */
+	var->bits_per_pixel = bpp * 8;	/*                         */
 	var->upper_margin = panel_info->lcdc.v_front_porch;
 	var->lower_margin = panel_info->lcdc.v_back_porch;
 	var->vsync_len = panel_info->lcdc.v_pulse_width;
@@ -789,7 +789,7 @@ static int mdss_fb_register(struct msm_fb_data_type *mfd)
 	mfd->var_yres = var->yres;
 	mfd->var_pixclock = var->pixclock;
 
-	/* id field for fb app  */
+	/*                      */
 
 	id = (int *)&mfd->panel;
 
@@ -810,7 +810,7 @@ static int mdss_fb_register(struct msm_fb_data_type *mfd)
 
 	mfd->op_enable = true;
 
-	/* cursor memory allocation */
+	/*                          */
 	if (mfd->cursor_update) {
 		mfd->cursor_buf = dma_alloc_coherent(NULL, MDSS_MDP_CURSOR_SIZE,
 					(dma_addr_t *) &mfd->cursor_buf_phys,
@@ -977,8 +977,8 @@ static int mdss_fb_check_var(struct fb_var_screeninfo *var,
 		break;
 
 	case 32:
-		/* Figure out if the user meant RGBA or ARGB
-		   and verify the position of the RGB components */
+		/*                                          
+                                                   */
 
 		if (var->transp.offset == 24) {
 			if ((var->blue.offset != 0) ||
@@ -993,7 +993,7 @@ static int mdss_fb_check_var(struct fb_var_screeninfo *var,
 		} else
 			return -EINVAL;
 
-		/* Check the common values for both RGBA and ARGB */
+		/*                                                */
 
 		if ((var->blue.length != 8) ||
 		    (var->green.length != 8) ||

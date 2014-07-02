@@ -16,7 +16,7 @@
 #include "mdss_fb.h"
 #include "mdss_mdp.h"
 
-/* intf timing settings */
+/*                      */
 struct intf_timing_params {
 	u32 width;
 	u32 height;
@@ -96,19 +96,19 @@ static int mdss_mdp_video_timegen_setup(struct mdss_mdp_ctl *ctl,
 
 	if (active_h_end) {
 		active_hctl = (active_h_end << 16) | active_h_start;
-		active_hctl |= BIT(31);	/* ACTIVE_H_ENABLE */
+		active_hctl |= BIT(31);	/*                 */
 	} else {
 		active_hctl = 0;
 	}
 
 	if (active_v_end)
-		active_v_start |= BIT(31); /* ACTIVE_V_ENABLE */
+		active_v_start |= BIT(31); /*                 */
 
 	hsync_ctl = (hsync_period << 16) | p->hsync_pulse_width;
 	display_hctl = (hsync_end_x << 16) | hsync_start_x;
-	polarity_ctl = (0 << 2) |	/* DEN Polarity */
-		       (0 << 1) |      /* VSYNC Polarity */
-		       (0);	       /* HSYNC Polarity */
+	polarity_ctl = (0 << 2) |	/*              */
+		       (0 << 1) |      /*                */
+		       (0);	       /*                */
 
 	MDSS_MDP_REG_WRITE(off + MDSS_MDP_REG_INTF_HSYNC_CTL, hsync_ctl);
 	MDSS_MDP_REG_WRITE(off + MDSS_MDP_REG_INTF_VSYNC_PERIOD_F0,

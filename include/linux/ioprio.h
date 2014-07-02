@@ -5,7 +5,7 @@
 #include <linux/iocontext.h>
 
 /*
- * Gives us 8 prio classes with 13-bits of data for each class
+                                                              
  */
 #define IOPRIO_BITS		(16)
 #define IOPRIO_CLASS_SHIFT	(13)
@@ -18,10 +18,10 @@
 #define ioprio_valid(mask)	(IOPRIO_PRIO_CLASS((mask)) != IOPRIO_CLASS_NONE)
 
 /*
- * These are the io priority groups as implemented by CFQ. RT is the realtime
- * class, it always gets premium service. BE is the best-effort scheduling
- * class, the default for any process. IDLE is the idle scheduling class, it
- * is only served when no one else is using the disk.
+                                                                             
+                                                                          
+                                                                            
+                                                     
  */
 enum {
 	IOPRIO_CLASS_NONE,
@@ -31,7 +31,7 @@ enum {
 };
 
 /*
- * 8 best effort priority levels are supported
+                                              
  */
 #define IOPRIO_BE_NR	(8)
 
@@ -42,8 +42,8 @@ enum {
 };
 
 /*
- * if process has set io priority explicitly, use that. if not, convert
- * the cpu scheduler nice value to an io priority
+                                                                       
+                                                 
  */
 #define IOPRIO_NORM	(4)
 static inline int task_ioprio(struct io_context *ioc)
@@ -68,8 +68,8 @@ static inline int task_nice_ioprio(struct task_struct *task)
 }
 
 /*
- * This is for the case where the task hasn't asked for a specific IO class.
- * Check for idle and rt task process, and return appropriate IO class.
+                                                                            
+                                                                       
  */
 static inline int task_nice_ioclass(struct task_struct *task)
 {
@@ -82,7 +82,7 @@ static inline int task_nice_ioclass(struct task_struct *task)
 }
 
 /*
- * For inheritance, return the highest of the two given priorities
+                                                                  
  */
 extern int ioprio_best(unsigned short aprio, unsigned short bprio);
 

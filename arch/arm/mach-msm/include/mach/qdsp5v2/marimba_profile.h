@@ -13,9 +13,9 @@
 #ifndef __MACH_QDSP5_V2_MARIMBA_PROFILE_H__
 #define __MACH_QDSP5_V2_MARIMBA_PROFILE_H__
 
-/***************************************************************************\
-				Handset
-\***************************************************************************/
+/*                                                                           
+           
+                                                                           */
 
 
 #define HANDSET_RX_8000_OSR_256 \
@@ -160,9 +160,9 @@
 	{ADIE_CODEC_ACTION_ENTRY, ADIE_CODEC_PACK_ENTRY(0x11, 0xff, 0x00)}, \
 	{ADIE_CODEC_ACTION_STAGE_REACHED, ADIE_CODEC_DIGITAL_OFF} }
 
-/***************************************************************************\
-				Headset
-\***************************************************************************/
+/*                                                                           
+           
+                                                                           */
 
 
 
@@ -2565,9 +2565,9 @@
 	{ADIE_CODEC_ACTION_STAGE_REACHED, ADIE_CODEC_DIGITAL_OFF} }
 
 
-/***************************************************************************\
-				DigitalMicprofile
-\***************************************************************************/
+/*                                                                           
+                     
+                                                                           */
 #define DIGITAL_MIC \
 	{{ADIE_CODEC_ACTION_STAGE_REACHED, ADIE_CODEC_FLASH_IMAGE}, \
 	{ADIE_CODEC_ACTION_ENTRY, ADIE_CODEC_PACK_ENTRY(0x80, 0x01, 0x01)}, \
@@ -2587,9 +2587,9 @@
 	{ADIE_CODEC_ACTION_STAGE_REACHED, ADIE_CODEC_ANALOG_OFF}, \
 	{ADIE_CODEC_ACTION_STAGE_REACHED, ADIE_CODEC_DIGITAL_OFF} }
 
-/***************************************************************************\
-				DualMicprofile
-\***************************************************************************/
+/*                                                                           
+                  
+                                                                           */
 #define SPEAKER_MIC1_LEFT_LINE_IN_RIGHT_8000_OSR_256 \
 	{{ADIE_CODEC_ACTION_STAGE_REACHED, ADIE_CODEC_FLASH_IMAGE}, \
 	{ADIE_CODEC_ACTION_ENTRY, ADIE_CODEC_PACK_ENTRY(0x80, 0x01, 0x01)}, \
@@ -2713,9 +2713,9 @@
 	{ADIE_CODEC_ACTION_STAGE_REACHED, ADIE_CODEC_DIGITAL_OFF} }
 
 
-/***************************************************************************\
-				AnalogDualMicProfile
-\***************************************************************************/
+/*                                                                           
+                        
+                                                                           */
 #define ANALOG_DUAL_MIC \
 	{{ADIE_CODEC_ACTION_STAGE_REACHED, ADIE_CODEC_FLASH_IMAGE}, \
 	{ADIE_CODEC_ACTION_ENTRY, ADIE_CODEC_PACK_ENTRY(0x80, 0x01, 0x01)}, \
@@ -2743,9 +2743,9 @@
 	{ADIE_CODEC_ACTION_STAGE_REACHED, ADIE_CODEC_ANALOG_OFF}, \
 	{ADIE_CODEC_ACTION_ENTRY, ADIE_CODEC_PACK_ENTRY(0x12, 0xff, 0x00)}, \
 	{ADIE_CODEC_ACTION_STAGE_REACHED, ADIE_CODEC_DIGITAL_OFF} }
-/***************************************************************************\
-				TTY
-\***************************************************************************/
+/*                                                                           
+       
+                                                                           */
 #define TTY_HEADSET_MONO_TX_8000_OSR_256 \
 	{{ADIE_CODEC_ACTION_STAGE_REACHED, ADIE_CODEC_FLASH_IMAGE}, \
 	{ADIE_CODEC_ACTION_ENTRY, ADIE_CODEC_PACK_ENTRY(0x80, 0x01, 0x01)}, \
@@ -2995,9 +2995,9 @@
 	{ADIE_CODEC_ACTION_ENTRY, ADIE_CODEC_PACK_ENTRY(0x33, 0x80, 0x00)}, \
 	{ADIE_CODEC_ACTION_STAGE_REACHED, ADIE_CODEC_DIGITAL_OFF} }
 
-/***************************************************************************\
-				FFA
-\***************************************************************************/
+/*                                                                           
+       
+                                                                           */
 #define HANDSET_RX_8000_OSR_256_FFA \
 	{{ADIE_CODEC_ACTION_STAGE_REACHED, ADIE_CODEC_FLASH_IMAGE},  \
 	{ADIE_CODEC_ACTION_ENTRY, ADIE_CODEC_PACK_ENTRY(0x80,  0x02,  0x02)},  \
@@ -3194,7 +3194,7 @@
 	{ADIE_CODEC_ACTION_DELAY_WAIT, 0x7530}, \
 	{ADIE_CODEC_ACTION_ENTRY, ADIE_CODEC_PACK_ENTRY(0x33, 0x80, 0x00)}, \
 	{ADIE_CODEC_ACTION_STAGE_REACHED, ADIE_CODEC_DIGITAL_OFF} }
-#endif /* __MARIMBA_PROFILE_H__ */
+#endif /*                       */
 
 
 

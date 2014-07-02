@@ -13,12 +13,12 @@
 #ifndef __MACH_QDSP5_V2_QDSP5AFECMDI_H
 #define __MACH_QDSP5_V2_QDSP5AFECMDI_H
 
-#define QDSP5_DEVICE_mI2S_CODEC_RX 1     /* internal codec rx path  */
-#define QDSP5_DEVICE_mI2S_CODEC_TX 2     /* internal codec tx path  */
-#define QDSP5_DEVICE_AUX_CODEC_RX  3     /* external codec rx path  */
-#define QDSP5_DEVICE_AUX_CODEC_TX  4     /* external codec tx path  */
-#define QDSP5_DEVICE_mI2S_HDMI_RX  5     /* HDMI/FM block rx path   */
-#define QDSP5_DEVICE_mI2S_HDMI_TX  6     /* HDMI/FM block tx path   */
+#define QDSP5_DEVICE_mI2S_CODEC_RX 1     /*                         */
+#define QDSP5_DEVICE_mI2S_CODEC_TX 2     /*                         */
+#define QDSP5_DEVICE_AUX_CODEC_RX  3     /*                         */
+#define QDSP5_DEVICE_AUX_CODEC_TX  4     /*                         */
+#define QDSP5_DEVICE_mI2S_HDMI_RX  5     /*                         */
+#define QDSP5_DEVICE_mI2S_HDMI_TX  6     /*                         */
 #define QDSP5_DEVICE_ID_MAX        7
 
 #define AFE_CMD_CODEC_CONFIG_CMD     0x1

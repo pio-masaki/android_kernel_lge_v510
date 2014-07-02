@@ -196,8 +196,8 @@ int msm_set_dual_mic_config(int enc_session_id, int config)
 	int i;
 	if (enc_session_id >= MAX_ENC_SESSIONS)
 		return -EINVAL;
-	/*config is set(1) dual mic recording is selected */
-	/*config is reset (0) dual mic recording is not selected*/
+	/*                                                */
+	/*                                                      */
 	routing_info.dual_mic_setting[enc_session_id] = config;
 	for (i = 0; i < MAX_ENC_SESSIONS; i++)
 		MM_DBG("dual_mic_setting[%d] = %d\n",
@@ -263,7 +263,7 @@ void msm_snddev_register(struct msm_snddev_info *dev_info)
 	mutex_lock(&session_lock);
 	if (audio_dev_ctrl.num_dev < AUDIO_DEV_CTL_MAX_DEV) {
 		audio_dev_ctrl.devs[audio_dev_ctrl.num_dev] = dev_info;
-		dev_info->dev_volume = 50; /* 50%  */
+		dev_info->dev_volume = 50; /*      */
 		dev_info->sessions = 0x0;
 		dev_info->usage_count = 0;
 		dev_info->set_sample_rate = 0;
@@ -701,18 +701,18 @@ int msm_snddev_request_freq(int *freq, u32 session_id,
 
 			rc = set_freq;
 			*freq = set_freq;
-			/* There is difference in device sample rate to
-			 * requested sample rate. So update device sample rate
-			 * and propagate sample rate change event to active
-			 * sessions of the device.
-			 */
+			/*                                             
+                                                         
+                                                      
+                             
+    */
 			if (info->set_sample_rate != set_freq) {
 				info->set_sample_rate = set_freq;
 				if (info->opened) {
-					/* Ignore propagating sample rate
-					 * change event to requested client
-					 * session
-					 */
+					/*                               
+                                        
+               
+      */
 					if (clnt_type == AUDDEV_CLNT_DEC)
 						routing_info.\
 						dec_freq[session_id].evt = 1;
@@ -887,11 +887,11 @@ struct miscdevice audio_dev_ctrl_misc = {
 	.fops	= &audio_dev_ctrl_fops,
 };
 
-/* session id is 32 bit routing mask per device
- * 0-7 for voice clients
- * 8-15 for Decoder clients
- * 16-23 for Encoder clients
- * 24-31 Do not care
+/*                                             
+                        
+                           
+                            
+                    
  */
 void broadcast_event(u32 evt_id, u32 dev_id, u32 session_id)
 {
@@ -1002,7 +1002,7 @@ volume_strm:
 					evt_payload->freq_info.acdb_dev_id
 						= dev_info->acdb_id;
 				}
-			/* Propogate device information to client */
+			/*                                        */
 			} else if (evt_id == AUDDEV_EVT_DEVICE_INFO) {
 				evt_payload->devinfo.dev_id
 					= dev_info->copp_id;
@@ -1060,7 +1060,7 @@ sent_dec:
 					evt_payload->freq_info.acdb_dev_id
 						= dev_info->acdb_id;
 				}
-			/* Propogate device information to client */
+			/*                                        */
 			} else if (evt_id == AUDDEV_EVT_DEVICE_INFO) {
 				evt_payload->devinfo.dev_id
 					= dev_info->copp_id;
@@ -1250,7 +1250,7 @@ void mixer_post_event(u32 evt_id, u32 id)
 
 	MM_DBG("evt_id = %d\n", evt_id);
 	switch (evt_id) {
-	case AUDDEV_EVT_DEV_CHG_VOICE: /* Called from Voice_route */
+	case AUDDEV_EVT_DEV_CHG_VOICE: /*                         */
 		broadcast_event(AUDDEV_EVT_DEV_CHG_VOICE, id, SESSION_IGNORE);
 		break;
 	case AUDDEV_EVT_DEV_RDY:

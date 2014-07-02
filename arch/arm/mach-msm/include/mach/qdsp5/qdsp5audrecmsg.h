@@ -28,27 +28,27 @@
  *
  *====*====*====*====*====*====*====*====*====*====*====*====*====*====*====*/
 
-/*===========================================================================
+/*                                                                           
 
-                      EDIT HISTORY FOR FILE
+                                           
 
-This section contains comments describing changes made to this file.
-Notice that changes are listed in reverse chronological order.
+                                                                    
+                                                              
    
- $Header: //source/qcom/qct/multimedia2/Audio/drivers/QDSP5Driver/QDSP5Interface/main/latest/qdsp5audrecmsg.h#3 $
+                                                                                                                 
 
-============================================================================*/
+                                                                            */
 
 /*
- * AUDRECTASK MESSAGES
- * AUDRECTASK uses audRecUpRlist to communicate with ARM
- * Location : MEMC
- * Buffer size : 4
- * No of buffers in a queue : 2
+                      
+                                                        
+                  
+                  
+                               
  */
 
 /*
- * Message to notify that config command is done
+                                                
  */
 
 #define AUDREC_MSG_CMD_CFG_DONE_MSG	0x0002
@@ -77,8 +77,8 @@ struct audrec_msg_cmd_cfg_done_msg {
 } __attribute__((packed));
 
 /*
- * Message to notify arec0/1 or concurrent encoder cfg done
- * and recording params recieved by task
+                                                           
+                                        
  */
 
 #define	AUDREC_MSG_CMD_AREC_PARAM_CFG_DONE_MSG		0x0003
@@ -94,10 +94,10 @@ struct audrec_msg_cmd_arec_param_cfg_done_msg {
 } __attribute__((packed));
 
 /*
- * Message to notify no more buffers are available in ext mem to DME
- * Or no concurrent encoder supported
+                                                                    
+                                     
  */
-/* for 7x27 */
+/*          */
 #define AUDREC_MSG_FATAL_ERR_MSG		0x0004
 #define AUDREC_MSG_FATAL_ERR_MSG_LEN	\
 	sizeof(struct audrec_msg_fatal_err_msg)
@@ -111,7 +111,7 @@ struct audrec_msg_fatal_err_msg {
 	unsigned short	audrec_err_id;
 } __attribute__((packed));
 
-/* for 7x27A */
+/*           */
 #define AUDREC_MSG_NO_EXT_PKT_AVAILABLE_MSG		0x0004
 #define AUDREC_MSG_NO_EXT_PKT_AVAILABLE_MSG_LEN	\
 	sizeof(struct audrec_msg_no_ext_pkt_avail_msg)
@@ -125,7 +125,7 @@ struct audrec_msg_no_ext_pkt_avail_msg {
 } __packed;
 
 /*
- * Message to notify DME deliverd the encoded pkt to ext pkt buffer
+                                                                   
  */
 
 #define AUDREC_MSG_PACKET_READY_MSG		0x0005
@@ -145,7 +145,7 @@ struct audrec_msg_packet_ready_msg {
 } __attribute__((packed));
 
 /*
- * Message to notify external memory cfg done and recieved by task
+                                                                  
  */
 
 #define	AUDREC_MSG_CMD_AREC_MEM_CFG_DONE_MSG		0x0006
@@ -158,8 +158,8 @@ struct audrec_msg_cmd_arec_mem_cfg_done_msg {
 } __attribute__((packed));
 
 /*
- * Message to indicate Routing mode
- * configuration success or failure
+                                   
+                                   
  */
 
 #define AUDREC_MSG_CMD_ROUTING_MODE_DONE_MSG		 0x0007
@@ -171,7 +171,7 @@ struct audrec_msg_cmd_routing_mode_done_msg {
 } __packed;
 
 /*
- * Message to indicate pcm buffer configured
+                                            
  */
 
 #define AUDREC_CMD_PCM_CFG_ARM_TO_ENC_DONE_MSG		0x0008
@@ -183,7 +183,7 @@ struct  audrec_cmd_pcm_cfg_arm_to_enc_msg {
 } __packed;
 
 /*
- * Message to indicate encoded packet is delivered to external buffer in FTRT
+                                                                             
  */
 
 #define AUDREC_UP_NT_PACKET_READY_MSG			0x0009
@@ -198,7 +198,7 @@ struct  audrec_up_nt_packet_ready_msg {
 } __packed;
 
 /*
- * Message to indicate pcm buffer is consumed
+                                             
  */
 
 #define AUDREC_CMD_PCM_BUFFER_PTR_UPDATE_ARM_TO_ENC_MSG 0x000A
@@ -213,7 +213,7 @@ struct  audrec_cmd_pcm_buffer_ptr_update_arm_to_enc_msg {
 } __packed;
 
 /*
- * Message to indicate flush acknowledgement
+                                            
  */
 
 #define AUDREC_CMD_FLUSH_DONE_MSG			0x000B

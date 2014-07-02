@@ -35,7 +35,7 @@
 
 #ifndef ION_ADSPRPC_HEAP_ID
 #define ION_ADSPRPC_HEAP_ID ION_AUDIO_HEAP_ID
-#endif /*ION_ADSPRPC_HEAP_ID*/
+#endif /*                   */
 
 #define RPC_TIMEOUT	(5 * HZ)
 #define RPC_HASH_BITS	5
@@ -114,7 +114,7 @@ static inline int buf_get_pages(void *addr, int sz, int nr_pages, int access,
 	return n;
 }
 
-#endif /*__KERNEL__*/
+#endif /*          */
 
 struct smq_invoke_ctx {
 	struct completion work;
@@ -800,9 +800,9 @@ static int fastrpc_device_open(struct inode *inode, struct file *filp)
 	int err = 0;
 
 	if (0 != try_module_get(THIS_MODULE)) {
-		/* This call will cause a dev to be created
-		 * which will addref this module
-		 */
+		/*                                         
+                                  
+   */
 		VERIFY(err, 0 == fastrpc_create_current_dsp_process());
 		if (err)
 			cleanup_current_dev();
@@ -860,7 +860,7 @@ static const struct file_operations fops = {
 	.unlocked_ioctl = fastrpc_device_ioctl,
 };
 
-#endif /*__KERNEL__*/
+#endif /*          */
 
 static int __init fastrpc_device_init(void)
 {

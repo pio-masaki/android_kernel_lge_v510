@@ -42,13 +42,13 @@ enum ov5647_setting {
 	RES_CAPTURE
 };
 enum ov5647_reg_update {
-	/* Sensor egisters that need to be updated during initialization */
+	/*                                                               */
 	REG_INIT,
-	/* Sensor egisters that needs periodic I2C writes */
+	/*                                                */
 	UPDATE_PERIODIC,
-	/* All the sensor Registers will be updated */
+	/*                                          */
 	UPDATE_ALL,
-	/* Not valid update */
+	/*                  */
 	UPDATE_INVALID
 };
 
@@ -89,4 +89,4 @@ struct ov5647_reg {
 	const struct ov5647_i2c_reg_conf *reg_snap;
 	const unsigned short reg_snap_size;
 };
-#endif /* OV5647_H */
+#endif /*          */

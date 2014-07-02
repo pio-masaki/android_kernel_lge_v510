@@ -27,26 +27,26 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 *====*====*====*====*====*====*====*====*====*====*====*====*====*====*====*/
-/*===========================================================================
+/*                                                                           
 
-                      EDIT HISTORY FOR FILE
+                                           
 
-This section contains comments describing changes made to this file.
-Notice that changes are listed in reverse chronological order.
+                                                                    
+                                                              
    
- $Header: //source/qcom/qct/multimedia2/Audio/drivers/QDSP5Driver/QDSP5Interface/main/latest/qdsp5audpreprocmsg.h#3 $
+                                                                                                                     
   
-===========================================================================*/
+                                                                           */
 
 /*
- * ADSPREPROCTASK Messages
- * AUDPREPROCTASK uses audPreProcUpRlist to communicate with ARM
- * Location	: MEMA
- * Message Length  : 2
+                          
+                                                                
+                  
+                      
  */
 
 /*
- * Message to indicate particular feature has been enabled or disabled
+                                                                      
  */
 
 
@@ -69,7 +69,7 @@ typedef struct {
 
 
 /*
- * Message to indicate particular feature has selected for wrong samp freq
+                                                                          
  */
 
 #define	AUDPREPROC_MSG_ERROR_MSG_ID		0x0002

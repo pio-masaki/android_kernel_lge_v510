@@ -26,10 +26,10 @@
 #include <mach/rpc_server_handset.h>
 #include <mach/board.h>
 
-/* keypad */
+/*        */
 #include <linux/mfd/pm8xxx/pm8921.h>
 
-/* i2c */
+/*     */
 #include <linux/regulator/consumer.h>
 #include <linux/i2c.h>
 
@@ -38,7 +38,7 @@
 #include <mach/board_lge.h>
 #include "board-mako.h"
 
-/* TOUCH GPIOS */
+/*             */
 #define SYNAPTICS_TS_I2C_SDA                 	8
 #define SYNAPTICS_TS_I2C_SCL                 	9
 #define SYNAPTICS_TS_I2C_INT_GPIO            	6
@@ -46,7 +46,7 @@
 
 #define TOUCH_FW_VERSION                        1
 
-/* touch screen device */
+/*                     */
 #define APQ8064_GSBI3_QUP_I2C_BUS_ID            3
 
 int synaptics_t1320_power_on(int on)
@@ -55,7 +55,7 @@ int synaptics_t1320_power_on(int on)
 	static struct regulator *vreg_l15 = NULL;
 	static struct regulator *vreg_l22 = NULL;
 
-	/* 3.3V_TOUCH_VDD, VREG_L15: 2.75 ~ 3.3 */
+	/*                                      */
 	if (!vreg_l15) {
 		vreg_l15 = regulator_get(NULL, "touch_vdd");
 		if (IS_ERR(vreg_l15)) {
@@ -67,7 +67,7 @@ int synaptics_t1320_power_on(int on)
 			return rc;
 		}
 	}
-	/* 1.8V_TOUCH_IO, VREG_L22: 1.7 ~ 2.85 */
+	/*                                     */
 	if (!vreg_l22) {
 		vreg_l22 = regulator_get(NULL, "touch_io");
 		if (IS_ERR(vreg_l22)) {
@@ -132,7 +132,7 @@ static struct touch_operation_role touch_role = {
 	.report_mode = REDUCED_REPORT_MODE,
 	.delta_pos_threshold = 1,
 	.orientation = 0,
-	.booting_delay = 400,
+	.booting_delay = 200,
 	.reset_delay = 20,
 	.suspend_pwr = POWER_OFF,
 	.resume_pwr = POWER_ON,

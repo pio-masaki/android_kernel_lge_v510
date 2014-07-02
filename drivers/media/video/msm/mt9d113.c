@@ -21,7 +21,7 @@
 #include <mach/gpio.h>
 #include "mt9d113.h"
 
-/* Micron MT9D113 Registers and their values */
+/*                                           */
 #define  REG_MT9D113_MODEL_ID	0x0000
 #define  MT9D113_MODEL_ID		0x2580
 #define Q8						0x00000100
@@ -36,8 +36,8 @@ static struct  i2c_client *mt9d113_client;
 struct mt9d113_ctrl {
 	const struct msm_camera_sensor_info *sensordata;
 	uint32_t sensormode;
-	uint32_t fps_divider;/* init to 1 * 0x00000400 */
-	uint32_t pict_fps_divider;/* init to 1 * 0x00000400 */
+	uint32_t fps_divider;/*                        */
+	uint32_t pict_fps_divider;/*                        */
 	uint16_t fps;
 	uint16_t curr_step_pos;
 	uint16_t my_reg_gain;
@@ -192,7 +192,7 @@ static long mt9d113_reg_init(void)
 		mt9d113_ctrl->config_csi = 1;
 		msleep(50);
 	}
-	/* Disable parallel and enable mipi*/
+	/*                                 */
 	rc = mt9d113_i2c_write(mt9d113_client->addr,
 				0x001A,
 				0x0051, WORD_LEN);
@@ -206,7 +206,7 @@ static long mt9d113_reg_init(void)
 				0x0058,
 				WORD_LEN);
 
-	/* Preset pll settings begin*/
+	/*                          */
 	rc = mt9d113_i2c_write_table(&mt9d113_regs.pll_tbl[0],
 				mt9d113_regs.pll_tbl_size);
 	if (rc < 0)
@@ -214,7 +214,7 @@ static long mt9d113_reg_init(void)
 	rc = mt9d113_i2c_read(mt9d113_client->addr,
 				0x0014, &data, WORD_LEN);
 	data = data&0x8000;
-	/* Poll*/
+	/*     */
 	while (data == 0x0000) {
 		data = 0;
 		rc = mt9d113_i2c_read(mt9d113_client->addr,
@@ -232,7 +232,7 @@ static long mt9d113_reg_init(void)
 				0x20FA,
 				WORD_LEN);
 
-	/*Preset pll Ends*/
+	/*               */
 	mt9d113_i2c_write(mt9d113_client->addr,
 				0x0018,
 				0x402D,
@@ -242,7 +242,7 @@ static long mt9d113_reg_init(void)
 				0x0018,
 				0x402C,
 				WORD_LEN);
-	/*POLL_REG=0x0018,0x4000,!=0x0000,DELAY=10,TIMEOUT=100*/
+	/*                                                    */
 	data = 0;
 	rc = mt9d113_i2c_read(mt9d113_client->addr,
 		0x0018, &data, WORD_LEN);
@@ -262,7 +262,7 @@ static long mt9d113_reg_init(void)
 		CDBG(" Not streaming\n");
 	}
 	CDBG("MT9D113: Start stream\n");
-	/*Preset Register Wizard Conf*/
+	/*                           */
 	rc = mt9d113_i2c_write_table(&mt9d113_regs.register_tbl[0],
 				mt9d113_regs.register_tbl_size);
 	if (rc < 0)
@@ -291,15 +291,15 @@ static long mt9d113_reg_init(void)
 	if (rc < 0)
 		return rc;
 
-	/*check patch load*/
+	/*                */
 	mt9d113_i2c_write(mt9d113_client->addr,
 				0x098C,
 				0xA024,
 				WORD_LEN);
 	count = 0;
-	/*To check if patch is loaded properly
-	poll the register 0x990 till the condition is
-	met or till the timeout*/
+	/*                                    
+                                              
+                        */
 	data = 0;
 	rc = mt9d113_i2c_read(mt9d113_client->addr,
 				0x0990, &data, WORD_LEN);
@@ -314,44 +314,44 @@ static long mt9d113_reg_init(void)
 			break;
 		}
 	}
-		/*BITFIELD=0x0018, 0x0004, 0*/
-	/*Preset continue begin */
+		/*                          */
+	/*                      */
 	rc = mt9d113_i2c_write(mt9d113_client->addr, 0x0018, 0x0028,
 				WORD_LEN);
 	CDBG(" mt9d113 wait for seq done\n");
-	/* syncronize the FW with the sensor
-	MCU_ADDRESS [SEQ_CMD]*/
+	/*                                  
+                      */
 	rc = mt9d113_i2c_write(mt9d113_client->addr,
 				0x098C, 0xA103, WORD_LEN);
 	rc = mt9d113_i2c_write(mt9d113_client->addr,
 				0x0990, 0x0006, WORD_LEN);
-		/*mt9d113 wait for seq done
-	 syncronize the FW with the sensor */
+		/*                         
+                                    */
 	msleep(20);
-	/*Preset continue end */
+	/*                    */
 	CDBG(" MT9D113: Preset continue end\n");
 	rc = mt9d113_i2c_write(mt9d113_client->addr,
 				0x0012,
 				0x00F5,
 				WORD_LEN);
-	/*continue begin */
+	/*               */
 	CDBG(" MT9D113: Preset continue begin\n");
 	rc = mt9d113_i2c_write(mt9d113_client->addr, 0x0018, 0x0028 ,
 				WORD_LEN);
-	/*mt9d113 wait for seq done
-	 syncronize the FW with the sensor
-	MCU_ADDRESS [SEQ_CMD]*/
+	/*                         
+                                   
+                      */
 	msleep(20);
 	rc = mt9d113_i2c_write(mt9d113_client->addr,
 				0x098C, 0xA103, WORD_LEN);
-	/* MCU DATA */
+	/*          */
 	rc = mt9d113_i2c_write(mt9d113_client->addr, 0x0990,
 				0x0006, WORD_LEN);
-	/*mt9d113 wait for seq done
-	syncronize the FW with the sensor */
-	/* MCU_ADDRESS [SEQ_CMD]*/
+	/*                         
+                                   */
+	/*                      */
 	msleep(20);
-	/*Preset continue end*/
+	/*                   */
 	return rc;
 
 }
@@ -410,13 +410,13 @@ static int mt9d113_sensor_init_probe(const struct
 {
 	uint16_t model_id = 0;
 	int rc = 0;
-	/* Read the Model ID of the sensor */
+	/*                                 */
 	rc = mt9d113_i2c_read(mt9d113_client->addr,
 						REG_MT9D113_MODEL_ID,
 						&model_id, WORD_LEN);
 	if (rc < 0)
 		goto init_probe_fail;
-	/* Check if it matches it with the value in Datasheet */
+	/*                                                    */
 	if (model_id != MT9D113_MODEL_ID)
 		printk(KERN_INFO "mt9d113 model_id = 0x%x\n", model_id);
 	if (rc < 0)
@@ -429,7 +429,7 @@ init_probe_fail:
 
 static int mt9d113_init_client(struct i2c_client *client)
 {
-	/* Initialize the MSM_CAMI2C Chip */
+	/*                                */
 	init_waitqueue_head(&mt9d113_wait_queue);
 	return 0;
 }
@@ -504,7 +504,7 @@ static int mt9d113_probe_init_sensor(const struct msm_camera_sensor_info
 						&chipid, WORD_LEN);
 	if (rc < 0)
 		goto init_probe_fail;
-	/*Compare sensor ID to MT9D113 ID: */
+	/*                                 */
 	if (chipid != MT9D113_MODEL_ID) {
 		printk(KERN_INFO "mt9d113_probe_init_sensor chip id is%d\n",
 			chipid);
@@ -582,7 +582,7 @@ int mt9d113_sensor_open_init(const struct msm_camera_sensor_info *data)
 		printk(KERN_INFO "mt9d113_sensor_open_init fail\n");
 		return rc;
 	}
-		/* enable mclk first */
+		/*                   */
 		msm_camio_clk_rate_set(24000000);
 		msleep(20);
 		rc = mt9d113_probe_init_sensor(data);

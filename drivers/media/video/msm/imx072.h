@@ -54,13 +54,13 @@ enum imx072_cam_mode_t {
 	MODE_INVALID
 };
 enum imx072_reg_update {
-	/* Sensor egisters that need to be updated during initialization */
+	/*                                                               */
 	REG_INIT,
-	/* Sensor egisters that needs periodic I2C writes */
+	/*                                                */
 	UPDATE_PERIODIC,
-	/* All the sensor Registers will be updated */
+	/*                                          */
 	UPDATE_ALL,
-	/* Not valid update */
+	/*                  */
 	UPDATE_INVALID
 };
 
@@ -76,4 +76,4 @@ struct imx072_reg {
 	const unsigned short rec_size;
 	const struct imx072_i2c_conf_array *conf_array;
 };
-#endif /* IMX072_H */
+#endif /*          */

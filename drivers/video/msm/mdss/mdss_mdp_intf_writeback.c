@@ -121,9 +121,9 @@ static int mdss_mdp_writeback_format_setup(struct mdss_mdp_writeback_ctx *ctx)
 	if (ctx->type != MDSS_MDP_WRITEBACK_TYPE_ROTATOR && fmt->is_yuv) {
 		mdss_mdp_csc_setup(MDSS_MDP_BLOCK_WB, ctx->wb_num, 0,
 				   MDSS_MDP_CSC_RGB2YUV);
-		opmode |= (1 << 8) |	/* CSC_EN */
-			  (0 << 9) |	/* SRC_DATA=RGB */
-			  (1 << 10);	/* DST_DATA=YCBCR */
+		opmode |= (1 << 8) |	/*        */
+			  (0 << 9) |	/*              */
+			  (1 << 10);	/*                */
 
 		switch (chroma_samp) {
 		case MDSS_MDP_CHROMA_RGB:
@@ -186,7 +186,7 @@ static int mdss_mdp_writeback_prepare_wfd(struct mdss_mdp_ctl *ctl, void *arg)
 	if (!ctx)
 		return -ENODEV;
 
-	if (ctx->initialized) /* already set */
+	if (ctx->initialized) /*             */
 		return 0;
 
 	pr_debug("wfd setup ctl=%d\n", ctl->num);
@@ -227,9 +227,9 @@ static int mdss_mdp_writeback_prepare_rot(struct mdss_mdp_ctl *ctl, void *arg)
 	}
 	pr_debug("rot setup wb_num=%d\n", ctx->wb_num);
 
-	ctx->opmode = BIT(6); /* ROT EN */
+	ctx->opmode = BIT(6); /*        */
 	if (ROT_BLK_SIZE == 128)
-		ctx->opmode |= BIT(4); /* block size 128 */
+		ctx->opmode |= BIT(4); /*                */
 
 	ctx->opmode |= rot->bwc_mode;
 
@@ -240,7 +240,7 @@ static int mdss_mdp_writeback_prepare_rot(struct mdss_mdp_ctl *ctl, void *arg)
 
 	ctx->rot90 = !!(rot->rotations & MDP_ROT_90);
 	if (ctx->rot90) {
-		ctx->opmode |= BIT(5); /* ROT 90 */
+		ctx->opmode |= BIT(5); /*        */
 		swap(ctx->width, ctx->height);
 	}
 
@@ -308,7 +308,7 @@ static int mdss_mdp_writeback_display(struct mdss_mdp_ctl *ctl, void *arg)
 	ctx->callback_fnc = wb_args->callback_fnc;
 	ctx->callback_arg = wb_args->priv_data;
 
-	flush_bits = BIT(16); /* WB */
+	flush_bits = BIT(16); /*    */
 	mdss_mdp_ctl_write(ctl, MDSS_MDP_REG_CTL_FLUSH, flush_bits);
 
 	mdss_mdp_set_intr_callback(ctx->intr_type, ctx->intf_num,
@@ -343,12 +343,12 @@ int mdss_mdp_writeback_start(struct mdss_mdp_ctl *ctl)
 		return -EINVAL;
 	}
 	ctl->priv_data = ctx;
-	ctx->wb_num = ctl->num;	/* wb num should match ctl num */
+	ctx->wb_num = ctl->num;	/*                             */
 	ctx->initialized = false;
 
 	if (ctx->type == MDSS_MDP_WRITEBACK_TYPE_ROTATOR)
 		ctl->prepare_fnc = mdss_mdp_writeback_prepare_rot;
-	else /* wfd or line mode */
+	else /*                  */
 		ctl->prepare_fnc = mdss_mdp_writeback_prepare_wfd;
 	ctl->stop_fnc = mdss_mdp_writeback_stop;
 	ctl->display_fnc = mdss_mdp_writeback_display;

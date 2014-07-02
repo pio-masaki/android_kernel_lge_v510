@@ -23,14 +23,12 @@
 #include <linux/tick.h>
 #include <mach/mpm.h>
 #include <mach/rpm-smd.h>
-#include <mach/trace_msm_low_power.h>
 #include "spm.h"
 #include "lpm_resources.h"
 #include "rpm-notifier.h"
 #include "idle.h"
 
-
-/*Debug Definitions*/
+/*                 */
 enum {
 	MSM_LPMRS_DEBUG_RPM = BIT(0),
 	MSM_LPMRS_DEBUG_PXO = BIT(1),
@@ -47,7 +45,7 @@ module_param_named(
 
 static bool msm_lpm_get_rpm_notif = true;
 
-/*Macros*/
+/*      */
 #define VDD_DIG_ACTIVE		(5)
 #define VDD_MEM_ACTIVE		(1050000)
 #define MAX_RS_NAME		(16)
@@ -96,7 +94,7 @@ static ssize_t msm_lpm_resource_attr_store(struct kobject *kobj,
 	__ATTR(_name, S_IRUGO|S_IWUSR, \
 		msm_lpm_resource_attr_show, msm_lpm_resource_attr_store)
 
-/*Data structures*/
+/*               */
 struct msm_lpm_rs_data {
 	uint32_t type;
 	uint32_t id;
@@ -204,7 +202,7 @@ static struct notifier_block __refdata msm_lpm_cpu_nblk = {
 
 static DEFINE_SPINLOCK(msm_lpm_sysfs_lock);
 
-/* Attribute Definitions */
+/*                       */
 static struct attribute *msm_lpm_attributes[] = {
 	&msm_lpm_vdd_dig.ko_attr.attr,
 	&msm_lpm_vdd_mem.ko_attr.attr,
@@ -229,7 +227,7 @@ static struct attribute_group msm_lpm_rpm_ctl_attr_group = {
 #define GET_RS_FROM_ATTR(attr) \
 	(container_of(attr, struct msm_lpm_resource, ko_attr))
 
-/* RPM */
+/*     */
 static struct msm_rpm_request *msm_lpm_create_rpm_request
 				(uint32_t rsc_type, uint32_t rsc_id)
 {
@@ -278,7 +276,7 @@ static int msm_lpm_send_sleep_data(struct msm_rpm_request *handle,
 	return ret;
 }
 
-/* RPM Notifier */
+/*              */
 static int msm_lpm_rpm_callback(struct notifier_block *rpm_nb,
 					unsigned long action,
 					void *rpm_notif)
@@ -303,7 +301,7 @@ static int msm_lpm_rpm_callback(struct notifier_block *rpm_nb,
 	return NOTIFY_OK;
 }
 
-/* SYSFS */
+/*       */
 static ssize_t msm_lpm_resource_attr_show(
 	struct kobject *kobj, struct kobj_attribute *attr, char *buf)
 {
@@ -353,8 +351,8 @@ static ssize_t msm_lpm_resource_attr_store(struct kobject *kobj,
 	return count;
 }
 
-/* lpm resource handling functions */
-/* Common */
+/*                                 */
+/*        */
 static void msm_lpm_notify_common(struct msm_rpm_notifier_data *cb,
 				struct msm_lpm_resource *rs)
 {
@@ -380,7 +378,7 @@ static void msm_lpm_notify_common(struct msm_rpm_notifier_data *cb,
 	}
 }
 
-/* L2 */
+/*    */
 static bool msm_lpm_beyond_limits_l2(struct msm_rpmrs_limits *limits)
 {
 	uint32_t l2;
@@ -450,7 +448,7 @@ static void msm_lpm_flush_l2(int notify_rpm)
 				__func__, lpm);
 }
 
-/* RPM CTL */
+/*         */
 static void msm_lpm_flush_rpm_ctl(int notify_rpm)
 {
 	struct msm_lpm_resource *rs = &msm_lpm_rpm_ctl;
@@ -459,7 +457,7 @@ static void msm_lpm_flush_rpm_ctl(int notify_rpm)
 				(uint8_t *)&rs->sleep_value);
 }
 
-/*VDD Dig*/
+/*       */
 static bool msm_lpm_beyond_limits_vdd_dig(struct msm_rpmrs_limits *limits)
 {
 	bool ret = true;
@@ -513,7 +511,7 @@ static void msm_lpm_notify_vdd_dig(struct msm_rpm_notifier_data
 	msm_lpm_notify_common(rpm_notifier_cb, rs);
 }
 
-/*VDD Mem*/
+/*       */
 static bool msm_lpm_beyond_limits_vdd_mem(struct msm_rpmrs_limits *limits)
 {
 	bool ret = true;
@@ -567,7 +565,7 @@ static void msm_lpm_notify_vdd_mem(struct msm_rpm_notifier_data
 	msm_lpm_notify_common(rpm_notifier_cb, rs);
 }
 
-/*PXO*/
+/*   */
 static bool msm_lpm_beyond_limits_pxo(struct msm_rpmrs_limits *limits)
 {
 	bool ret = true;
@@ -629,7 +627,7 @@ static inline bool msm_lpm_use_mpm(struct msm_rpmrs_limits *limits)
 	return (limits->pxo == MSM_LPM_PXO_OFF);
 }
 
-/* LPM levels interface */
+/*                      */
 bool msm_lpm_level_beyond_limit(struct msm_rpmrs_limits *limits)
 {
 	int i;
@@ -680,9 +678,9 @@ int msm_lpmrs_enter_sleep(uint32_t sclk_count, struct msm_rpmrs_limits *limits,
 void msm_lpmrs_exit_sleep(struct msm_rpmrs_limits *limits,
 		bool from_idle, bool notify_rpm, bool collapsed)
 {
-	/* MPM exit sleep
-	if (msm_lpm_use_mpm(limits))
-		msm_mpm_exit_sleep(from_idle);*/
+	/*               
+                             
+                                */
 
 	msm_spm_l2_set_low_power_mode(MSM_SPM_MODE_DISABLED, notify_rpm);
 }
@@ -706,7 +704,7 @@ static int msm_lpm_cpu_callback(struct notifier_block *cpu_nb,
 	return NOTIFY_OK;
 }
 
-/* RPM CTL */
+/*         */
 static int __devinit msm_lpm_init_rpm_ctl(void)
 {
 	struct msm_lpm_resource *rs = &msm_lpm_rpm_ctl;
@@ -848,7 +846,7 @@ static int __devinit msm_lpmrs_probe(struct platform_device *pdev)
 	msm_rpm_register_notifier(&msm_lpm_rpm_nblk);
 	msm_lpm_init_rpm_ctl();
 	register_hotcpu_notifier(&msm_lpm_cpu_nblk);
-	/* For UP mode, set the default to HSFS OPEN*/
+	/*                                          */
 	if (num_possible_cpus() == 1) {
 		msm_lpm_l2.rs_data.default_value = MSM_LPM_L2_CACHE_HSFS_OPEN;
 		msm_lpm_l2.rs_data.value = MSM_LPM_L2_CACHE_HSFS_OPEN;

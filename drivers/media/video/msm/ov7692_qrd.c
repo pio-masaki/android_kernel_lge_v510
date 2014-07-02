@@ -21,41 +21,41 @@
 #include <mach/gpio.h>
 #include "ov7692.h"
 
-/*=============================================================
-    SENSOR REGISTER DEFINES
-==============================================================*/
+/*                                                             
+                           
+                                                              */
 #define Q8    0x00000100
 
-/* Omnivision8810 product ID register address */
+/*                                            */
 #define REG_OV7692_MODEL_ID_MSB                       0x0A
 #define REG_OV7692_MODEL_ID_LSB                       0x0B
 
 #define OV7692_MODEL_ID                       0x7692
-/* Omnivision8810 product ID */
+/*                           */
 
-/* Time in milisecs for waiting for the sensor to reset */
+/*                                                      */
 #define OV7692_RESET_DELAY_MSECS    66
 #define OV7692_DEFAULT_CLOCK_RATE   24000000
-/* Registers*/
+/*          */
 
-/* Color bar pattern selection */
+/*                             */
 #define OV7692_COLOR_BAR_PATTERN_SEL_REG     0x82
-/* Color bar enabling control */
+/*                            */
 #define OV7692_COLOR_BAR_ENABLE_REG           0x601
-/* Time in milisecs for waiting for the sensor to reset*/
+/*                                                     */
 #define OV7692_RESET_DELAY_MSECS    66
 
 static int ov7692_pwdn_gpio;
 static int ov7692_reset_gpio;
 
 
-/*============================================================================
-			DATA DECLARATIONS
-============================================================================*/
+/*                                                                            
+                    
+                                                                            */
 
 
 static bool OV7692_CSI_CONFIG;
-/* 816x612, 24MHz MCLK 96MHz PCLK */
+/*                                */
 uint32_t OV7692_FULL_SIZE_WIDTH        = 640;
 uint32_t OV7692_FULL_SIZE_HEIGHT       = 480;
 
@@ -75,8 +75,8 @@ static struct  i2c_client *ov7692_client;
 struct ov7692_ctrl_t {
 	const struct  msm_camera_sensor_info *sensordata;
 	uint32_t sensormode;
-	uint32_t fps_divider;        /* init to 1 * 0x00000400 */
-	uint32_t pict_fps_divider;    /* init to 1 * 0x00000400 */
+	uint32_t fps_divider;        /*                        */
+	uint32_t pict_fps_divider;    /*                        */
 	uint32_t fps;
 	int32_t  curr_lens_pos;
 	uint32_t curr_step_pos;
@@ -97,7 +97,7 @@ static int16_t ov7692_effect = CAMERA_EFFECT_OFF;
 static unsigned int SAT_U = 0x80;
 static unsigned int SAT_V = 0x80;
 
-/*=============================================================*/
+/*                                                             */
 
 static int ov7692_i2c_rxdata(unsigned short saddr,
 		unsigned char *rxdata, int length)
@@ -244,7 +244,7 @@ static int32_t ov7692_video_config(int mode)
 {
 	int32_t rc = 0;
 	int rt;
-	/* change sensor resolution if needed */
+	/*                                    */
 	rt = RES_PREVIEW;
 
 	CDBG("%s\n", __func__);
@@ -397,7 +397,7 @@ static int ov7692_set_saturation(int saturation)
 		}
 	}
 
-	/*for recover saturation level when change special effect*/
+	/*                                                       */
 	switch (saturation) {
 	case CAMERA_SATURATION_LV0:
 		CDBG("--CAMERA--CAMERA_SATURATION_LV0\n");
@@ -463,11 +463,11 @@ static long ov7692_set_effect(int mode, int effect)
 	case SENSOR_HFR_60FPS_MODE:
 		break;
 	case SENSOR_HFR_90FPS_MODE:
-		/* Context A Special Effects */
+		/*                           */
 		CDBG("-CAMERA- %s ...SENSOR_PREVIEW_MODE\n", __func__);
 		break;
 	case SENSOR_SNAPSHOT_MODE:
-		/* Context B Special Effects */
+		/*                           */
 		CDBG("-CAMERA- %s ...SENSOR_SNAPSHOT_MODE\n", __func__);
 		break;
 	default:
@@ -478,11 +478,11 @@ static long ov7692_set_effect(int mode, int effect)
 	case CAMERA_EFFECT_OFF: {
 		CDBG("--CAMERA-- %s ...CAMERA_EFFECT_OFF\n", __func__);
 		rc = OV7692Core_WritePREG(ov7692_effect_normal_tbl);
-		/* for recover saturation level
-		 when change special effect*/
+		/*                             
+                             */
 		ov7692_i2c_write_b_sensor(0xda, SAT_U);
-		/* for recover saturation level
-		when change special effect*/
+		/*                             
+                            */
 		ov7692_i2c_write_b_sensor(0xdb, SAT_V);
 		break;
 	}
@@ -530,7 +530,7 @@ static long ov7692_set_effect(int mode, int effect)
 	}
 	}
 	ov7692_effect = effect;
-	/*Refresh Sequencer */
+	/*                  */
 	CDBG("--CAMERA-- %s ...(End)\n", __func__);
 	return rc;
 }
@@ -731,7 +731,7 @@ static void ov7692_sw_reset(void)
 static void ov7692_hw_reset(void)
 {
 	CDBG("--CAMERA-- %s ... (Start...)\n", __func__);
-	gpio_set_value(ov7692_reset_gpio, 1);   /*reset camera reset pin*/
+	gpio_set_value(ov7692_reset_gpio, 1);   /*                      */
 	usleep_range(5000, 5100);
 	gpio_set_value(ov7692_reset_gpio, 0);
 	usleep_range(5000, 5100);
@@ -747,11 +747,11 @@ static int ov7692_probe_init_sensor(const struct msm_camera_sensor_info *data)
 	uint8_t model_id_msb, model_id_lsb = 0;
 	uint16_t model_id = 0;
 	int32_t rc = 0;
-	/*The reset pin is not physically connected to the sensor.
-	  The standby pin will do the reset hence there is no need
-	  to request the gpio reset*/
+	/*                                                        
+                                                           
+                            */
 
-	/* Read sensor Model ID: */
+	/*                       */
 	rc = ov7692_i2c_read(REG_OV7692_MODEL_ID_MSB, &model_id_msb, 1);
 	if (rc < 0)
 		goto init_probe_fail;
@@ -761,7 +761,7 @@ static int ov7692_probe_init_sensor(const struct msm_camera_sensor_info *data)
 	model_id = (model_id_msb << 8) | ((model_id_lsb & 0x00FF)) ;
 	CDBG("ov7692 model_id = 0x%x, 0x%x, 0x%x\n",
 			model_id, model_id_msb, model_id_lsb);
-	/* 4. Compare sensor ID to OV7692 ID: */
+	/*                                    */
 	if (model_id != OV7692_MODEL_ID) {
 		rc = -ENODEV;
 		goto init_probe_fail;
@@ -796,11 +796,11 @@ int ov7692_sensor_open_init(const struct msm_camera_sensor_info *data)
 
 	if (data)
 		ov7692_ctrl->sensordata = data;
-	/* turn on LDO for PVT */
+	/*                     */
 	if (data->pmic_gpio_enable)
 		lcd_camera_power_onoff(1);
 
-	/* enable mclk first */
+	/*                   */
 
 	msm_camio_clk_rate_set(24000000);
 	msleep(20);
@@ -832,7 +832,7 @@ init_done:
 
 static int ov7692_init_client(struct i2c_client *client)
 {
-	/* Initialize the MSM_CAMI2C Chip */
+	/*                                */
 	init_waitqueue_head(&ov7692_wait_queue);
 	return 0;
 }
@@ -911,11 +911,11 @@ int ov7692_sensor_config(void __user *argp)
 		break;
 	case CFG_START:
 		CDBG("--CAMERA-- CFG_START (Not Support) !!\n");
-		/* Not Support */
+		/*             */
 		break;
 	case CFG_PWR_UP:
 		CDBG("--CAMERA-- CFG_PWR_UP (Not Support) !!\n");
-		/* Not Support */
+		/*             */
 		break;
 	case CFG_PWR_DOWN:
 		CDBG("--CAMERA-- CFG_PWR_DOWN !!\n");
@@ -923,7 +923,7 @@ int ov7692_sensor_config(void __user *argp)
 		break;
 	case CFG_WRITE_EXPOSURE_GAIN:
 		CDBG("--CAMERA-- CFG_WRITE_EXPOSURE_GAIN (Not Support) !!\n");
-		/* Not Support */
+		/*             */
 		break;
 	case CFG_SET_DEFAULT_FOCUS:
 		CDBG("--CAMERA-- CFG_SET_DEFAULT_FOCUS (Not Implement) !!\n");
@@ -933,23 +933,23 @@ int ov7692_sensor_config(void __user *argp)
 		break;
 	case CFG_REGISTER_TO_REAL_GAIN:
 		CDBG("--CAMERA-- CFG_REGISTER_TO_REAL_GAIN (Not Support) !!\n");
-		/* Not Support */
+		/*             */
 		break;
 	case CFG_REAL_TO_REGISTER_GAIN:
 		CDBG("--CAMERA-- CFG_REAL_TO_REGISTER_GAIN (Not Support) !!\n");
-		/* Not Support */
+		/*             */
 		break;
 	case CFG_SET_FPS:
 		CDBG("--CAMERA-- CFG_SET_FPS (Not Support) !!\n");
-		/* Not Support */
+		/*             */
 		break;
 	case CFG_SET_PICT_FPS:
 		CDBG("--CAMERA-- CFG_SET_PICT_FPS (Not Support) !!\n");
-		/* Not Support */
+		/*             */
 		break;
 	case CFG_SET_BRIGHTNESS:
 		CDBG("--CAMERA-- CFG_SET_BRIGHTNESS  !!\n");
-		/* rc = ov7692_set_brightness(cdata.cfg.brightness); */
+		/*                                                   */
 		break;
 	case CFG_SET_CONTRAST:
 		CDBG("--CAMERA-- CFG_SET_CONTRAST  !!\n");
@@ -957,11 +957,11 @@ int ov7692_sensor_config(void __user *argp)
 		break;
 	case CFG_SET_ZOOM:
 		CDBG("--CAMERA-- CFG_SET_ZOOM (Not Support) !!\n");
-		/* Not Support */
+		/*             */
 		break;
 	case CFG_SET_EXPOSURE_MODE:
 		CDBG("--CAMERA-- CFG_SET_EXPOSURE_MODE !!\n");
-		/* rc = ov7692_set_exposure_mode(cdata.cfg.ae_mode); */
+		/*                                                   */
 		break;
 	case CFG_SET_WB:
 		CDBG("--CAMERA-- CFG_SET_WB!!\n");
@@ -975,51 +975,51 @@ int ov7692_sensor_config(void __user *argp)
 		break;
 	case CFG_SET_EXP_GAIN:
 		CDBG("--CAMERA-- CFG_SET_EXP_GAIN (Not Support) !!\n");
-		/* Not Support */
+		/*             */
 		break;
 	case CFG_SET_PICT_EXP_GAIN:
 		CDBG("--CAMERA-- CFG_SET_PICT_EXP_GAIN (Not Support) !!\n");
-		/* Not Support */
+		/*             */
 		break;
 	case CFG_SET_LENS_SHADING:
 		CDBG("--CAMERA-- CFG_SET_LENS_SHADING !!\n");
-		/* rc = ov7692_lens_shading_enable(cdata.cfg.lens_shading); */
+		/*                                                          */
 		break;
 	case CFG_GET_PICT_FPS:
 		CDBG("--CAMERA-- CFG_GET_PICT_FPS (Not Support) !!\n");
-		/* Not Support */
+		/*             */
 		break;
 	case CFG_GET_PREV_L_PF:
 		CDBG("--CAMERA-- CFG_GET_PREV_L_PF (Not Support) !!\n");
-		/* Not Support */
+		/*             */
 		break;
 	case CFG_GET_PREV_P_PL:
 		CDBG("--CAMERA-- CFG_GET_PREV_P_PL (Not Support) !!\n");
-		/* Not Support */
+		/*             */
 		break;
 	case CFG_GET_PICT_L_PF:
 		CDBG("--CAMERA-- CFG_GET_PICT_L_PF (Not Support) !!\n");
-		/* Not Support */
+		/*             */
 		break;
 	case CFG_GET_PICT_P_PL:
 		CDBG("--CAMERA-- CFG_GET_PICT_P_PL (Not Support) !!\n");
-		/* Not Support */
+		/*             */
 		break;
 	case CFG_GET_AF_MAX_STEPS:
 		CDBG("--CAMERA-- CFG_GET_AF_MAX_STEPS (Not Support) !!\n");
-		/* Not Support */
+		/*             */
 		break;
 	case CFG_GET_PICT_MAX_EXP_LC:
 		CDBG("--CAMERA-- CFG_GET_PICT_MAX_EXP_LC (Not Support) !!\n");
-		/* Not Support */
+		/*             */
 		break;
 	case CFG_SEND_WB_INFO:
 		CDBG("--CAMERA-- CFG_SEND_WB_INFO (Not Support) !!\n");
-		/* Not Support */
+		/*             */
 		break;
 	case CFG_SENSOR_INIT:
 		CDBG("--CAMERA-- CFG_SENSOR_INIT (Not Support) !!\n");
-		/* Not Support */
+		/*             */
 		break;
 	case CFG_SET_SATURATION:
 		CDBG("--CAMERA-- CFG_SET_SATURATION !!\n");
@@ -1031,17 +1031,17 @@ int ov7692_sensor_config(void __user *argp)
 		break;
 	case CFG_SET_TOUCHAEC:
 		CDBG("--CAMERA-- CFG_SET_TOUCHAEC!!\n");
-		/* ov7692_set_touchaec(cdata.cfg.aec_cord.x,
-			 cdata.cfg.aec_cord.y); */
+		/*                                          
+                           */
 		rc = 0 ;
 		break;
 	case CFG_SET_AUTO_FOCUS:
 		CDBG("--CAMERA-- CFG_SET_AUTO_FOCUS (Not Support) !!\n");
-		/* Not Support */
+		/*             */
 		break;
 	case CFG_SET_AUTOFLASH:
 		CDBG("--CAMERA-- CFG_SET_AUTOFLASH (Not Support) !!\n");
-		/* Not Support */
+		/*             */
 		break;
 	case CFG_SET_EXPOSURE_COMPENSATION:
 		CDBG("--CAMERA-- CFG_SET_EXPOSURE_COMPENSATION !\n");
@@ -1110,7 +1110,7 @@ static int ov7692_sensor_probe(const struct msm_camera_sensor_info *info,
 		CDBG("%s: gpio init failed\n", __func__);
 		goto probe_fail;
 	}
-	/* turn on LDO for PVT */
+	/*                     */
 	if (info->pmic_gpio_enable)
 		lcd_camera_power_onoff(1);
 
@@ -1138,7 +1138,7 @@ static int ov7692_sensor_probe(const struct msm_camera_sensor_info *info,
 	s->s_camera_type = FRONT_CAMERA_2D;
 	s->s_mount_angle = info->sensor_platform_info->mount_angle;
 
-	/* ov7692_sw_reset(); */
+	/*                    */
 	ov7692_power_down();
 
 	if (info->pmic_gpio_enable)

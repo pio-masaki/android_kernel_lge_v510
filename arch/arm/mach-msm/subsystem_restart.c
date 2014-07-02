@@ -84,7 +84,7 @@ static DEFINE_MUTEX(subsystem_list_lock);
 static DEFINE_MUTEX(soc_order_reg_lock);
 static DEFINE_MUTEX(restart_log_mutex);
 
-/* SOC specific restart orders go here */
+/*                                     */
 
 #define DEFINE_SINGLE_RESTART_ORDER(name, order)		\
 	static struct subsys_soc_restart_order __##name = {	\
@@ -96,7 +96,7 @@ static DEFINE_MUTEX(restart_log_mutex);
 		&__##name,					\
 	}
 
-/* MSM 8x60 restart ordering info */
+/*                                */
 static const char * const _order_8x60_all[] = {
 	"external_modem",  "modem", "lpass"
 };
@@ -105,7 +105,7 @@ DEFINE_SINGLE_RESTART_ORDER(orders_8x60_all, _order_8x60_all);
 static const char * const _order_8x60_modems[] = {"external_modem", "modem"};
 DEFINE_SINGLE_RESTART_ORDER(orders_8x60_modems, _order_8x60_modems);
 
-/*SGLTE restart ordering info*/
+/*                           */
 static const char * const order_8960_sglte[] = {"external_modem",
 						"modem"};
 
@@ -119,40 +119,13 @@ static struct subsys_soc_restart_order *restart_orders_8960_sglte[] = {
 	&restart_orders_8960_fusion_sglte,
 	};
 
-/* SGLTE2 restart ordering info*/
-static const char * const order_8064_sglte2[] = {"external_modem",
-						"external_modem_mdm"};
-
-static struct subsys_soc_restart_order restart_orders_8064_fusion_sglte2 = {
-	.subsystem_list = order_8064_sglte2,
-	.count = ARRAY_SIZE(order_8064_sglte2),
-	.subsys_ptrs = {[ARRAY_SIZE(order_8064_sglte2)] = NULL}
-	};
-
-static struct subsys_soc_restart_order *restart_orders_8064_sglte2[] = {
-	&restart_orders_8064_fusion_sglte2,
-	};
-
-/* MSM 8960 restart ordering info */
-static const char * const order_8960[] = {"modem", "lpass"};
-
-static struct subsys_soc_restart_order restart_orders_8960_one = {
-	.subsystem_list = order_8960,
-	.count = ARRAY_SIZE(order_8960),
-	.subsys_ptrs = {[ARRAY_SIZE(order_8960)] = NULL}
-	};
-
-static struct subsys_soc_restart_order *restart_orders_8960[] = {
-	&restart_orders_8960_one,
-};
-
-/* These will be assigned to one of the sets above after
- * runtime SoC identification.
+/*                                                      
+                              
  */
 static struct subsys_soc_restart_order **restart_orders;
 static int n_restart_orders;
 
-static int restart_level = RESET_SOC;
+static int restart_level = RESET_SUBSYS_INDEPENDENT;
 
 int get_restart_level()
 {
@@ -241,7 +214,7 @@ static void do_epoch_check(struct subsys_device *dev)
 	max_restarts_check = max_restarts;
 	max_history_time_check = max_history_time;
 
-	/* Check if epoch checking is enabled */
+	/*                                    */
 	if (!max_restarts_check)
 		goto out;
 
@@ -280,7 +253,7 @@ static void do_epoch_check(struct subsys_device *dev)
 #if defined(CONFIG_LGE_CRASH_HANDLER)
 			msm_set_restart_mode(ssr_magic_number | SUB_UNAB_THD);
 #endif
-			panic("Subsystems have crashed %d times in less than "\
+			WARN(1, "Subsystems have crashed %d times in less than "\
 				"%ld seconds!", max_restarts_check,
 				max_history_time_check);
 		}
@@ -326,7 +299,7 @@ static void subsystem_shutdown(struct subsys_device *dev, void *data)
 #if defined(CONFIG_LGE_CRASH_HANDLER)
 		msm_set_restart_mode(ssr_magic_number | SUB_THD_F_SD);
 #endif
-		panic("subsys-restart: [%p]: Failed to shutdown %s!",
+		WARN(1, "subsys-restart: [%p]: Failed to shutdown %s!",
 			current, name);
 	}
 }
@@ -352,7 +325,7 @@ static void subsystem_powerup(struct subsys_device *dev, void *data)
 #if defined(CONFIG_LGE_CRASH_HANDLER)
 		msm_set_restart_mode(ssr_magic_number | SUB_THD_F_PWR);
 #endif
-		panic("[%p]: Failed to powerup %s!", current, name);
+		WARN(1, "[%p]: Failed to powerup %s!", current, name);
 	}
 }
 
@@ -375,10 +348,10 @@ static void subsystem_restart_wq_func(struct work_struct *work)
 		soc_restart_order = dev->restart_order;
 
 	/*
-	 * It's OK to not take the registration lock at this point.
-	 * This is because the subsystem list inside the relevant
-	 * restart order is not being traversed.
-	 */
+                                                            
+                                                          
+                                         
+  */
 	if (!soc_restart_order) {
 		list = &dev;
 		count = 1;
@@ -394,35 +367,35 @@ static void subsystem_restart_wq_func(struct work_struct *work)
 	pr_debug("[%p]: Attempting to get shutdown lock!\n", current);
 
 	/*
-	 * Try to acquire shutdown_lock. If this fails, these subsystems are
-	 * already being restarted - return.
-	 */
+                                                                     
+                                     
+  */
 	if (!mutex_trylock(shutdown_lock))
 		goto out;
 
 	pr_debug("[%p]: Attempting to get powerup lock!\n", current);
 
 	/*
-	 * Now that we've acquired the shutdown lock, either we're the first to
-	 * restart these subsystems or some other thread is doing the powerup
-	 * sequence for these subsystems. In the latter case, panic and bail
-	 * out, since a subsystem died in its powerup sequence.
-	 */
+                                                                        
+                                                                      
+                                                                     
+                                                        
+  */
 	if (!mutex_trylock(powerup_lock)) {
 #if defined(CONFIG_LGE_CRASH_HANDLER)
 		msm_set_restart_mode(ssr_magic_number | SUB_THD_F_PWR);
 #endif
-		panic("%s[%p]: Subsystem died during powerup!",
+		WARN(1, "%s[%p]: Subsystem died during powerup!",
 						__func__, current);
 	}
 
 	do_epoch_check(dev);
 
 	/*
-	 * It's necessary to take the registration lock because the subsystem
-	 * list in the SoC restart order will be traversed and it shouldn't be
-	 * changed until _this_ restart sequence completes.
-	 */
+                                                                      
+                                                                       
+                                                    
+  */
 	mutex_lock(&soc_order_reg_lock);
 
 	pr_debug("[%p]: Starting restart sequence for %s\n", current,
@@ -432,14 +405,14 @@ static void subsystem_restart_wq_func(struct work_struct *work)
 	send_notification_to_order(list, count, SUBSYS_AFTER_SHUTDOWN);
 
 	/*
-	 * Now that we've finished shutting down these subsystems, release the
-	 * shutdown lock. If a subsystem restart request comes in for a
-	 * subsystem in _this_ restart order after the unlock below, and
-	 * before the powerup lock is released, panic and bail out.
-	 */
+                                                                       
+                                                                
+                                                                 
+                                                            
+  */
 	mutex_unlock(shutdown_lock);
 
-	/* Collect ram dumps for all subsystems in order here */
+	/*                                                    */
 	for_each_subsys_device(list, count, NULL, subsystem_ramdump);
 
 	send_notification_to_order(list, count, SUBSYS_BEFORE_POWERUP);
@@ -493,10 +466,10 @@ int subsystem_restart_dev(struct subsys_device *dev)
 #endif
 
 	/*
-	 * If a system reboot/shutdown is underway, ignore subsystem errors.
-	 * However, print a message so that we know that a subsystem behaved
-	 * unexpectedly here.
-	 */
+                                                                     
+                                                                     
+                      
+  */
 	if (system_state == SYSTEM_RESTART
 		|| system_state == SYSTEM_POWER_OFF) {
 		pr_err("%s crashed during a system poweroff/shutdown.\n", name);
@@ -513,19 +486,18 @@ int subsystem_restart_dev(struct subsys_device *dev)
 		__subsystem_restart_dev(dev);
 		break;
 	case RESET_SOC:
-		// 2013.08.01 real-wifi@lge.com[wo0gi] QCT patch : SSR(SubSystem Reset 3) [START]
+		/*                                            */
 		if (strncmp(name, "wcnss", 5) == 0) {
 			__subsystem_restart_dev(dev);
 			break;
-		} 
-		// 2013.08.01 real-wifi@lge.com[wo0gi] QCT patch : SSR(SubSystem Reset 3) [END]
+		}
 #if defined(CONFIG_LGE_CRASH_HANDLER)
 		set_ssr_magic_number(name);
 		ssr_magic_number = get_ssr_magic_number();
 
 		msm_set_restart_mode(ssr_magic_number | SUB_RESET_SOC);
 #endif
-		panic("subsys-restart: Resetting the SoC - %s crashed.", name);
+		WARN(1, "subsys-restart: Resetting the SoC - %s crashed.", name);
 		break;
 	default:
 #if defined(CONFIG_LGE_CRASH_HANDLER)
@@ -534,7 +506,7 @@ int subsystem_restart_dev(struct subsys_device *dev)
 
 		msm_set_restart_mode(ssr_magic_number | SUB_UNKNOWN);
 #endif
-		panic("subsys-restart: Unknown restart level!\n");
+		pr_err("subsys-restart: Unknown restart level!\n");
 		break;
 	}
 
@@ -634,10 +606,6 @@ static int __init ssr_init_soc_restart_orders(void)
 
 		restart_orders = orders_8x60_all;
 		n_restart_orders = ARRAY_SIZE(orders_8x60_all);
-	} else if(cpu_is_msm8960() || cpu_is_msm8930() || cpu_is_msm8930aa() ||
-	    cpu_is_msm9615() || cpu_is_apq8064() || cpu_is_msm8627()) {
-		restart_orders = restart_orders_8960;
-		n_restart_orders = ARRAY_SIZE(restart_orders_8960);
 	}
 
 	if (socinfo_get_platform_subtype() == PLATFORM_SUBTYPE_SGLTE) {
@@ -645,14 +613,13 @@ static int __init ssr_init_soc_restart_orders(void)
 		n_restart_orders = ARRAY_SIZE(restart_orders_8960_sglte);
 	}
 
-	if (socinfo_get_platform_subtype() == PLATFORM_SUBTYPE_SGLTE2) {
-		restart_orders = restart_orders_8064_sglte2;
-		n_restart_orders = ARRAY_SIZE(restart_orders_8064_sglte2);
-	}
-
 	for (i = 0; i < n_restart_orders; i++) {
 		mutex_init(&restart_orders[i]->powerup_lock);
 		mutex_init(&restart_orders[i]->shutdown_lock);
+	}
+
+	if (restart_orders == NULL || n_restart_orders < 1) {
+		WARN_ON(1);
 	}
 
 	return 0;
@@ -660,11 +627,12 @@ static int __init ssr_init_soc_restart_orders(void)
 
 static int __init subsys_restart_init(void)
 {
-	restart_level = RESET_SOC;
-
 	ssr_wq = alloc_workqueue("ssr_wq", WQ_CPU_INTENSIVE, 0);
-	if (!ssr_wq)
-		panic("%s: out of memory\n", __func__);
+	if (!ssr_wq) {
+		pr_err("%s: out of memory\n", __func__);
+		return -ENOMEM;
+	}
+
 
 	return ssr_init_soc_restart_orders();
 }

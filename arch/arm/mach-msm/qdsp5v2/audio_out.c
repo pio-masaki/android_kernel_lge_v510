@@ -66,7 +66,7 @@ struct audio {
 
 	uint8_t out_head;
 	uint8_t out_tail;
-	uint8_t out_needed; /* number of buffers the dsp is waiting for */
+	uint8_t out_needed; /*                                          */
 
 	atomic_t out_bytes;
 
@@ -74,7 +74,7 @@ struct audio {
 	struct mutex write_lock;
 	wait_queue_head_t wait;
 
-	/* configuration to use on next enable */
+	/*                                     */
 	uint32_t out_sample_rate;
 	uint32_t out_channel_mode;
 	uint32_t out_weight;
@@ -82,15 +82,15 @@ struct audio {
 	uint32_t device_events;
 	int16_t source;
 
-	/* data allocated for various buffers */
+	/*                                    */
 	char *data;
 	dma_addr_t phys;
 	void *map_v_write;
-	int teos; /* valid only if tunnel mode & no data left for decoder */
+	int teos; /*                                                      */
 	int opened;
 	int enabled;
 	int running;
-	int stopped; /* set when stopped, cleared on flush */
+	int stopped; /*                                    */
 	uint16_t dec_id;
 	int voice_state;
 
@@ -129,7 +129,7 @@ static void audio_out_listener(u32 evt_id, union auddev_evt_data *evt_payload,
 		MM_DBG("AUDDEV_EVT_VOICE_STATE_CHG, state = %d\n",
 						evt_payload->voice_state);
 		audio->voice_state = evt_payload->voice_state;
-		/* Voice uplink Rx case */
+		/*                      */
 		if (audio->running &&
 			(audio->source & AUDPP_MIXER_UPLINK_RX) &&
 			(audio->voice_state == VOICE_STATE_OFFCALL)) {
@@ -146,7 +146,7 @@ static void audio_out_listener(u32 evt_id, union auddev_evt_data *evt_payload,
 
 static void audio_prevent_sleep(struct audio *audio)
 {
-	MM_DBG("\n"); /* Macro prints the file name and function */
+	MM_DBG("\n"); /*                                         */
 	wake_lock(&audio->wakelock);
 	pm_qos_update_request(&audio->pm_qos_req,
 			      msm_cpuidle_get_deep_idle_latency());
@@ -156,7 +156,7 @@ static void audio_allow_sleep(struct audio *audio)
 {
 	pm_qos_update_request(&audio->pm_qos_req, PM_QOS_DEFAULT_VALUE);
 	wake_unlock(&audio->wakelock);
-	MM_DBG("\n"); /* Macro prints the file name and function */
+	MM_DBG("\n"); /*                                         */
 }
 
 static int audio_dsp_out_enable(struct audio *audio, int yes);
@@ -165,21 +165,21 @@ static int audio_dsp_send_buffer(struct audio *audio, unsigned id,
 
 static void audio_dsp_event(void *private, unsigned id, uint16_t *msg);
 
-/* must be called with audio->lock held */
+/*                                      */
 static int audio_enable(struct audio *audio)
 {
-	MM_DBG("\n"); /* Macro prints the file name and function */
+	MM_DBG("\n"); /*                                         */
 
 	if (audio->enabled)
 		return 0;
 
-	/* refuse to start if we're not ready */
+	/*                                    */
 	if (!audio->out[0].used || !audio->out[1].used)
 		return -EIO;
 
-	/* we start buffers 0 and 1, so buffer 0 will be the
-	 * next one the dsp will want
-	 */
+	/*                                                  
+                              
+  */
 	audio->out_tail = 0;
 	audio->out_needed = 0;
 
@@ -196,10 +196,10 @@ static int audio_enable(struct audio *audio)
 	return 0;
 }
 
-/* must be called with audio->lock held */
+/*                                      */
 static int audio_disable(struct audio *audio)
 {
-	MM_DBG("\n"); /* Macro prints the file name and function */
+	MM_DBG("\n"); /*                                         */
 	if (audio->enabled) {
 		audio->enabled = 0;
 		audio_dsp_out_enable(audio, 0);
@@ -213,7 +213,7 @@ static int audio_disable(struct audio *audio)
 	return 0;
 }
 
-/* ------------------- dsp --------------------- */
+/*                                               */
 static void audio_dsp_event(void *private, unsigned id, uint16_t *msg)
 {
 	struct audio *audio = private;
@@ -241,9 +241,9 @@ static void audio_dsp_event(void *private, unsigned id, uint16_t *msg)
 			audio->out[idx].used = 0;
 			frame = audio->out + audio->out_tail;
 			if (frame->used) {
-				/* Reset teos flag to avoid stale
-				 * PCMDMAMISS been considered
-				 */
+				/*                               
+                                 
+     */
 				audio->teos = 0;
 				audio_dsp_send_buffer(
 					audio, audio->out_tail, frame->used);
@@ -257,8 +257,8 @@ static void audio_dsp_event(void *private, unsigned id, uint16_t *msg)
 		break;
 	}
 	case AUDPP_MSG_PCMDMAMISSED:
-		/* prints only if 1 second is elapsed since the last time
-		 * this message has been printed */
+		/*                                                       
+                                   */
 		if (printk_timed_ratelimit(&pcmdmamsd_time, 1000))
 			printk(KERN_INFO "[%s:%s] PCMDMAMISSED %d\n",
 					__MM_FILE__, __func__, msg[0]);
@@ -339,7 +339,7 @@ static int audio_dsp_send_buffer(struct audio *audio, unsigned idx,
 	return audpp_send_queue2(&cmd, sizeof(cmd));
 }
 
-/* ------------------- device --------------------- */
+/*                                                  */
 static void audio_flush(struct audio *audio)
 {
 	audio->out[0].used = 0;
@@ -401,11 +401,11 @@ static long audio_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 		break;
 	case AUDIO_FLUSH:
 		if (audio->stopped) {
-			/* Make sure we're stopped and we wake any threads
-			 * that might be blocked holding the write_lock.
-			 * While audio->stopped write threads will always
-			 * exit immediately.
-			 */
+			/*                                                
+                                                   
+                                                    
+                       
+    */
 			wake_up(&audio->wait);
 			mutex_lock(&audio->write_lock);
 			audio_flush(audio);
@@ -463,7 +463,7 @@ static long audio_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 	return rc;
 }
 
-/* Only useful in tunnel-mode */
+/*                            */
 static int audio_fsync(struct file *file, loff_t ppos1, loff_t ppos2, int datasync)
 {
 	struct audio *audio = file->private_data;
@@ -474,10 +474,10 @@ static int audio_fsync(struct file *file, loff_t ppos1, loff_t ppos2, int datasy
 
 	mutex_lock(&audio->write_lock);
 
-	/* PCM DMAMISS message is sent only once in
-	 * hpcm interface. So, wait for buffer complete
-	 * and teos flag.
-	 */
+	/*                                         
+                                                
+                  
+  */
 	rc = wait_event_interruptible(audio->wait,
 		(!audio->out[0].used &&
 		!audio->out[1].used));
@@ -533,7 +533,7 @@ static ssize_t audio_write(struct file *file, const char __user *buf,
 			audio->voice_state, audio->source, audio->running);
 		return -EPERM;
 	}
-	/* just for this write, set us real-time */
+	/*                                       */
 	if (!task_has_rt_policy(current)) {
 		struct cred *new = prepare_creds();
 		cap_raise(new->cap_effective, CAP_SYS_NICE);
@@ -577,9 +577,9 @@ static ssize_t audio_write(struct file *file, const char __user *buf,
 		spin_lock_irqsave(&audio->dsp_lock, flags);
 		frame = audio->out + audio->out_tail;
 		if (frame->used && audio->out_needed) {
-			/* Reset teos flag to avoid stale
-			 * PCMDMAMISS been considered
-			 */
+			/*                               
+                                
+    */
 			audio->teos = 0;
 			audio_dsp_send_buffer(audio, audio->out_tail,
 					frame->used);
@@ -591,7 +591,7 @@ static ssize_t audio_write(struct file *file, const char __user *buf,
 
 	mutex_unlock(&audio->write_lock);
 
-	/* restore scheduling policy and priority */
+	/*                                        */
 	if (!rt_policy(old_policy)) {
 		struct sched_param v = { .sched_priority = old_prio };
 		if ((sched_setscheduler(current, old_policy, &v)) < 0)

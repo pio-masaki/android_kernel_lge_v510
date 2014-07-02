@@ -90,7 +90,7 @@ static int __init q5_debug_init(void)
 #ifdef CONFIG_DEBUG_FS
 	adsp_dentry = debugfs_create_file("q5_debug", S_IFREG | S_IRUGO,
 				NULL, (void *) NULL, &q5_debug_fops);
-#endif /* CONFIG_DEBUG_FS */
+#endif /*                 */
 	return 0;
 }
 device_initcall(q5_debug_init);

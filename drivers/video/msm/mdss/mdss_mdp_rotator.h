@@ -51,4 +51,4 @@ int mdss_mdp_rotator_queue(struct mdss_mdp_rotator_session *rot,
 int mdss_mdp_rotator_finish(struct mdss_mdp_rotator_session *rot);
 int mdss_mdp_rotator_ctl_busy_wait(struct mdss_mdp_ctl *ctl);
 
-#endif /* MDSS_MDP_ROTATOR_H */
+#endif /*                    */

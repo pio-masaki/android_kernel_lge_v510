@@ -1,7 +1,6 @@
 /*
   * Copyright (C) 2011,2012 LGE, Inc.
   *
-  * Author: Sungwoo Cho <sungwoo.cho@lge.com>
   *
   * This software is licensed under the terms of the GNU General
   * License version 2, as published by the Free Software Foundation,
@@ -34,24 +33,24 @@
 #include "devices.h"
 #include "board-mako.h"
 
-/* gpio and clock control for vibrator */
+/*                                     */
 #define REG_WRITEL(value, reg)  writel(value, (MSM_CLK_CTL_BASE+reg))
 #define REG_READL(reg)          readl((MSM_CLK_CTL_BASE+reg))
 
 #define GPn_MD_REG(n)           (0x2D00+32*(n))
 #define GPn_NS_REG(n)           (0x2D24+32*(n))
 
-/* When use SM100 with GP_CLK
-  170Hz motor : 22.4KHz - M=1, N=214 ,
-  230Hz motor : 29.4KHZ - M=1, N=163 ,
+/*                           
+                                      
+                                      
   */
 
-/* Vibrator GPIOs */
+/*                */
 #ifdef CONFIG_ANDROID_VIBRATOR
 #define GPIO_MOTOR_EN           PM8921_GPIO_PM_TO_SYS(33)
 #define GPIO_MOTOR_PWM          3
 
-#define GP_CLK_ID               0 /* gp clk 0 */
+#define GP_CLK_ID               0 /*          */
 #define GP_CLK_M_DEFAULT        1
 #define GP_CLK_N_DEFAULT        166
 #define GP_CLK_D_MAX            GP_CLK_N_DEFAULT
@@ -66,7 +65,7 @@ static struct gpiomux_setting vibrator_suspend_cfg_gpio3 = {
 };
 
 static struct gpiomux_setting vibrator_active_cfg = {
-	.func = GPIOMUX_FUNC_2, /*gp_mn:2 */
+	.func = GPIOMUX_FUNC_2, /*        */
 	.drv = GPIOMUX_DRV_2MA,
 	.pull = GPIOMUX_PULL_NONE,
 };
@@ -88,7 +87,7 @@ static DEFINE_MUTEX(vib_lock);
 
 static void vibrator_clock_init(void)
 {
-	/* Vote for XO clock */
+	/*                   */
 	vib_clock = msm_xo_get(MSM_XO_TCXO_D0, "vib_clock");
 	if (IS_ERR(vib_clock)) {
 		pr_warn("%s: Couldn't get TCXO_D0 vote for vibrator\n",
@@ -188,35 +187,35 @@ static int vibrator_pwm_set(int enable, int amp, int n_value)
 		}
 
 		REG_WRITEL(
-			(((M_VAL & 0xffU) << 16U) + /* M_VAL[23:16] */
-			((~(D_VAL << 1)) & 0xffU)),  /* D_VAL[7:0] */
+			(((M_VAL & 0xffU) << 16U) + /*              */
+			((~(D_VAL << 1)) & 0xffU)),  /*            */
 			GPn_MD_REG(clk_id));
 
 		REG_WRITEL(
-			((((~(n_value-M_VAL)) & 0xffU) << 16U) + /* N_VAL[23:16] */
-			(1U << 11U) +  /* CLK_ROOT_ENA[11]  : Enable(1) */
-			((D_INV & 0x01U) << 10U) +  /* CLK_INV[10]       : Disable(0) */
-			(1U << 9U) +   /* CLK_BRANCH_ENA[9] : Enable(1) */
-			(1U << 8U) +   /* NMCNTR_EN[8]      : Enable(1) */
-			(0U << 7U) +   /* MNCNTR_RST[7]     : Not Active(0) */
-			(2U << 5U) +   /* MNCNTR_MODE[6:5]  : Dual-edge mode(2) */
-			(3U << 3U) +   /* PRE_DIV_SEL[4:3]  : Div-4 (3) */
-			(5U << 0U)),   /* SRC_SEL[2:0]      : CXO (5)  */
+			((((~(n_value-M_VAL)) & 0xffU) << 16U) + /*              */
+			(1U << 11U) +  /*                               */
+			((D_INV & 0x01U) << 10U) +  /*                                */
+			(1U << 9U) +   /*                               */
+			(1U << 8U) +   /*                               */
+			(0U << 7U) +   /*                                   */
+			(2U << 5U) +   /*                                       */
+			(3U << 3U) +   /*                               */
+			(5U << 0U)),   /*                              */
 			GPn_NS_REG(clk_id));
 		pr_debug("%s: PWM is enable with M=%d N=%d D=%d\n",
 				__func__,
 				M_VAL, n_value, D_VAL);
 	} else {
 		REG_WRITEL(
-			((((~(n_value-M_VAL)) & 0xffU) << 16U) + /* N_VAL[23:16] */
-			(0U << 11U) +  /* CLK_ROOT_ENA[11]  : Disable(0) */
-			(0U << 10U) +  /* CLK_INV[10]	    : Disable(0) */
-			(0U << 9U) +	 /* CLK_BRANCH_ENA[9] : Disable(0) */
-			(0U << 8U) +   /* NMCNTR_EN[8]      : Disable(0) */
-			(0U << 7U) +   /* MNCNTR_RST[7]     : Not Active(0) */
-			(2U << 5U) +   /* MNCNTR_MODE[6:5]  : Dual-edge mode(2) */
-			(3U << 3U) +   /* PRE_DIV_SEL[4:3]  : Div-4 (3) */
-			(5U << 0U)),   /* SRC_SEL[2:0]      : CXO (5)  */
+			((((~(n_value-M_VAL)) & 0xffU) << 16U) + /*              */
+			(0U << 11U) +  /*                                */
+			(0U << 10U) +  /*                              */
+			(0U << 9U) +	 /*                                */
+			(0U << 8U) +   /*                                */
+			(0U << 7U) +   /*                                   */
+			(2U << 5U) +   /*                                       */
+			(3U << 3U) +   /*                               */
+			(5U << 0U)),   /*                              */
 			GPn_NS_REG(clk_id));
 		pr_debug("%s: PWM is disable\n", __func__);
 	}
@@ -240,7 +239,7 @@ static int vibrator_init(void)
 {
 	int rc;
 
-	/* GPIO function setting */
+	/*                       */
 	msm_gpiomux_install(gpio3_vibrator_configs,
 			ARRAY_SIZE(gpio3_vibrator_configs));
 
@@ -251,7 +250,7 @@ static int vibrator_init(void)
 		return rc;
 	}
 
-	vreg_l16 = regulator_get(NULL, "vibrator");   //2.6 ~ 3V
+	vreg_l16 = regulator_get(NULL, "vibrator");   //        
 	if (IS_ERR(vreg_l16)) {
 		rc = PTR_ERR(vreg_l16);
 		pr_err("%s: regulator get of vibrator failed\n",
@@ -289,7 +288,7 @@ static struct platform_device android_vibrator_device = {
 		.platform_data = &vibrator_data,
 	},
 };
-#endif /* CONFIG_ANDROID_VIBRATOR */
+#endif /*                         */
 
 static struct platform_device *misc_devices[] __initdata = {
 #ifdef CONFIG_ANDROID_VIBRATOR

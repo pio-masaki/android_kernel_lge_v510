@@ -27,28 +27,28 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 *====*====*====*====*====*====*====*====*====*====*====*====*====*====*====*/
-/*===========================================================================
+/*                                                                           
 
-                      EDIT HISTORY FOR FILE
+                                           
 
-This section contains comments describing changes made to this file.
-Notice that changes are listed in reverse chronological order.
+                                                                    
+                                                              
    
  
-$Header: //source/qcom/qct/multimedia2/AdspSvc/7XXX/qdsp5cmd/video/qdsp5jpegcmdi.h#2 $ $DateTime: 2008/07/30 10:50:23 $ $Author: pavanr $                     
-Revision History:                                            
-when       who     what, where, why
---------   ---     ----------------------------------------------------------
-06/09/08   sv      initial version
-===========================================================================*/
+                                                                                                                                                              
+                                                             
+                                   
+                                                                             
+                                  
+                                                                           */
 
 /*
- * ARM to JPEG configuration commands are passed through the
- * uPJpegCfgCmdQueue
+                                                            
+                    
  */
 
 /*
- * Command to configure JPEG Encoder
+                                    
  */
 
 #define	JPEG_CMD_ENC_CFG		0x0000
@@ -94,7 +94,7 @@ typedef struct {
 } __attribute__((packed)) jpeg_cmd_enc_cfg;
 
 /*
- * Command to configure JPEG Decoder
+                                    
  */
 
 #define	JPEG_CMD_DEC_CFG		0x0001
@@ -268,12 +268,12 @@ typedef struct {
 
 
 /*
- * ARM to JPEG configuration commands are passed through the
- * uPJpegActionCmdQueue
+                                                            
+                       
  */
 
 /*
- * Command to start the encode process
+                                      
  */
 
 #define	JPEG_CMD_ENC_ENCODE		0x0001
@@ -286,7 +286,7 @@ typedef struct {
 
 
 /*
- * Command to transition from current state of encoder to IDLE state
+                                                                    
  */
 
 #define	JPEG_CMD_ENC_IDLE		0x0006
@@ -299,7 +299,7 @@ typedef struct {
 
 
 /*
- * Command to inform the encoder that another buffer is ready
+                                                             
  */
 
 #define	JPEG_CMD_ENC_OP_CONSUMED	0x0002
@@ -314,7 +314,7 @@ typedef struct {
 
 
 /*
- * Command to start the decoding process
+                                        
  */
 
 #define	JPEG_CMD_DEC_DECODE		0x0003
@@ -327,7 +327,7 @@ typedef struct {
 
 
 /*
- * Command to transition from the current state of decoder to IDLE
+                                                                  
  */
 
 #define	JPEG_CMD_DEC_IDLE	0x0007
@@ -340,7 +340,7 @@ typedef struct {
 
 
 /*
- * Command to inform that an op buffer is ready for use
+                                                       
  */
 
 #define	JPEG_CMD_DEC_OP_CONSUMED	0x0004
@@ -356,7 +356,7 @@ typedef struct {
 
 
 /*
- * Command to pass a new ip buffer to the jpeg decoder
+                                                      
  */
 
 #define	JPEG_CMD_DEC_IP	0x0005

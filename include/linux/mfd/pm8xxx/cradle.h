@@ -1,7 +1,6 @@
 /* include/linux/mfd/pm8xxx/cradle.h
  *
  * Copyright (c) 2011-2012, LG Electronics Inc, All rights reserved.
- * Author: Fred Cho <fred.cho@lge.com>
  *
  * This software is licensed under the terms of the GNU General Public
  * License version 2, as published by the Free Software Foundation, and
@@ -16,16 +15,12 @@
 #ifndef __PM8XXX_CRADLE_H__
 #define __PM8XXX_CRADLE_H__
 
-//#define PM8XXX_CRADLE_DEV_NAME  "bu52014hfv"
-#define HALL_IC_DEV_NAME "bu52031nvx"
+#define PM8XXX_CRADLE_DEV_NAME "bu52014hfv"
 
 #define CRADLE_NO_DEV 		0
 #define CRADLE_DESKDOCK 	1
 #define CRADLE_CARKIT 		2
-
-#define HALL_IC_GPIO		7
-#define CRADLE_SMARTCOVER	5
-#define CRADLE_SMARTCOVER_NO_DEV	6
+#define CRADLE_POUCH 		256
 
 struct pm8xxx_cradle_platform_data {
 	int carkit_detect_pin;
@@ -35,10 +30,7 @@ struct pm8xxx_cradle_platform_data {
 	unsigned long irq_flags;
 };
 
-typedef void (*cradle_notify_handler) (int on); /* 1 : cover closed, 0 : cover opened */
-void cradle_install_notify_handler(cradle_notify_handler handler);
-
 void cradle_set_deskdock(int state);
 int cradle_get_deskdock(void);
 
-#endif /* __CRADLE_H__ */
+#endif /*              */

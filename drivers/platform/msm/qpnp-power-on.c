@@ -23,12 +23,12 @@
 #include <linux/input.h>
 #include <linux/log2.h>
 
-/* PON common register addresses */
+/*                               */
 #define QPNP_PON_RT_STS(base)		(base + 0x10)
 #define QPNP_PON_PULL_CTL(base)		(base + 0x70)
 #define QPNP_PON_DBC_CTL(base)		(base + 0x71)
 
-/* PON/RESET sources register addresses */
+/*                                      */
 #define QPNP_PON_KPDPWR_S1_TIMER(base)	(base + 0x40)
 #define QPNP_PON_KPDPWR_S2_TIMER(base)	(base + 0x41)
 #define QPNP_PON_KPDPWR_S2_CNTL(base)	(base + 0x42)
@@ -50,7 +50,7 @@
 #define QPNP_PON_RESIN_N_SET		BIT(1)
 #define QPNP_PON_RESIN_BARK_N_SET	BIT(4)
 
-/* Ranges */
+/*        */
 #define QPNP_PON_S1_TIMER_MAX		10256
 #define QPNP_PON_S2_TIMER_MAX		2000
 #define QPNP_PON_RESET_TYPE_MAX		0xF
@@ -137,11 +137,11 @@ qpnp_pon_input_dispatch(struct qpnp_pon *pon, u32 pon_type)
 	if (!cfg)
 		return -EINVAL;
 
-	/* Check if key reporting is supported */
+	/*                                     */
 	if (!cfg->key_code)
 		return 0;
 
-	/* check the RT status to get the current status of the line */
+	/*                                                           */
 	rc = spmi_ext_register_readl(pon->spmi->ctrl, pon->spmi->sid,
 				QPNP_PON_RT_STS(pon->base), &pon_rt_sts, 1);
 	if (rc) {
@@ -203,16 +203,16 @@ static void bark_work_func(struct work_struct *work)
 	struct qpnp_pon *pon =
 		container_of(work, struct qpnp_pon, bark_work.work);
 
-	/* enable reset */
+	/*              */
 	rc = qpnp_pon_masked_write(pon, QPNP_PON_RESIN_S2_CNTL(pon->base),
 				QPNP_PON_S2_CNTL_EN, QPNP_PON_S2_CNTL_EN);
 	if (rc) {
 		dev_err(&pon->spmi->dev, "Unable to configure S2 enable\n");
 		goto err_return;
 	}
-	/* bark RT status update delay */
+	/*                             */
 	msleep(100);
-	/* read the bark RT status */
+	/*                         */
 	rc = spmi_ext_register_readl(pon->spmi->ctrl, pon->spmi->sid,
 				QPNP_PON_RT_STS(pon->base), &pon_rt_sts, 1);
 	if (rc) {
@@ -226,12 +226,12 @@ static void bark_work_func(struct work_struct *work)
 			dev_err(&pon->spmi->dev, "Invalid config pointer\n");
 			goto err_return;
 		}
-		/* report the key event and enable the bark IRQ */
+		/*                                              */
 		input_report_key(pon->pon_input, cfg->key_code, 0);
 		input_sync(pon->pon_input);
 		enable_irq(cfg->bark_irq);
 	} else {
-		/* disable reset */
+		/*               */
 		rc = qpnp_pon_masked_write(pon,
 				QPNP_PON_RESIN_S2_CNTL(pon->base),
 				QPNP_PON_S2_CNTL_EN, 0);
@@ -240,7 +240,7 @@ static void bark_work_func(struct work_struct *work)
 				"Unable to configure S2 enable\n");
 			goto err_return;
 		}
-		/* re-arm the work */
+		/*                 */
 		schedule_delayed_work(&pon->bark_work, QPNP_KEY_STATUS_DELAY);
 	}
 
@@ -254,10 +254,10 @@ static irqreturn_t qpnp_resin_bark_irq(int irq, void *_pon)
 	struct qpnp_pon *pon = _pon;
 	struct qpnp_pon_config *cfg;
 
-	/* disable the bark interrupt */
+	/*                            */
 	disable_irq_nosync(irq);
 
-	/* disable reset */
+	/*               */
 	rc = qpnp_pon_masked_write(pon, QPNP_PON_RESIN_S2_CNTL(pon->base),
 						QPNP_PON_S2_CNTL_EN, 0);
 	if (rc) {
@@ -271,10 +271,10 @@ static irqreturn_t qpnp_resin_bark_irq(int irq, void *_pon)
 		goto err_exit;
 	}
 
-	/* report the key event */
+	/*                      */
 	input_report_key(pon->pon_input, cfg->key_code, 1);
 	input_sync(pon->pon_input);
-	/* schedule work to check the bark status for key-release */
+	/*                                                        */
 	schedule_delayed_work(&pon->bark_work, QPNP_KEY_STATUS_DELAY);
 err_exit:
 	return IRQ_HANDLED;
@@ -326,7 +326,7 @@ qpnp_config_reset(struct qpnp_pon *pon, struct qpnp_pon_config *cfg)
 	default:
 		return -EINVAL;
 	}
-	/* disable S2 reset */
+	/*                  */
 	rc = qpnp_pon_masked_write(pon, s2_cntl_addr,
 				QPNP_PON_S2_CNTL_EN, 0);
 	if (rc) {
@@ -336,7 +336,7 @@ qpnp_config_reset(struct qpnp_pon *pon, struct qpnp_pon_config *cfg)
 
 	usleep(100);
 
-	/* configure s1 timer, s2 timer and reset type */
+	/*                                             */
 	for (i = 0; i < PON_S1_COUNT_MAX + 1; i++) {
 		if (cfg->s1_timer <= s1_delay[i])
 			break;
@@ -368,7 +368,7 @@ qpnp_config_reset(struct qpnp_pon *pon, struct qpnp_pon_config *cfg)
 		return rc;
 	}
 
-	/* enable S2 reset */
+	/*                 */
 	rc = qpnp_pon_masked_write(pon, s2_cntl_addr,
 				QPNP_PON_S2_CNTL_EN, QPNP_PON_S2_CNTL_EN);
 	if (rc) {
@@ -463,7 +463,7 @@ static int __devinit qpnp_pon_config_init(struct qpnp_pon *pon)
 	struct device_node *pp = NULL;
 	struct qpnp_pon_config *cfg;
 
-	/* iterate through the list of pon configs */
+	/*                                         */
 	while ((pp = of_get_next_child(pon->spmi->dev.of_node, pp))) {
 
 		cfg = &pon->pon_cfg[i++];
@@ -537,9 +537,9 @@ static int __devinit qpnp_pon_config_init(struct qpnp_pon *pon)
 
 		if (cfg->support_reset) {
 			/*
-			 * Get the reset parameters (bark debounce time and
-			 * reset debounce time) for the reset line.
-			 */
+                                                      
+                                              
+    */
 			rc = of_property_read_u32(pp, "qcom,s1-timer",
 							&cfg->s1_timer);
 			if (rc) {
@@ -578,22 +578,22 @@ static int __devinit qpnp_pon_config_init(struct qpnp_pon *pon)
 			}
 		}
 		/*
-		 * Get the standard-key parameters. This might not be
-		 * specified if there is no key mapping on the reset line.
-		 */
+                                                       
+                                                            
+   */
 		rc = of_property_read_u32(pp, "linux,code", &cfg->key_code);
 		if (rc && rc == -EINVAL) {
 			dev_err(&pon->spmi->dev,
 				"Unable to read key-code\n");
 			return rc;
 		}
-		/* Register key configuration */
+		/*                            */
 		if (cfg->key_code) {
 			rc = qpnp_pon_config_input(pon, cfg);
 			if (rc < 0)
 				return rc;
 		}
-		/* get the pull-up configuration */
+		/*                               */
 		rc = of_property_read_u32(pp, "qcom,pull-up", &cfg->pull_up);
 		if (rc && rc != -EINVAL) {
 			dev_err(&pon->spmi->dev, "Unable to read pull-up\n");
@@ -601,7 +601,7 @@ static int __devinit qpnp_pon_config_init(struct qpnp_pon *pon)
 		}
 	}
 
-	/* register the input device */
+	/*                           */
 	if (pon->pon_input) {
 		rc = input_register_device(pon->pon_input);
 		if (rc) {
@@ -613,13 +613,13 @@ static int __devinit qpnp_pon_config_init(struct qpnp_pon *pon)
 
 	for (i = 0; i < pon->num_pon_config; i++) {
 		cfg = &pon->pon_cfg[i];
-		/* Configure the pull-up */
+		/*                       */
 		rc = qpnp_config_pull(pon, cfg);
 		if (rc) {
 			dev_err(&pon->spmi->dev, "Unable to config pull-up\n");
 			goto unreg_input_dev;
 		}
-		/* Configure the reset-configuration */
+		/*                                   */
 		if (cfg->support_reset) {
 			rc = qpnp_config_reset(pon, cfg);
 			if (rc) {
@@ -665,12 +665,12 @@ static int __devinit qpnp_pon_probe(struct spmi_device *spmi)
 
 	pon->spmi = spmi;
 
-	/* get the total number of pon configurations */
+	/*                                            */
 	while ((itr = of_get_next_child(spmi->dev.of_node, itr)))
 		pon->num_pon_config++;
 
 	if (!pon->num_pon_config) {
-		/* No PON config., do not register the driver */
+		/*                                            */
 		dev_err(&spmi->dev, "No PON config. specified\n");
 		return -EINVAL;
 	}
@@ -706,7 +706,7 @@ static int __devinit qpnp_pon_probe(struct spmi_device *spmi)
 
 	INIT_DELAYED_WORK(&pon->bark_work, bark_work_func);
 
-	/* register the PON configurations */
+	/*                                 */
 	rc = qpnp_pon_config_init(pon);
 	if (rc) {
 		dev_err(&spmi->dev,

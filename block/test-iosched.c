@@ -17,7 +17,7 @@
  *
  */
 
-/* elevator test iosched */
+/*                       */
 #include <linux/blkdev.h>
 #include <linux/elevator.h>
 #include <linux/bio.h>
@@ -43,7 +43,7 @@ static DEFINE_SPINLOCK(blk_dev_test_list_lock);
 static LIST_HEAD(blk_dev_test_list);
 static struct test_data *ptd;
 
-/* Get the request after `test_rq' in the test requests list */
+/*                                                           */
 static struct test_request *
 latter_test_request(struct request_queue *q,
 				 struct test_request *test_rq)
@@ -56,9 +56,9 @@ latter_test_request(struct request_queue *q,
 			  queuelist);
 }
 
-/**
- * test_iosched_get_req_queue() - returns the request queue
- * served by the scheduler
+/* 
+                                                           
+                          
  */
 struct request_queue *test_iosched_get_req_queue(void)
 {
@@ -69,9 +69,9 @@ struct request_queue *test_iosched_get_req_queue(void)
 }
 EXPORT_SYMBOL(test_iosched_get_req_queue);
 
-/**
- * test_iosched_mark_test_completion() - Wakeup the debugfs
- * thread, waiting on the test completion
+/* 
+                                                           
+                                         
  */
 void test_iosched_mark_test_completion(void)
 {
@@ -83,7 +83,7 @@ void test_iosched_mark_test_completion(void)
 }
 EXPORT_SYMBOL(test_iosched_mark_test_completion);
 
-/* Check if all the queued test requests were completed */
+/*                                                      */
 static void check_test_completion(void)
 {
 	struct test_request *test_rq;
@@ -101,8 +101,8 @@ static void check_test_completion(void)
 }
 
 /*
- * A callback to be called per bio completion.
- * Frees the bio memory.
+                                              
+                        
  */
 static void end_test_bio(struct bio *bio, int err)
 {
@@ -113,9 +113,9 @@ static void end_test_bio(struct bio *bio, int err)
 }
 
 /*
- * A callback to be called per request completion.
- * the request memory is not freed here, will be freed later after the test
- * results checking.
+                                                  
+                                                                           
+                    
  */
 static void end_test_req(struct request *rq, int err)
 {
@@ -133,16 +133,16 @@ static void end_test_req(struct request *rq, int err)
 	check_test_completion();
 }
 
-/**
- * test_iosched_add_unique_test_req() - Create and queue a non
- * read/write request (such as FLUSH/DISCRAD/SANITIZE).
- * @is_err_expcted:	A flag to indicate if this request
- *			should succeed or not
- * @req_unique:		The type of request to add
- * @start_sec:		start address of the first bio
- * @nr_sects:		number of sectors in the request
- * @end_req_io:		specific completion callback. When not
- *			set, the defaulcallback will be used
+/* 
+                                                              
+                                                       
+                                                      
+                          
+                                           
+                                              
+                                               
+                                                       
+                                         
  */
 int test_iosched_add_unique_test_req(int is_err_expcted,
 			enum req_unique_type req_unique,
@@ -225,9 +225,9 @@ int test_iosched_add_unique_test_req(int is_err_expcted,
 EXPORT_SYMBOL(test_iosched_add_unique_test_req);
 
 /*
- * Get a pattern to be filled in the request data buffer.
- * If the pattern used is (-1) the buffer will be filled with sequential
- * numbers
+                                                         
+                                                                        
+          
  */
 static void fill_buf_with_pattern(int *buf, int num_bytes, int pattern)
 {
@@ -237,7 +237,7 @@ static void fill_buf_with_pattern(int *buf, int num_bytes, int pattern)
 	if (pattern == TEST_NO_PATTERN)
 		return;
 
-	/* num_bytes should be aligned to sizeof(int) */
+	/*                                            */
 	BUG_ON((num_bytes % sizeof(int)) != 0);
 
 	if (pattern == TEST_PATTERN_SEQUENTIAL) {
@@ -249,31 +249,31 @@ static void fill_buf_with_pattern(int *buf, int num_bytes, int pattern)
 	}
 }
 
-/**
- * test_iosched_add_wr_rd_test_req() - Create and queue a
- * read/write request.
- * @is_err_expcted:	A flag to indicate if this request
- *			should succeed or not
- * @direction:		READ/WRITE
- * @start_sec:		start address of the first bio
- * @num_bios:		number of BIOs to be allocated for the
- *			request
- * @pattern:		A pattern, to be written into the write
- *			requests data buffer. In case of READ
- *			request, the given pattern is kept as
- *			the expected pattern. The expected
- *			pattern will be compared in the test
- *			check result function. If no comparisson
- *			is required, set pattern to
- *			TEST_NO_PATTERN.
- * @end_req_io:		specific completion callback. When not
- *			set,the default callback will be used
- *
- * This function allocates the test request and the block
- * request and calls blk_rq_map_kern which allocates the
- * required BIO. The allocated test request and the block
- * request memory is freed at the end of the test and the
- * allocated BIO memory is freed by end_test_bio.
+/* 
+                                                         
+                      
+                                                      
+                          
+                          
+                                              
+                                                     
+            
+                                                     
+                                          
+                                          
+                                       
+                                         
+                                             
+                                
+                     
+                                                       
+                                          
+  
+                                                         
+                                                        
+                                                         
+                                                         
+                                                 
  */
 int test_iosched_add_wr_rd_test_req(int is_err_expcted,
 		      int direction, int start_sec,
@@ -370,7 +370,7 @@ err:
 }
 EXPORT_SYMBOL(test_iosched_add_wr_rd_test_req);
 
-/* Converts the testcase number into a string */
+/*                                            */
 static char *get_test_case_str(struct test_data *td)
 {
 	if (td->test_info.get_test_case_str_fn)
@@ -380,15 +380,15 @@ static char *get_test_case_str(struct test_data *td)
 }
 
 /*
- * Verify that the test request data buffer includes the expected
- * pattern
+                                                                 
+          
  */
 static int compare_buffer_to_pattern(struct test_request *test_rq)
 {
 	int i = 0;
 	int num_of_dwords = test_rq->buf_size/sizeof(int);
 
-	/* num_bytes should be aligned to sizeof(int) */
+	/*                                            */
 	BUG_ON((test_rq->buf_size % sizeof(int)) != 0);
 	BUG_ON(test_rq->bios_buffer == NULL);
 
@@ -420,10 +420,10 @@ static int compare_buffer_to_pattern(struct test_request *test_rq)
 }
 
 /*
- * Determine if the test passed or failed.
- * The function checks the test request completion value and calls
- * check_testcase_result for result checking that are specific
- * to a test case.
+                                          
+                                                                  
+                                                              
+                  
  */
 static int check_test_result(struct test_data *td)
 {
@@ -483,7 +483,7 @@ err:
 	return res;
 }
 
-/* Create and queue the required requests according to the test case */
+/*                                                                   */
 static int prepare_test(struct test_data *td)
 {
 	int ret = 0;
@@ -496,7 +496,7 @@ static int prepare_test(struct test_data *td)
 	return 0;
 }
 
-/* Run the test */
+/*              */
 static int run_test(struct test_data *td)
 {
 	int ret = 0;
@@ -507,9 +507,9 @@ static int run_test(struct test_data *td)
 	}
 
 	/*
-	 * Set the next_req pointer to the first request in the test requests
-	 * list
-	 */
+                                                                      
+        
+  */
 	if (!list_empty(&td->test_queue))
 		td->next_req = list_entry(td->test_queue.next,
 					  struct test_request, queuelist);
@@ -518,7 +518,7 @@ static int run_test(struct test_data *td)
 	return 0;
 }
 
-/* Free the allocated test requests, their requests and BIOs buffer */
+/*                                                                  */
 static void free_test_requests(struct test_data *td)
 {
 	struct test_request *test_rq;
@@ -529,9 +529,9 @@ static void free_test_requests(struct test_data *td)
 				     queuelist);
 		list_del_init(&test_rq->queuelist);
 		/*
-		 * If the request was not completed we need to free its BIOs
-		 * and remove it from the packed list
-		 */
+                                                              
+                                       
+   */
 		if (!test_rq->req_completed) {
 			test_pr_info(
 				"%s: Freeing memory of an uncompleted request",
@@ -549,8 +549,8 @@ static void free_test_requests(struct test_data *td)
 }
 
 /*
- * Do post test operations.
- * Free the allocated test requests, their requests and BIOs buffer.
+                           
+                                                                    
  */
 static int post_test(struct test_data *td)
 {
@@ -568,8 +568,8 @@ static int post_test(struct test_data *td)
 }
 
 /*
- * The timer verifies that the test will be completed even if we don't get
- * the completion callback for all the requests.
+                                                                          
+                                                
  */
 static void test_timeout_handler(unsigned long data)
 {
@@ -589,12 +589,12 @@ static unsigned int get_timeout_msec(struct test_data *td)
 		return TIMEOUT_TIMER_MS;
 }
 
-/**
- * test_iosched_start_test() - Prepares and runs the test.
- * @t_info:	the current test testcase and callbacks
- *		functions
- *
- * The function also checks the test result upon test completion
+/* 
+                                                          
+                                                   
+             
+  
+                                                                
  */
 int test_iosched_start_test(struct test_info *t_info)
 {
@@ -614,9 +614,9 @@ int test_iosched_start_test(struct test_info *t_info)
 	do {
 		if (ptd->ignore_round)
 			/*
-			 * We ignored the last run due to FS write requests.
-			 * Sleep to allow those requests to be issued
-			 */
+                                                       
+                                                
+    */
 			msleep(2000);
 
 		spin_lock(&ptd->lock);
@@ -694,9 +694,9 @@ int test_iosched_start_test(struct test_info *t_info)
 		}
 
 		/*
-		 * Wakeup the queue thread to fetch FS requests that might got
-		 * postponded due to the test
-		 */
+                                                                
+                               
+   */
 		__blk_run_queue(ptd->req_q);
 
 		if (ptd->ignore_round)
@@ -724,10 +724,10 @@ error:
 }
 EXPORT_SYMBOL(test_iosched_start_test);
 
-/**
- * test_iosched_register() - register a block device test
- * utility.
- * @bdt:	the block device test type to register
+/* 
+                                                         
+           
+                                               
  */
 void test_iosched_register(struct blk_dev_test_type *bdt)
 {
@@ -737,10 +737,10 @@ void test_iosched_register(struct blk_dev_test_type *bdt)
 }
 EXPORT_SYMBOL_GPL(test_iosched_register);
 
-/**
- * test_iosched_unregister() - unregister a block device test
- * utility.
- * @bdt:	the block device test type to unregister
+/* 
+                                                             
+           
+                                                 
  */
 void test_iosched_unregister(struct blk_dev_test_type *bdt)
 {
@@ -750,10 +750,10 @@ void test_iosched_unregister(struct blk_dev_test_type *bdt)
 }
 EXPORT_SYMBOL_GPL(test_iosched_unregister);
 
-/**
- * test_iosched_set_test_result() - Set the test
- * result(PASS/FAIL)
- * @test_result:	the test result
+/* 
+                                                
+                    
+                                
  */
 void test_iosched_set_test_result(int test_result)
 {
@@ -765,10 +765,10 @@ void test_iosched_set_test_result(int test_result)
 EXPORT_SYMBOL(test_iosched_set_test_result);
 
 
-/**
- * test_iosched_set_ignore_round() - Set the ignore_round flag
- * @ignore_round:	A flag to indicate if this test round
- * should be ignored and re-run
+/* 
+                                                              
+                                                       
+                               
  */
 void test_iosched_set_ignore_round(bool ignore_round)
 {
@@ -779,9 +779,9 @@ void test_iosched_set_ignore_round(bool ignore_round)
 }
 EXPORT_SYMBOL(test_iosched_set_ignore_round);
 
-/**
- * test_iosched_get_debugfs_tests_root() - returns the root
- * debugfs directory for the test_iosched tests
+/* 
+                                                           
+                                               
  */
 struct dentry *test_iosched_get_debugfs_tests_root(void)
 {
@@ -792,9 +792,9 @@ struct dentry *test_iosched_get_debugfs_tests_root(void)
 }
 EXPORT_SYMBOL(test_iosched_get_debugfs_tests_root);
 
-/**
- * test_iosched_get_debugfs_utils_root() - returns the root
- * debugfs directory for the test_iosched utils
+/* 
+                                                           
+                                               
  */
 struct dentry *test_iosched_get_debugfs_utils_root(void)
 {
@@ -883,8 +883,8 @@ static void test_merged_requests(struct request_queue *q,
 }
 
 /*
- * Dispatch a test request in case there is a running test Otherwise, dispatch
- * a request that was queued by the FS to keep the card functional.
+                                                                              
+                                                                   
  */
 static int test_dispatch_requests(struct request_queue *q, int force)
 {
@@ -928,9 +928,9 @@ static void test_add_request(struct request_queue *q, struct request *rq)
 	list_add_tail(&rq->queuelist, &td->queue);
 
 	/*
-	 * The write requests can be followed by a FLUSH request that might
-	 * cause unexpected results of the test.
-	 */
+                                                                    
+                                         
+  */
 	if ((rq_data_dir(rq) == WRITE) && (td->test_state == TEST_RUNNING)) {
 		test_pr_debug("%s: got WRITE req in the middle of the test",
 			__func__);

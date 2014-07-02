@@ -23,13 +23,13 @@
 #define AFE_HW_PATH_MI2S_RX     5
 #define AFE_HW_PATH_MI2S_TX     6
 
-#define AFE_VOLUME_UNITY 0x4000 /* Based on Q14 */
+#define AFE_VOLUME_UNITY 0x4000 /*              */
 
 struct msm_afe_config {
 	u16 sample_rate;
 	u16 channel_mode;
 	u16 volume;
-	/* To be expaned for AUX CODEC */
+	/*                             */
 };
 
 int afe_enable(u8 path_id, struct msm_afe_config *config);

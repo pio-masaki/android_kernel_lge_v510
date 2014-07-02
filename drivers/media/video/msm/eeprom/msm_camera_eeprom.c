@@ -164,7 +164,7 @@ int32_t msm_eeprom_i2c_probe(struct i2c_client *client,
 
 	CDBG("%s client = %x\n", __func__, (unsigned int) client);
 
-	/* Assign name for sub device */
+	/*                            */
 	snprintf(e_ctrl_t->sdev.name, sizeof(e_ctrl_t->sdev.name),
 		"%s", e_ctrl_t->i2c_driver->driver.name);
 
@@ -183,7 +183,7 @@ int32_t msm_eeprom_i2c_probe(struct i2c_client *client,
 		rc = e_ctrl_t->func_tbl.eeprom_release(e_ctrl_t);
 
 
-	/* Initialize sub device */
+	/*                       */
 	v4l2_i2c_subdev_init(&e_ctrl_t->sdev,
 		e_ctrl_t->i2c_client.client,
 		e_ctrl_t->eeprom_v4l2_subdev_ops);

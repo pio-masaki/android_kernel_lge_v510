@@ -40,7 +40,7 @@
 static int msm_stats_init(struct msm_stats_bufq_ctrl *stats_ctrl)
 {
 	int rc = 0;
-	/* cannot get spinlock here */
+	/*                          */
 	if (stats_ctrl->init_done > 0) {
 		pr_err("%s: already initialized stats ctrl. no op", __func__);
 		return 0;
@@ -65,19 +65,19 @@ static int msm_stats_reqbuf(struct msm_stats_bufq_ctrl *stats_ctrl,
 		reqbuf->stats_type, reqbuf->num_buf);
 	if (reqbuf->num_buf > 0) {
 		if (stats_ctrl->bufq[idx]) {
-			/* already in use. Error */
+			/*                       */
 			pr_err("%s: stats type %d aleady requested",
 				 __func__, reqbuf->stats_type);
 			rc = -EEXIST;
 			goto end;
 		} else {
-			/* good case */
+			/*           */
 			bufq = (struct msm_stats_bufq *)
 				kzalloc(
 					sizeof(struct msm_stats_bufq),
 					GFP_KERNEL);
 			if (!bufq) {
-				/* no memory */
+				/*           */
 				rc = -ENOMEM;
 				pr_err("%s: no mem for stats type %d",
 					__func__, reqbuf->stats_type);
@@ -88,16 +88,16 @@ static int msm_stats_reqbuf(struct msm_stats_bufq_ctrl *stats_ctrl,
 					sizeof(struct msm_stats_meta_buf)),
 					GFP_KERNEL);
 			if (!bufs) {
-				/* no memory */
+				/*           */
 				rc = -ENOMEM;
 				pr_err("%s: no mem for stats buf, stats type = %d",
 					__func__, reqbuf->stats_type);
 				kfree(bufq);
 				goto end;
 			}
-			/* init bufq list head */
+			/*                     */
 			INIT_LIST_HEAD(&bufq->head);
-			/* set the meta buf state to initialized */
+			/*                                       */
 			bufq->num_bufs = reqbuf->num_buf;
 			for (i = 0; i < reqbuf->num_buf; i++)
 				bufs[i].state =
@@ -106,25 +106,25 @@ static int msm_stats_reqbuf(struct msm_stats_bufq_ctrl *stats_ctrl,
 			bufq->num_bufs = reqbuf->num_buf;
 			bufq->type = reqbuf->stats_type;
 			stats_ctrl->bufq[idx] = bufq;
-			/* done reqbuf (larger than zero case) */
+			/*                                     */
 			goto end;
 		}
 	} else if (reqbuf->num_buf == 0) {
 		if (stats_ctrl->bufq[idx] == NULL) {
-			/* double free case? */
+			/*                   */
 			pr_err("%s: stats type %d aleady freed",
 				 __func__, reqbuf->stats_type);
 			rc = -ENXIO;
 			goto end;
 		} else {
-			/* good case. need to de-reqbuf */
+			/*                              */
 			kfree(stats_ctrl->bufq[idx]->bufs);
 			kfree(stats_ctrl->bufq[idx]);
 			stats_ctrl->bufq[idx] = NULL;
 			goto end;
 		}
 	} else {
-		/* error case */
+		/*            */
 		pr_err("%s: stats type = %d, req_num_buf = %d, error",
 			   __func__, reqbuf->stats_type, reqbuf->num_buf);
 		rc = -EPERM;
@@ -142,7 +142,7 @@ static int msm_stats_deinit(struct msm_stats_bufq_ctrl *stats_ctrl)
 		pr_err("%s: not inited yet. no op", __func__);
 		return 0;
 	}
-	/* safe guard in case deallocate memory not done yet. */
+	/*                                                    */
 	for (i = 0; i < MSM_STATS_TYPE_MAX; i++) {
 		if (stats_ctrl->bufq[i]) {
 			if (stats_ctrl->bufq[i]->bufs) {
@@ -299,7 +299,7 @@ static int msm_stats_buf_unprepare(struct msm_stats_bufq_ctrl *stats_ctrl,
 	put_pmem_file(stats_buf->file);
 #endif
 	if (stats_buf->state == MSM_STATS_BUFFER_STATE_QUEUED) {
-		/* buf queued need delete from list */
+		/*                                  */
 		D("%s: delete stats buf, type = %d, idx = %d",
 		  __func__,  stats_type,  buf_idx);
 		list_del_init(&stats_buf->list);
@@ -322,16 +322,16 @@ static int msm_stats_bufq_flush(struct msm_stats_bufq_ctrl *stats_ctrl,
 		stats_buf = &bufq->bufs[i];
 		switch (stats_buf->state) {
 		case MSM_STATS_BUFFER_STATE_QUEUED:
-			/* buf queued in stats free queue */
+			/*                                */
 			stats_buf->state = MSM_STATS_BUFFER_STATE_PREPARED;
 			list_del_init(&stats_buf->list);
 			break;
 		case MSM_STATS_BUFFER_STATE_DEQUEUED:
-			/* if stats buf in VFE reset the state */
+			/*                                     */
 			stats_buf->state = MSM_STATS_BUFFER_STATE_PREPARED;
 			break;
 		case MSM_STATS_BUFFER_STATE_DISPATCHED:
-			/* if stats buf in userspace reset the state */
+			/*                                           */
 			stats_buf->state = MSM_STATS_BUFFER_STATE_PREPARED;
 			break;
 		default:
@@ -357,7 +357,7 @@ static int msm_stats_dqbuf(struct msm_stats_bufq_ctrl *stats_ctrl,
 		if(!stats_buf)
 			return -1;
 		if (stats_buf->state == MSM_STATS_BUFFER_STATE_QUEUED) {
-			/* found one buf */
+			/*               */
 			list_del_init(&stats_buf->list);
 			*pp_stats_buf = stats_buf;
 			break;

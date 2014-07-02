@@ -104,14 +104,14 @@ int tpa2028d_poweron(void)
 
 	agc_output_limiter_disable = (agc_output_limiter_disable<<7);
 
-	fail |= WriteI2C(IC_CONTROL, 0xE3); /*Tuen On*/
-	fail |= WriteI2C(AGC_ATTACK_CONTROL, 0x05); /*Tuen On*/
-	fail |= WriteI2C(AGC_RELEASE_CONTROL, 0x0B); /*Tuen On*/
-	fail |= WriteI2C(AGC_HOLD_TIME_CONTROL, 0x00); /*Tuen On*/
-	fail |= WriteI2C(AGC_FIXED_GAIN_CONTROL, agc_fixed_gain); /*Tuen On*/
-	fail |= WriteI2C(AGC1_CONTROL, 0x3A|agc_output_limiter_disable); /*Tuen On*/
-	fail |= WriteI2C(AGC2_CONTROL, 0xC0|agc_compression_rate); /*Tuen On*/
-	fail |= WriteI2C(IC_CONTROL, 0xC3); /*Tuen On*/
+	fail |= WriteI2C(IC_CONTROL, 0xE3); /*       */
+	fail |= WriteI2C(AGC_ATTACK_CONTROL, 0x05); /*       */
+	fail |= WriteI2C(AGC_RELEASE_CONTROL, 0x0B); /*       */
+	fail |= WriteI2C(AGC_HOLD_TIME_CONTROL, 0x00); /*       */
+	fail |= WriteI2C(AGC_FIXED_GAIN_CONTROL, agc_fixed_gain); /*       */
+	fail |= WriteI2C(AGC1_CONTROL, 0x3A|agc_output_limiter_disable); /*       */
+	fail |= WriteI2C(AGC2_CONTROL, 0xC0|agc_compression_rate); /*       */
+	fail |= WriteI2C(IC_CONTROL, 0xC3); /*       */
 
 	return fail;
 }
@@ -128,16 +128,16 @@ inline void set_amp_gain(int amp_state)
 
 	switch (amp_state) {
 	case SPK_ON:
-		/* if the delay time is need for chip ready,
-		 * should be added to each power or enable function.
-		 */
+		/*                                          
+                                                      
+   */
 		if (amp_data->pdata->power)
 			fail = amp_data->pdata->power(1);
-		/*need 5 msec for prevent mute issue*/
+		/*                                  */
 		msleep(5);
 		if (amp_data->pdata->enable)
 			fail = amp_data->pdata->enable(1);
-		/*need 10 msec for chip ready*/
+		/*                           */
 		msleep(10);
 		fail = tpa2028d_poweron();
 		break;
@@ -317,5 +317,5 @@ module_init(tpa2028d_amp_init);
 module_exit(tpa2028d_amp_exit);
 
 MODULE_DESCRIPTION("TPA2028D Amp Control");
-MODULE_AUTHOR("Kim EunHye <ehgrace.kim@lge.com>");
+MODULE_AUTHOR("");
 MODULE_LICENSE("GPL");

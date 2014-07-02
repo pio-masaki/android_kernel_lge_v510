@@ -12,8 +12,8 @@
  */
 
 /*
-#define DEBUG_TRACE_VDEC
-#define DEBUG
+                        
+             
 */
 
 #include <linux/slab.h>
@@ -59,28 +59,28 @@
 #endif
 
 #define YAMATO_COLOR_FORMAT  0x02
-#define MAX_Q6_LOAD        ((720*1280)/256)  /* 720p */
+#define MAX_Q6_LOAD        ((720*1280)/256)  /*      */
 #define MAX_Q6_LOAD_YAMATO ((736*1280)/256)
 #define MAX_Q6_LOAD_VP6    ((800*480)/256)
 
 #define VDEC_MAX_PORTS 4
 
 /*
- *why magic number 300?
+                       
 
- *the Maximum size of the DAL payload is 512 bytes according to DAL protocol
- *Initialize call to QDSP6 from scorpion need to send sequence header as part of
- *the DAL payload. DAL payload to initialize contains the following
+                                                                            
+                                                                                
+                                                                   
 
- *1) configuration data- 52 bytes 2) length field of config data - 4 bytes
- *3) sequence header data ( that is from the bit stream)
- *4) length field for sequence header - 4 bytes
- *5) length field for output structure - 4 bytes
+                                                                          
+                                                        
+                                               
+                                                
 
- *that left with 512 - 68 = 448 bytes. It is unusual that we get a sequence
- *header with such a big length unless the bit stream has multiple sequence
- *headers.We estimated 300 is good enough which gives enough room for rest
- *of the payload and even reserves some space for future payload.
+                                                                           
+                                                                           
+                                                                          
+                                                                 
  */
 
 #define VDEC_MAX_SEQ_HEADER_SIZE 300
@@ -156,7 +156,7 @@ static char deviceIdRegistry[DALVDEC_MAX_DEVICE_IDS];
 #define FOURCC_SPARK MAKEFOURCC('F', 'L', 'V', '1')
 #define FOURCC_VP6 MAKEFOURCC('V', 'P', '6', '0')
 
-/* static struct vdec_data *multiInstances[MAX_SUPPORTED_INSTANCES];*/
+/*                                                                  */
 
 static int totalPlaybackQ6load;
 static int totalTnailQ6load;
@@ -444,13 +444,13 @@ static void printportsanddeviceids(void)
 
 	pr_err("\n\n");
 }
-#endif /*TRACE_PORTS*/
+#endif /*           */
 
 
 /*
- *
- * This method is used to get the number of ports supported on the Q6
- *
+  
+                                                                     
+  
  */
 static int vdec_get_numberofq6ports(void)
 {
@@ -462,14 +462,14 @@ static int vdec_get_numberofq6ports(void)
 			     DALDEVICEID_VDEC_PORTNAME, 1, NULL, NULL);
 	if (!vdec_handle) {
 		pr_err("%s: failed to attach\n", __func__);
-		return 1;/* default setting */
+		return 1;/*                 */
 	}
 
 	retval = dal_call_f6(vdec_handle, VDEC_DALRPC_GETPROPERTY,
       VDEC_NUM_DAL_PORTS, (void *)&property, sizeof(union vdec_property));
 	if (retval) {
 		pr_err("%s: Q6get prperty failed\n", __func__);
-		return 1;/* default setting */
+		return 1;/*                 */
 	}
 
 	dal_detach(vdec_handle);
@@ -477,17 +477,17 @@ static int vdec_get_numberofq6ports(void)
 }
 
 
-/**
-  * This method is used to get the find the least loaded port and a corresponding
-  * free device id in that port.
-  *
-  * Prerequisite: vdec_open should have been called.
-  *
-  *  @param[in] deviceid
-  *     device id will be populated here.
-  *
-  *  @param[in] portname
-  *     portname will be populated here.
+/* 
+                                                                                 
+                                
+   
+                                                    
+   
+                        
+                                         
+   
+                        
+                                        
   */
 static void vdec_get_next_portanddevid(int *deviceid, char **portname)
 {
@@ -500,20 +500,20 @@ static void vdec_get_next_portanddevid(int *deviceid, char **portname)
 		numOfPorts = vdec_get_numberofq6ports();
 		pr_err("%s: Q6get numOfPorts %d\n", __func__, numOfPorts);
 		numOfPorts = 4;
-		/*fix: me currently hard coded to 4 as
-		 *the Q6 getproperty is failing
-		 */
+		/*                                    
+                                 
+   */
 	}
 
 	if ((NULL == deviceid) || (NULL == portname))
 		return;
 	else
-		*deviceid = 0; /* init value */
+		*deviceid = 0; /*            */
 
 	if (numOfPorts > 1) {
-		/* multi ports mode*/
+		/*                 */
 
-		/* find the least loaded port*/
+		/*                           */
 		for (i = 1, leastLoad = loadOnPorts[0], leastLoadedIndex = 0;
 					i < numOfPorts; i++) {
 			if (leastLoad > loadOnPorts[i]) {
@@ -522,11 +522,11 @@ static void vdec_get_next_portanddevid(int *deviceid, char **portname)
 			}
 		}
 
-		/* register the load */
+		/*                   */
 		loadOnPorts[leastLoadedIndex]++;
 		*portname = Q6Portnames[leastLoadedIndex];
 
-		/* find a free device id corresponding to the port*/
+		/*                                                */
 		for (i = leastLoadedIndex; i < DALVDEC_MAX_DEVICE_IDS;
 					i += numOfPorts) {
 			if (VDEC_DEVID_FREE == deviceIdRegistry[i]) {
@@ -538,9 +538,9 @@ static void vdec_get_next_portanddevid(int *deviceid, char **portname)
 
 #ifdef TRACE_PORTS
 		printportsanddeviceids();
-#endif /*TRACE_PORTS*/
+#endif /*           */
 	} else if (1 == numOfPorts) {
-		/* single port mode */
+		/*                  */
 		*deviceid = DALDEVICEID_VDEC_DEVICE;
 		*portname = DALDEVICEID_VDEC_PORTNAME;
 	} else if (numOfPorts <= 0) {
@@ -552,16 +552,16 @@ static void vdec_get_next_portanddevid(int *deviceid, char **portname)
 }
 
 
-/**
-  * This method frees up the used dev id and decrements the port load.
-  *
+/* 
+                                                                      
+   
   */
 
 static void vdec_freeup_portanddevid(int deviceid)
 {
 
 	if (numOfPorts > 1) {
-		/* multi ports mode*/
+		/*                 */
 		if (VDEC_DEVID_FREE ==
 			deviceIdRegistry[deviceid - DALDEVICEID_VDEC_DEVICE_0])
 			pr_err("device id cannot be already free\n");
@@ -581,23 +581,23 @@ static void vdec_freeup_portanddevid(int deviceid)
 
 #ifdef TRACE_PORTS
 		printportsanddeviceids();
-#endif /*TRACE_PORTS*/
+#endif /*           */
 	} else {
-		/*single port mode, nothing to be done here*/
+		/*                                         */
 	}
 
 }
 
 
-/**
-  * This method validates whether a new instance can be houred or not.
-  *
+/* 
+                                                                      
+   
   */
 static int vdec_rm_checkWithRm(struct vdec_data *vdecInstance,
 				unsigned int color_format)
 {
 
-	unsigned int maxQ6load = 0;/* in the units of macro blocks per second */
+	unsigned int maxQ6load = 0;/*                                         */
 	unsigned int currentq6load = 0;
 	struct videoStreamDetails *streamDetails = &vdecInstance->streamDetails;
 
@@ -622,7 +622,7 @@ static int vdec_rm_checkWithRm(struct vdec_data *vdecInstance,
 		}
 	}
 
-	/* calculate the Q6 percentage instance would need */
+	/*                                                 */
 	if ((streamDetails->fourcc == FOURCC_MPEG4) ||
 		 (streamDetails->fourcc  == FOURCC_H264) ||
 		 (streamDetails->fourcc  == FOURCC_DIVX) ||
@@ -631,16 +631,16 @@ static int vdec_rm_checkWithRm(struct vdec_data *vdecInstance,
 		 (streamDetails->fourcc  == FOURCC_H263)
 		){
 
-		/* is yamato color format,
-		  Rounds the H & W --> mutiple of 32 */
+		/*                        
+                                       */
 		if (color_format == YAMATO_COLOR_FORMAT)
 			maxQ6load = MAX_Q6_LOAD_YAMATO;
 		else
-			maxQ6load = MAX_Q6_LOAD; /* 720p */
+			maxQ6load = MAX_Q6_LOAD; /*      */
 
 	} else if (streamDetails->fourcc  == FOURCC_VP6) {
 
-		maxQ6load = MAX_Q6_LOAD_VP6;    /* FWVGA */
+		maxQ6load = MAX_Q6_LOAD_VP6;    /*       */
 
 	} else {
 
@@ -653,7 +653,7 @@ static int vdec_rm_checkWithRm(struct vdec_data *vdecInstance,
 	currentq6load = ((streamDetails->height)*(streamDetails->width) / 256);
 	currentq6load = ((currentq6load * 100)/maxQ6load);
 	if ((currentq6load+totalPlaybackQ6load) > 100) {
-		/* reject this instance */
+		/*                      */
 		pr_err("%s: too much Q6load [cur+tot] = [%d + %d] = %d",
 		__func__, currentq6load, totalPlaybackQ6load,
 		(currentq6load+totalPlaybackQ6load));
@@ -696,8 +696,8 @@ static int vdec_initialize(struct vdec_data *vd, void *argp)
 	memcpy(&vi_cfg.cfg, &vdec_cfg_sps.cfg, sizeof(struct vdec_config));
 
 	/*
-	 * restricting the max value of the seq header
-	 */
+                                               
+  */
 	if (vdec_cfg_sps.seq.len > VDEC_MAX_SEQ_HEADER_SIZE)
 		vdec_cfg_sps.seq.len = VDEC_MAX_SEQ_HEADER_SIZE;
 
@@ -827,7 +827,7 @@ static int vdec_setbuffers(struct vdec_data *vd, void *argp)
 	      vmem.buf.region.src_id, vmem.buf.region.offset,
 	      vmem.buf.region.size);
 
-	/* input buffers */
+	/*               */
 	if ((vmem.buf.region.offset + vmem.buf.region.size) > l->mem.len) {
 		pr_err("%s: invalid input buffer offset!\n", __func__);
 		ret = -EINVAL;
@@ -918,7 +918,7 @@ static int vdec_queue(struct vdec_data *vd, void *argp)
 	rpc.size = sizeof(struct vdec_input_buf_info);
 	rpc.osize = sizeof(struct vdec_queue_status);
 
-	/* complete the writes to the buffer */
+	/*                                   */
 	wmb();
 	ret = dal_call(vd->vdec_handle, VDEC_DALRPC_QUEUE, 8,
 		       &rpc, sizeof(rpc), &rpc_res, sizeof(rpc_res));
@@ -1047,7 +1047,7 @@ static int vdec_freebuffers(struct vdec_data *vd, void *argp)
 		return -EPERM;
 	}
 
-	/* input buffers */
+	/*               */
 	if ((vmem.buf.region.offset + vmem.buf.region.size) > l->mem.len) {
 		pr_err("%s: invalid input buffer offset!\n", __func__);
 		return -EINVAL;
@@ -1135,7 +1135,7 @@ static long vdec_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 		if (vd->close_decode)
 			ret = -EINTR;
 		else
-			/* order the reads from the buffer */
+			/*                                 */
 			rmb();
 		break;
 
@@ -1245,8 +1245,8 @@ static void vdec_reuseibuf_handler(struct vdec_data *vd, void *bufstat,
 	struct vdec_buffer_status *vdec_bufstat;
 	struct vdec_msg msg;
 
-	/* TODO: how do we signal the client? If they are waiting on a
-	 * message in an ioctl, they may block forever */
+	/*                                                            
+                                                */
 	if (bufstat_size != sizeof(struct vdec_buffer_status)) {
 		pr_warning("%s: msg size mismatch %d != %d\n", __func__,
 			   bufstat_size, sizeof(struct vdec_buffer_status));

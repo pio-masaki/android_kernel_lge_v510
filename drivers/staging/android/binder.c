@@ -18,6 +18,7 @@
 #include <asm/cacheflush.h>
 #include <linux/fdtable.h>
 #include <linux/file.h>
+#include <linux/freezer.h>
 #include <linux/fs.h>
 #include <linux/list.h>
 #include <linux/miscdevice.h>
@@ -33,6 +34,7 @@
 #include <linux/uaccess.h>
 #include <linux/vmalloc.h>
 #include <linux/slab.h>
+#include <linux/security.h>
 
 #include "binder.h"
 #include "binder_trace.h"
@@ -69,7 +71,7 @@ static const struct file_operations binder_##name##_fops = { \
 static int binder_proc_show(struct seq_file *m, void *unused);
 BINDER_DEBUG_ENTRY(proc);
 
-/* This is only defined in include/asm-arm/sizes.h */
+/*                                                 */
 #ifndef SZ_1K
 #define SZ_1K                               0x400
 #endif
@@ -242,10 +244,10 @@ struct binder_ref_death {
 };
 
 struct binder_ref {
-	/* Lookups needed: */
-	/*   node + proc => ref (transaction) */
-	/*   desc + proc => ref (transaction, inc/dec ref) */
-	/*   node => refs + procs (proc exit) */
+	/*                 */
+	/*                                    */
+	/*                                                 */
+	/*                                    */
 	int debug_id;
 	struct rb_node rb_node_desc;
 	struct rb_node rb_node_node;
@@ -259,9 +261,9 @@ struct binder_ref {
 };
 
 struct binder_buffer {
-	struct list_head entry; /* free and allocated entries by address */
-	struct rb_node rb_node; /* free entry by size or allocated entry */
-				/* by address */
+	struct list_head entry; /*                                       */
+	struct rb_node rb_node; /*                                       */
+				/*            */
 	unsigned free:1;
 	unsigned allow_user_free:1;
 	unsigned async_transaction:1;
@@ -333,10 +335,10 @@ struct binder_thread {
 	int looper;
 	struct binder_transaction *transaction_stack;
 	struct list_head todo;
-	uint32_t return_error; /* Write failed, return error code in read buf */
-	uint32_t return_error2; /* Write failed, return error code in read */
-		/* buffer. Used when sending a reply to a dead process that */
-		/* we are also waiting on */
+	uint32_t return_error; /*                                             */
+	uint32_t return_error2; /*                                         */
+		/*                                                          */
+		/*                        */
 	wait_queue_head_t wait;
 	struct binder_stats stats;
 };
@@ -350,7 +352,7 @@ struct binder_transaction {
 	struct binder_thread *to_thread;
 	struct binder_transaction *to_parent;
 	unsigned need_reply:1;
-	/* unsigned is_dead:1; */	/* not used at the moment */
+	/*                     */	/*                        */
 
 	struct binder_buffer *buffer;
 	unsigned int	code;
@@ -364,7 +366,7 @@ static void
 binder_defer_work(struct binder_proc *proc, enum binder_deferred_state defer);
 
 /*
- * copied from get_unused_fd_flags
+                                  
  */
 int task_get_unused_fd_flags(struct binder_proc *proc, int flags)
 {
@@ -385,9 +387,9 @@ repeat:
 	fd = find_next_zero_bit(fdt->open_fds, fdt->max_fds, files->next_fd);
 
 	/*
-	 * N.B. For clone tasks sharing a files structure, this test
-	 * will limit the total number of files that can be opened.
-	 */
+                                                             
+                                                            
+  */
 	rlim_cur = 0;
 	if (lock_task_sighand(proc->tsk, &irqs)) {
 		rlim_cur = proc->tsk->signal->rlim[RLIMIT_NOFILE].rlim_cur;
@@ -396,16 +398,16 @@ repeat:
 	if (fd >= rlim_cur)
 		goto out;
 
-	/* Do we need to expand the fd array or fd set?  */
+	/*                                               */
 	error = expand_files(files, fd);
 	if (error < 0)
 		goto out;
 
 	if (error) {
 		/*
-		 * If we needed to expand the fs array we
-		 * might have blocked - try again.
-		 */
+                                           
+                                    
+   */
 		error = -EMFILE;
 		goto repeat;
 	}
@@ -417,7 +419,7 @@ repeat:
 		__clear_close_on_exec(fd, fdt);
 	files->next_fd = fd + 1;
 #if 1
-	/* Sanity check */
+	/*              */
 	if (fdt->fd[fd] != NULL) {
 		printk(KERN_WARNING "get_unused_fd: slot %d not NULL!\n", fd);
 		fdt->fd[fd] = NULL;
@@ -431,7 +433,7 @@ out:
 }
 
 /*
- * copied from fd_install
+                         
  */
 static void task_fd_install(
 	struct binder_proc *proc, unsigned int fd, struct file *file)
@@ -450,7 +452,7 @@ static void task_fd_install(
 }
 
 /*
- * copied from __put_unused_fd in open.c
+                                        
  */
 static void __put_unused_fd(struct files_struct *files, unsigned int fd)
 {
@@ -461,7 +463,7 @@ static void __put_unused_fd(struct files_struct *files, unsigned int fd)
 }
 
 /*
- * copied from sys_close
+                        
  */
 static long task_close_fd(struct binder_proc *proc, unsigned int fd)
 {
@@ -486,7 +488,7 @@ static long task_close_fd(struct binder_proc *proc, unsigned int fd)
 	spin_unlock(&files->file_lock);
 	retval = filp_close(filp, files);
 
-	/* can't restart close syscall because file table entry was cleared */
+	/*                                                                  */
 	if (unlikely(retval == -ERESTARTSYS ||
 		     retval == -ERESTARTNOINTR ||
 		     retval == -ERESTARTNOHAND ||
@@ -678,7 +680,7 @@ static int binder_update_page_range(struct binder_proc *proc, int allocate,
 			goto err_alloc_page_failed;
 		}
 		tmp_area.addr = page_addr;
-		tmp_area.size = PAGE_SIZE + PAGE_SIZE /* guard page? */;
+		tmp_area.size = PAGE_SIZE + PAGE_SIZE /*             */;
 		page_array_ptr = page;
 		ret = map_vm_area(&tmp_area, PAGE_KERNEL, &page_array_ptr);
 		if (ret) {
@@ -696,7 +698,7 @@ static int binder_update_page_range(struct binder_proc *proc, int allocate,
 			       proc->pid, user_page_addr);
 			goto err_vm_insert_page_failed;
 		}
-		/* vm_insert_page does not seem to increment the refcount */
+		/*                                                        */
 	}
 	if (mm) {
 		up_write(&mm->mmap_sem);
@@ -795,7 +797,7 @@ static struct binder_buffer *binder_alloc_buf(struct binder_proc *proc,
 		(void *)(((uintptr_t)buffer->data + buffer_size) & PAGE_MASK);
 	if (n == NULL) {
 		if (size + sizeof(struct binder_buffer) + 4 >= buffer_size)
-			buffer_size = size; /* no room for other buffers */
+			buffer_size = size; /*                           */
 		else
 			buffer_size = size + sizeof(struct binder_buffer);
 	}
@@ -1489,6 +1491,10 @@ static void binder_transaction(struct binder_proc *proc,
 			return_error = BR_DEAD_REPLY;
 			goto err_dead_binder;
 		}
+		if (security_binder_transaction(proc->tsk, target_proc->tsk) < 0) {
+			return_error = BR_FAILED_REPLY;
+			goto err_invalid_target_handle;
+		}
 		if (!(tr->flags & TF_ONE_WAY) && thread->transaction_stack) {
 			struct binder_transaction *tmp;
 			tmp = thread->transaction_stack;
@@ -1520,7 +1526,7 @@ static void binder_transaction(struct binder_proc *proc,
 	}
 	e->to_proc = target_proc->pid;
 
-	/* TODO: reuse incoming transaction for reply */
+	/*                                            */
 	t = kzalloc(sizeof(*t), GFP_KERNEL);
 	if (t == NULL) {
 		return_error = BR_FAILED_REPLY;
@@ -1638,6 +1644,10 @@ static void binder_transaction(struct binder_proc *proc,
 					fp->cookie, node->cookie);
 				goto err_binder_get_ref_for_node_failed;
 			}
+			if (security_binder_transfer_binder(proc->tsk, target_proc->tsk)) {
+				return_error = BR_FAILED_REPLY;
+				goto err_binder_get_ref_for_node_failed;
+			}
 			ref = binder_get_ref_for_node(target_proc, node);
 			if (ref == NULL) {
 				return_error = BR_FAILED_REPLY;
@@ -1665,6 +1675,10 @@ static void binder_transaction(struct binder_proc *proc,
 					"transaction with invalid "
 					"handle, %ld\n", proc->pid,
 					thread->pid, fp->handle);
+				return_error = BR_FAILED_REPLY;
+				goto err_binder_get_ref_failed;
+			}
+			if (security_binder_transfer_binder(proc->tsk, target_proc->tsk)) {
 				return_error = BR_FAILED_REPLY;
 				goto err_binder_get_ref_failed;
 			}
@@ -1724,6 +1738,11 @@ static void binder_transaction(struct binder_proc *proc,
 				return_error = BR_FAILED_REPLY;
 				goto err_fget_failed;
 			}
+			if (security_binder_transfer_file(proc->tsk, target_proc->tsk, file) < 0) {
+				fput(file);
+				return_error = BR_FAILED_REPLY;
+				goto err_get_unused_fd_failed;
+			}
 			target_fd = task_get_unused_fd_flags(target_proc, O_CLOEXEC);
 			if (target_fd < 0) {
 				fput(file);
@@ -1734,7 +1753,7 @@ static void binder_transaction(struct binder_proc *proc,
 			trace_binder_transaction_fd(t, fp->handle, target_fd);
 			binder_debug(BINDER_DEBUG_TRANSACTION,
 				     "        fd %ld -> %d\n", fp->handle, target_fd);
-			/* TODO: fput? */
+			/*             */
 			fp->handle = target_fd;
 		} break;
 
@@ -2290,13 +2309,13 @@ retry:
 			if (!binder_has_proc_work(proc, thread))
 				ret = -EAGAIN;
 		} else
-			ret = wait_event_interruptible_exclusive(proc->wait, binder_has_proc_work(proc, thread));
+			ret = wait_event_freezable_exclusive(proc->wait, binder_has_proc_work(proc, thread));
 	} else {
 		if (non_block) {
 			if (!binder_has_thread_work(thread))
 				ret = -EAGAIN;
 		} else
-			ret = wait_event_interruptible(thread->wait, binder_has_thread_work(thread));
+			ret = wait_event_freezable(thread->wait, binder_has_thread_work(thread));
 	}
 
 	binder_lock(__func__);
@@ -2319,7 +2338,7 @@ retry:
 		else if (!list_empty(&proc->todo) && wait_for_proc_work)
 			w = list_first_entry(&proc->todo, struct binder_work, entry);
 		else {
-			if (ptr - buffer == 4 && !(thread->looper & BINDER_LOOPER_STATE_NEED_RETURN)) /* no data added */
+			if (ptr - buffer == 4 && !(thread->looper & BINDER_LOOPER_STATE_NEED_RETURN)) /*               */
 				goto retry;
 			break;
 		}
@@ -2439,7 +2458,7 @@ retry:
 			} else
 				list_move(&w->entry, &proc->delivered_death);
 			if (cmd == BR_DEAD_BINDER)
-				goto done; /* DEAD_BINDER notifications can cause transactions */
+				goto done; /*                                                  */
 		} break;
 		}
 
@@ -2524,8 +2543,8 @@ done:
 	if (proc->requested_threads + proc->ready_threads == 0 &&
 	    proc->requested_threads_started < proc->max_threads &&
 	    (thread->looper & (BINDER_LOOPER_STATE_REGISTERED |
-	     BINDER_LOOPER_STATE_ENTERED)) /* the user-space code fails to */
-	     /*spawn a new thread if we leave this out */) {
+	     BINDER_LOOPER_STATE_ENTERED)) /*                              */
+	     /*                                        */) {
 		proc->requested_threads++;
 		binder_debug(BINDER_DEBUG_THREADS,
 			     "binder: %d:%d BR_SPAWN_LOOPER\n",
@@ -2678,7 +2697,7 @@ static long binder_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 	unsigned int size = _IOC_SIZE(cmd);
 	void __user *ubuf = (void __user *)arg;
 
-	/*printk(KERN_INFO "binder_ioctl: %d:%d %x %lx\n", proc->pid, current->pid, cmd, arg);*/
+	/*                                                                                    */
 
 	trace_binder_ioctl(cmd, arg);
 
@@ -2752,6 +2771,9 @@ static long binder_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 			ret = -EBUSY;
 			goto err;
 		}
+		ret = security_binder_set_context_mgr(proc->tsk);
+		if (ret < 0)
+			goto err;
 		if (binder_context_mgr_uid != -1) {
 			if (binder_context_mgr_uid != current->cred->euid) {
 				printk(KERN_ERR "binder: BINDER_SET_"
@@ -2910,8 +2932,8 @@ static int binder_mmap(struct file *filp, struct vm_area_struct *vma)
 	proc->vma = vma;
 	proc->vma_vm_mm = vma->vm_mm;
 
-	/*printk(KERN_INFO "binder_mmap: %d %lx-%lx maps %p\n",
-		 proc->pid, vma->vm_start, vma->vm_end, proc->buffer);*/
+	/*                                                     
+                                                        */
 	return 0;
 
 err_alloc_small_buf_failed:
@@ -3086,7 +3108,7 @@ static void binder_deferred_release(struct binder_proc *proc)
 			printk(KERN_ERR "binder: release proc %d, "
 			       "transaction %d, not freed\n",
 			       proc->pid, t->debug_id);
-			/*BUG();*/
+			/*      */
 		}
 		binder_free_buf(proc, buffer);
 		buffers++;
@@ -3159,7 +3181,7 @@ static void binder_deferred_func(struct work_struct *work)
 			binder_deferred_flush(proc);
 
 		if (defer & BINDER_DEFERRED_RELEASE)
-			binder_deferred_release(proc); /* frees proc */
+			binder_deferred_release(proc); /*            */
 
 		binder_unlock(__func__);
 		if (files)

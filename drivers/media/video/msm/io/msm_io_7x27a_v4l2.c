@@ -90,7 +90,7 @@ void msm_camio_vfe_blk_reset_2(void)
 {
 	uint32_t val;
 
-	/* do apps reset */
+	/*               */
 	val = readl_relaxed(appbase + 0x00000210);
 	val |= 0x1;
 	writel_relaxed(val, appbase + 0x00000210);
@@ -101,7 +101,7 @@ void msm_camio_vfe_blk_reset_2(void)
 	writel_relaxed(val, appbase + 0x00000210);
 	usleep_range(10000, 11000);
 
-	/* do axi reset */
+	/*              */
 	val = readl_relaxed(appbase + 0x00000208);
 	val |= 0x1;
 	writel_relaxed(val, appbase + 0x00000208);
@@ -121,7 +121,7 @@ void msm_camio_vfe_blk_reset_3(void)
 	if (!apps_reset)
 		return;
 
-	/* do apps reset */
+	/*               */
 	val = readl_relaxed(appbase + 0x00000210);
 	val |= 0x10A0000;
 	writel_relaxed(val, appbase + 0x00000210);

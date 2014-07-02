@@ -134,11 +134,11 @@ static int32_t adm_callback(struct apr_client_data *data, void *priv)
 	return 0;
 }
 
-/* TODO: send_adm_cal_block function to be defined
-	when calibration available for 8974 */
+/*                                                
+                                     */
 static void send_adm_cal(int port_id, int path)
 {
-	/* function to be defined when calibration available for 8974 */
+	/*                                                            */
 	pr_debug("%s\n", __func__);
 }
 
@@ -194,7 +194,7 @@ int adm_connect_afe_port(int mode, int session_id, int port_id)
 		ret = -EINVAL;
 		goto fail_cmd;
 	}
-	/* Wait for the callback with copp id */
+	/*                                    */
 	ret = wait_event_timeout(this_adm.wait[index],
 		atomic_read(&this_adm.copp_stat[index]),
 		msecs_to_jiffies(TIMEOUT_MS));
@@ -244,7 +244,7 @@ int adm_open(int port_id, int path, int rate, int channel_mode, int topology)
 	}
 
 
-	/* Create a COPP if port id are not enabled */
+	/*                                          */
 	if (atomic_read(&this_adm.copp_cnt[index]) == 0) {
 
 		open.hdr.hdr_field = APR_HDR_FIELD(APR_MSG_TYPE_SEQ_CMD,
@@ -260,12 +260,12 @@ int adm_open(int port_id, int path, int rate, int channel_mode, int topology)
 		open.hdr.opcode = ADM_CMD_DEVICE_OPEN_V5;
 
 		open.mode_of_operation = path;
-		/* Reserved for future use, need to set this to 0 */
+		/*                                                */
 		open.flags = 0x00;
 		open.endpoint_id_1 = tmp_port;
 		open.endpoint_id_2 = 0xFFFF;
 
-		/* convert path to acdb path */
+		/*                           */
 		if (path == ADM_PATH_PLAYBACK)
 			open.topology_id = get_adm_rx_topology();
 		else {
@@ -316,7 +316,7 @@ int adm_open(int port_id, int path, int rate, int channel_mode, int topology)
 			ret = -EINVAL;
 			goto fail_cmd;
 		}
-		/* Wait for the callback with copp id */
+		/*                                    */
 		ret = wait_event_timeout(this_adm.wait[index],
 			atomic_read(&this_adm.copp_stat[index]),
 			msecs_to_jiffies(TIMEOUT_MS));
@@ -357,7 +357,7 @@ int adm_matrix_map(int session_id, int path, int num_copps,
 	void *payload = NULL;
 	void *matrix_map = NULL;
 
-	/* Assumes port_ids have already been validated during adm_open */
+	/*                                                              */
 	int index = q6audio_get_port_index(copp_id);
 	if (index < 0 || index >= Q6_AFE_MAX_PORTS) {
 		pr_err("%s: invalid port idx %d token %d\n",

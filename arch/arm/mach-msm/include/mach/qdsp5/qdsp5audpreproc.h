@@ -25,9 +25,9 @@
 #define MSM_ADSP_ENC_MODE_TUNNEL 24
 #define MSM_ADSP_ENC_MODE_NON_TUNNEL 25
 
-/* Exported common api's from audpreproc layer */
+/*                                             */
 int audpreproc_aenc_alloc(unsigned enc_type, const char **module_name,
 		unsigned *queue_id);
 void audpreproc_aenc_free(int enc_id);
 
-#endif /* QDSP5AUDPREPROC_H */
+#endif /*                   */

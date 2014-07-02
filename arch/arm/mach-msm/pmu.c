@@ -101,11 +101,11 @@ static struct platform_device *pmu_devices[] = {
 static int __init msm_pmu_init(void)
 {
 	/*
-	 * For the targets we know are multicore's set the request/free IRQ
-	 * handlers to call the percpu API.
-	 * Defaults to unicore API {request,free}_irq().
-	 * See arch/arm/kernel/perf_event.c
-	 */
+                                                                    
+                                    
+                                                 
+                                    
+  */
 #if defined(CONFIG_ARCH_MSM_KRAITMP) || defined(CONFIG_ARCH_MSM_SCORPIONMP)
 	cpu_pmu_device.dev.platform_data = &multicore_data;
 #endif

@@ -36,7 +36,7 @@
 #define STATE_DISABLING 4
 #define STATE_ERROR	5
 
-/* store information used across complete audmgr sessions */
+/*                                                        */
 struct audmgr_global {
 	struct mutex *lock;
 	struct msm_rpc_endpoint *ept;
@@ -69,11 +69,11 @@ static void process_audmgr_callback(struct audmgr_global *amg,
 {
 	struct audmgr *am;
 
-	/* Allow only if complete arguments recevied */
+	/*                                           */
 	if (len < (sizeof(struct rpc_audmgr_cb_func_ptr)))
 		return;
 
-	/* Allow only if valid argument */
+	/*                              */
 	if (be32_to_cpu(args->set_to_one) != 1)
 		return;
 
@@ -179,7 +179,7 @@ static int audmgr_rpc_thread(void *data)
 			} else {
 				MM_INFO("rpc_reply denied!\n");
 			}
-			/* process reply */
+			/*               */
 			continue;
 		}
 
@@ -221,7 +221,7 @@ int audmgr_open(struct audmgr *am)
 
 	mutex_lock(amg->lock);
 
-	/* connect to audmgr end point and polling thread only once */
+	/*                                                          */
 	if (amg->ept == NULL) {
 		amg->ept = msm_rpc_connect_compatible(AUDMGR_PROG,
 				AUDMGR_VERS_COMP_VER3,
@@ -273,7 +273,7 @@ int audmgr_open(struct audmgr *am)
 		}
 	}
 
-	/* Initialize session parameters */
+	/*                               */
 	init_waitqueue_head(&am->wait);
 	am->state = STATE_DISABLED;
 	rc = 0;

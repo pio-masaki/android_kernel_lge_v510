@@ -288,11 +288,11 @@ void msm_snddev_register(struct msm_snddev_info *dev_info)
 	mutex_lock(&session_lock);
 	if (audio_dev_ctrl.num_dev < AUDIO_DEV_CTL_MAX_DEV) {
 		audio_dev_ctrl.devs[audio_dev_ctrl.num_dev] = dev_info;
-		/* roughly 0 DB for digital gain
-		 * If default gain is not desirable, it is expected that
-		 * application sets desired gain before activating sound
-		 * device
-		 */
+		/*                              
+                                                          
+                                                          
+           
+   */
 		dev_info->dev_volume = 75;
 		dev_info->sessions = 0x0;
 		dev_info->usage_count = 0;
@@ -339,7 +339,7 @@ unsigned short msm_snddev_route_dec(int popp_id)
 }
 EXPORT_SYMBOL(msm_snddev_route_dec);
 
-/*To check one->many case*/
+/*                       */
 int msm_check_multicopp_per_stream(int session_id,
 				struct route_payload *payload)
 {
@@ -393,7 +393,7 @@ int msm_snddev_set_dec(int popp_id, int copp_id, int set,
 		memset(payload.copp_ids, COPP_IGNORE,
 				(sizeof(unsigned int) * AFE_MAX_PORTS));
 		num_copps = msm_check_multicopp_per_stream(popp_id, &payload);
-		/* Multiple streams per copp is handled, one stream at a time */
+		/*                                                            */
 		rc = adm_matrix_map(popp_id, ADM_PATH_PLAYBACK, num_copps,
 					payload.copp_ids, copp_id);
 		if (rc < 0) {
@@ -427,7 +427,7 @@ int msm_snddev_set_dec(int popp_id, int copp_id, int set,
 	}
 
 	if (copp_id == VOICE_PLAYBACK_TX) {
-		/* Signal uplink playback. */
+		/*                         */
 		rc = voice_start_playback(set);
 	}
 	mutex_unlock(&routing_info.adm_mutex);
@@ -1347,11 +1347,11 @@ struct miscdevice audio_dev_ctrl_misc = {
 	.fops	= &audio_dev_ctrl_fops,
 };
 
-/* session id is 64 bit routing mask per device
- * 0-15 for voice clients
- * 16-31 for Decoder clients
- * 32-47 for Encoder clients
- * 48-63 Do not care
+/*                                             
+                         
+                            
+                            
+                    
  */
 void broadcast_event(u32 evt_id, u32 dev_id, u64 session_id)
 {
@@ -1660,7 +1660,7 @@ void mixer_post_event(u32 evt_id, u32 id)
 
 	pr_debug("evt_id = %d\n", evt_id);
 	switch (evt_id) {
-	case AUDDEV_EVT_DEV_CHG_VOICE: /* Called from Voice_route */
+	case AUDDEV_EVT_DEV_CHG_VOICE: /*                         */
 		broadcast_event(AUDDEV_EVT_DEV_CHG_VOICE, id, SESSION_IGNORE);
 		break;
 	case AUDDEV_EVT_DEV_RDY:

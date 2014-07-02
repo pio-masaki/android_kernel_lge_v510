@@ -46,11 +46,11 @@ static int ehci_msm_reset(struct usb_hcd *hcd)
 	if (retval)
 		return retval;
 
-	/* bursts of unspecified length. */
+	/*                               */
 	writel(0, USB_AHBBURST);
-	/* Use the AHB transactor */
+	/*                        */
 	writel_relaxed(0x08, USB_AHBMODE);
-	/* Disable streaming mode and select host mode */
+	/*                                             */
 	writel(0x13, USB_USBMODE);
 
 	ehci_port_power(ehci, 1);
@@ -63,8 +63,8 @@ static struct hc_driver msm_hc_driver = {
 	.hcd_priv_size		= sizeof(struct ehci_hcd),
 
 	/*
-	 * generic hardware linkage
-	 */
+                            
+  */
 	.irq			= ehci_irq,
 	.flags			= HCD_USB2 | HCD_MEMORY,
 
@@ -75,8 +75,8 @@ static struct hc_driver msm_hc_driver = {
 	.shutdown		= ehci_shutdown,
 
 	/*
-	 * managing i/o requests and associated device resources
-	 */
+                                                         
+  */
 	.urb_enqueue		= ehci_urb_enqueue,
 	.urb_dequeue		= ehci_urb_dequeue,
 	.endpoint_disable	= ehci_endpoint_disable,
@@ -84,21 +84,21 @@ static struct hc_driver msm_hc_driver = {
 	.clear_tt_buffer_complete = ehci_clear_tt_buffer_complete,
 
 	/*
-	 * scheduling support
-	 */
+                      
+  */
 	.get_frame_number	= ehci_get_frame,
 
 	/*
-	 * root hub support
-	 */
+                    
+  */
 	.hub_status_data	= ehci_hub_status_data,
 	.hub_control		= ehci_hub_control,
 	.relinquish_port	= ehci_relinquish_port,
 	.port_handed_over	= ehci_port_handed_over,
 
 	/*
-	 * PM support
-	 */
+              
+  */
 	.bus_suspend		= ehci_bus_suspend,
 	.bus_resume		= ehci_bus_resume,
 };
@@ -141,10 +141,10 @@ static int ehci_msm_probe(struct platform_device *pdev)
 	}
 
 	/*
-	 * OTG driver takes care of PHY initialization, clock management,
-	 * powering up VBUS, mapping of registers address space and power
-	 * management.
-	 */
+                                                                  
+                                                                  
+               
+  */
 	phy = usb_get_transceiver();
 	if (!phy) {
 		dev_err(&pdev->dev, "unable to find transceiver\n");
@@ -202,9 +202,9 @@ static int ehci_msm_runtime_suspend(struct device *dev)
 {
 	dev_dbg(dev, "ehci runtime suspend\n");
 	/*
-	 * Notify OTG about suspend.  It takes care of
-	 * putting the hardware in LPM.
-	 */
+                                               
+                                
+  */
 	return usb_phy_set_suspend(phy, 1);
 }
 
@@ -227,12 +227,12 @@ static int ehci_msm_pm_suspend(struct device *dev)
 		return 0;
 
 	/*
-	 * EHCI helper function has also the same check before manipulating
-	 * port wakeup flags.  We do check here the same condition before
-	 * calling the same helper function to avoid bringing hardware
-	 * from Low power mode when there is no need for adjusting port
-	 * wakeup flags.
-	 */
+                                                                    
+                                                                  
+                                                               
+                                                                
+                 
+  */
 	if (hcd->self.root_hub->do_remote_wakeup && !wakeup) {
 		pm_runtime_resume(dev);
 		ehci_prepare_ports_for_controller_suspend(hcd_to_ehci(hcd),

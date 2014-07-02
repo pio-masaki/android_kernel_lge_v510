@@ -28,14 +28,14 @@ GNU General Public License for more details.
 	sizeof(audplay_msg_dec_needs_data)
 
 struct audplay_msg_dec_needs_data {
-	/* reserved*/
+	/*         */
 	unsigned int dec_id;
 
-	/*The read pointer offset of external memory till which bitstream
-	has been dmed in*/
+	/*                                                               
+                 */
 	unsigned int adecDataReadPtrOffset;
 
-	/*The buffer size of external memory. */
+	/*                                    */
 	unsigned int adecDataBufSize;
 
 	unsigned int 	bitstream_free_len;
@@ -71,4 +71,4 @@ struct audplay_msg_buffer_update {
 
 #define AUDPLAY_UP_OUTPORT_FLUSH_ACK 0x0005
 
-#endif /* QDSP5AUDPLAYMSG_H */
+#endif /*                   */

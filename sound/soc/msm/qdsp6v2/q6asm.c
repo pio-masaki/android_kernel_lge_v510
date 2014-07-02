@@ -56,7 +56,7 @@
 #define READDONE_IDX_NUMFRAMES 9
 #define READDONE_IDX_SEQ_ID 10
 
-/* TODO, combine them together */
+/*                             */
 static DEFINE_MUTEX(session_lock);
 struct asm_mmap {
 	atomic_t ref_cnt;
@@ -64,7 +64,7 @@ struct asm_mmap {
 };
 
 static struct asm_mmap this_mmap;
-/* session id: 0 reserved */
+/*                        */
 static struct audio_client *session[SESSION_MAX+1];
 
 struct asm_buffer_node {
@@ -100,7 +100,7 @@ static long in_enable_flag;
 static struct dentry *out_dentry;
 static struct dentry *in_dentry;
 static int in_cont_index;
-/*This var is used to keep track of first write done for cold output latency */
+/*                                                                           */
 static int out_cold_index;
 static char *out_buffer;
 static char *in_buffer;
@@ -194,8 +194,8 @@ static const struct file_operations audio_input_latency_debug_fops = {
 static void config_debug_fs_write_cb(void)
 {
 	if (out_enable_flag) {
-		/* For first Write done log the time and reset
-		out_cold_index*/
+		/*                                            
+                */
 		if (out_cold_index != 1) {
 			do_gettimeofday(&out_cold_tv);
 			pr_debug("COLD: apr_send_pkt at %ld sec %ld microsec\n",
@@ -210,17 +210,17 @@ static void config_debug_fs_write_cb(void)
 static void config_debug_fs_read_cb(void)
 {
 	if (in_enable_flag) {
-		/* when in_cont_index == 7, DSP would be
-		* writing into the 8th 512 byte buffer and this
-		* timestamp is tapped here.Once done it then writes
-		* to 9th 512 byte buffer.These two buffers(8th, 9th)
-		* reach the test application in 5th iteration and that
-		* timestamp is tapped at user level. The difference
-		* of these two timestamps gives us the time between
-		* the time at which dsp started filling the sample
-		* required and when it reached the test application.
-		* Hence continuous input latency
-		*/
+		/*                                      
+                                                 
+                                                     
+                                                      
+                                                        
+                                                     
+                                                     
+                                                    
+                                                      
+                                  
+  */
 		if (in_cont_index == 7) {
 			do_gettimeofday(&in_cont_tv);
 			pr_err("In_CONT:previous read buffer done at %ld sec %ld microsec\n",
@@ -248,8 +248,8 @@ static void config_debug_fs_write(struct audio_buffer *ab)
 {
 	if (out_enable_flag) {
 		char zero_pattern[2] = {0x00, 0x00};
-		/* If First two byte is non zero and last two byte
-		is zero then it is warm output pattern */
+		/*                                                
+                                         */
 		if ((strncmp(((char *)ab->data), zero_pattern, 2)) &&
 		(!strncmp(((char *)ab->data + 2), zero_pattern, 2))) {
 			do_gettimeofday(&out_warm_tv);
@@ -258,8 +258,8 @@ static void config_debug_fs_write(struct audio_buffer *ab)
 			out_warm_tv.tv_usec);
 			pr_debug("Warm Pattern Matched");
 		}
-		/* If First two byte is zero and last two byte is
-		non zero then it is cont ouput pattern */
+		/*                                               
+                                         */
 		else if ((!strncmp(((char *)ab->data), zero_pattern, 2))
 		&& (strncmp(((char *)ab->data + 2), zero_pattern, 2))) {
 			do_gettimeofday(&out_cont_tv);
@@ -471,7 +471,7 @@ void q6asm_audio_client_free(struct audio_client *ac)
 
 	pr_debug("%s: APR De-Register\n", __func__);
 
-/*done:*/
+/*     */
 	kfree(ac);
 	return;
 }
@@ -1101,11 +1101,11 @@ void *q6asm_is_cpu_buf_avail(int dir, struct audio_client *ac, uint32_t *size,
 			mutex_unlock(&port->lock);
 			return NULL;
 		}
-		/*  dir 0: used = 0 means buf in use
-			dir 1: used = 1 means buf in use */
+		/*                                  
+                                    */
 		if (port->buf[idx].used == dir) {
-			/* To make it more robust, we could loop and get the
-			next avail buf, its risky though */
+			/*                                                  
+                                    */
 			pr_debug("%s:Next buf idx[0x%x] not available, dir[%d]\n",
 			 __func__, idx, dir);
 			mutex_unlock(&port->lock);
@@ -1119,9 +1119,9 @@ void *q6asm_is_cpu_buf_avail(int dir, struct audio_client *ac, uint32_t *size,
 						ac->session,
 						port->cpu_buf,
 						data, *size);
-		/* By default increase the cpu_buf cnt
-		user accesses this function,increase cpu
-		buf(to avoid another api)*/
+		/*                                    
+                                          
+                           */
 		port->buf[idx].used = dir;
 		port->cpu_buf = ((port->cpu_buf + 1) & (port->max_buf_cnt - 1));
 		mutex_unlock(&port->lock);
@@ -1148,14 +1148,14 @@ void *q6asm_is_cpu_buf_avail_nolock(int dir, struct audio_client *ac,
 		return NULL;
 	}
 	/*
-	 * dir 0: used = 0 means buf in use
-	 * dir 1: used = 1 means buf in use
-	 */
+                                    
+                                    
+  */
 	if (port->buf[idx].used == dir) {
 		/*
-		 * To make it more robust, we could loop and get the
-		 * next avail buf, its risky though
-		 */
+                                                      
+                                     
+   */
 		pr_debug("%s:Next buf idx[0x%x] not available, dir[%d]\n",
 		 __func__, idx, dir);
 		return NULL;
@@ -1167,10 +1167,10 @@ void *q6asm_is_cpu_buf_avail_nolock(int dir, struct audio_client *ac,
 		__func__, ac->session, port->cpu_buf,
 		data, *size);
 	/*
-	 * By default increase the cpu_buf cnt
-	 * user accesses this function,increase cpu
-	 * buf(to avoid another api)
-	 */
+                                       
+                                            
+                             
+  */
 	port->buf[idx].used = dir;
 	port->cpu_buf = ((port->cpu_buf + 1) & (port->max_buf_cnt - 1));
 	return data;
@@ -1192,8 +1192,8 @@ int q6asm_is_dsp_buf_avail(int dir, struct audio_client *ac)
 		idx = port->dsp_buf;
 
 		if (port->buf[idx].used == (dir ^ 1)) {
-			/* To make it more robust, we could loop and get the
-			next avail buf, its risky though */
+			/*                                                  
+                                    */
 			pr_err("Next buf idx[0x%x] not available, dir[%d]\n",
 								idx, dir);
 			mutex_unlock(&port->lock);
@@ -1287,7 +1287,7 @@ int q6asm_open_read(struct audio_client *ac,
 
 	q6asm_add_hdr(ac, &open.hdr, sizeof(open), TRUE);
 	open.hdr.opcode = ASM_STREAM_CMD_OPEN_READ_V2;
-	/* Stream prio : High, provide meta info with encoded frames */
+	/*                                                           */
 	open.src_endpointype = ASM_END_POINT_DEVICE_MATRIX;
 
 	open.preprocopo_id = get_asm_topology();
@@ -1357,7 +1357,7 @@ int q6asm_open_write(struct audio_client *ac, uint32_t format)
 
 	open.hdr.opcode = ASM_STREAM_CMD_OPEN_WRITE_V2;
 	open.mode_flags = 0x00;
-	/* source endpoint : matrix */
+	/*                          */
 	open.sink_endpointype = ASM_END_POINT_DEVICE_MATRIX;
 	open.bits_per_sample = 16;
 
@@ -1427,7 +1427,7 @@ int q6asm_open_read_write(struct audio_client *ac,
 
 	open.mode_flags = BUFFER_META_ENABLE;
 	open.bits_per_sample = 16;
-	/* source endpoint : matrix */
+	/*                          */
 	open.postprocopo_id = get_asm_topology();
 	if (open.postprocopo_id == 0)
 		open.postprocopo_id = ASM_STREAM_POSTPROC_TOPO_ID_DEFAULT;
@@ -1689,7 +1689,7 @@ int q6asm_enc_cfg_blk_pcm(struct audio_client *ac,
 	enc_cfg.bits_per_sample = 16;
 	enc_cfg.sample_rate = rate;
 	enc_cfg.is_signed = 1;
-	channel_mapping = enc_cfg.channel_mapping;  /* ??? PHANI */
+	channel_mapping = enc_cfg.channel_mapping;  /*           */
 
 	memset(channel_mapping, 0, PCM_FORMAT_MAX_NUM_CHANNEL);
 
@@ -1735,11 +1735,11 @@ int q6asm_enc_cfg_blk_pcm_native(struct audio_client *ac,
 	enc_cfg.encblk.enc_cfg_blk_size  = enc_cfg.encdec.param_size -
 				sizeof(struct asm_enc_cfg_blk_param_v2);
 
-	enc_cfg.num_channels = 0;/*channels;*/
+	enc_cfg.num_channels = 0;/*         */
 	enc_cfg.bits_per_sample = 16;
-	enc_cfg.sample_rate = 0;/*rate;*/
+	enc_cfg.sample_rate = 0;/*     */
 	enc_cfg.is_signed = 1;
-	channel_mapping = enc_cfg.channel_mapping;  /* ??? PHANI */
+	channel_mapping = enc_cfg.channel_mapping;  /*           */
 
 	memset(channel_mapping, 0, PCM_FORMAT_MAX_NUM_CHANNEL);
 
@@ -1887,10 +1887,10 @@ fail_cmd:
 	return -EINVAL;
 }
 
-/* Support for selecting stereo mixing coefficients for B family not done */
+/*                                                                        */
 int q6asm_cfg_aac_sel_mix_coef(struct audio_client *ac, uint32_t mix_coeff)
 {
-	/* To Be Done */
+	/*            */
 	return 0;
 }
 
@@ -2117,7 +2117,7 @@ int q6asm_media_format_block_multi_aac(struct audio_client *ac,
 					sizeof(fmt.fmt_blk);
 	fmt.aac_fmt_flag = cfg->format;
 	fmt.audio_objype = cfg->aot;
-	/* If zero, PCE is assumed to be available in bitstream*/
+	/*                                                     */
 	fmt.total_size_of_PCE_bits = 0;
 	fmt.channel_config = cfg->ch_cfg;
 	fmt.sample_rate = cfg->sample_rate;
@@ -2282,7 +2282,7 @@ int q6asm_memory_map(struct audio_client *ac, uint32_t buf_add, int dir,
 	port = &ac->port[dir];
 	pr_debug("%s, buf_add 0x%x, bufsz: %d\n", __func__, buf_add, bufsz);
 	mregions->shm_addr_lsw = buf_add;
-	/* Using only 32 bit address */
+	/*                           */
 	mregions->shm_addr_msw = 0;
 	mregions->mem_size_bytes = bufsz;
 	++mregions;
@@ -2415,7 +2415,7 @@ static int q6asm_memory_map_regions(struct audio_client *ac, int dir,
 
 	mmap_regions->hdr.opcode = ASM_CMD_SHARED_MEM_MAP_REGIONS;
 	mmap_regions->mem_pool_id = ADSP_MEMORY_MAP_SHMEM8_4K_POOL;
-	mmap_regions->num_regions = 1; /*bufcnt & 0x00ff; */
+	mmap_regions->num_regions = 1; /*                 */
 	mmap_regions->property_flag = 0x00;
 	pr_debug("map_regions->nregions = %d\n", mmap_regions->num_regions);
 	payload = ((u8 *) mmap_region_cmd +
@@ -2426,7 +2426,7 @@ static int q6asm_memory_map_regions(struct audio_client *ac, int dir,
 	port = &ac->port[dir];
 	ab = &port->buf[0];
 	mregions->shm_addr_lsw = ab->phys;
-	/* Using only 32 bit address */
+	/*                           */
 	mregions->shm_addr_msw = 0;
 	mregions->mem_size_bytes = (bufsz * bufcnt);
 
@@ -2965,7 +2965,7 @@ int q6asm_async_write(struct audio_client *ac,
 	port = &ac->port[IN];
 	ab = &port->buf[port->dsp_buf];
 
-	/* Pass physical address as token for AIO scheme */
+	/*                                               */
 	write.hdr.token = param->uid;
 	write.hdr.opcode = ASM_DATA_CMD_WRITE_V2;
 	write.buf_addr_lsw = param->paddr;
@@ -2988,7 +2988,7 @@ int q6asm_async_write(struct audio_client *ac,
 		write.buf_size, write.timestamp_msw,
 		write.timestamp_lsw, lbuf_addr_lsw);
 
-	/* Use 0xFF00 for disabling timestamps */
+	/*                                     */
 	if (param->flags == 0xFF00)
 		write.flags = (0x00000000 | (param->flags & 0x800000FF));
 	else
@@ -3032,7 +3032,7 @@ int q6asm_async_read(struct audio_client *ac,
 
 	q6asm_add_hdr_async(ac, &read.hdr, sizeof(read), FALSE);
 
-	/* Pass physical address as token for AIO scheme */
+	/*                                               */
 	read.hdr.token = param->paddr;
 	read.hdr.opcode = ASM_DATA_CMD_READ_V2;
 	read.buf_addr_lsw = param->paddr;
@@ -3099,7 +3099,7 @@ int q6asm_write(struct audio_client *ac, uint32_t len, uint32_t msw_ts,
 		write.seq_id = port->dsp_buf;
 		write.timestamp_lsw = lsw_ts;
 		write.timestamp_msw = msw_ts;
-		/* Use 0xFF00 for disabling timestamps */
+		/*                                     */
 		if (flags == 0xFF00)
 			write.flags = (0x00000000 | (flags & 0x800000FF));
 		else
@@ -3170,7 +3170,7 @@ int q6asm_write_nolock(struct audio_client *ac, uint32_t len, uint32_t msw_ts,
 						struct asm_buffer_node,
 						list);
 		write.mem_map_handle = buf_node->mmap_hdl;
-		/* Use 0xFF00 for disabling timestamps */
+		/*                                     */
 		if (flags == 0xFF00)
 			write.flags = (0x00000000 | (flags & 0x800000FF));
 		else
@@ -3294,7 +3294,7 @@ int q6asm_cmd(struct audio_client *ac, int cmd)
 	if (cmd == CMD_FLUSH)
 		q6asm_reset_buf_state(ac);
 	if (cmd == CMD_CLOSE) {
-		/* check if DSP return all buffers */
+		/*                                 */
 		if (ac->port[IN].buf) {
 			for (cnt = 0; cnt < ac->port[IN].max_buf_cnt;
 								cnt++) {
@@ -3393,7 +3393,7 @@ int q6asm_reg_tx_overflow(struct audio_client *ac, uint16_t enable)
 
 	tx_overflow.hdr.opcode = \
 			ASM_SESSION_CMD_REGISTER_FORX_OVERFLOW_EVENTS;
-	/* tx overflow event: enable */
+	/*                           */
 	tx_overflow.enable_flag = enable;
 
 	rc = apr_send_pkt(ac->apr, (uint32_t *) &tx_overflow);

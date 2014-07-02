@@ -27,7 +27,7 @@
 
 #include <linux/pm_qos.h>
 
-/* AXI rates in KHz */
+/*                  */
 #define MSM_AXI_QOS_PREVIEW     192000
 #define MSM_AXI_QOS_SNAPSHOT    192000
 #define MSM_AXI_QOS_RECORDING   192000

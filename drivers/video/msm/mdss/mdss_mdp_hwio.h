@@ -428,4 +428,4 @@ enum mdss_mdp_smp_client_index {
 	MDSS_MDP_SMP_CLIENT_RGB2_FETCH,
 };
 
-#endif /* MDSS_MDP_HWIO_H */
+#endif /*                 */

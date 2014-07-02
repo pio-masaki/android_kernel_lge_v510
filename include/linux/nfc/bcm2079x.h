@@ -22,11 +22,11 @@
 #define BCMNFC_MAGIC	0xFA
 
 /*
- * BCMNFC power control via ioctl
- * BCMNFC_POWER_CTL(0): power off
- * BCMNFC_POWER_CTL(1): power on
- * BCMNFC_WAKE_CTL(0): wake off
- * BCMNFC_WAKE_CTL(1): wake on
+                                 
+                                 
+                                
+                               
+                              
  */
 #define BCMNFC_POWER_CTL		_IO(BCMNFC_MAGIC, 0x01)
 #define BCMNFC_CHANGE_ADDR		_IO(BCMNFC_MAGIC, 0x02)

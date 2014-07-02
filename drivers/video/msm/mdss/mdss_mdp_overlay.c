@@ -255,7 +255,7 @@ static int mdss_mdp_overlay_pipe_setup(struct msm_fb_data_type *mfd,
 
 		pipe = mdss_mdp_pipe_alloc_locked(pipe_type);
 
-		/* VIG pipes can also support RGB format */
+		/*                                       */
 		if (!pipe && pipe_type == MDSS_MDP_PIPE_TYPE_RGB) {
 			pipe_type = MDSS_MDP_PIPE_TYPE_VIG;
 			pipe = mdss_mdp_pipe_alloc_locked(pipe_type);
@@ -319,7 +319,7 @@ static int mdss_mdp_overlay_set(struct msm_fb_data_type *mfd,
 	} else {
 		struct mdss_mdp_pipe *pipe;
 
-		/* userspace zorder start with stage 0 */
+		/*                                     */
 		req->z_order += MDSS_MDP_STAGE_0;
 
 		ret = mdss_mdp_overlay_pipe_setup(mfd, req, &pipe);
@@ -641,9 +641,9 @@ static int mdss_mdp_hw_cursor_update(struct fb_info *info,
 		alpha = (img->fg_color & 0xff000000) >> 24;
 
 		if (alpha)
-			calpha_en = 0x0; /* xrgb */
+			calpha_en = 0x0; /*      */
 		else
-			calpha_en = 0x2; /* argb */
+			calpha_en = 0x2; /*      */
 
 		MDSS_MDP_REG_WRITE(off + MDSS_MDP_REG_LM_CURSOR_SIZE,
 				   (img->height << 16) | img->width);

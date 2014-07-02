@@ -22,39 +22,39 @@
 #include <mach/gpio.h>
 #include <mach/camera.h>
 #include "qs_s5k4e1.h"
-/*=============================================================
-	SENSOR REGISTER DEFINES
-==============================================================*/
+/*                                                             
+                        
+                                                              */
 #define REG_GROUPED_PARAMETER_HOLD		0x0104
 #define GROUPED_PARAMETER_HOLD_OFF		0x00
 #define GROUPED_PARAMETER_HOLD			0x01
-/* Integration Time */
+/*                  */
 #define REG_COARSE_INTEGRATION_TIME		0x0202
-/* Gain */
+/*      */
 #define REG_GLOBAL_GAIN					0x0204
 #define REG_GR_GAIN					0x020E
 #define REG_R_GAIN					0x0210
 #define REG_B_GAIN					0x0212
 #define REG_GB_GAIN					0x0214
-/* PLL registers */
+/*               */
 #define REG_FRAME_LENGTH_LINES			0x0340
 #define REG_LINE_LENGTH_PCK				0x0342
-/* Test Pattern */
+/*              */
 #define REG_TEST_PATTERN_MODE			0x0601
 #define REG_VCM_NEW_CODE				0x30F2
 #define AF_ADDR							0x18
 #define BRIDGE_ADDR						0x80
-/*============================================================================
-			 TYPE DECLARATIONS
-============================================================================*/
+/*                                                                            
+                     
+                                                                            */
 
-/* 16bit address - 8 bit context register structure */
+/*                                                  */
 #define Q8  0x00000100
 #define Q10 0x00000400
 #define QS_S5K4E1_MASTER_CLK_RATE 24000000
 #define QS_S5K4E1_OFFSET			8
 
-/* AF Total steps parameters */
+/*                           */
 #define QS_S5K4E1_TOTAL_STEPS_NEAR_TO_FAR    32
 #define QS_S5K4E1_TOTAL_STEPS_3D    32
 
@@ -82,8 +82,8 @@ struct qs_s5k4e1_ctrl_t {
 	const struct  msm_camera_sensor_info *sensordata;
 
 	uint32_t sensormode;
-	uint32_t fps_divider;/* init to 1 * 0x00000400 */
-	uint32_t pict_fps_divider;/* init to 1 * 0x00000400 */
+	uint32_t fps_divider;/*                        */
+	uint32_t pict_fps_divider;/*                        */
 	uint16_t fps;
 
 	uint16_t curr_lens_pos;
@@ -111,7 +111,7 @@ DEFINE_MUTEX(qs_s5k4e1_mut);
 
 static int cam_debug_init(void);
 static struct dentry *debugfs_base;
-/*=============================================================*/
+/*                                                             */
 
 static int qs_s5k4e1_i2c_rxdata(unsigned short saddr,
 	unsigned char *rxdata, int length)
@@ -640,17 +640,17 @@ static void qs_s5k4e1_stop_stream(void)
 
 static void qs_s5k4e1_get_pict_fps(uint16_t fps, uint16_t *pfps)
 {
-	/* input fps is preview fps in Q8 format */
+	/*                                       */
 	uint32_t divider, d1, d2;
 
 	d1 = prev_frame_length_lines * 0x00000400 / snap_frame_length_lines;
 	d2 = prev_line_length_pck * 0x00000400 / snap_line_length_pck;
 	divider = d1 * d2 / 0x400;
 
-	/*Verify PCLK settings and frame sizes.*/
+	/*                                     */
 	*pfps = (uint16_t) (fps * divider / 0x400);
-	/* 2 is the ratio of no.of snapshot channels
-	to number of preview channels */
+	/*                                          
+                               */
 }
 
 static uint16_t qs_s5k4e1_get_prev_lines_pf(void)
@@ -762,7 +762,7 @@ static int32_t qs_s5k4e1_write_focus_value(uint16_t code_value)
 	uint8_t code_val_msb, code_val_lsb;
 	if ((qs_s5k4e1_ctrl->cam_mode == MODE_2D_LEFT) ||
 		(qs_s5k4e1_ctrl->cam_mode == MODE_3D)) {
-		/* Left */
+		/*      */
 		bridge_i2c_write_w(0x06, 0x02);
 		CDBG("%s: Left Lens Position: %d\n", __func__,
 			code_value);
@@ -777,7 +777,7 @@ static int32_t qs_s5k4e1_write_focus_value(uint16_t code_value)
 
 	if ((qs_s5k4e1_ctrl->cam_mode == MODE_2D_RIGHT) ||
 		(qs_s5k4e1_ctrl->cam_mode == MODE_3D)) {
-		/* Right */
+		/*       */
 		bridge_i2c_write_w(0x06, 0x01);
 		code_value += qs_s5k4e1_af_right_adjust;
 		CDBG("%s: Right Lens Position: %d\n", __func__,
@@ -792,7 +792,7 @@ static int32_t qs_s5k4e1_write_focus_value(uint16_t code_value)
 	}
 
 	if (qs_s5k4e1_ctrl->cam_mode == MODE_3D) {
-		/* 3D Mode */
+		/*         */
 		bridge_i2c_write_w(0x06, 0x03);
 	}
 	usleep(qs_s5k4e1_sw_damping_time_wait*50);
@@ -848,11 +848,11 @@ static int32_t qs_s5k4e1_move_focus(int direction,
 
 	if (step_direction < 0) {
 		if (num_steps >= 20) {
-			/* sweeping towards all the way in infinity direction */
+			/*                                                    */
 			qs_s5k4e1_af_mode = 2;
 			qs_s5k4e1_sw_damping_time_wait = 8;
 		} else if (num_steps <= 4) {
-			/* reverse search during macro mode */
+			/*                                  */
 			qs_s5k4e1_af_mode = 4;
 			qs_s5k4e1_sw_damping_time_wait = 16;
 		} else {
@@ -860,13 +860,13 @@ static int32_t qs_s5k4e1_move_focus(int direction,
 			qs_s5k4e1_sw_damping_time_wait = 12;
 		}
 	} else {
-		/* coarse search towards macro direction */
+		/*                                       */
 		qs_s5k4e1_af_mode = 4;
 		qs_s5k4e1_sw_damping_time_wait = 16;
 	}
 
 	if (qs_s5k4e1_ctrl->cam_mode == MODE_3D) {
-		/* Left */
+		/*      */
 		bridge_i2c_write_w(0x06, 0x02);
 		dest_lens_position =
 			qs_s5k4e1_step_position_table_left[dest_step_position];
@@ -875,11 +875,11 @@ static int32_t qs_s5k4e1_move_focus(int direction,
 			bridge_i2c_write_w(0x06, 0x03);
 			return -EBUSY;
 		}
-		/* Keep left sensor as reference as AF stats is from left */
+		/*                                                        */
 		qs_s5k4e1_ctrl->curr_step_pos = dest_step_position;
 		qs_s5k4e1_ctrl->curr_lens_pos = dest_lens_position;
 
-		/* Right */
+		/*       */
 		bridge_i2c_write_w(0x06, 0x01);
 		dest_lens_position =
 			qs_s5k4e1_step_position_table_right[dest_step_position];
@@ -889,7 +889,7 @@ static int32_t qs_s5k4e1_move_focus(int direction,
 			return -EBUSY;
 		}
 
-		/* 3D Mode */
+		/*         */
 		bridge_i2c_write_w(0x06, 0x03);
 		return 0;
 	}
@@ -918,7 +918,7 @@ static int32_t qs_s5k4e1_set_default_focus(uint8_t af_step)
 			return rc;
 	} else {
 		if (qs_s5k4e1_ctrl->cam_mode == MODE_3D) {
-			/* Left */
+			/*      */
 			bridge_i2c_write_w(0x06, 0x02);
 			rc = qs_s5k4e1_write_1D_focus_value(
 				qs_s5k4e1_step_position_table_left[0]);
@@ -927,7 +927,7 @@ static int32_t qs_s5k4e1_set_default_focus(uint8_t af_step)
 				return rc;
 			}
 
-			/* Right */
+			/*       */
 			bridge_i2c_write_w(0x06, 0x01);
 			rc = qs_s5k4e1_write_1D_focus_value(
 				qs_s5k4e1_step_position_table_right[0]);
@@ -936,11 +936,11 @@ static int32_t qs_s5k4e1_set_default_focus(uint8_t af_step)
 				return rc;
 			}
 
-			/* Left sensor is the reference sensor for AF stats */
+			/*                                                  */
 			qs_s5k4e1_ctrl->curr_lens_pos =
 				qs_s5k4e1_step_position_table_left[0];
 
-			/* 3D Mode */
+			/*         */
 			bridge_i2c_write_w(0x06, 0x03);
 		} else {
 			rc = qs_s5k4e1_write_focus_value(
@@ -987,9 +987,9 @@ static void qs_s5k4e1_3d_table_init(void)
 		}
 
 		/*
-		 * Using the 150cm and 100cm calibration values
-		 * as per the Lens characteristics derive intermediate step
-		 */
+                                                 
+                                                             
+   */
 		step_position_table[1] = step_position_table[0] +
 			(step_position_table[2] - step_position_table[0])/2;
 		CDBG("%s: Step between 150cm:100cm is %d\n", __func__,
@@ -1006,25 +1006,25 @@ static void qs_s5k4e1_3d_table_init(void)
 		}
 
 		/*
-		 * Using the 100cm and 50cm calibration values
-		 * as per the Lens characteristics derive
-		 * intermediate steps
-		 */
+                                                
+                                           
+                       
+   */
 		step = (step_position_table[6] - step_position_table[2])/4;
 
 		/*
-		 * Interpolate the intermediate steps between 100cm
-		 * to 50cm based on COC1.5
-		 */
+                                                     
+                            
+   */
 		step_position_table[3] = step_position_table[2] + step;
 		step_position_table[4] = step_position_table[3] + step;
 		step_position_table[5] = step_position_table[4] + step;
 
 		/*
-		 * Extrapolate the steps within 50cm based on
-		 * OC2 to converge faster. This range is beyond the 3D
-		 * specification of 50cm
-		 */
+                                               
+                                                        
+                          
+   */
 		anchor_point_q2 = step_position_table[6] << 1;
 		step_q2 = (step_position_table[6] - step_position_table[2]);
 
@@ -1042,7 +1042,7 @@ static void qs_s5k4e1_init_focus(void)
 	int32_t rc = 0;
 	int16_t af_far_data = 0;
 	qs_s5k4e1_af_initial_code = 190;
-	/* Read the calibration data from left and right sensors if available */
+	/*                                                                    */
 	rc = qs_s5k4e1_eeprom_i2c_read_b(0x110, &af_far_data, 2);
 	if (rc == 0) {
 		CDBG("%s: Left Far data - %d\n", __func__, af_far_data);
@@ -1082,10 +1082,10 @@ static int32_t qs_s5k4e1_test(enum qs_s5k4e1_test_mode_t mo)
 	if (mo == TEST_OFF)
 		return rc;
 	else {
-		/* REG_0x30D8[4] is TESBYPEN: 0: Normal Operation,
-		1: Bypass Signal Processing
-		REG_0x30D8[5] is EBDMASK: 0:
-		Output Embedded data, 1: No output embedded data */
+		/*                                                
+                             
+                              
+                                                   */
 		if (qs_s5k4e1_i2c_write_b_sensor(REG_TEST_PATTERN_MODE,
 			(uint8_t) mo) < 0) {
 			return rc;
@@ -1149,7 +1149,7 @@ static int32_t qs_s5k4e1_video_config(int mode)
 {
 
 	int32_t rc = 0;
-	/* change sensor resolution if needed */
+	/*                                    */
 	if (qs_s5k4e1_sensor_setting(UPDATE_PERIODIC,
 			qs_s5k4e1_ctrl->prev_res) < 0)
 		return rc;
@@ -1166,7 +1166,7 @@ static int32_t qs_s5k4e1_video_config(int mode)
 static int32_t qs_s5k4e1_snapshot_config(int mode)
 {
 	int32_t rc = 0;
-	/*change sensor resolution if needed */
+	/*                                   */
 	if (qs_s5k4e1_ctrl->curr_res != qs_s5k4e1_ctrl->pict_res) {
 		if (qs_s5k4e1_sensor_setting(UPDATE_PERIODIC,
 				qs_s5k4e1_ctrl->pict_res) < 0)
@@ -1176,12 +1176,12 @@ static int32_t qs_s5k4e1_snapshot_config(int mode)
 	qs_s5k4e1_ctrl->curr_res = qs_s5k4e1_ctrl->pict_res;
 	qs_s5k4e1_ctrl->sensormode = mode;
 	return rc;
-} /*end of qs_s5k4e1_snapshot_config*/
+} /*                                */
 
 static int32_t qs_s5k4e1_raw_snapshot_config(int mode)
 {
 	int32_t rc = 0;
-	/* change sensor resolution if needed */
+	/*                                    */
 	if (qs_s5k4e1_ctrl->curr_res != qs_s5k4e1_ctrl->pict_res) {
 		if (qs_s5k4e1_sensor_setting(UPDATE_PERIODIC,
 				qs_s5k4e1_ctrl->pict_res) < 0)
@@ -1191,7 +1191,7 @@ static int32_t qs_s5k4e1_raw_snapshot_config(int mode)
 	qs_s5k4e1_ctrl->curr_res = qs_s5k4e1_ctrl->pict_res;
 	qs_s5k4e1_ctrl->sensormode = mode;
 	return rc;
-} /*end of qs_s5k4e1_raw_snapshot_config*/
+} /*                                    */
 
 static int32_t qs_s5k4e1_mode_init(int mode, struct sensor_init_cfg init_info)
 {
@@ -1259,7 +1259,7 @@ static int32_t qs_s5k4e1_power_down(void)
 	qs_s5k4e1_af_right_adjust = 0;
 	qs_s5k4e1_write_focus_value(0);
 	msleep(100);
-	/* Set AF actutator to PowerDown */
+	/*                               */
 	af_i2c_write_b_sensor(0x80, 00);
 	return 0;
 }
@@ -1298,7 +1298,7 @@ static int
 	CDBG(" qs_s5k4e1_probe_init_sensor is called\n");
 	rc = qs_s5k4e1_i2c_read(0x0000, &chipid, 2);
 	CDBG("ID: %d\n", chipid);
-	/* 4. Compare sensor ID to QS_S5K4E1 ID: */
+	/*                                       */
 	if (chipid != 0x4e10) {
 		rc = -ENODEV;
 		CDBG("qs_s5k4e1_probe_init_sensor fail chip id mismatch\n");
@@ -1313,7 +1313,7 @@ init_probe_done:
 	CDBG(" qs_s5k4e1_probe_init_sensor finishes\n");
 	return rc;
 }
-/* camsensor_qs_s5k4e1_reset */
+/*                           */
 
 int qs_s5k4e1_sensor_open_init(const struct msm_camera_sensor_info *data)
 {
@@ -1339,12 +1339,12 @@ int qs_s5k4e1_sensor_open_init(const struct msm_camera_sensor_info *data)
 		return rc;
 	}
 	CDBG("%s: %d\n", __func__, __LINE__);
-	/* enable mclk first */
+	/*                   */
 	msm_camio_clk_rate_set(QS_S5K4E1_MASTER_CLK_RATE);
 	rc = qs_s5k4e1_probe_init_sensor(data);
 	if (rc < 0)
 		goto init_fail;
-/*Default mode is 3D*/
+/*                  */
 	memcpy(lens_eeprom_data, data->eeprom_data, 864);
 	qs_s5k4e1_ctrl->fps = 30*Q8;
 	qs_s5k4e1_init_focus();
@@ -1359,11 +1359,11 @@ init_fail:
 init_done:
 	CDBG("init_done\n");
 	return rc;
-} /*endof qs_s5k4e1_sensor_open_init*/
+} /*                                */
 
 static int qs_s5k4e1_init_client(struct i2c_client *client)
 {
-	/* Initialize the MSM_CAMI2C Chip */
+	/*                                */
 	init_waitqueue_head(&qs_s5k4e1_wait_queue);
 	return 0;
 }
@@ -1410,7 +1410,7 @@ static int qs_s5k4e1_send_wb_info(struct wb_info_cfg *wb)
 {
 	return 0;
 
-} /*end of qs_s5k4e1_snapshot_config*/
+} /*                                */
 
 static int __exit qs_s5k4e1_remove(struct i2c_client *client)
 {
@@ -1650,7 +1650,7 @@ static int qs_s5k4e1_sensor_probe(const struct msm_camera_sensor_info *info,
 	rc = qs_s5k4e1_probe_init_sensor(info);
 	if (rc < 0)
 		goto probe_fail;
-	qs_s5k4e1_read_lsc(info->eeprom_data); /*Default mode is 3D*/
+	qs_s5k4e1_read_lsc(info->eeprom_data); /*                  */
 	s->s_init = qs_s5k4e1_sensor_open_init;
 	s->s_release = qs_s5k4e1_sensor_release;
 	s->s_config  = qs_s5k4e1_sensor_config;

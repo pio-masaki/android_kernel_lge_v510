@@ -21,7 +21,7 @@
 #define _LINUX_TEST_IOSCHED_H
 
 /*
- * Patterns definitions for read/write requests data
+                                                    
  */
 #define TEST_PATTERN_SEQUENTIAL	-1
 #define TEST_PATTERN_5A		0x5A5A5A5A
@@ -39,8 +39,8 @@ typedef char* (get_test_case_str_fn) (struct test_data *);
 typedef void (blk_dev_test_init_fn) (void);
 typedef void (blk_dev_test_exit_fn) (void);
 
-/**
- * enum test_state - defines the state of the test
+/* 
+                                                  
  */
 enum test_state {
 	TEST_IDLE,
@@ -48,8 +48,8 @@ enum test_state {
 	TEST_COMPLETED,
 };
 
-/**
- * enum test_results - defines the success orfailure of the test
+/* 
+                                                                
  */
 enum test_results {
 	TEST_NO_RESULT,
@@ -58,8 +58,8 @@ enum test_results {
 	TEST_NOT_SUPPORTED,
 };
 
-/**
- * enum req_unique_type - defines a unique request type
+/* 
+                                                       
  */
 enum req_unique_type {
 	REQ_UNIQUE_NONE,
@@ -68,16 +68,16 @@ enum req_unique_type {
 	REQ_UNIQUE_SANITIZE,
 };
 
-/**
- * struct test_debug - debugfs directories
- * @debug_root:		The test-iosched debugfs root directory
- * @debug_utils_root:	test-iosched debugfs utils root
- *			directory
- * @debug_tests_root:	test-iosched debugfs tests root
- *			directory
- * @debug_test_result:	Exposes the test result to the user
- *			space
- * @start_sector:	The start sector for read/write requests
+/* 
+                                          
+                                                        
+                                                     
+              
+                                                     
+              
+                                                          
+          
+                                                          
  */
 struct test_debug {
 	struct dentry *debug_root;
@@ -87,24 +87,24 @@ struct test_debug {
 	struct dentry *start_sector;
 };
 
-/**
- * struct test_request - defines a test request
- * @queuelist:		The test requests list
- * @bios_buffer:	Write/read requests data buffer
- * @buf_size:		Write/read requests data buffer size (in
- *			bytes)
- * @rq:			A block request, to be dispatched
- * @req_completed:	A flag to indicate if the request was
- *			completed
- * @req_result:		Keeps the error code received in the
- *			request completion callback
- * @is_err_expected:	A flag to indicate if the request should
- *			fail
- * @wr_rd_data_pattern:	A pattern written to the write data
- *			buffer. Can be used in read requests to
- *			verify the data
- * @req_id:		A unique ID to identify a test request
- *			to ease the debugging of the test cases
+/* 
+                                               
+                                      
+                                                
+                                                       
+           
+                                           
+                                                        
+              
+                                                     
+                                
+                                                             
+         
+                                                           
+                                            
+                    
+                                                   
+                                            
  */
 struct test_request {
 	struct list_head queuelist;
@@ -118,18 +118,18 @@ struct test_request {
 	int req_id;
 };
 
-/**
- * struct test_info - specific test information
- * @testcase:		The current running test case
- * @timeout_msec:	Test specific test timeout
- * @buf_size:		Write/read requests data buffer size (in
- *			bytes)
- * @prepare_test_fn:	Test specific test preparation callback
- * @run_test_fn:	Test specific test running callback
- * @check_test_result_fn: Test specific test result checking
- *			callback
- * @get_test_case_str_fn: Test specific function to get the test name
- * @data:		Test specific private data
+/* 
+                                               
+                                            
+                                            
+                                                       
+           
+                                                            
+                                                    
+                                                            
+             
+                                                                     
+                                     
  */
 struct test_info {
 	int testcase;
@@ -142,11 +142,11 @@ struct test_info {
 	void *data;
 };
 
-/**
- * struct blk_dev_test_type - identifies block device test
- * @list:	list head pointer
- * @init_fn:	block device test init callback
- * @exit_fn:	block device test exit callback
+/* 
+                                                          
+                           
+                                            
+                                            
  */
 struct blk_dev_test_type {
 	struct list_head list;
@@ -154,40 +154,40 @@ struct blk_dev_test_type {
 	blk_dev_test_exit_fn *exit_fn;
 };
 
-/**
- * struct test_data - global test iosched data
- * @queue:		The test IO scheduler requests list
- * @test_queue:		The test requests list
- * @next_req:		Points to the next request to be
- *			dispatched from the test requests list
- * @wait_q:		A wait queue for waiting for the test
- *			requests completion
- * @test_state:		Indicates if there is a running test.
- *			Used for dispatch function
- * @test_result:	Indicates if the test passed or failed
- * @debug:		The test debugfs entries
- * @req_q:		The block layer request queue
- * @num_of_write_bios:	The number of write BIOs added to the test requests.
- *			Used to calcualte the sector number of
- *			new BIOs.
- * @start_sector:	The address of the first sector that can
- *			be accessed by the test
- * @timeout_timer:	A timer to verify test completion in
- *			case of non-completed requests
- * @wr_rd_next_req_id:	A unique ID to identify WRITE/READ
- *			request to ease the debugging of the
- *			test cases
- * @unique_next_req_id:	A unique ID to identify
- *			FLUSH/DISCARD/SANITIZE request to ease
- *			the debugging of the test cases
- * @lock:		A lock to verify running a single test
- *			at a time
- * @test_info:		A specific test data to be set by the
- *			test invokation function
- * @ignore_round:	A boolean variable indicating that a
- *			test round was disturbed by an external
- *			flush request, therefore disqualifying
- *			the results
+/* 
+                                              
+                                               
+                                       
+                                               
+                                           
+                                                  
+                        
+                                                      
+                               
+                                                       
+                                    
+                                         
+                                                                           
+                                           
+              
+                                                          
+                            
+                                                       
+                                   
+                                                         
+                                         
+               
+                                               
+                                           
+                                    
+                                                 
+              
+                                                     
+                             
+                                                      
+                                            
+                                           
+                
  */
 struct test_data {
 	struct list_head queue;
@@ -231,4 +231,4 @@ void test_iosched_register(struct blk_dev_test_type *bdt);
 
 void test_iosched_unregister(struct blk_dev_test_type *bdt);
 
-#endif /* _LINUX_TEST_IOSCHED_H */
+#endif /*                       */

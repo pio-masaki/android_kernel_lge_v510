@@ -125,7 +125,7 @@ static void vfe_7x_convert(struct msm_vfe_phy_info *pinfo,
 
 	default:
 		break;
-	} /* switch */
+	} /*        */
 }
 
 static void vfe_7x_ops(void *driver_data, unsigned id, size_t len,
@@ -148,7 +148,7 @@ static void vfe_7x_ops(void *driver_data, unsigned id, size_t len,
 	rp->evt_msg.len = len;
 
 	if (id == VFE_ADSP_EVENT) {
-		/* event */
+		/*       */
 		rp->type           = VFE_EVENT;
 		rp->evt_msg.type   = MSM_CAMERA_EVT;
 		getevent(evt_buf, sizeof(evt_buf));
@@ -157,7 +157,7 @@ static void vfe_7x_ops(void *driver_data, unsigned id, size_t len,
 		resp->vfe_resp(rp, MSM_CAM_Q_VFE_EVT, vfe_syncdata,
 		GFP_ATOMIC);
 	} else {
-		/* messages */
+		/*          */
 		rp->evt_msg.type   = MSM_CAMERA_MSG;
 		rp->evt_msg.msg_id = id;
 		rp->evt_msg.data = rp + 1;
@@ -303,7 +303,7 @@ static void vfe_7x_release(struct platform_device *pdev)
 	kfree(extdata);
 	extlen = 0;
 
-	/* Release AXI */
+	/*             */
 	release_axi_qos();
 	cnt = 0;
 }
@@ -322,7 +322,7 @@ static int vfe_7x_init(struct msm_vfe_callback *presp,
 	else
 		return -EFAULT;
 
-	/* Bring up all the required GPIOs and Clocks */
+	/*                                            */
 	rc = msm_camio_enable(dev);
 	if (rc < 0)
 		return rc;
@@ -399,7 +399,7 @@ static int vfe_7x_config_axi(int mode,
 			*bptr = regptr->paddr + regptr->info.planar1_off;
 			bptr++;
 		}
-	} /* if OUTPUT1 or Both */
+	} /*                    */
 
 	if (mode == OUTPUT_2 || mode == OUTPUT_1_AND_2) {
 		regptr = &(ad->region[ad->bufnum1]);
@@ -664,14 +664,14 @@ static int vfe_7x_config(struct msm_vfe_cfg_cmd *cmd, void *data)
 				_mode = (uint32_t *)cmd_data;
 				op_mode = *(++_mode);
 				if (op_mode & SNAPSHOT_MASK_MODE) {
-					/* request AXI bus for snapshot */
+					/*                              */
 					if (update_axi_qos(MSM_AXI_QOS_SNAPSHOT)
 						< 0) {
 						rc = -EFAULT;
 						goto config_failure;
 					}
 				} else {
-					/* request AXI bus for snapshot */
+					/*                              */
 					if (update_axi_qos(MSM_AXI_QOS_PREVIEW)
 						< 0) {
 						rc = -EFAULT;
@@ -689,7 +689,7 @@ static int vfe_7x_config(struct msm_vfe_cfg_cmd *cmd, void *data)
 			default:
 				break;
 			}
-		} /* QDSP_CMDQUEUE */
+		} /*               */
 	}
 		break;
 	case CMD_AXI_CFG_PREVIEW:
@@ -744,7 +744,7 @@ static int vfe_7x_config(struct msm_vfe_cfg_cmd *cmd, void *data)
 
 	default:
 		break;
-	} /* switch */
+	} /*        */
 
 	if (vfestopped)
 		goto config_done;

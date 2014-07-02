@@ -15,11 +15,11 @@
 
 #include <linux/platform_device.h>
 
-#include <linux/types.h>        /* size_t */
-#include <linux/interrupt.h>    /* mark_bh */
+#include <linux/types.h>        /*        */
+#include <linux/interrupt.h>    /*         */
 
-#include <linux/netdevice.h>   /* struct device, and other headers */
-#include <linux/etherdevice.h> /* eth_type_trans */
+#include <linux/netdevice.h>   /*                                  */
+#include <linux/etherdevice.h> /*                */
 #include <linux/skbuff.h>
 
 #include <linux/proc_fs.h>
@@ -49,7 +49,7 @@
 #define H_DPLX     0
 #define F_DPLX     1
 /*
- * logging macros
+                 
  */
 #define QFEC_LOG_PR     1
 #define QFEC_LOG_DBG    2
@@ -74,9 +74,9 @@ static int qfec_debug = QFEC_LOG_PR;
 #define QFEC_LOG_ERR(...) pr_err(__VA_ARGS__)
 
 /*
- * driver buffer-descriptor
- *   contains the 4 word HW descriptor plus an additional 4-words.
- *   (See the DSL bits in the BUS-Mode register).
+                           
+                                                                  
+                                                 
  */
 #define BD_FLAG_LAST_BD     1
 
@@ -89,10 +89,10 @@ struct buf_desc {
 };
 
 /*
- *inline functions accessing non-struct qfec_buf_desc elements
+                                                              
  */
 
-/* skb */
+/*     */
 static inline struct sk_buff *qfec_bd_skbuf_get(struct buf_desc *p_bd)
 {
 	return p_bd->skb;
@@ -103,7 +103,7 @@ static inline void qfec_bd_skbuf_set(struct buf_desc *p_bd, struct sk_buff *p)
 	p_bd->skb   = p;
 };
 
-/* virtual addr  */
+/*               */
 static inline void qfec_bd_virt_set(struct buf_desc *p_bd, void *addr)
 {
 	p_bd->buf_virt_addr = addr;
@@ -114,7 +114,7 @@ static inline void *qfec_bd_virt_get(struct buf_desc *p_bd)
 	return p_bd->buf_virt_addr;
 };
 
-/* physical addr  */
+/*                */
 static inline void qfec_bd_phys_set(struct buf_desc *p_bd, void *addr)
 {
 	p_bd->buf_phys_addr = addr;
@@ -125,7 +125,7 @@ static inline void *qfec_bd_phys_get(struct buf_desc *p_bd)
 	return p_bd->buf_phys_addr;
 };
 
-/* last_bd_flag */
+/*              */
 static inline uint32_t qfec_bd_last_bd(struct buf_desc *p_bd)
 {
 	return (p_bd->last_bd_flag != 0);
@@ -137,10 +137,10 @@ static inline void qfec_bd_last_bd_set(struct buf_desc *p_bd)
 };
 
 /*
- *inline functions accessing struct qfec_buf_desc elements
+                                                          
  */
 
-/* ownership bit */
+/*               */
 static inline uint32_t qfec_bd_own(struct buf_desc *p_bd)
 {
 	return p_bd->p_desc->status & BUF_OWN;
@@ -171,7 +171,7 @@ static inline uint32_t qfec_bd_status_len(struct buf_desc *p_bd)
 	return BUF_RX_FL_GET((*p_bd->p_desc));
 };
 
-/* control register */
+/*                  */
 static inline void qfec_bd_ctl_reset(struct buf_desc *p_bd)
 {
 	p_bd->p_desc->ctl  = 0;
@@ -192,7 +192,7 @@ static inline void qfec_bd_ctl_wr(struct buf_desc *p_bd, uint32_t val)
 	p_bd->p_desc->ctl = val;
 };
 
-/* pbuf register  */
+/*                */
 static inline void *qfec_bd_pbuf_get(struct buf_desc *p_bd)
 {
 	return p_bd->p_desc->p_buf;
@@ -203,14 +203,14 @@ static inline void qfec_bd_pbuf_set(struct buf_desc *p_bd, void *p)
 	p_bd->p_desc->p_buf = p;
 }
 
-/* next register */
+/*               */
 static inline void *qfec_bd_next_get(struct buf_desc *p_bd)
 {
 	return p_bd->p_desc->next;
 };
 
 /*
- * initialize an RX BD w/ a new buf
+                                   
  */
 static int qfec_rbd_init(struct net_device *dev, struct buf_desc *p_bd)
 {
@@ -218,7 +218,7 @@ static int qfec_rbd_init(struct net_device *dev, struct buf_desc *p_bd)
 	void               *p;
 	void               *v;
 
-	/* allocate and record ptrs for sk buff */
+	/*                                      */
 	skb   = dev_alloc_skb(ETH_BUF_SIZE);
 	if (!skb)
 		goto err;
@@ -233,8 +233,8 @@ static int qfec_rbd_init(struct net_device *dev, struct buf_desc *p_bd)
 	qfec_bd_pbuf_set(p_bd, p);
 	qfec_bd_phys_set(p_bd, p);
 
-	/* populate control register */
-	/* mark the last BD and set end-of-ring bit */
+	/*                           */
+	/*                                          */
 	qfec_bd_ctl_wr(p_bd, ETH_BUF_SIZE |
 		(qfec_bd_last_bd(p_bd) ? BUF_RX_RER : 0));
 
@@ -243,7 +243,7 @@ static int qfec_rbd_init(struct net_device *dev, struct buf_desc *p_bd)
 	if (!(qfec_debug & QFEC_LOG_DBG2))
 		return 0;
 
-	/* debug messages */
+	/*                */
 	QFEC_LOG(QFEC_LOG_DBG2, "%s: %p bd\n", __func__, p_bd);
 
 	QFEC_LOG(QFEC_LOG_DBG2, "%s: %p skb\n", __func__, skb);
@@ -251,7 +251,7 @@ static int qfec_rbd_init(struct net_device *dev, struct buf_desc *p_bd)
 	QFEC_LOG(QFEC_LOG_DBG2,
 		"%s: %p p_bd, %p data, %p skb_put, %p virt, %p p_buf, %p p\n",
 		__func__, (void *)p_bd,
-		(void *)skb->data, v, /*(void *)skb_put(skb, ETH_BUF_SIZE), */
+		(void *)skb->data, v, /*                                    */
 		(void *)qfec_bd_virt_get(p_bd), (void *)qfec_bd_pbuf_get(p_bd),
 		(void *)p);
 
@@ -262,19 +262,19 @@ err:
 };
 
 /*
- * ring structure used to maintain indices of buffer-descriptor (BD) usage
- *
- *   The RX BDs are normally all pre-allocated with buffers available to be
- *   DMA'd into with received frames.  The head indicates the first BD/buffer
- *   containing a received frame, and the tail indicates the oldest BD/buffer
- *   that needs to be restored for use.   Head and tail are both initialized
- *   to zero, and n_free is initialized to zero, since all BD are initialized.
- *
- *   The TX BDs are normally available for use, only being initialized as
- *   TX frames are requested for transmission.   The head indicates the
- *   first available BD, and the tail indicate the oldest BD that has
- *   not been acknowledged as transmitted.    Head and tail are both initialized
- *   to zero, and n_free is initialized to len, since all are available for use.
+                                                                          
+  
+                                                                           
+                                                                             
+                                                                             
+                                                                            
+                                                                              
+  
+                                                                         
+                                                                       
+                                                                     
+                                                                                
+                                                                                
  */
 struct ring {
 	int     head;
@@ -283,7 +283,7 @@ struct ring {
 	int     len;
 };
 
-/* accessory in line functions for struct ring */
+/*                                             */
 static inline void qfec_ring_init(struct ring *p_ring, int size, int free)
 {
 	p_ring->head  = p_ring->tail = 0;
@@ -332,7 +332,7 @@ static inline int qfec_ring_room(struct ring *p_ring)
 };
 
 /*
- * counters track normal and abnormal driver events and activity
+                                                                
  */
 enum cntr {
 	isr                  =  0,
@@ -356,7 +356,7 @@ enum cntr {
 
 	gmac_isr,
 
-	/* half */
+	/*      */
 	norm_int,
 	abnorm_int,
 
@@ -407,7 +407,7 @@ static char *cntr_name[]  = {
 
 	"gmac_isr",
 
-	/* half */
+	/*      */
 	"norm_int",
 	"abnorm_int",
 
@@ -437,7 +437,7 @@ static char *cntr_name[]  = {
 };
 
 /*
- * private data
+               
  */
 
 static struct net_device  *qfec_dev;
@@ -448,52 +448,52 @@ enum qfec_state {
 
 struct qfec_priv {
 	struct net_device      *net_dev;
-	struct net_device_stats stats;            /* req statistics */
+	struct net_device_stats stats;            /*                */
 
 	struct device           dev;
 
 	spinlock_t              xmit_lock;
 	spinlock_t              mdio_lock;
 
-	unsigned int            state;            /* driver state */
+	unsigned int            state;            /*              */
 
-	unsigned int            bd_size;          /* buf-desc alloc size */
-	struct qfec_buf_desc   *bd_base;          /* * qfec-buf-desc */
-	dma_addr_t              tbd_dma;          /* dma/phy-addr buf-desc */
-	dma_addr_t              rbd_dma;          /* dma/phy-addr buf-desc */
+	unsigned int            bd_size;          /*                     */
+	struct qfec_buf_desc   *bd_base;          /*                 */
+	dma_addr_t              tbd_dma;          /*                       */
+	dma_addr_t              rbd_dma;          /*                       */
 
 	struct resource        *mac_res;
-	void                   *mac_base;         /* mac (virt) base address */
+	void                   *mac_base;         /*                         */
 
 	struct resource        *clk_res;
-	void                   *clk_base;         /* clk (virt) base address */
+	void                   *clk_base;         /*                         */
 
 	struct resource        *fuse_res;
-	void                   *fuse_base;        /* mac addr fuses */
+	void                   *fuse_base;        /*                */
 
-	unsigned int            n_tbd;            /* # of TX buf-desc */
-	struct ring             ring_tbd;         /* TX ring */
+	unsigned int            n_tbd;            /*                  */
+	struct ring             ring_tbd;         /*         */
 	struct buf_desc        *p_tbd;
-	unsigned int            tx_ic_mod;        /* (%) val for setting IC */
+	unsigned int            tx_ic_mod;        /*                        */
 
-	unsigned int            n_rbd;            /* # of RX buf-desc */
-	struct ring             ring_rbd;         /* RX ring */
+	unsigned int            n_rbd;            /*                  */
+	struct ring             ring_rbd;         /*         */
 	struct buf_desc        *p_rbd;
 
 	struct buf_desc        *p_latest_rbd;
 	struct buf_desc        *p_ending_rbd;
 
-	unsigned long           cntr[cntr_last];  /* activity counters */
+	unsigned long           cntr[cntr_last];  /*                   */
 
-	struct mii_if_info      mii;              /* used by mii lib */
+	struct mii_if_info      mii;              /*                 */
 
-	int                     mdio_clk;         /* phy mdio clock rate */
-	int                     phy_id;           /* default PHY addr (0) */
-	struct timer_list       phy_tmr;          /* monitor PHY state */
+	int                     mdio_clk;         /*                     */
+	int                     phy_id;           /*                      */
+	struct timer_list       phy_tmr;          /*                   */
 };
 
 /*
- * cntrs display
+                
  */
 
 static int qfec_cntrs_show(struct device *dev, struct device_attribute *attr,
@@ -521,7 +521,7 @@ static int qfec_cntrs_show(struct device *dev, struct device_attribute *attr,
 # define CNTR_INC(priv, name)  (priv->cntr[name]++)
 
 /*
- * functions that manage state
+                              
  */
 static inline void qfec_queue_start(struct net_device *dev)
 {
@@ -542,7 +542,7 @@ static inline void qfec_queue_stop(struct net_device *dev)
 };
 
 /*
- * functions to access and initialize the MAC registers
+                                                       
  */
 static inline uint32_t qfec_reg_read(struct qfec_priv *priv, uint32_t reg)
 {
@@ -558,7 +558,7 @@ static void qfec_reg_write(struct qfec_priv *priv, uint32_t reg, uint32_t val)
 }
 
 /*
- * speed/duplex/pause  settings
+                               
  */
 static int qfec_config_show(struct device *dev, struct device_attribute *attr,
 			      char *buf)
@@ -592,7 +592,7 @@ static int qfec_config_show(struct device *dev, struct device_attribute *attr,
 
 
 /*
- * table and functions to initialize controller registers
+                                                         
  */
 
 struct reg_entry {
@@ -667,7 +667,7 @@ static void qfec_reg_init(struct qfec_priv *priv)
 }
 
 /*
- * display registers thru sysfs
+                               
  */
 static int qfec_reg_show(struct device *dev, struct device_attribute *attr,
 			      char *buf)
@@ -690,7 +690,7 @@ static int qfec_reg_show(struct device *dev, struct device_attribute *attr,
 }
 
 /*
- * set the MAC-0 address
+                        
  */
 static void qfec_set_adr_regs(struct qfec_priv *priv, uint8_t *addr)
 {
@@ -712,7 +712,7 @@ static void qfec_set_adr_regs(struct qfec_priv *priv, uint8_t *addr)
 }
 
 /*
- * set up the RX filter
+                       
  */
 static void qfec_set_rx_mode(struct net_device *dev)
 {
@@ -720,26 +720,26 @@ static void qfec_set_rx_mode(struct net_device *dev)
 	uint32_t filter_conf;
 	int index;
 
-	/* Clear address filter entries */
+	/*                              */
 	for (index = 1; index < MAC_ADR_MAX; ++index) {
 		qfec_reg_write(priv, MAC_ADR_HIGH_REG_N(index), 0);
 		qfec_reg_write(priv, MAC_ADR_LOW_REG_N(index), 0);
 	}
 
 	if (dev->flags & IFF_PROMISC) {
-		/* Receive all frames */
+		/*                    */
 		filter_conf = MAC_FR_FILTER_RA;
 	} else if ((dev->flags & IFF_MULTICAST) == 0) {
-		/* Unicast filtering only */
+		/*                        */
 		filter_conf = MAC_FR_FILTER_HPF;
 	} else if ((netdev_mc_count(dev) > MAC_ADR_MAX - 1) ||
 		   (dev->flags & IFF_ALLMULTI)) {
-		/* Unicast filtering is enabled, Pass all multicast frames */
+		/*                                                         */
 		filter_conf = MAC_FR_FILTER_HPF | MAC_FR_FILTER_PM;
 	} else {
 		struct netdev_hw_addr *ha;
 
-		/* Both unicast and multicast filtering are enabled */
+		/*                                                  */
 		filter_conf = MAC_FR_FILTER_HPF;
 
 		index = 1;
@@ -762,13 +762,13 @@ static void qfec_set_rx_mode(struct net_device *dev)
 }
 
 /*
- * reset the controller
+                       
  */
 
 #define QFEC_RESET_TIMEOUT   10000
-	/* reset should always clear but did not w/o test/delay
-	 * in RgMii mode.  there is no spec'd max timeout
-	 */
+	/*                                                     
+                                                  
+  */
 
 static int qfec_hw_reset(struct qfec_priv *priv)
 {
@@ -784,10 +784,10 @@ static int qfec_hw_reset(struct qfec_priv *priv)
 			return -ETIME;
 		}
 
-		/* there were problems resetting the controller
-		 * in RGMII mode when there wasn't sufficient
-		 * delay between register reads
-		 */
+		/*                                             
+                                               
+                                 
+   */
 		usleep_range(100, 200);
 	}
 
@@ -795,7 +795,7 @@ static int qfec_hw_reset(struct qfec_priv *priv)
 }
 
 /*
- * initialize controller
+                        
  */
 static int qfec_hw_init(struct qfec_priv *priv)
 {
@@ -809,18 +809,18 @@ static int qfec_hw_init(struct qfec_priv *priv)
 
 	qfec_reg_init(priv);
 
-	/* config buf-desc locations */
+	/*                           */
 	qfec_reg_write(priv, TX_DES_LST_ADR_REG, priv->tbd_dma);
 	qfec_reg_write(priv, RX_DES_LST_ADR_REG, priv->rbd_dma);
 
-	/* clear interrupts */
+	/*                  */
 	qfec_reg_write(priv, STATUS_REG, INTRP_EN_REG_NIE | INTRP_EN_REG_RIE
 		| INTRP_EN_REG_TIE | INTRP_EN_REG_TUE | INTRP_EN_REG_ETE);
 
 	if (priv->mii.supports_gmii) {
-		/* Clear RGMII */
+		/*             */
 		qfec_reg_read(priv, SG_RG_SMII_STATUS_REG);
-		/* Disable RGMII int */
+		/*                   */
 		qfec_reg_write(priv, INTRP_MASK_REG, 1);
 	}
 
@@ -828,7 +828,7 @@ static int qfec_hw_init(struct qfec_priv *priv)
 }
 
 /*
- * en/disable controller
+                        
  */
 static void qfec_hw_enable(struct qfec_priv *priv)
 {
@@ -849,7 +849,7 @@ static void qfec_hw_disable(struct qfec_priv *priv)
 }
 
 /*
- * interface selection
+                      
  */
 struct intf_config  {
 	uint32_t     intf_sel;
@@ -869,7 +869,7 @@ static struct intf_config intf_config_tbl[] = {
 };
 
 /*
- * emac clk register read and write functions
+                                             
  */
 static inline uint32_t qfec_clkreg_read(struct qfec_priv *priv, uint32_t reg)
 {
@@ -886,7 +886,7 @@ static inline void qfec_clkreg_write(struct qfec_priv *priv,
 }
 
 /*
- * configure the PHY interface and clock routing and signal bits
+                                                                
  */
 enum phy_intfc  {
 	INTFC_MII     = 0,
@@ -916,7 +916,7 @@ static int qfec_intf_sel(struct qfec_priv *priv, unsigned int intfc)
 }
 
 /*
- * display registers thru proc-fs
+                                 
  */
 static struct qfec_clk_reg {
 	uint32_t        offset;
@@ -957,31 +957,31 @@ static int qfec_clk_reg_show(struct device *dev, struct device_attribute *attr,
 }
 
 /*
- * speed selection
+                  
  */
 
 struct qfec_pll_cfg {
 	uint32_t    spd;
-	uint32_t    eth_md;     /* M [31:16], NOT 2*D [15:0] */
-	uint32_t    eth_ns;     /* NOT(M-N) [31:16], ctl bits [11:0]  */
+	uint32_t    eth_md;     /*                           */
+	uint32_t    eth_ns;     /*                                    */
 };
 
 static struct qfec_pll_cfg qfec_pll_cfg_tbl[] = {
-	/* 2.5 MHz */
+	/*         */
 	{ MAC_CONFIG_REG_SPD_10,   ETH_MD_M(1)  | ETH_MD_2D_N(100),
 						  ETH_NS_NM(100-1)
 						| ETH_NS_MCNTR_EN
 						| ETH_NS_MCNTR_MODE_DUAL
 						| ETH_NS_PRE_DIV(0)
 						| CLK_SRC_PLL_EMAC },
-	/* 25 MHz */
+	/*        */
 	{ MAC_CONFIG_REG_SPD_100,  ETH_MD_M(1)  | ETH_MD_2D_N(10),
 						  ETH_NS_NM(10-1)
 						| ETH_NS_MCNTR_EN
 						| ETH_NS_MCNTR_MODE_DUAL
 						| ETH_NS_PRE_DIV(0)
 						| CLK_SRC_PLL_EMAC },
-	/* 125 MHz */
+	/*         */
 	{MAC_CONFIG_REG_SPD_1G,    0,             ETH_NS_PRE_DIV(1)
 						| CLK_SRC_PLL_EMAC },
 };
@@ -993,7 +993,7 @@ enum speed  {
 };
 
 /*
- * configure the PHY interface and clock routing and signal bits
+                                                                
  */
 static int qfec_speed_cfg(struct net_device *dev, unsigned int spd,
 	unsigned int dplx)
@@ -1010,7 +1010,7 @@ static int qfec_speed_cfg(struct net_device *dev, unsigned int spd,
 
 	p = &qfec_pll_cfg_tbl[spd];
 
-	/* set the MAC speed bits */
+	/*                        */
 	qfec_reg_write(priv, MAC_CONFIG_REG,
 	(qfec_reg_read(priv, MAC_CONFIG_REG)
 		& ~(MAC_CONFIG_REG_SPD | MAC_CONFIG_REG_DM))
@@ -1023,11 +1023,11 @@ static int qfec_speed_cfg(struct net_device *dev, unsigned int spd,
 }
 
 /*
- * configure PTP divider for 25 MHz assuming EMAC PLL 250 MHz
+                                                             
  */
 
 static struct qfec_pll_cfg qfec_pll_ptp = {
-	/* 19.2 MHz  tcxo */
+	/*                */
 	0,      0,                                ETH_NS_PRE_DIV(0)
 						| EMAC_PTP_NS_ROOT_EN
 						| EMAC_PTP_NS_CLK_EN
@@ -1050,7 +1050,7 @@ static int qfec_ptp_cfg(struct qfec_priv *priv)
 	qfec_clkreg_write(priv, EMAC_PTP_MD_REG, p->eth_md);
 	qfec_clkreg_write(priv, EMAC_PTP_NS_REG, p->eth_ns);
 
-	/* configure HS/LS clk test ports to verify clks */
+	/*                                               */
 	qfec_clkreg_write(priv, CLKTEST_REG,     CLKTEST_EMAC_RX);
 	qfec_clkreg_write(priv, PLLTEST_PAD_CFG, PLLTEST_PLL_7);
 
@@ -1058,11 +1058,11 @@ static int qfec_ptp_cfg(struct qfec_priv *priv)
 }
 
 /*
- * MDIO operations
+                  
  */
 
 /*
- * wait reasonable amount of time for MDIO operation to complete, not busy
+                                                                          
  */
 static int qfec_mdio_busy(struct net_device *dev)
 {
@@ -1080,7 +1080,7 @@ static int qfec_mdio_busy(struct net_device *dev)
 }
 
 /*
- * initiate either a read or write MDIO operation
+                                                 
  */
 
 static int qfec_mdio_oper(struct net_device *dev, int phy_id, int reg, int wr)
@@ -1088,14 +1088,14 @@ static int qfec_mdio_oper(struct net_device *dev, int phy_id, int reg, int wr)
 	struct qfec_priv   *priv = netdev_priv(dev);
 	int                 res = 0;
 
-	/* insure phy not busy */
+	/*                     */
 	res = qfec_mdio_busy(dev);
 	if (res)  {
 		QFEC_LOG_ERR("%s: busy\n", __func__);
 		goto done;
 	}
 
-	/* initiate operation */
+	/*                    */
 	qfec_reg_write(priv, GMII_ADR_REG,
 		GMII_ADR_REG_ADR_SET(phy_id)
 		| GMII_ADR_REG_REG_SET(reg)
@@ -1103,7 +1103,7 @@ static int qfec_mdio_oper(struct net_device *dev, int phy_id, int reg, int wr)
 		| (wr ? GMII_ADR_REG_GW : 0)
 		| GMII_ADR_REG_GB);
 
-	/* wait for operation to complete */
+	/*                                */
 	res = qfec_mdio_busy(dev);
 	if (res)
 		QFEC_LOG_ERR("%s: timeout\n", __func__);
@@ -1113,7 +1113,7 @@ done:
 }
 
 /*
- * read MDIO register
+                     
  */
 static int qfec_mdio_read(struct net_device *dev, int phy_id, int reg)
 {
@@ -1139,7 +1139,7 @@ done:
 }
 
 /*
- * write MDIO register
+                      
  */
 static void qfec_mdio_write(struct net_device *dev, int phy_id, int reg,
 	int val)
@@ -1161,7 +1161,7 @@ static void qfec_mdio_write(struct net_device *dev, int phy_id, int reg,
 }
 
 /*
- * MDIO show
+            
  */
 static int qfec_mdio_show(struct device *dev, struct device_attribute *attr,
 					char *buf)
@@ -1186,7 +1186,7 @@ static int qfec_mdio_show(struct device *dev, struct device_attribute *attr,
 }
 
 /*
- * get auto-negotiation results
+                               
  */
 #define QFEC_100        (LPA_100HALF | LPA_100FULL | LPA_100HALF)
 #define QFEC_100_FD     (LPA_100FULL | LPA_100BASE4)
@@ -1222,7 +1222,7 @@ static void qfec_get_an(struct net_device *dev, uint32_t *spd, uint32_t *dplx)
 		}
 	}
 
-	/* mii speeds */
+	/*            */
 	if (status & QFEC_100)  {
 		*spd  = SPD_100;
 		*dplx = status & QFEC_100_FD ? F_DPLX : H_DPLX;
@@ -1233,7 +1233,7 @@ static void qfec_get_an(struct net_device *dev, uint32_t *spd, uint32_t *dplx)
 		*dplx = status & QFEC_10_FD ? F_DPLX : H_DPLX;
 	}
 
-	/* check pause */
+	/*             */
 pause:
 	flow  = qfec_reg_read(priv, FLOW_CONTROL_REG);
 	flow &= ~(FLOW_CONTROL_TFE | FLOW_CONTROL_RFE);
@@ -1251,7 +1251,7 @@ pause:
 }
 
 /*
- * monitor phy status, and process auto-neg results when changed
+                                                                
  */
 
 static void qfec_phy_monitor(unsigned long data)
@@ -1279,7 +1279,7 @@ static void qfec_phy_monitor(unsigned long data)
 }
 
 /*
- * dealloc buffer descriptor memory
+                                   
  */
 
 static void qfec_mem_dealloc(struct net_device *dev)
@@ -1292,7 +1292,7 @@ static void qfec_mem_dealloc(struct net_device *dev)
 }
 
 /*
- * allocate shared device memory for TX/RX buf-desc (and buffers)
+                                                                 
  */
 
 static int qfec_mem_alloc(struct net_device *dev)
@@ -1316,7 +1316,7 @@ static int qfec_mem_alloc(struct net_device *dev)
 		return -ENOMEM;
 	}
 
-	/* alloc mem for buf-desc, if not already alloc'd */
+	/*                                                */
 	if (!priv->bd_base)  {
 		priv->bd_base = dma_alloc_coherent(&dev->dev,
 			priv->bd_size, &priv->tbd_dma,
@@ -1339,7 +1339,7 @@ static int qfec_mem_alloc(struct net_device *dev)
 }
 
 /*
- * display buffer descriptors
+                             
  */
 
 static int qfec_bd_fmt(char *buf, int size, struct buf_desc *p_bd)
@@ -1378,7 +1378,7 @@ static int qfec_bd_show(char *buf, int count, struct buf_desc *p_bd, int n_bd,
 }
 
 /*
- * display TX BDs
+                 
  */
 static int qfec_bd_tx_show(struct device *dev, struct device_attribute *attr,
 			      char *buf)
@@ -1391,7 +1391,7 @@ static int qfec_bd_tx_show(struct device *dev, struct device_attribute *attr,
 }
 
 /*
- * display RX BDs
+                 
  */
 static int qfec_bd_rx_show(struct device *dev, struct device_attribute *attr,
 			      char *buf)
@@ -1404,27 +1404,27 @@ static int qfec_bd_rx_show(struct device *dev, struct device_attribute *attr,
 }
 
 /*
- * process timestamp values
- *    The pbuf and next fields of the buffer descriptors are overwritten
- *    with the timestamp high and low register values.
- *
- *    The low register is incremented by the value in the subsec_increment
- *    register and overflows at 0x8000 0000 causing the high register to
- *    increment.
- *
- *    The subsec_increment register is recommended to be set to the number
- *    of nanosec corresponding to each clock tic, scaled by 2^31 / 10^9
- *    (e.g. 40 * 2^32 / 10^9 = 85.9, or 86 for 25 MHz).  However, the
- *    rounding error in this case will result in a 1 sec error / ~14 mins.
- *
- *    An alternate approach is used.  The subsec_increment is set to 1,
- *    and the concatenation of the 2 timestamp registers used to count
- *    clock tics.  The 63-bit result is manipulated to determine the number
- *    of sec and ns.
+                           
+                                                                        
+                                                      
+  
+                                                                          
+                                                                        
+                
+  
+                                                                          
+                                                                       
+                                                                     
+                                                                          
+  
+                                                                       
+                                                                      
+                                                                           
+                    
  */
 
 /*
- * convert 19.2 MHz clock tics into sec/ns
+                                          
  */
 #define TS_LOW_REG_BITS    31
 
@@ -1467,8 +1467,8 @@ static inline void qfec_get_sec(uint64_t *cnt,
 }
 
 /*
- * read ethernet timestamp registers, pass up raw register values
- * and values converted to sec/ns
+                                                                 
+                                 
  */
 static void qfec_read_timestamp(struct buf_desc *p_bd,
 	struct skb_shared_hwtstamps *ts)
@@ -1481,20 +1481,20 @@ static void qfec_read_timestamp(struct buf_desc *p_bd,
 	cnt  <<= TS_LOW_REG_BITS;
 	cnt   |= (unsigned long)qfec_bd_pbuf_get(p_bd);
 
-	/* report raw counts as concatenated 63 bits */
+	/*                                           */
 	sec    = cnt >> 32;
 	subsec = cnt & 0xffffffff;
 
 	ts->hwtstamp  = ktime_set(sec, subsec);
 
-	/* translate counts to sec and ns */
+	/*                                */
 	qfec_get_sec(&cnt, &sec, &subsec);
 
 	ts->syststamp = ktime_set(sec, subsec);
 }
 
 /*
- * capture the current system time in the timestamp registers
+                                                             
  */
 static int qfec_cmd(struct device *dev, struct device_attribute *attr,
 				const char *buf, size_t count)
@@ -1510,7 +1510,7 @@ static int qfec_cmd(struct device *dev, struct device_attribute *attr,
 
 		do_gettimeofday(&tv);
 
-		/* convert raw sec/usec to ns */
+		/*                            */
 		subsec   = tv.tv_usec;
 		subsec  *= US_TO_F_CLK;
 		subsec >>= US_TO_F_CLK_Q;
@@ -1534,7 +1534,7 @@ static int qfec_cmd(struct device *dev, struct device_attribute *attr,
 }
 
 /*
- * display ethernet tstamp and system time
+                                          
  */
 static int qfec_tstamp_show(struct device *dev, struct device_attribute *attr,
 				char *buf)
@@ -1549,7 +1549,7 @@ static int qfec_tstamp_show(struct device *dev, struct device_attribute *attr,
 	uint32_t            ts_hi;
 	uint32_t            ts_lo;
 
-	/* insure that ts_hi didn't increment during read */
+	/*                                                */
 	do {
 		ts_hi = qfec_reg_read(priv, TS_HIGH_REG);
 		ts_lo = qfec_reg_read(priv, TS_LOW_REG);
@@ -1574,7 +1574,7 @@ static int qfec_tstamp_show(struct device *dev, struct device_attribute *attr,
 }
 
 /*
- * free transmitted skbufs from buffer-descriptor no owned by HW
+                                                                
  */
 static int qfec_tx_replenish(struct net_device *dev)
 {
@@ -1590,7 +1590,7 @@ static int qfec_tx_replenish(struct net_device *dev)
 
 	while (!qfec_ring_empty(p_ring))  {
 		if (qfec_bd_own(p_bd))
-			break;          /* done for now */
+			break;          /*              */
 
 		skb = qfec_bd_skbuf_get(p_bd);
 		if (unlikely(skb == NULL))  {
@@ -1602,14 +1602,14 @@ static int qfec_tx_replenish(struct net_device *dev)
 		qfec_reg_write(priv, STATUS_REG,
 			STATUS_REG_TU | STATUS_REG_TI);
 
-		/* retrieve timestamp if requested */
+		/*                                 */
 		if (qfec_bd_status_get(p_bd) & BUF_TX_TTSS)  {
 			CNTR_INC(priv, ts_tx_rtn);
 			qfec_read_timestamp(p_bd, skb_hwtstamps(skb));
 			skb_tstamp_tx(skb, skb_hwtstamps(skb));
 		}
 
-		/* update statistics before freeing skb */
+		/*                                      */
 		priv->stats.tx_packets++;
 		priv->stats.tx_bytes  += skb->len;
 
@@ -1631,7 +1631,7 @@ static int qfec_tx_replenish(struct net_device *dev)
 }
 
 /*
- * clear ownership bits of all TX buf-desc and release the sk-bufs
+                                                                  
  */
 static void qfec_tx_timeout(struct net_device *dev)
 {
@@ -1649,7 +1649,7 @@ static void qfec_tx_timeout(struct net_device *dev)
 }
 
 /*
- * rx() - process a received frame
+                                  
  */
 static void qfec_rx_int(struct net_device *dev)
 {
@@ -1664,15 +1664,15 @@ static void qfec_rx_int(struct net_device *dev)
 
 	CNTR_INC(priv, rx_int);
 
-	/* check that valid interrupt occurred */
+	/*                                     */
 	if (unlikely(desc_status & BUF_OWN))
 		return;
 
-	/* accumulate missed-frame count (reg reset when read) */
+	/*                                                     */
 	priv->stats.rx_missed_errors += mis_fr_reg
 					& MIS_FR_REG_MISS_CNT;
 
-	/* process all unowned frames */
+	/*                            */
 	while (!(desc_status & BUF_OWN) && (!qfec_ring_full(p_ring)))  {
 		struct sk_buff     *skb;
 		struct buf_desc    *p_bd_next;
@@ -1685,7 +1685,7 @@ static void qfec_rx_int(struct net_device *dev)
 			break;
 		}
 
-		/* cache coherency before skb->data is accessed */
+		/*                                              */
 		dma_unmap_single(&dev->dev,
 			(dma_addr_t) qfec_bd_phys_get(p_bd),
 			ETH_BUF_SIZE, DMA_FROM_DEVICE);
@@ -1705,7 +1705,7 @@ static void qfec_rx_int(struct net_device *dev)
 				qfec_read_timestamp(p_bd, skb_hwtstamps(skb));
 			}
 
-			/* update statistics before freeing skb */
+			/*                                      */
 			priv->stats.rx_packets++;
 			priv->stats.rx_bytes  += skb->len;
 
@@ -1734,7 +1734,7 @@ static void qfec_rx_int(struct net_device *dev)
 
 	priv->p_latest_rbd = p_bd;
 
-	/* replenish bufs */
+	/*                */
 	while (!qfec_ring_empty(p_ring))  {
 		if (qfec_rbd_init(dev, &priv->p_rbd[qfec_ring_tail(p_ring)]))
 			break;
@@ -1745,9 +1745,9 @@ static void qfec_rx_int(struct net_device *dev)
 }
 
 /*
- * isr() - interrupt service routine
- *          determine cause of interrupt and invoke/schedule appropriate
- *          processing or error handling
+                                    
+                                                                        
+                                        
  */
 #define ISR_ERR_CHK(priv, status, interrupt, cntr) \
 	if (status & interrupt) \
@@ -1762,7 +1762,7 @@ static irqreturn_t qfec_int(int irq, void *dev_id)
 
 	QFEC_LOG(QFEC_LOG_DBG2, "%s: %s\n", __func__, dev->name);
 
-	/* abnormal interrupt */
+	/*                    */
 	if (status & STATUS_REG_AIS)  {
 		QFEC_LOG(QFEC_LOG_DBG, "%s: abnormal status 0x%08x\n",
 			__func__, status);
@@ -1785,19 +1785,19 @@ static irqreturn_t qfec_int(int irq, void *dev_id)
 	if (status & STATUS_REG_NIS)
 		CNTR_INC(priv, norm_int);
 
-	/* receive interrupt */
+	/*                   */
 	if (status & STATUS_REG_RI) {
 		CNTR_INC(priv, rx_isr);
 		qfec_rx_int(dev);
 	}
 
-	/* transmit interrupt */
+	/*                    */
 	if (status & STATUS_REG_TI)  {
 		CNTR_INC(priv, tx_isr);
 		qfec_tx_replenish(dev);
 	}
 
-	/* gmac interrupt */
+	/*                */
 	if (status & (STATUS_REG_GPI | STATUS_REG_GMI | STATUS_REG_GLI))  {
 		status &= ~(STATUS_REG_GPI | STATUS_REG_GMI | STATUS_REG_GLI);
 		CNTR_INC(priv, gmac_isr);
@@ -1805,7 +1805,7 @@ static irqreturn_t qfec_int(int irq, void *dev_id)
 		qfec_reg_read(priv, SG_RG_SMII_STATUS_REG);
 	}
 
-	/* clear interrupts */
+	/*                  */
 	qfec_reg_write(priv, STATUS_REG, int_bits);
 	CNTR_INC(priv, isr);
 
@@ -1813,8 +1813,8 @@ static irqreturn_t qfec_int(int irq, void *dev_id)
 }
 
 /*
- * open () - register system resources (IRQ, DMA, ...)
- *   turn on HW, perform device setup.
+                                                      
+                                      
  */
 static int qfec_open(struct net_device *dev)
 {
@@ -1832,13 +1832,13 @@ static int qfec_open(struct net_device *dev)
 		goto err;
 	}
 
-	/* allocate TX/RX buffer-descriptors and buffers */
+	/*                                               */
 
 	res = qfec_mem_alloc(dev);
 	if (res)
 		goto err;
 
-	/* initialize TX */
+	/*               */
 	p_desc = priv->bd_base;
 
 	for (n = 0, p_bd = priv->p_tbd; n < priv->n_tbd; n++, p_bd++) {
@@ -1847,7 +1847,7 @@ static int qfec_open(struct net_device *dev)
 		if (n == (priv->n_tbd - 1))
 			qfec_bd_last_bd_set(p_bd);
 
-		qfec_bd_own_clr(p_bd);      /* clear ownership */
+		qfec_bd_own_clr(p_bd);      /*                 */
 	}
 
 	qfec_ring_init(&priv->ring_tbd, priv->n_tbd, priv->n_tbd);
@@ -1856,7 +1856,7 @@ static int qfec_open(struct net_device *dev)
 	if (priv->tx_ic_mod == 0)
 		priv->tx_ic_mod = 1;
 
-	/* initialize RX buffer descriptors and allocate sk_bufs */
+	/*                                                       */
 	p_ring = &priv->ring_rbd;
 	qfec_ring_init(p_ring, priv->n_rbd, 0);
 	qfec_bd_last_bd_set(&priv->p_rbd[priv->n_rbd - 1]);
@@ -1872,10 +1872,10 @@ static int qfec_open(struct net_device *dev)
 	priv->p_latest_rbd = priv->p_rbd;
 	priv->p_ending_rbd = priv->p_rbd + priv->n_rbd - 1;
 
-	/* config ptp clock */
+	/*                  */
 	qfec_ptp_cfg(priv);
 
-	/* configure PHY - must be set before reset/hw_init */
+	/*                                                  */
 	priv->mii.supports_gmii = mii_check_gmii_support(&priv->mii);
 	if (priv->mii.supports_gmii) {
 		QFEC_LOG_ERR("%s: RGMII\n", __func__);
@@ -1885,33 +1885,33 @@ static int qfec_open(struct net_device *dev)
 		qfec_intf_sel(priv, INTFC_MII);
 	}
 
-	/* initialize controller after BDs allocated */
+	/*                                           */
 	res = qfec_hw_init(priv);
 	if (res)
 		goto err1;
 
-	/* get/set (primary) MAC address */
+	/*                               */
 	qfec_set_adr_regs(priv, dev->dev_addr);
 	qfec_set_rx_mode(dev);
 
-	/* start phy monitor */
+	/*                   */
 	QFEC_LOG(QFEC_LOG_DBG, " %s: start timer\n", __func__);
 	netif_carrier_off(priv->net_dev);
 	setup_timer(&priv->phy_tmr, qfec_phy_monitor, (unsigned long)dev);
 	mod_timer(&priv->phy_tmr, jiffies + HZ);
 
-	/* driver supports AN capable PHY only */
+	/*                                     */
 	qfec_mdio_write(dev, priv->phy_id, MII_BMCR, BMCR_RESET);
 	res = (BMCR_ANENABLE|BMCR_ANRESTART);
 	qfec_mdio_write(dev, priv->phy_id, MII_BMCR, res);
 
-	/* initialize interrupts */
+	/*                       */
 	QFEC_LOG(QFEC_LOG_DBG, " %s: request irq %d\n", __func__, dev->irq);
 	res = request_irq(dev->irq, qfec_int, 0, dev->name, dev);
 	if (res)
 		goto err1;
 
-	/* enable controller */
+	/*                   */
 	qfec_hw_enable(priv);
 	netif_start_queue(dev);
 
@@ -1929,7 +1929,7 @@ err:
 }
 
 /*
- * stop() - "reverse operations performed at open time"
+                                                       
  */
 static int qfec_stop(struct net_device *dev)
 {
@@ -1946,7 +1946,7 @@ static int qfec_stop(struct net_device *dev)
 	qfec_queue_stop(dev);
 	free_irq(dev->irq, dev);
 
-	/* free all pending sk_bufs */
+	/*                          */
 	for (n = priv->n_rbd, p_bd = priv->p_rbd; n > 0; n--, p_bd++) {
 		skb = qfec_bd_skbuf_get(p_bd);
 		if (skb)
@@ -1973,7 +1973,7 @@ static int qfec_set_config(struct net_device *dev, struct ifmap *map)
 }
 
 /*
- * pass data from skbuf to buf-desc
+                                   
  */
 static int qfec_xmit(struct sk_buff *skb, struct net_device *dev)
 {
@@ -1988,11 +1988,11 @@ static int qfec_xmit(struct sk_buff *skb, struct net_device *dev)
 
 	spin_lock_irqsave(&priv->xmit_lock, flags);
 
-	/* If there is no room, on the ring try to free some up */
+	/*                                                      */
 	if (qfec_ring_room(p_ring) == 0)
 		qfec_tx_replenish(dev);
 
-	/* stop queuing if no resources available */
+	/*                                        */
 	if (qfec_ring_room(p_ring) == 0)  {
 		qfec_queue_stop(dev);
 		CNTR_INC(priv, tx_no_resource);
@@ -2001,25 +2001,25 @@ static int qfec_xmit(struct sk_buff *skb, struct net_device *dev)
 		goto done;
 	}
 
-	/* locate and save *sk_buff */
+	/*                          */
 	p_bd = &priv->p_tbd[qfec_ring_head(p_ring)];
 	qfec_bd_skbuf_set(p_bd, skb);
 
-	/* set DMA ptr to sk_buff data and write cache to memory */
+	/*                                                       */
 	qfec_bd_pbuf_set(p_bd, (void *)
 	dma_map_single(&dev->dev,
 		(void *)skb->data, skb->len, DMA_TO_DEVICE));
 
 	ctrl  = skb->len;
 	if (!(qfec_ring_head(p_ring) % priv->tx_ic_mod))
-		ctrl |= BUF_TX_IC; /* interrupt on complete */
+		ctrl |= BUF_TX_IC; /*                       */
 
-	/* check if timestamping enabled and requested */
+	/*                                             */
 	if (priv->state & timestamping)  {
 		if (skb_shinfo(skb)->tx_flags & SKBTX_HW_TSTAMP) {
 			CNTR_INC(priv, ts_tx_en);
-			ctrl |= BUF_TX_IC;	/* interrupt on complete */
-			ctrl |= BUF_TX_TTSE;	/* enable timestamp */
+			ctrl |= BUF_TX_IC;	/*                       */
+			ctrl |= BUF_TX_TTSE;	/*                  */
 			skb_shinfo(skb)->tx_flags |= SKBTX_IN_PROGRESS;
 		}
 	}
@@ -2027,14 +2027,14 @@ static int qfec_xmit(struct sk_buff *skb, struct net_device *dev)
 	if (qfec_bd_last_bd(p_bd))
 		ctrl |= BUF_RX_RER;
 
-	/* no gather, no multi buf frames */
-	ctrl |= BUF_TX_FS | BUF_TX_LS;  /* 1st and last segment */
+	/*                                */
+	ctrl |= BUF_TX_FS | BUF_TX_LS;  /*                      */
 
 	qfec_bd_ctl_wr(p_bd, ctrl);
 	qfec_bd_status_set(p_bd, BUF_OWN);
 
 	qfec_ring_head_adv(p_ring);
-	qfec_reg_write(priv, TX_POLL_DEM_REG, 1);      /* poll */
+	qfec_reg_write(priv, TX_POLL_DEM_REG, 1);      /*      */
 
 done:
 	spin_unlock_irqrestore(&priv->xmit_lock, flags);
@@ -2081,7 +2081,7 @@ static struct net_device_stats *qfec_get_stats(struct net_device *dev)
 }
 
 /*
- * accept new mac address
+                         
  */
 static int qfec_set_mac_address(struct net_device *dev, void *p)
 {
@@ -2098,7 +2098,7 @@ static int qfec_set_mac_address(struct net_device *dev, void *p)
 }
 
 /*
- *  read discontinuous MAC address from corrected fuse memory region
+                                                                    
  */
 
 static int qfec_get_mac_address(char *buf, char *mac_base, int nBytes)
@@ -2111,7 +2111,7 @@ static int qfec_get_mac_address(char *buf, char *mac_base, int nBytes)
 	for (n = 0; n < nBytes; n++)
 		buf[n] = ioread8(mac_base + offset[n]);
 
-	/* check that MAC programmed  */
+	/*                            */
 	if ((buf[0] + buf[1] + buf[2] + buf[3] + buf[4] + buf[5]) == 0)  {
 		QFEC_LOG_ERR("%s: null MAC address\n", __func__);
 		return -ENODATA;
@@ -2121,7 +2121,7 @@ static int qfec_get_mac_address(char *buf, char *mac_base, int nBytes)
 }
 
 /*
- * static definition of driver functions
+                                        
  */
 static const struct net_device_ops qfec_netdev_ops = {
 	.ndo_open               = qfec_open,
@@ -2141,7 +2141,7 @@ static const struct net_device_ops qfec_netdev_ops = {
 };
 
 /*
- * ethtool functions
+                    
  */
 
 static int qfec_nway_reset(struct net_device *dev)
@@ -2151,7 +2151,7 @@ static int qfec_nway_reset(struct net_device *dev)
 }
 
 /*
- * speed, duplex, auto-neg settings
+                                   
  */
 static void qfec_ethtool_getpauseparam(struct net_device *dev,
 			struct ethtool_pauseparam *pp)
@@ -2162,11 +2162,11 @@ static void qfec_ethtool_getpauseparam(struct net_device *dev,
 
 	QFEC_LOG(QFEC_LOG_DBG, "%s:\n", __func__);
 
-	/* report current settings */
+	/*                         */
 	pp->tx_pause = (flow & FLOW_CONTROL_TFE) != 0;
 	pp->rx_pause = (flow & FLOW_CONTROL_RFE) != 0;
 
-	/* report if pause is being advertised */
+	/*                                     */
 	advert = qfec_mdio_read(dev, priv->phy_id, MII_ADVERTISE);
 	pp->autoneg =
 		(advert & (ADVERTISE_PAUSE_CAP | ADVERTISE_PAUSE_ASYM)) != 0;
@@ -2184,11 +2184,11 @@ static int qfec_ethtool_setpauseparam(struct net_device *dev,
 	advert  =  qfec_mdio_read(dev, priv->phy_id, MII_ADVERTISE);
 	advert &= ~(ADVERTISE_PAUSE_CAP | ADVERTISE_PAUSE_ASYM);
 
-	/* If pause autonegotiation is enabled, but both rx and tx are not
-	 * because neither was specified in the ethtool cmd,
-	 * enable both symetrical and asymetrical pause.
-	 * otherwise, only enable the pause mode indicated by rx/tx.
-	 */
+	/*                                                                
+                                                     
+                                                 
+                                                             
+  */
 	if (pp->autoneg)  {
 		if (pp->rx_pause)
 			advert |= ADVERTISE_PAUSE_ASYM | ADVERTISE_PAUSE_CAP;
@@ -2204,11 +2204,11 @@ static int qfec_ethtool_setpauseparam(struct net_device *dev,
 }
 
 /*
- * ethtool ring parameter (-g/G) support
+                                        
  */
 
 /*
- * setringparamam - change the tx/rx ring lengths
+                                                 
  */
 #define MIN_RING_SIZE	3
 #define MAX_RING_SIZE	1000
@@ -2218,10 +2218,10 @@ static int qfec_ethtool_setringparam(struct net_device *dev,
 	struct qfec_priv  *priv    = netdev_priv(dev);
 	u32                timeout = 20;
 
-	/* notify stack the link is down */
+	/*                               */
 	netif_carrier_off(dev);
 
-	/* allow tx to complete & free skbufs on the tx ring */
+	/*                                                   */
 	do {
 		usleep_range(10000, 100000);
 		qfec_tx_replenish(dev);
@@ -2235,14 +2235,14 @@ static int qfec_ethtool_setringparam(struct net_device *dev,
 
 	qfec_stop(dev);
 
-	/* set tx ring size */
+	/*                  */
 	if (ring->tx_pending < MIN_RING_SIZE)
 		ring->tx_pending = MIN_RING_SIZE;
 	else if (ring->tx_pending > MAX_RING_SIZE)
 		ring->tx_pending = MAX_RING_SIZE;
 	priv->n_tbd = ring->tx_pending;
 
-	/* set rx ring size */
+	/*                  */
 	if (ring->rx_pending < MIN_RING_SIZE)
 		ring->rx_pending = MIN_RING_SIZE;
 	else if (ring->rx_pending > MAX_RING_SIZE)
@@ -2256,7 +2256,7 @@ static int qfec_ethtool_setringparam(struct net_device *dev,
 }
 
 /*
- * getringparamam - returns local values
+                                        
  */
 static void qfec_ethtool_getringparam(struct net_device *dev,
 	struct ethtool_ringparam *ring)
@@ -2277,7 +2277,7 @@ static void qfec_ethtool_getringparam(struct net_device *dev,
 }
 
 /*
- * speed, duplex, auto-neg settings
+                                   
  */
 static int
 qfec_ethtool_getsettings(struct net_device *dev, struct ethtool_cmd *cmd)
@@ -2303,7 +2303,7 @@ qfec_ethtool_setsettings(struct net_device *dev, struct ethtool_cmd *cmd)
 }
 
 /*
- * msg/debug level
+                  
  */
 static u32 qfec_ethtool_getmsglevel(struct net_device *dev)
 {
@@ -2312,11 +2312,11 @@ static u32 qfec_ethtool_getmsglevel(struct net_device *dev)
 
 static void qfec_ethtool_setmsglevel(struct net_device *dev, u32 level)
 {
-	qfec_debug ^= level;	/* toggle on/off */
+	qfec_debug ^= level;	/*               */
 }
 
 /*
- * register dump
+                
  */
 #define DMA_DMP_OFFSET  0x0000
 #define DMA_REG_OFFSET  0x1000
@@ -2375,17 +2375,17 @@ qfec_ethtool_getregs(struct net_device *dev, struct ethtool_regs *regs,
 }
 
 /*
- * statistics
- *   return counts of various ethernet activity.
- *   many of these are same as in struct net_device_stats
- *
- *   missed-frames indicates the number of attempts made by the ethernet
- *      controller to write to a buffer-descriptor when the BD ownership
- *      bit was not set.   The rxfifooverflow counter (0x1D4) is not
- *      available.  The Missed Frame and Buffer Overflow Counter register
- *      (0x1020) is used, but has only 16-bits and is reset when read.
- *      It is read and updates the value in priv->stats.rx_missed_errors
- *      in qfec_rx_int().
+             
+                                                
+                                                         
+  
+                                                                        
+                                                                        
+                                                                    
+                                                                         
+                                                                      
+                                                                        
+                         
  */
 static char qfec_stats_strings[][ETH_GSTRING_LEN] = {
 	"TX good/bad Bytes         ",
@@ -2466,7 +2466,7 @@ static int qfec_get_sset_count(struct net_device *dev, int sset)
 {
 	switch (sset) {
 	case ETH_SS_STATS:
-		return ARRAY_SIZE(qfec_stats_regs) + 1;	/* missed frames */
+		return ARRAY_SIZE(qfec_stats_regs) + 1;	/*               */
 
 	default:
 		return -EOPNOTSUPP;
@@ -2511,7 +2511,7 @@ static void qfec_ethtool_getdrvinfo(struct net_device *dev,
 }
 
 /*
- * ethtool ops table
+                    
  */
 static const struct ethtool_ops qfec_ethtool_ops = {
 	.nway_reset         = qfec_nway_reset,
@@ -2537,7 +2537,7 @@ static const struct ethtool_ops qfec_ethtool_ops = {
 };
 
 /*
- *  create sysfs entries
+                        
  */
 static DEVICE_ATTR(bd_tx,   0444, qfec_bd_tx_show,   NULL);
 static DEVICE_ATTR(bd_rx,   0444, qfec_bd_rx_show,   NULL);
@@ -2566,7 +2566,7 @@ static void qfec_sysfs_create(struct net_device *dev)
 }
 
 /*
- * map a specified resource
+                           
  */
 static int qfec_map_resource(struct platform_device *plat, int resource,
 	struct resource **priv_res,
@@ -2576,7 +2576,7 @@ static int qfec_map_resource(struct platform_device *plat, int resource,
 
 	QFEC_LOG(QFEC_LOG_DBG, "%s: 0x%x resource\n", __func__, resource);
 
-	/* allocate region to access controller registers */
+	/*                                                */
 	*priv_res = res = platform_get_resource(plat, resource, 0);
 	if (!res) {
 		QFEC_LOG_ERR("%s: platform_get_resource failed\n", __func__);
@@ -2601,7 +2601,7 @@ static int qfec_map_resource(struct platform_device *plat, int resource,
 };
 
 /*
- * free allocated io regions
+                            
  */
 static void qfec_free_res(struct resource *res, void *base)
 {
@@ -2615,7 +2615,7 @@ static void qfec_free_res(struct resource *res, void *base)
 };
 
 /*
- * probe function that obtain configuration info and allocate net_device
+                                                                        
  */
 static int __devinit qfec_probe(struct platform_device *plat)
 {
@@ -2623,7 +2623,7 @@ static int __devinit qfec_probe(struct platform_device *plat)
 	struct qfec_priv   *priv;
 	int                 ret = 0;
 
-	/* allocate device */
+	/*                 */
 	dev = alloc_etherdev(sizeof(struct qfec_priv));
 	if (!dev) {
 		QFEC_LOG_ERR("%s: alloc_etherdev failed\n", __func__);
@@ -2643,7 +2643,7 @@ static int __devinit qfec_probe(struct platform_device *plat)
 
 	dev->dev.coherent_dma_mask = DMA_BIT_MASK(32);
 
-	/* initialize private data */
+	/*                         */
 	priv = (struct qfec_priv *)netdev_priv(dev);
 	memset((void *)priv, 0, sizeof(priv));
 
@@ -2653,14 +2653,14 @@ static int __devinit qfec_probe(struct platform_device *plat)
 	priv->n_tbd     = TX_BD_NUM;
 	priv->n_rbd     = RX_BD_NUM;
 
-	/* initialize phy structure */
+	/*                          */
 	priv->mii.phy_id_mask   = 0x1F;
 	priv->mii.reg_num_mask  = 0x1F;
 	priv->mii.dev           = dev;
 	priv->mii.mdio_read     = qfec_mdio_read;
 	priv->mii.mdio_write    = qfec_mdio_write;
 
-	/* map register regions */
+	/*                      */
 	ret = qfec_map_resource(
 		plat, IORESOURCE_MEM, &priv->mac_res, &priv->mac_base);
 	if (ret)  {
@@ -2682,7 +2682,7 @@ static int __devinit qfec_probe(struct platform_device *plat)
 		goto err3;
 	}
 
-	/* initialize MAC addr */
+	/*                     */
 	ret = qfec_get_mac_address(dev->dev_addr, priv->fuse_base,
 		MAC_ADDR_SIZE);
 	if (ret)
@@ -2706,7 +2706,7 @@ static int __devinit qfec_probe(struct platform_device *plat)
 
 	return 0;
 
-	/* error handling */
+	/*                */
 err4:
 	qfec_free_res(priv->fuse_res, priv->fuse_base);
 err3:
@@ -2721,7 +2721,7 @@ err:
 }
 
 /*
- * module remove
+                
  */
 static int __devexit qfec_remove(struct platform_device *plat)
 {
@@ -2743,8 +2743,8 @@ static int __devexit qfec_remove(struct platform_device *plat)
 }
 
 /*
- * module support
- *     the FSM9xxx is not a mobile device does not support power management
+                 
+                                                                           
  */
 
 static struct platform_driver qfec_driver = {
@@ -2757,7 +2757,7 @@ static struct platform_driver qfec_driver = {
 };
 
 /*
- * module init
+              
  */
 static int __init qfec_init_module(void)
 {
@@ -2774,7 +2774,7 @@ static int __init qfec_init_module(void)
 }
 
 /*
- * module exit
+              
  */
 static void __exit qfec_exit_module(void)
 {

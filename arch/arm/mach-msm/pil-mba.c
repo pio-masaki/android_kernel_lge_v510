@@ -79,14 +79,14 @@ static int pil_mba_init_image(struct pil_desc *pil,
 	s32 status;
 	int ret;
 
-	/* Copy metadata to assigned shared buffer location */
+	/*                                                  */
 	memcpy(drv->metadata_base, metadata, size);
 
-	/* Initialize length counter to 0 */
+	/*                                */
 	writel_relaxed(0, drv->reg_base + RMB_PMI_CODE_LENGTH);
 	drv->img_length = 0;
 
-	/* Pass address of meta-data to the MBA and perform authentication */
+	/*                                                                 */
 	writel_relaxed(drv->metadata_phys, drv->reg_base + RMB_PMI_META_DATA);
 	writel_relaxed(CMD_META_DATA_READY, drv->reg_base + RMB_MBA_COMMAND);
 	ret = readl_poll_timeout(drv->reg_base + RMB_MBA_STATUS, status,
@@ -108,12 +108,12 @@ static int pil_mba_verify_blob(struct pil_desc *pil, u32 phy_addr,
 	struct mba_data *drv = dev_get_drvdata(pil->dev);
 	s32 status;
 
-	/* Begin image authentication */
+	/*                            */
 	if (drv->img_length == 0) {
 		writel_relaxed(phy_addr, drv->reg_base + RMB_PMI_CODE_START);
 		writel_relaxed(CMD_LOAD_READY, drv->reg_base + RMB_MBA_COMMAND);
 	}
-	/* Increment length counter */
+	/*                          */
 	drv->img_length += size;
 	writel_relaxed(drv->img_length, drv->reg_base + RMB_PMI_CODE_LENGTH);
 
@@ -132,7 +132,7 @@ static int pil_mba_auth(struct pil_desc *pil)
 	int ret;
 	s32 status;
 
-	/* Wait for all segments to be authenticated or an error to occur */
+	/*                                                                */
 	ret = readl_poll_timeout(drv->reg_base + RMB_MBA_STATUS, status,
 			status == STATUS_AUTH_COMPLETE || status < 0,
 			50, modem_auth_timeout_ms * 1000);

@@ -318,7 +318,7 @@ TRACE_EVENT(binder_return,
 			  "unknown")
 );
 
-#endif /* _BINDER_TRACE_H */
+#endif /*                 */
 
 #undef TRACE_INCLUDE_PATH
 #undef TRACE_INCLUDE_FILE

@@ -11,7 +11,7 @@
  *
  */
 
-/* MMC block test */
+/*                */
 
 #include <linux/module.h>
 #include <linux/blkdev.h>
@@ -23,7 +23,7 @@
 #include "queue.h"
 
 #define MODULE_NAME "mmc_block_test"
-#define TEST_MAX_SECTOR_RANGE		(600*1024*1024) /* 600 MB */
+#define TEST_MAX_SECTOR_RANGE		(600*1024*1024) /*        */
 #define TEST_MAX_BIOS_PER_REQ		120
 #define CMD23_PACKED_BIT	(1 << 30)
 #define LARGE_PRIME_1	1103515367
@@ -43,7 +43,7 @@ enum is_random {
 };
 
 enum mmc_block_test_testcases {
-	/* Start of send write packing test group */
+	/*                                        */
 	SEND_WRITE_PACKING_MIN_TESTCASE,
 	TEST_STOP_DUE_TO_READ = SEND_WRITE_PACKING_MIN_TESTCASE,
 	TEST_STOP_DUE_TO_READ_AFTER_MAX_REQS,
@@ -54,7 +54,7 @@ enum mmc_block_test_testcases {
 	TEST_STOP_DUE_TO_THRESHOLD,
 	SEND_WRITE_PACKING_MAX_TESTCASE = TEST_STOP_DUE_TO_THRESHOLD,
 
-	/* Start of err check test group */
+	/*                               */
 	ERR_CHECK_MIN_TESTCASE,
 	TEST_RET_ABORT = ERR_CHECK_MIN_TESTCASE,
 	TEST_RET_PARTIAL_FOLLOWED_BY_SUCCESS,
@@ -66,7 +66,7 @@ enum mmc_block_test_testcases {
 	TEST_RET_DATA_ERR,
 	ERR_CHECK_MAX_TESTCASE = TEST_RET_DATA_ERR,
 
-	/* Start of send invalid test group */
+	/*                                  */
 	INVALID_CMD_MIN_TESTCASE,
 	TEST_HDR_INVALID_VERSION = INVALID_CMD_MIN_TESTCASE,
 	TEST_HDR_WRONG_WRITE_CODE,
@@ -84,9 +84,9 @@ enum mmc_block_test_testcases {
 	INVALID_CMD_MAX_TESTCASE = TEST_CMD23_HDR_BLK_NOT_IN_COUNT,
 
 	/*
-	 * Start of packing control test group.
-	 * in these next testcases the abbreviation FB = followed by
-	 */
+                                        
+                                                             
+  */
 	PACKING_CONTROL_MIN_TESTCASE,
 	TEST_PACKING_EXP_ONE_OVER_TRIGGER_FB_READ =
 				PACKING_CONTROL_MIN_TESTCASE,
@@ -121,43 +121,43 @@ struct mmc_block_test_debug {
 };
 
 struct mmc_block_test_data {
-	/* The number of write requests that the test will issue */
+	/*                                                       */
 	int num_requests;
-	/* The expected write packing statistics for the current test */
+	/*                                                            */
 	struct mmc_wr_pack_stats exp_packed_stats;
 	/*
-	 * A user-defined seed for random choices of number of bios written in
-	 * a request, and of number of requests issued in a test
-	 * This field is randomly updated after each use
-	 */
+                                                                       
+                                                         
+                                                 
+  */
 	unsigned int random_test_seed;
-	/* A retry counter used in err_check tests */
+	/*                                         */
 	int err_check_counter;
-	/* Can be one of the values of enum test_group */
+	/*                                             */
 	enum mmc_block_test_group test_group;
 	/*
-	 * Indicates if the current testcase is running with random values of
-	 * num_requests and num_bios (in each request)
-	 */
+                                                                      
+                                               
+  */
 	int is_random;
-	/* Data structure for debugfs dentrys */
+	/*                                    */
 	struct mmc_block_test_debug debug;
 	/*
-	 * Data structure containing individual test information, including
-	 * self-defined specific data
-	 */
+                                                                    
+                              
+  */
 	struct test_info test_info;
-	/* mmc block device test */
+	/*                       */
 	struct blk_dev_test_type bdt;
 };
 
 static struct mmc_block_test_data *mbtd;
 
 /*
- * A callback assigned to the packed_test_fn field.
- * Called from block layer in mmc_blk_packed_hdr_wrq_prep.
- * Here we alter the packed header or CMD23 in order to send an invalid
- * packed command to the card.
+                                                   
+                                                          
+                                                                       
+                              
  */
 static void test_invalid_packed_cmd(struct request_queue *q,
 				    struct mmc_queue_req *mqrq)
@@ -186,18 +186,18 @@ static void test_invalid_packed_cmd(struct request_queue *q,
 	switch (mbtd->test_info.testcase) {
 	case TEST_HDR_INVALID_VERSION:
 		test_pr_info("%s: set invalid header version", __func__);
-		/* Put 0 in header version field (1 byte, offset 0 in header) */
+		/*                                                            */
 		packed_cmd_hdr[0] = packed_cmd_hdr[0] & ~PACKED_HDR_VER_MASK;
 		break;
 	case TEST_HDR_WRONG_WRITE_CODE:
 		test_pr_info("%s: wrong write code", __func__);
-		/* Set R/W field with R value (1 byte, offset 1 in header) */
+		/*                                                         */
 		packed_cmd_hdr[0] = packed_cmd_hdr[0] & ~PACKED_HDR_RW_MASK;
 		packed_cmd_hdr[0] = packed_cmd_hdr[0] | 0x00000100;
 		break;
 	case TEST_HDR_INVALID_RW_CODE:
 		test_pr_info("%s: invalid r/w code", __func__);
-		/* Set R/W field with invalid value */
+		/*                                  */
 		packed_cmd_hdr[0] = packed_cmd_hdr[0] & ~PACKED_HDR_RW_MASK;
 		packed_cmd_hdr[0] = packed_cmd_hdr[0] | 0x00000400;
 		break;
@@ -209,21 +209,21 @@ static void test_invalid_packed_cmd(struct request_queue *q,
 			      __func__, (long)req->__sector,
 			     (long)second_rq->__sector);
 		/*
-		 * Put start sector of second write request in the first write
-		 * request's cmd25 argument in the packed header
-		 */
+                                                                
+                                                  
+   */
 		packed_cmd_hdr[3] = second_rq->__sector;
 		break;
 	case TEST_HDR_REQ_NUM_SMALLER_THAN_ACTUAL:
 		test_pr_info("%s: request num smaller than actual" , __func__);
 		num_requests = (packed_cmd_hdr[0] & PACKED_HDR_NUM_REQS_MASK)
 									>> 16;
-		/* num of entries is decremented by 1 */
+		/*                                    */
 		num_requests = (num_requests - 1) << 16;
 		/*
-		 * Set number of requests field in packed write header to be
-		 * smaller than the actual number (1 byte, offset 2 in header)
-		 */
+                                                              
+                                                                
+   */
 		packed_cmd_hdr[0] = (packed_cmd_hdr[0] &
 				     ~PACKED_HDR_NUM_REQS_MASK) + num_requests;
 		break;
@@ -231,22 +231,22 @@ static void test_invalid_packed_cmd(struct request_queue *q,
 		test_pr_info("%s: request num larger than actual" , __func__);
 		num_requests = (packed_cmd_hdr[0] & PACKED_HDR_NUM_REQS_MASK)
 									>> 16;
-		/* num of entries is incremented by 1 */
+		/*                                    */
 		num_requests = (num_requests + 1) << 16;
 		/*
-		 * Set number of requests field in packed write header to be
-		 * larger than the actual number (1 byte, offset 2 in header).
-		 */
+                                                              
+                                                                
+   */
 		packed_cmd_hdr[0] = (packed_cmd_hdr[0] &
 				     ~PACKED_HDR_NUM_REQS_MASK) + num_requests;
 		break;
 	case TEST_HDR_CMD23_PACKED_BIT_SET:
 		test_pr_info("%s: header CMD23 packed bit set" , __func__);
 		/*
-		 * Set packed bit (bit 30) in cmd23 argument of first and second
-		 * write requests in packed write header.
-		 * These are located at bytes 2 and 4 in packed write header
-		 */
+                                                                  
+                                           
+                                                              
+   */
 		packed_cmd_hdr[2] = packed_cmd_hdr[2] | CMD23_PACKED_BIT;
 		packed_cmd_hdr[4] = packed_cmd_hdr[4] | CMD23_PACKED_BIT;
 		break;
@@ -254,27 +254,27 @@ static void test_invalid_packed_cmd(struct request_queue *q,
 		test_pr_info("%s: CMD23 request num > max_packed_reqs",
 			      __func__);
 		/*
-		 * Set the individual packed cmd23 request num to
-		 * max_packed_reqs + 1
-		 */
+                                                   
+                        
+   */
 		brq->sbc.arg = MMC_CMD23_ARG_PACKED | (max_packed_reqs + 1);
 		break;
 	case TEST_CMD23_ZERO_PACKED_WRITES:
 		test_pr_info("%s: CMD23 request num = 0", __func__);
-		/* Set the individual packed cmd23 request num to zero */
+		/*                                                     */
 		brq->sbc.arg = MMC_CMD23_ARG_PACKED;
 		break;
 	case TEST_CMD23_PACKED_BIT_UNSET:
 		test_pr_info("%s: CMD23 packed bit unset", __func__);
 		/*
-		 * Set the individual packed cmd23 packed bit to 0,
-		 *  although there is a packed write request
-		 */
+                                                     
+                                              
+   */
 		brq->sbc.arg &= ~CMD23_PACKED_BIT;
 		break;
 	case TEST_CMD23_REL_WR_BIT_SET:
 		test_pr_info("%s: CMD23 REL WR bit set", __func__);
-		/* Set the individual packed cmd23 reliable write bit */
+		/*                                                    */
 		brq->sbc.arg = MMC_CMD23_ARG_PACKED | MMC_CMD23_ARG_REL_WR;
 		break;
 	case TEST_CMD23_BITS_16TO29_SET:
@@ -295,10 +295,10 @@ static void test_invalid_packed_cmd(struct request_queue *q,
 }
 
 /*
- * A callback assigned to the err_check_fn field of the mmc_request by the
- * MMC/card/block layer.
- * Called upon request completion by the MMC/core layer.
- * Here we emulate an error return value from the card.
+                                                                          
+                        
+                                                        
+                                                       
  */
 static int test_err_check(struct mmc_card *card, struct mmc_async_req *areq)
 {
@@ -339,9 +339,9 @@ static int test_err_check(struct mmc_card *card, struct mmc_async_req *areq)
 		test_pr_info("%s: return partial followed by success",
 			      __func__);
 		/*
-		 * Since in this testcase num_requests is always >= 2,
-		 * we can be sure that packed_fail_idx is always >= 1
-		 */
+                                                        
+                                                       
+   */
 		mq_rq->packed_fail_idx = (mbtd->num_requests / 2);
 		test_pr_info("%s: packed_fail_idx = %d"
 			, __func__, mq_rq->packed_fail_idx);
@@ -354,9 +354,9 @@ static int test_err_check(struct mmc_card *card, struct mmc_async_req *areq)
 				      __func__);
 			mbtd->err_check_counter++;
 			/*
-			 * Since in this testcase num_requests is always >= 3,
-			 * we have that packed_fail_idx is always >= 1
-			 */
+                                                         
+                                                 
+    */
 			mq_rq->packed_fail_idx = (mbtd->num_requests / 2);
 			test_pr_info("%s: packed_fail_idx = %d"
 				, __func__, mq_rq->packed_fail_idx);
@@ -406,9 +406,9 @@ static int test_err_check(struct mmc_card *card, struct mmc_async_req *areq)
 }
 
 /*
- * This is a specific implementation for the get_test_case_str_fn function
- * pointer in the test_info data structure. Given a valid test_data instance,
- * the function returns a string resembling the test name, based on the testcase
+                                                                          
+                                                                             
+                                                                                
  */
 static char *get_test_case_str(struct test_data *td)
 {
@@ -504,8 +504,8 @@ static char *get_test_case_str(struct test_data *td)
 }
 
 /*
- * Compare individual testcase's statistics to the expected statistics:
- * Compare stop reason and number of packing events
+                                                                       
+                                                   
  */
 static int check_wr_packing_statistics(struct test_data *td)
 {
@@ -645,8 +645,8 @@ cancel_round:
 }
 
 /*
- * Pseudo-randomly choose a seed based on the last seed, and update it in
- * seed_number. then return seed_number (mod max_val), or min_val.
+                                                                         
+                                                                  
  */
 static unsigned int pseudo_random_seed(unsigned int *seed_number,
 				       unsigned int min_val,
@@ -665,8 +665,8 @@ static unsigned int pseudo_random_seed(unsigned int *seed_number,
 }
 
 /*
- * Given a pseudo-random seed, find a pseudo-random num_of_bios.
- * Make sure that num_of_bios is not larger than TEST_MAX_SECTOR_RANGE
+                                                                
+                                                                      
  */
 static void pseudo_rnd_num_of_bios(unsigned int *num_bios_seed,
 				   unsigned int *num_of_bios)
@@ -679,7 +679,7 @@ static void pseudo_rnd_num_of_bios(unsigned int *num_bios_seed,
 	} while ((*num_of_bios) * BIO_U32_SIZE * 4 > TEST_MAX_SECTOR_RANGE);
 }
 
-/* Add a single read request to the given td's request queue */
+/*                                                           */
 static int prepare_request_add_read(struct test_data *td)
 {
 	int ret;
@@ -705,7 +705,7 @@ static int prepare_request_add_read(struct test_data *td)
 	return 0;
 }
 
-/* Add a single flush request to the given td's request queue */
+/*                                                            */
 static int prepare_request_add_flush(struct test_data *td)
 {
 	int ret;
@@ -728,9 +728,9 @@ static int prepare_request_add_flush(struct test_data *td)
 }
 
 /*
- * Add num_requets amount of write requests to the given td's request queue.
- * If random test mode is chosen we pseudo-randomly choose the number of bios
- * for each write request, otherwise add between 1 to 5 bio per request.
+                                                                            
+                                                                             
+                                                                        
  */
 static int prepare_request_add_write_reqs(struct test_data *td,
 					  int num_requests, int is_err_expected,
@@ -758,9 +758,9 @@ static int prepare_request_add_write_reqs(struct test_data *td,
 			pseudo_rnd_num_of_bios(bio_seed, &num_bios);
 		else
 			/*
-			 * For the non-random case, give num_bios a value
-			 * between 1 and 5, to keep a small number of BIOs
-			 */
+                                                    
+                                                     
+    */
 			num_bios = (i%5)+1;
 
 		ret = test_iosched_add_wr_rd_test_req(is_err_expected, WRITE,
@@ -776,8 +776,8 @@ static int prepare_request_add_write_reqs(struct test_data *td,
 }
 
 /*
- * Prepare the write, read and flush requests for a generic packed commands
- * testcase
+                                                                           
+           
  */
 static int prepare_packed_requests(struct test_data *td, int is_err_expected,
 				   int num_requests, int is_random)
@@ -821,7 +821,7 @@ static int prepare_packed_requests(struct test_data *td, int is_err_expected,
 	if (ret)
 		return ret;
 
-	/* Avoid memory corruption in upcoming stats set */
+	/*                                               */
 	if (td->test_info.testcase == TEST_STOP_DUE_TO_THRESHOLD)
 		num_requests--;
 
@@ -868,8 +868,8 @@ static int prepare_packed_requests(struct test_data *td, int is_err_expected,
 }
 
 /*
- * Prepare the write, read and flush requests for the packing control
- * testcases
+                                                                     
+            
  */
 static int prepare_packed_control_tests_requests(struct test_data *td,
 			int is_err_expected, int num_requests, int is_random)
@@ -919,7 +919,7 @@ static int prepare_packed_control_tests_requests(struct test_data *td,
 		num_requests = test_packed_trigger - 1;
 	}
 
-	/* Verify that the packing is disabled before starting the test */
+	/*                                                              */
 	mq->wr_packing_enabled = false;
 	mq->num_of_potential_packed_wr_reqs = 0;
 
@@ -1047,9 +1047,9 @@ exit:
 }
 
 /*
- * Prepare requests for the TEST_RET_PARTIAL_FOLLOWED_BY_ABORT testcase.
- * In this testcase we have mixed error expectations from different
- * write requests, hence the special prepare function.
+                                                                        
+                                                                   
+                                                      
  */
 static int prepare_partial_followed_by_abort(struct test_data *td,
 					      int num_requests)
@@ -1097,9 +1097,9 @@ static int prepare_partial_followed_by_abort(struct test_data *td,
 }
 
 /*
- * Get number of write requests for current testcase. If random test mode was
- * chosen, pseudo-randomly choose the number of requests, otherwise set to
- * two less than the packing threshold.
+                                                                             
+                                                                          
+                                       
  */
 static int get_num_requests(struct test_data *td)
 {
@@ -1131,29 +1131,29 @@ static int get_num_requests(struct test_data *td)
 	test_packed_trigger = mq->num_wr_reqs_to_start_packing;
 
 	/*
-	 * Here max_for_double is intended for packed control testcases
-	 * in which we issue many write requests. It's purpose is to prevent
-	 * exceeding max number of req_queue requests.
-	 */
+                                                                
+                                                                     
+                                               
+  */
 	max_for_double = max_num_requests - 10;
 
 	if (td->test_info.testcase ==
 				TEST_PACKING_NOT_EXP_LESS_THAN_TRIGGER_REQUESTS)
-		/* Don't expect packing, so issue up to trigger-1 reqs */
+		/*                                                     */
 		num_requests = test_packed_trigger - 1;
 
 	if (is_random) {
 		if (td->test_info.testcase ==
 		    TEST_RET_PARTIAL_FOLLOWED_BY_ABORT)
 			/*
-			 * Here we don't want num_requests to be less than 1
-			 * as a consequence of division by 2.
-			 */
+                                                       
+                                        
+    */
 			min_num_requests = 3;
 
 		if (td->test_info.testcase ==
 				TEST_PACKING_NOT_EXP_LESS_THAN_TRIGGER_REQUESTS)
-			/* Don't expect packing, so issue up to trigger reqs */
+			/*                                                   */
 			max_num_requests = test_packed_trigger;
 
 		num_requests = pseudo_random_seed(seed, min_num_requests,
@@ -1178,9 +1178,9 @@ static int get_num_requests(struct test_data *td)
 }
 
 /*
- * An implementation for the prepare_test_fn pointer in the test_info
- * data structure. According to the testcase we add the right number of requests
- * and decide if an error is expected or not.
+                                                                     
+                                                                                
+                                             
  */
 static int prepare_test(struct test_data *td)
 {
@@ -1294,10 +1294,10 @@ static int prepare_test(struct test_data *td)
 }
 
 /*
- * An implementation for the post_test_fn in the test_info data structure.
- * In our case we just reset the function pointers in the mmc_queue in order for
- * the FS to be able to dispatch it's requests correctly after the test is
- * finished.
+                                                                          
+                                                                                
+                                                                          
+            
  */
 static int post_test(struct test_data *td)
 {
@@ -1320,9 +1320,9 @@ static int post_test(struct test_data *td)
 }
 
 /*
- * This function checks, based on the current test's test_group, that the
- * packed commands capability and control are set right. In addition, we check
- * if the card supports the packed command feature.
+                                                                         
+                                                                              
+                                                   
  */
 static int validate_packed_commands_settings(void)
 {
@@ -1369,7 +1369,7 @@ static int validate_packed_commands_settings(void)
 	case TEST_SEND_WRITE_PACKING_GROUP:
 	case TEST_ERR_CHECK_GROUP:
 	case TEST_SEND_INVALID_GROUP:
-		/* disable the packing control */
+		/*                             */
 		host->caps2 &= ~MMC_CAP2_PACKED_WR_CONTROL;
 		break;
 	case TEST_PACKING_CONTROL_GROUP:
@@ -1390,7 +1390,7 @@ static int test_open(struct inode *inode, struct file *file)
 	return 0;
 }
 
-/* send_packing TEST */
+/*                   */
 static ssize_t send_write_packing_test_write(struct file *file,
 				const char __user *buf,
 				size_t count,
@@ -1438,14 +1438,14 @@ static ssize_t send_write_packing_test_write(struct file *file,
 			ret = test_iosched_start_test(&mbtd->test_info);
 			if (ret)
 				break;
-			/* Allow FS requests to be dispatched */
+			/*                                    */
 			msleep(1000);
 			mbtd->test_info.testcase = j;
 			mbtd->is_random = NON_RANDOM_TEST;
 			ret = test_iosched_start_test(&mbtd->test_info);
 			if (ret)
 				break;
-			/* Allow FS requests to be dispatched */
+			/*                                    */
 			msleep(1000);
 		}
 	}
@@ -1489,7 +1489,7 @@ const struct file_operations send_write_packing_test_ops = {
 	.read = send_write_packing_test_read,
 };
 
-/* err_check TEST */
+/*                */
 static ssize_t err_check_test_write(struct file *file,
 				const char __user *buf,
 				size_t count,
@@ -1535,14 +1535,14 @@ static ssize_t err_check_test_write(struct file *file,
 			ret = test_iosched_start_test(&mbtd->test_info);
 			if (ret)
 				break;
-			/* Allow FS requests to be dispatched */
+			/*                                    */
 			msleep(1000);
 			mbtd->test_info.testcase = j;
 			mbtd->is_random = NON_RANDOM_TEST;
 			ret = test_iosched_start_test(&mbtd->test_info);
 			if (ret)
 				break;
-			/* Allow FS requests to be dispatched */
+			/*                                    */
 			msleep(1000);
 		}
 	}
@@ -1587,7 +1587,7 @@ const struct file_operations err_check_test_ops = {
 	.read = err_check_test_read,
 };
 
-/* send_invalid_packed TEST */
+/*                          */
 static ssize_t send_invalid_packed_test_write(struct file *file,
 				const char __user *buf,
 				size_t count,
@@ -1635,7 +1635,7 @@ static ssize_t send_invalid_packed_test_write(struct file *file,
 			ret = test_iosched_start_test(&mbtd->test_info);
 			if (ret)
 				num_of_failures++;
-			/* Allow FS requests to be dispatched */
+			/*                                    */
 			msleep(1000);
 
 			mbtd->test_info.testcase = j;
@@ -1643,7 +1643,7 @@ static ssize_t send_invalid_packed_test_write(struct file *file,
 			ret = test_iosched_start_test(&mbtd->test_info);
 			if (ret)
 				num_of_failures++;
-			/* Allow FS requests to be dispatched */
+			/*                                    */
 			msleep(1000);
 		}
 	}
@@ -1699,7 +1699,7 @@ const struct file_operations send_invalid_packed_test_ops = {
 	.read = send_invalid_packed_test_read,
 };
 
-/* packing_control TEST */
+/*                      */
 static ssize_t write_packing_control_test_write(struct file *file,
 				const char __user *buf,
 				size_t count,
@@ -1749,7 +1749,7 @@ static ssize_t write_packing_control_test_write(struct file *file,
 				test_successful = 0;
 				break;
 			}
-			/* Allow FS requests to be dispatched */
+			/*                                    */
 			msleep(1000);
 
 			mbtd->test_info.testcase = j;
@@ -1759,7 +1759,7 @@ static ssize_t write_packing_control_test_write(struct file *file,
 				test_successful = 0;
 				break;
 			}
-			/* Allow FS requests to be dispatched */
+			/*                                    */
 			msleep(1000);
 		}
 

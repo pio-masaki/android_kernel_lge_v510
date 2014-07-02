@@ -12,21 +12,21 @@
 
 
 /*
-[SENSOR]
-Sensor Model:   OV5640
-Camera Module:
-Lens Model:
-Driver IC:
-PV Size         = 640 x 480
-Cap Size        = 2592 x 1944
-Output Format   = YUYV
-MCLK Speed      = 24M
-PV DVP_PCLK     = 28M
-Cap DVP_PCLK    = 56M
-PV Frame Rate   = 30fps
-Cap Frame Rate  = 7.5fps
-I2C Slave ID    = 0x78
-I2C Mode        = 16Addr, 8Data
+        
+                      
+              
+           
+          
+                           
+                             
+                      
+                     
+                     
+                     
+                       
+                        
+                      
+                               
 */
 
 #ifndef CAMSENSOR_OV5640
@@ -36,14 +36,14 @@ I2C Mode        = 16Addr, 8Data
 #define OV5640CORE_WRITEPREG(PTBL)	ov5640_writepregs(PTBL,\
 					sizeof(PTBL)/sizeof(PTBL[0]))
 
-/* OV SENSOR SCCB */
+/*                */
 struct ov5640_sensor {
 	uint16_t addr;
 	uint8_t data;
 	uint8_t mask;
 };
 
-/* Auto Focus Command */
+/*                    */
 #define OV5640_CMD_MAIN 0x3022
 #define OV5640_CMD_ACK 0x3023
 #define OV5640_CMD_PARA0 0x3024
@@ -53,11 +53,11 @@ struct ov5640_sensor {
 #define OV5640_CMD_PARA4 0x3028
 #define OV5640_CMD_FW_STATUS 0x3029
 
-/* Sensor ID */
+/*           */
 #define OV5640_SENSOR_ID 0x5640
 
-#define capture_framerate 750     /* 7.5fps capture frame rate */
-#define g_preview_frameRate 3000  /* 30fps preview frame rate */
+#define capture_framerate 750     /*                           */
+#define g_preview_frameRate 3000  /*                          */
 
 struct ov5640_sensor ov5640_init_tbl[] = {
 	{0x3008, 0x42},
@@ -314,8 +314,8 @@ struct ov5640_sensor ov5640_init_tbl[] = {
 };
 
 struct ov5640_sensor ov5640_init_iq_tbl[] = {
-/* Lens correction */
-/* OV5640 LENC setting */
+/*                 */
+/*                     */
 	{0x5800, 0x3f},
 	{0x5801, 0x20},
 	{0x5802, 0x1a},
@@ -378,14 +378,14 @@ struct ov5640_sensor ov5640_init_iq_tbl[] = {
 	{0x583b, 0x28},
 	{0x583c, 0x66},
 	{0x583d, 0xce},
-/* AEC */
+/*     */
 	{0x3a0f, 0x38},
 	{0x3a10, 0x30},
 	{0x3a11, 0x61},
 	{0x3a1b, 0x38},
 	{0x3a1e, 0x30},
 	{0x3a1f, 0x10},
-	/* AWB */
+	/*     */
 	{0x5180, 0xff},
 	{0x5181, 0xf2},
 	{0x5182, 0x00},
@@ -418,19 +418,19 @@ struct ov5640_sensor ov5640_init_iq_tbl[] = {
 	{0x519d, 0x2b},
 	{0x519e, 0x38},
 
-/* UV Adjust Auto Mode */
-	{0x5580, 0x02},	/* 02 ;Sat enable */
-	{0x5588, 0x01},	/*40 ;enable UV adj */
-	{0x5583, 0x40},	/*	;offset high */
-	{0x5584, 0x18},	/*	;offset low */
-	{0x5589, 0x18},	/*	;gth1	*/
+/*                     */
+	{0x5580, 0x02},	/*                */
+	{0x5588, 0x01},	/*                  */
+	{0x5583, 0x40},	/*              */
+	{0x5584, 0x18},	/*             */
+	{0x5589, 0x18},	/*       */
 	{0x558a, 0x00},
-	{0x358b, 0xf8},	/*	;gth2 */
+	{0x358b, 0xf8},	/*       */
 };
 
 struct ov5640_sensor ov5640_preview_tbl[] = {
-/* @@ MIPI_2lane_5M to vga(YUV) 30fps 99 640 480 98 0 0 */
-	{0x3503, 0x00}, /* enable AE back from capture to preview */
+/*                                                      */
+	{0x3503, 0x00}, /*                                        */
 	{0x3035, 0x14},
 	{0x3036, 0x38},
 	{0x3820, 0x41},
@@ -465,8 +465,8 @@ struct ov5640_sensor ov5640_preview_tbl[] = {
 };
 
 struct ov5640_sensor ov5640_capture_tbl[] = {
-/* @@ MIPI_2lane_5M(YUV) 7.5/15fps 99 2592 1944 98 0 0 */
-	{0x3035, 0x21}, /* 11 */
+/*                                                     */
+	{0x3035, 0x21}, /*    */
 	{0x3036, 0x54},
 	{0x3820, 0x40},
 	{0x3821, 0x06},
@@ -491,7 +491,7 @@ struct ov5640_sensor ov5640_capture_tbl[] = {
 	{0x5001, 0x83},
 	{0x4004, 0x06},
 	{0x4005, 0x1a},
-	{0x4837, 0x15}, /* 0a */
+	{0x4837, 0x15}, /*    */
 	{0x4713, 0x02},
 	{0x4407, 0x0c},
 	{0x460b, 0x37},
@@ -499,40 +499,40 @@ struct ov5640_sensor ov5640_capture_tbl[] = {
 	{0x3824, 0x01},
 };
 
-/* Contrast */
+/*          */
 
 struct ov5640_sensor ov5640_contrast_lv0_tbl[] = {
-/* Contrast -4 */
+/*             */
 	{0x5001, 0x83, INVMASK(0x80)},
-	{0x5580, 0x04, INVMASK(0x04)}, /* Enable BIT2 for contrast/brightness
-					  control*/
-	{0x5586, 0x10},                /* Gain */
-	{0x5585, 0x10},                /* Offset */
-	{0x5588, 0x00, INVMASK(0x04)}, /* Offset sign */
+	{0x5580, 0x04, INVMASK(0x04)}, /*                                    
+              */
+	{0x5586, 0x10},                /*      */
+	{0x5585, 0x10},                /*        */
+	{0x5588, 0x00, INVMASK(0x04)}, /*             */
 };
 
 struct ov5640_sensor ov5640_contrast_lv1_tbl[] = {
-/* Contrast -3 */
+/*             */
 	{0x5001, 0x83, INVMASK(0x80)},
-	{0x5580, 0x04, INVMASK(0x04)}, /* Enable BIT2 for contrast/brightness
-					  control */
-	{0x5586, 0x14},                /* Gain */
-	{0x5585, 0x14},                /* Offset */
-	{0x5588, 0x00, INVMASK(0x04)}, /* Offset sign */
+	{0x5580, 0x04, INVMASK(0x04)}, /*                                    
+               */
+	{0x5586, 0x14},                /*      */
+	{0x5585, 0x14},                /*        */
+	{0x5588, 0x00, INVMASK(0x04)}, /*             */
 };
 
 struct ov5640_sensor ov5640_contrast_lv2_tbl[] = {
-/* Contrast -2 */
+/*             */
 	{0x5001, 0x83, INVMASK(0x80)},
-	{0x5580, 0x04, INVMASK(0x04)}, /* Enable BIT2 for contrast/brightness
-					  control */
-	{0x5586, 0x18},                /* Gain */
-	{0x5585, 0x18},                /* Offset */
-	{0x5588, 0x00, INVMASK(0x04)}, /* Offset sign */
+	{0x5580, 0x04, INVMASK(0x04)}, /*                                    
+               */
+	{0x5586, 0x18},                /*      */
+	{0x5585, 0x18},                /*        */
+	{0x5588, 0x00, INVMASK(0x04)}, /*             */
 };
 
 struct ov5640_sensor ov5640_contrast_lv3_tbl[] = {
-/* Contrast -1 */
+/*             */
 	{0x5001, 0x83, INVMASK(0x80)},
 	{0x5580, 0x04, INVMASK(0x04)},
 	{0x5586, 0x1c},
@@ -541,7 +541,7 @@ struct ov5640_sensor ov5640_contrast_lv3_tbl[] = {
 };
 
 struct ov5640_sensor ov5640_contrast_default_lv4_tbl[] = {
-/* Contrast (Default) */
+/*                    */
 	{0x5001, 0x83, INVMASK(0x80)},
 	{0x5580, 0x04, INVMASK(0x04)},
 	{0x5586, 0x20},
@@ -550,7 +550,7 @@ struct ov5640_sensor ov5640_contrast_default_lv4_tbl[] = {
 };
 
 struct ov5640_sensor ov5640_contrast_lv5_tbl[] = {
-/* Contrast +1 */
+/*             */
 	{0x5001, 0x83, INVMASK(0x80)},
 	{0x5580, 0x04, INVMASK(0x04)},
 	{0x5586, 0x24},
@@ -559,7 +559,7 @@ struct ov5640_sensor ov5640_contrast_lv5_tbl[] = {
 };
 
 struct ov5640_sensor ov5640_contrast_lv6_tbl[] = {
-/* Contrast +2 */
+/*             */
 	{0x5001, 0x83, INVMASK(0x80)},
 	{0x5580, 0x04, INVMASK(0x04)},
 	{0x5586, 0x28},
@@ -568,7 +568,7 @@ struct ov5640_sensor ov5640_contrast_lv6_tbl[] = {
 };
 
 struct ov5640_sensor ov5640_contrast_lv7_tbl[] = {
-/* Contrast +3 */
+/*             */
 	{0x5001, 0x83, INVMASK(0x80)},
 	{0x5580, 0x04, INVMASK(0x04)},
 	{0x5586, 0x2c},
@@ -577,7 +577,7 @@ struct ov5640_sensor ov5640_contrast_lv7_tbl[] = {
 };
 
 struct ov5640_sensor ov5640_contrast_lv8_tbl[] = {
-/* Contrast +4 */
+/*             */
 	{0x5001, 0x83, INVMASK(0x80)},
 	{0x5580, 0x04, INVMASK(0x04)},
 	{0x5586, 0x30},
@@ -585,22 +585,22 @@ struct ov5640_sensor ov5640_contrast_lv8_tbl[] = {
 	{0x5588, 0x00, INVMASK(0x04)},
 };
 
-/* Sharpness */
+/*           */
 
 struct ov5640_sensor ov5640_sharpness_lv0_tbl[] = {
-/* Sharpness 0 */
+/*             */
 	{0x5308, 0x40, INVMASK(0x40)},
 	{0x5302, 0x00},
 };
 
 struct ov5640_sensor ov5640_sharpness_lv1_tbl[] = {
-/* Sharpness 1 */
+/*             */
 	{0x5308, 0x40, INVMASK(0x40)},
 	{0x5302, 0x02},
 };
 
 struct ov5640_sensor ov5640_sharpness_default_lv2_tbl[] = {
-/* Sharpness_Auto (Default) */
+/*                          */
 	{0x5308, 0x00, INVMASK(0x40)},
 	{0x5300, 0x08},
 	{0x5301, 0x30},
@@ -613,54 +613,54 @@ struct ov5640_sensor ov5640_sharpness_default_lv2_tbl[] = {
 };
 
 struct ov5640_sensor ov5640_sharpness_lv3_tbl[] = {
-/* Sharpness 3 */
+/*             */
 	{0x5308, 0x40, INVMASK(0x40)},
 	{0x5302, 0x08},
 };
 
 struct ov5640_sensor ov5640_sharpness_lv4_tbl[] = {
-/* Sharpness 4 */
+/*             */
 	{0x5308, 0x40, INVMASK(0x40)},
 	{0x5302, 0x0c},
 };
 
 struct ov5640_sensor ov5640_sharpness_lv5_tbl[] = {
-/* Sharpness 5 */
+/*             */
 	{0x5308, 0x40, INVMASK(0x40)},
 	{0x5302, 0x10},
 };
 
 struct ov5640_sensor ov5640_sharpness_lv6_tbl[] = {
-/* Sharpness 6 */
+/*             */
 	{0x5308, 0x40, INVMASK(0x40)},
 	{0x5302, 0x14},
 };
 
 struct ov5640_sensor ov5640_sharpness_lv7_tbl[] = {
-/* Sharpness 7 */
+/*             */
 	{0x5308, 0x40, INVMASK(0x40)},
 	{0x5302, 0x18},
 };
 
 struct ov5640_sensor ov5640_sharpness_lv8_tbl[] = {
-/* Sharpness 8 */
+/*             */
 	{0x5308, 0x40, INVMASK(0x40)},
 	{0x5302, 0x20},
 };
 
-/* Saturation */
+/*            */
 
 struct ov5640_sensor ov5640_saturation_lv0_tbl[] = {
-/* Saturation x0.25 */
-	{0x5001, 0x83, INVMASK(0x80)},  /* SDE_En */
-	{0x5583, 0x00},                 /* Saturaion gain in U */
-	{0x5584, 0x00},                 /* Saturation gain in V */
-	{0x5580, 0x02, INVMASK(0x02)},  /* Saturation enable */
+/*                  */
+	{0x5001, 0x83, INVMASK(0x80)},  /*        */
+	{0x5583, 0x00},                 /*                     */
+	{0x5584, 0x00},                 /*                      */
+	{0x5580, 0x02, INVMASK(0x02)},  /*                   */
 	{0x5588, 0x40, INVMASK(0x40)},
 };
 
 struct ov5640_sensor ov5640_saturation_lv1_tbl[] = {
-/* Saturation x0.5 */
+/*                 */
 	{0x5001, 0x83, INVMASK(0x80)},
 	{0x5583, 0x10},
 	{0x5584, 0x10},
@@ -669,7 +669,7 @@ struct ov5640_sensor ov5640_saturation_lv1_tbl[] = {
 };
 
 struct ov5640_sensor ov5640_saturation_lv2_tbl[] = {
-/* Saturation x0.75 */
+/*                  */
 	{0x5001, 0x83, INVMASK(0x80)},
 	{0x5583, 0x20},
 	{0x5584, 0x20},
@@ -678,7 +678,7 @@ struct ov5640_sensor ov5640_saturation_lv2_tbl[] = {
 };
 
 struct ov5640_sensor ov5640_saturation_lv3_tbl[] = {
-/* Saturation x0.75 */
+/*                  */
 	{0x5001, 0x83, INVMASK(0x80)},
 	{0x5583, 0x30},
 	{0x5584, 0x30},
@@ -687,7 +687,7 @@ struct ov5640_sensor ov5640_saturation_lv3_tbl[] = {
 };
 
 struct ov5640_sensor ov5640_saturation_default_lv4_tbl[] = {
-/* Saturation x1 (Default) */
+/*                         */
 	{0x5001, 0x83, INVMASK(0x80)},
 	{0x5583, 0x40},
 	{0x5584, 0x40},
@@ -696,7 +696,7 @@ struct ov5640_sensor ov5640_saturation_default_lv4_tbl[] = {
 };
 
 struct ov5640_sensor ov5640_saturation_lv5_tbl[] = {
-/* Saturation x1.25 */
+/*                  */
 	{0x5001, 0x83, INVMASK(0x80)},
 	{0x5583, 0x50},
 	{0x5584, 0x50},
@@ -705,7 +705,7 @@ struct ov5640_sensor ov5640_saturation_lv5_tbl[] = {
 };
 
 struct ov5640_sensor ov5640_saturation_lv6_tbl[] = {
-/* Saturation x1.5 */
+/*                 */
 	{0x5001, 0x83, INVMASK(0x80)},
 	{0x5583, 0x60},
 	{0x5584, 0x60},
@@ -714,7 +714,7 @@ struct ov5640_sensor ov5640_saturation_lv6_tbl[] = {
 };
 
 struct ov5640_sensor ov5640_saturation_lv7_tbl[] = {
-/* Saturation x1.25 */
+/*                  */
 	{0x5001, 0x83, INVMASK(0x80)},
 	{0x5583, 0x70},
 	{0x5584, 0x70},
@@ -723,7 +723,7 @@ struct ov5640_sensor ov5640_saturation_lv7_tbl[] = {
 };
 
 struct ov5640_sensor ov5640_saturation_lv8_tbl[] = {
-/* Saturation x1.5 */
+/*                 */
 	{0x5001, 0x83, INVMASK(0x80)},
 	{0x5583, 0x80},
 	{0x5584, 0x80},
@@ -731,10 +731,10 @@ struct ov5640_sensor ov5640_saturation_lv8_tbl[] = {
 	{0x5588, 0x40, INVMASK(0x40)},
 };
 
-/* Brightness */
+/*            */
 
 struct ov5640_sensor ov5640_brightness_lv0_tbl[] = {
-/* Brightness -4 */
+/*               */
 	{0x5001, 0x83, INVMASK(0x80)},
 	{0x5587, 0x40},
 	{0x5580, 0x04, INVMASK(0x04)},
@@ -742,7 +742,7 @@ struct ov5640_sensor ov5640_brightness_lv0_tbl[] = {
 };
 
 struct ov5640_sensor ov5640_brightness_lv1_tbl[] = {
-/* Brightness -3 */
+/*               */
 	{0x5001, 0x83, INVMASK(0x80)},
 	{0x5587, 0x30},
 	{0x5580, 0x04, INVMASK(0x04)},
@@ -750,7 +750,7 @@ struct ov5640_sensor ov5640_brightness_lv1_tbl[] = {
 };
 
 struct ov5640_sensor ov5640_brightness_lv2_tbl[] = {
-/* Brightness -2 */
+/*               */
 	{0x5001, 0x83, INVMASK(0x80)},
 	{0x5587, 0x20},
 	{0x5580, 0x04, INVMASK(0x04)},
@@ -758,7 +758,7 @@ struct ov5640_sensor ov5640_brightness_lv2_tbl[] = {
 };
 
 struct ov5640_sensor ov5640_brightness_lv3_tbl[] = {
-/* Brightness -1 */
+/*               */
 	{0x5001, 0x83, INVMASK(0x80)},
 	{0x5587, 0x10},
 	{0x5580, 0x04, INVMASK(0x04)},
@@ -766,7 +766,7 @@ struct ov5640_sensor ov5640_brightness_lv3_tbl[] = {
 };
 
 struct ov5640_sensor ov5640_brightness_default_lv4_tbl[] = {
-/* Brightness 0 (Default) */
+/*                        */
 	{0x5001, 0x83, INVMASK(0x80)},
 	{0x5587, 0x00},
 	{0x5580, 0x04, INVMASK(0x04)},
@@ -774,7 +774,7 @@ struct ov5640_sensor ov5640_brightness_default_lv4_tbl[] = {
 };
 
 struct ov5640_sensor ov5640_brightness_lv5_tbl[] = {
-/* Brightness +1 */
+/*               */
 	{0x5001, 0x83, INVMASK(0x80)},
 	{0x5587, 0x10},
 	{0x5580, 0x04, INVMASK(0x04)},
@@ -782,7 +782,7 @@ struct ov5640_sensor ov5640_brightness_lv5_tbl[] = {
 };
 
 struct ov5640_sensor ov5640_brightness_lv6_tbl[] = {
-/* Brightness +2 */
+/*               */
 	{0x5001, 0x83, INVMASK(0x80)},
 	{0x5587, 0x20},
 	{0x5580, 0x04, INVMASK(0x04)},
@@ -790,7 +790,7 @@ struct ov5640_sensor ov5640_brightness_lv6_tbl[] = {
 };
 
 struct ov5640_sensor ov5640_brightness_lv7_tbl[] = {
-/* Brightness +3 */
+/*               */
 	{0x5001, 0x83, INVMASK(0x80)},
 	{0x5587, 0x30},
 	{0x5580, 0x04, INVMASK(0x04)},
@@ -798,16 +798,16 @@ struct ov5640_sensor ov5640_brightness_lv7_tbl[] = {
 };
 
 struct ov5640_sensor ov5640_brightness_lv8_tbl[] = {
-/* Brightness +4 */
+/*               */
 	{0x5001, 0x83, INVMASK(0x80)},
 	{0x5587, 0x40},
 	{0x5580, 0x04, INVMASK(0x04)},
 	{0x5588, 0x00, INVMASK(0x08)},
 };
 
-/* Exposure Compensation */
+/*                       */
 struct ov5640_sensor ov5640_exposure_compensation_lv0_tbl[] = {
-	/* @@ +1.7EV */
+	/*           */
 	{0x3a0f, 0x60},
 	{0x3a10, 0x58},
 	{0x3a11, 0xa0},
@@ -817,7 +817,7 @@ struct ov5640_sensor ov5640_exposure_compensation_lv0_tbl[] = {
 };
 
 struct ov5640_sensor ov5640_exposure_compensation_lv1_tbl[] = {
-	/* @@ +1.0EV */
+	/*           */
 	{0x3a0f, 0x50},
 	{0x3a10, 0x48},
 	{0x3a11, 0x90},
@@ -827,7 +827,7 @@ struct ov5640_sensor ov5640_exposure_compensation_lv1_tbl[] = {
 };
 
 struct ov5640_sensor ov5640_exposure_compensation_lv2_default_tbl[] = {
-	/* @@ default */
+	/*            */
 	{0x3a0f, 0x38},
 	{0x3a10, 0x30},
 	{0x3a11, 0x61},
@@ -837,7 +837,7 @@ struct ov5640_sensor ov5640_exposure_compensation_lv2_default_tbl[] = {
 };
 
 struct ov5640_sensor ov5640_exposure_compensation_lv3_tbl[] = {
-	/* @@ -1.0EV */
+	/*           */
 	{0x3a0f, 0x20},
 	{0x3a10, 0x18},
 	{0x3a11, 0x41},
@@ -847,7 +847,7 @@ struct ov5640_sensor ov5640_exposure_compensation_lv3_tbl[] = {
 };
 
 struct ov5640_sensor ov5640_exposure_compensation_lv4_tbl[] = {
-	/* @@ -1.7EV */
+	/*           */
 	{0x3a0f, 0x10},
 	{0x3a10, 0x08},
 	{0x3a11, 0x10},
@@ -856,22 +856,22 @@ struct ov5640_sensor ov5640_exposure_compensation_lv4_tbl[] = {
 	{0x3a1f, 0x10},
 };
 
-/* Auto Expourse Weight */
+/*                      */
 
 struct ov5640_sensor ov5640_ae_average_tbl[] = {
-  /* Whole Image Average */
-	{0x5688, 0x11}, /* Zone 1/Zone 0 weight */
-	{0x5689, 0x11}, /* Zone 3/Zone 2 weight */
-	{0x569a, 0x11}, /* Zone 5/Zone 4 weight */
-	{0x569b, 0x11}, /* Zone 7/Zone 6 weight */
-	{0x569c, 0x11}, /* Zone 9/Zone 8 weight */
-	{0x569d, 0x11}, /* Zone b/Zone a weight */
-	{0x569e, 0x11}, /* Zone d/Zone c weight */
-	{0x569f, 0x11}, /* Zone f/Zone e weight */
+  /*                     */
+	{0x5688, 0x11}, /*                      */
+	{0x5689, 0x11}, /*                      */
+	{0x569a, 0x11}, /*                      */
+	{0x569b, 0x11}, /*                      */
+	{0x569c, 0x11}, /*                      */
+	{0x569d, 0x11}, /*                      */
+	{0x569e, 0x11}, /*                      */
+	{0x569f, 0x11}, /*                      */
 };
 
 struct ov5640_sensor ov5640_ae_centerweight_tbl[] = {
-  /* Whole Image Center More weight */
+  /*                                */
 	{0x5688, 0x62},
 	{0x5689, 0x26},
 	{0x568a, 0xe6},
@@ -882,7 +882,7 @@ struct ov5640_sensor ov5640_ae_centerweight_tbl[] = {
 	{0x568f, 0x6a},
 };
 
-/* Light Mode */
+/*            */
 struct ov5640_sensor ov5640_wb_def[] = {
 	{0x3406, 0x00, INVMASK(0x01)},
 };
@@ -927,7 +927,7 @@ struct ov5640_sensor ov5640_wb_cloudy[] = {
 	{0x3405, 0x00},
 };
 
-/* EFFECT */
+/*        */
 struct ov5640_sensor ov5640_effect_normal_tbl[] = {
 	{0x5001, 0x83, INVMASK(0x80)},
 	{0x5580, 0x00, INVMASK(0x78)},
@@ -997,12 +997,12 @@ struct ov5640_sensor ov5640_effect_negative_tbl[] = {
 	{0x5003, 0x08},
 };
 
-/* AntiBanding */
+/*             */
 struct ov5640_sensor ov5640_antibanding_auto_tbl[] = {
-  /* Auto-XCLK24MHz */
-	{0x3622, 0x01}, /* PD-sel */
-	{0x3635, 0x1c}, /* VMREF 3635[2:0] */
-	{0x3634, 0x40}, /* I_5060 3643[2:0] */
+  /*                */
+	{0x3622, 0x01}, /*        */
+	{0x3635, 0x1c}, /*                 */
+	{0x3634, 0x40}, /*                  */
 	{0x3c01, 0x34},
 	{0x3c00, 0x00},
 	{0x3c04, 0x28},
@@ -1011,37 +1011,37 @@ struct ov5640_sensor ov5640_antibanding_auto_tbl[] = {
 	{0x3c07, 0x08},
 	{0x3c08, 0x00},
 	{0x3c09, 0x1c},
-	{0x300c, 0x22}, /* 50/60div 300c[2:0] */
+	{0x300c, 0x22}, /*                    */
 	{0x3c0a, 0x9c},
 	{0x3c0b, 0x40},
 };
 
 struct ov5640_sensor ov5640_antibanding_50z_tbl[] = {
-  /* Band 50Hz */
+  /*           */
 	{0x3c01, 0x80, INVMASK(0x80)},
 	{0x3c00, 0x04},
 };
 
 struct ov5640_sensor ov5640_antibanding_60z_tbl[] = {
-  /* Band 60Hz */
+  /*           */
 	{0x3c01, 0x80, INVMASK(0x80)},
 	{0x3c00, 0x00},
 };
 
 
-/* Lens_shading */
+/*              */
 
 struct ov5640_sensor ov5640_lens_shading_on_tbl[] = {
-	/* @@ Lenc On(C) */
+	/*               */
 	{0x5000, 0x80, INVMASK(0x80)},
 };
 
 struct ov5640_sensor ov5640_lens_shading_off_tbl[] = {
-	/*  Lenc Off */
+	/*           */
 	{0x5000, 0x00, INVMASK(0x80)},
 };
 
-/* Auto Focus Firmware-use 2011-08-24 firmware settings */
+/*                                                      */
 u8 ov5640_afinit_tbl[] = {
 	0x80,	0x00,	0x02,	0x0b,	0x7b,	0x02,	0x07,	0xbd,	0xc2,
 	0x01,	0x22,	0x22,	0x00,	0x02,	0x0b,	0x57,	0xe5,	0x1f,
@@ -2990,4 +2990,4 @@ u8 ov5640_afinit_tbl[] = {
 	0x00,
 };
 
-#endif /* CAMSENSOR_OV5640 */
+#endif /*                  */

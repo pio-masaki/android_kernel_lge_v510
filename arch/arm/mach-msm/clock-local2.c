@@ -29,16 +29,16 @@
 #include "clock-local2.h"
 
 /*
- * When enabling/disabling a clock, check the halt bit up to this number
- * number of times (with a 1 us delay in between) before continuing.
+                                                                        
+                                                                    
  */
 #define HALT_CHECK_MAX_LOOPS	200
-/* For clock without halt checking, wait this long after enables/disables. */
+/*                                                                         */
 #define HALT_CHECK_DELAY_US	10
 
 /*
- * When updating an RCG configuration, check the update bit up to this number
- * number of times (with a 1 us delay in between) before continuing.
+                                                                             
+                                                                    
  */
 #define UPDATE_CHECK_MAX_LOOPS	200
 
@@ -55,7 +55,7 @@ struct clk_freq_tbl rcg_dummy_freq = F_END;
 #define VOTE_REG(x)	(*(x)->base + (x)->vote_reg)
 
 /*
- * Important clock bit positions and masks
+                                          
  */
 #define CMD_RCGR_ROOT_ENABLE_BIT	BIT(1)
 #define CBCR_BRANCH_ENABLE_BIT		BIT(0)
@@ -78,13 +78,13 @@ enum branch_state {
 };
 
 /*
- * RCG functions
+                
  */
 
 /*
- * Update an RCG with a new configuration. This may include a new M, N, or D
- * value, source selection or pre-divider value.
- *
+                                                                            
+                                                
+  
  */
 static void rcg_update_config(struct rcg_clk *rcg)
 {
@@ -94,7 +94,7 @@ static void rcg_update_config(struct rcg_clk *rcg)
 	cmd_rcgr_regval |= CMD_RCGR_CONFIG_UPDATE_BIT;
 	writel_relaxed(cmd_rcgr_regval, CMD_RCGR_REG(rcg));
 
-	/* Wait for update to take effect */
+	/*                                */
 	for (count = UPDATE_CHECK_MAX_LOOPS; count > 0; count--) {
 		if (!(readl_relaxed(CMD_RCGR_REG(rcg)) &
 				CMD_RCGR_CONFIG_UPDATE_BIT))
@@ -106,7 +106,7 @@ static void rcg_update_config(struct rcg_clk *rcg)
 		rcg->c.dbg_name);
 }
 
-/* RCG set rate function for clocks with Half Integer Dividers. */
+/*                                                              */
 void set_rate_hid(struct rcg_clk *rcg, struct clk_freq_tbl *nf)
 {
 	u32 cfg_regval;
@@ -122,7 +122,7 @@ void set_rate_hid(struct rcg_clk *rcg, struct clk_freq_tbl *nf)
 	spin_unlock_irqrestore(&local_clock_reg_lock, flags);
 }
 
-/* RCG set rate function for clocks with MND & Half Integer Dividers. */
+/*                                                                    */
 void set_rate_mnd(struct rcg_clk *rcg, struct clk_freq_tbl *nf)
 {
 	u32 cfg_regval;
@@ -138,7 +138,7 @@ void set_rate_mnd(struct rcg_clk *rcg, struct clk_freq_tbl *nf)
 	cfg_regval &= ~(CFG_RCGR_DIV_MASK | CFG_RCGR_SRC_SEL_MASK);
 	cfg_regval |= nf->div_src_val;
 
-	/* Activate or disable the M/N:D divider as necessary */
+	/*                                                    */
 	cfg_regval &= ~MND_MODE_MASK;
 	if (nf->n_val != 0)
 		cfg_regval |= MND_DUAL_EDGE_MODE_BVAL;
@@ -174,7 +174,7 @@ static int rcg_clk_set_rate(struct clk *c, unsigned long rate)
 
 	cf = rcg->current_freq;
 
-	/* Enable source clock dependency for the new freq. */
+	/*                                                  */
 	if (c->prepare_count) {
 		rc = clk_prepare(nf->src_clk);
 		if (rc)
@@ -193,10 +193,10 @@ static int rcg_clk_set_rate(struct clk *c, unsigned long rate)
 
 	BUG_ON(!rcg->set_rate);
 
-	/* Perform clock-specific frequency switch operations. */
+	/*                                                     */
 	rcg->set_rate(rcg, nf);
 
-	/* Release source requirements of the old freq. */
+	/*                                              */
 	if (c->count)
 		clk_disable(cf->src_clk);
 	spin_unlock_irqrestore(&c->lock, flags);
@@ -209,7 +209,7 @@ static int rcg_clk_set_rate(struct clk *c, unsigned long rate)
 	return 0;
 }
 
-/* Return a supported rate that's at least the specified rate. */
+/*                                                             */
 static long rcg_clk_round_rate(struct clk *c, unsigned long rate)
 {
 	struct rcg_clk *rcg = to_rcg_clk(c);
@@ -222,7 +222,7 @@ static long rcg_clk_round_rate(struct clk *c, unsigned long rate)
 	return -EPERM;
 }
 
-/* Return the nth supported frequency for a given clock. */
+/*                                                       */
 static int rcg_clk_list_rate(struct clk *c, unsigned n)
 {
 	struct rcg_clk *rcg = to_rcg_clk(c);
@@ -245,28 +245,28 @@ static enum handoff _rcg_clk_handoff(struct rcg_clk *rcg, int has_mnd)
 	struct clk_freq_tbl *freq;
 	u32 cmd_rcgr_regval;
 
-	/* Is the root enabled? */
+	/*                      */
 	cmd_rcgr_regval = readl_relaxed(CMD_RCGR_REG(rcg));
 	if ((cmd_rcgr_regval & CMD_RCGR_ROOT_STATUS_BIT))
 		return HANDOFF_DISABLED_CLK;
 
-	/* Is there a pending configuration? */
+	/*                                   */
 	if (cmd_rcgr_regval & CMD_RCGR_CONFIG_DIRTY_MASK)
 		return HANDOFF_UNKNOWN_RATE;
 
-	/* Get values of m, n, d, div and src_sel registers. */
+	/*                                                   */
 	if (has_mnd) {
 		m_regval = readl_relaxed(M_REG(rcg));
 		n_regval = readl_relaxed(N_REG(rcg));
 		d_regval = readl_relaxed(D_REG(rcg));
 
 		/*
-		 * The n and d values stored in the frequency tables are sign
-		 * extended to 32 bits. The n and d values in the registers are
-		 * sign extended to 8 or 16 bits. Sign extend the values read
-		 * from the registers so that they can be compared to the
-		 * values in the frequency tables.
-		 */
+                                                               
+                                                                 
+                                                               
+                                                           
+                                    
+   */
 		n_regval |= (n_regval >> 8) ? BM(31, 16) : BM(31, 8);
 		d_regval |= (d_regval >> 8) ? BM(31, 16) : BM(31, 8);
 	}
@@ -275,17 +275,17 @@ static enum handoff _rcg_clk_handoff(struct rcg_clk *rcg, int has_mnd)
 	cfg_regval &= CFG_RCGR_SRC_SEL_MASK | CFG_RCGR_DIV_MASK
 				| MND_MODE_MASK;
 
-	/* If mnd counter is present, check if it's in use. */
+	/*                                                  */
 	has_mnd = (has_mnd) &&
 		((cfg_regval & MND_MODE_MASK) == MND_DUAL_EDGE_MODE_BVAL);
 
 	/*
-	 * Clear out the mn counter mode bits since we now want to compare only
-	 * the source mux selection and pre-divider values in the registers.
-	 */
+                                                                        
+                                                                     
+  */
 	cfg_regval &= ~MND_MODE_MASK;
 
-	/* Figure out what rate the rcg is running at */
+	/*                                            */
 	for (freq = rcg->freq_tbl; freq->freq_hz != FREQ_END; freq++) {
 		if (freq->div_src_val != cfg_regval)
 			continue;
@@ -300,7 +300,7 @@ static enum handoff _rcg_clk_handoff(struct rcg_clk *rcg, int has_mnd)
 		break;
 	}
 
-	/* No known frequency found */
+	/*                          */
 	if (freq->freq_hz == FREQ_END)
 		return HANDOFF_UNKNOWN_RATE;
 
@@ -326,7 +326,7 @@ static enum handoff rcg_clk_handoff(struct clk *c)
 #define BRANCH_NOC_FSM_ON_VAL	BVAL(31, 28, 0x2)
 
 /*
- * Branch clock functions
+                         
  */
 static void branch_clk_halt_check(u32 halt_check, const char *clk_name,
 				  void __iomem *cbcr_reg,
@@ -335,11 +335,11 @@ static void branch_clk_halt_check(u32 halt_check, const char *clk_name,
 	char *status_str = (br_status == BRANCH_ON) ? "off" : "on";
 
 	/*
-	 * Use a memory barrier since some halt status registers are
-	 * not within the same 1K segment as the branch/root enable
-	 * registers.  It's also needed in the udelay() case to ensure
-	 * the delay starts after the branch disable.
-	 */
+                                                             
+                                                            
+                                                               
+                                              
+  */
 	mb();
 
 	if (halt_check == DELAY || halt_check == HALT_VOTED) {
@@ -380,7 +380,7 @@ static int branch_clk_enable(struct clk *c)
 	writel_relaxed(cbcr_val, CBCR_REG(branch));
 	spin_unlock_irqrestore(&local_clock_reg_lock, flags);
 
-	/* Wait for clock to enable before continuing. */
+	/*                                             */
 	branch_clk_halt_check(branch->halt_check, branch->c.dbg_name,
 				CBCR_REG(branch), BRANCH_ON);
 
@@ -399,7 +399,7 @@ static void branch_clk_disable(struct clk *c)
 	writel_relaxed(reg_val, CBCR_REG(branch));
 	spin_unlock_irqrestore(&local_clock_reg_lock, flags);
 
-	/* Wait for clock to disable before continuing. */
+	/*                                              */
 	branch_clk_halt_check(branch->halt_check, branch->c.dbg_name,
 				CBCR_REG(branch), BRANCH_OFF);
 }
@@ -518,7 +518,7 @@ static int __branch_clk_reset(void __iomem *bcr_reg,
 	writel_relaxed(reg_val, bcr_reg);
 	spin_unlock_irqrestore(&local_clock_reg_lock, flags);
 
-	/* Make sure write is issued before returning. */
+	/*                                             */
 	mb();
 
 	return ret;
@@ -537,7 +537,7 @@ static int branch_clk_reset(struct clk *c, enum clk_reset_action action)
 }
 
 /*
- * Voteable clock functions
+                           
  */
 static int local_vote_clk_reset(struct clk *c, enum clk_reset_action action)
 {
@@ -587,7 +587,7 @@ static enum handoff local_vote_clk_handoff(struct clk *c)
 	struct local_vote_clk *vclk = to_local_vote_clk(c);
 	u32 vote_regval;
 
-	/* Is the branch voted on by apps? */
+	/*                                 */
 	vote_regval = readl_relaxed(VOTE_REG(vclk));
 	if (!(vote_regval & vclk->en_mask))
 		return HANDOFF_DISABLED_CLK;

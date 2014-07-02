@@ -29,7 +29,7 @@
 #include "msm_vfe7x27a_v4l2.h"
 #include "msm.h"
 
-/* ADSP Messages */
+/*               */
 #define MSG_RESET_ACK  0
 #define MSG_STOP_ACK  1
 #define MSG_SNAPSHOT  2
@@ -65,12 +65,12 @@
 #define QDSP_SCALEQUEUE 26
 #define QDSP_TABLEQUEUE 27
 
-/* ADSP Scler queue Cmd IDs */
+/*                          */
 #define VFE_SCALE_OUTPUT1_CONFIG  0
 #define VFE_SCALE_OUTPUT2_CONFIG  1
 #define VFE_SCALE_MAX  0xFFFFFFFF
 
-/* ADSP table queue Cmd IDs */
+/*                          */
 #define VFE_AXI_INPUT_CONFIG  0
 #define VFE_AXI_OUTPUT_CONFIG  1
 #define VFE_RGB_GAMMA_CONFIG  2
@@ -81,7 +81,7 @@
 #define VFE_DEMOSAICv3_CFG  8
 #define VFE_MAX  0xFFFFFFFF
 
-/* ADSP cfg queue cmd IDs */
+/*                        */
 #define VFE_RESET  0
 #define VFE_START  1
 #define VFE_STOP  2
@@ -376,10 +376,10 @@ static unsigned long vfe2x_stats_flush_enqueue(
 	int i;
 
 	/*
-	 * Passing NULL for ion client as the buffers are already
-	 * mapped at this stage, client is not required, flush all
-	 * the buffers, and buffers move to PREPARE state
-	 */
+                                                          
+                                                           
+                                                  
+  */
 	rc = vfe2x_ctrl->stats_ops.bufq_flush(
 			vfe2x_ctrl->stats_ops.stats_ctrl,
 			stats_type, NULL);
@@ -389,7 +389,7 @@ static unsigned long vfe2x_stats_flush_enqueue(
 		return 0L;
 	}
 
-	/* Queue all the buffers back to QUEUED state */
+	/*                                            */
 	bufq = vfe2x_ctrl->stats_ctrl.bufq[stats_type];
 	for (i = 0; i < bufq->num_bufs; i++) {
 		stats_buf = &bufq->bufs[i];
@@ -509,7 +509,7 @@ static long vfe2x_stats_bufq_sub_ioctl(struct msm_vfe_cfg_cmd *cmd,
 	switch (cmd->cmd_type) {
 	case VFE_CMD_STATS_REQBUF:
 		if (!vfe2x_ctrl->stats_ops.stats_ctrl) {
-			/* stats_ctrl has not been init yet */
+			/*                                  */
 			rc = msm_stats_buf_ops_init(
 					&vfe2x_ctrl->stats_ctrl,
 					(struct ion_client *)ion_client,
@@ -528,7 +528,7 @@ static long vfe2x_stats_bufq_sub_ioctl(struct msm_vfe_cfg_cmd *cmd,
 				goto end;
 			}
 			if (sizeof(struct msm_stats_reqbuf) != cmd->length) {
-				/* error. the length not match */
+				/*                             */
 				pr_err("%s: stats reqbuf input size = %d,\n"
 					"struct size = %d, mismatch\n",
 					__func__, cmd->length,
@@ -544,7 +544,7 @@ static long vfe2x_stats_bufq_sub_ioctl(struct msm_vfe_cfg_cmd *cmd,
 		break;
 		case VFE_CMD_STATS_ENQUEUEBUF: {
 			if (sizeof(struct msm_stats_buf_info) != cmd->length) {
-				/* error. the length not match */
+				/*                             */
 				pr_err("%s: stats enqueuebuf input size = %d,\n"
 					"struct size = %d, mismatch\n",
 					 __func__, cmd->length,
@@ -562,7 +562,7 @@ static long vfe2x_stats_bufq_sub_ioctl(struct msm_vfe_cfg_cmd *cmd,
 		struct msm_stats_flush_bufq *flush_req = NULL;
 		flush_req = (struct msm_stats_flush_bufq *)cmd->value;
 		if (sizeof(struct msm_stats_flush_bufq) != cmd->length) {
-			/* error. the length not match */
+			/*                             */
 			pr_err("%s: stats flush queue input size = %d,\n"
 				"struct size = %d, mismatch\n",
 				__func__, cmd->length,
@@ -581,7 +581,7 @@ static long vfe2x_stats_bufq_sub_ioctl(struct msm_vfe_cfg_cmd *cmd,
 		struct msm_stats_reqbuf *req_buf = NULL;
 		req_buf = (struct msm_stats_reqbuf *)cmd->value;
 		if (sizeof(struct msm_stats_reqbuf) != cmd->length) {
-			/* error. the length not match */
+			/*                             */
 			pr_err("%s: stats reqbuf input size = %d,\n"
 				"struct size = %d, mitch match\n",
 				 __func__, cmd->length,
@@ -686,11 +686,11 @@ static void vfe_7x_ops(void *driver_data, unsigned id, size_t len,
 		}
 	}
 	if (id == VFE_ADSP_EVENT) {
-		/* event */
+		/*       */
 		getevent(evt_buf, sizeof(evt_buf));
 		CDBG("%s:event:msg_id=%d\n", __func__, id);
 	} else {
-		/* messages */
+		/*          */
 		getevent(data, len);
 		CDBG("%s:messages:msg_id=%d\n", __func__, id);
 
@@ -885,15 +885,15 @@ static void vfe_7x_ops(void *driver_data, unsigned id, size_t len,
 						return;
 					}
 				}
-			} else { /* Live snapshot */
+			} else { /*               */
 				spin_unlock_irqrestore(
 						&vfe2x_ctrl->
 						liveshot_enabled_lock,
 						flags);
 				if (free_buf) {
-					/* liveshot_swap to enqueue
-					   when liveshot snapshot buffer
-					   is obtainedi from adsp */
+					/*                         
+                                     
+                               */
 					liveshot_swap.y_address =
 						((struct vfe_endframe *)
 						 data)->y_address;
@@ -943,8 +943,8 @@ static void vfe_7x_ops(void *driver_data, unsigned id, size_t len,
 					kfree(data);
 					return;
 				} else {
-					/* Enque data got
-					 * during freebuf */
+					/*               
+                       */
 					fack.header = VFE_OUTPUT2_ACK;
 					fack.output2newybufferaddress =
 						(void *)
@@ -993,7 +993,7 @@ static void vfe_7x_ops(void *driver_data, unsigned id, size_t len,
 				frame_id;
 
 			if (!vfe2x_ctrl->liveshot_enabled) {
-				/* Liveshot not enalbed */
+				/*                      */
 				vfe_send_outmsg(&vfe2x_ctrl->subdev,
 						MSG_ID_OUTPUT_PRIMARY,
 						y_phy, cbcr_phy);
@@ -1055,7 +1055,7 @@ static void vfe_7x_ops(void *driver_data, unsigned id, size_t len,
 		case MSG_SOF:
 			vfe2x_ctrl->vfeFrameId++;
 			if (vfe2x_ctrl->vfeFrameId == 0)
-				vfe2x_ctrl->vfeFrameId = 1; /* wrapped back */
+				vfe2x_ctrl->vfeFrameId = 1; /*              */
 			if ((op_mode & SNAPSHOT_MASK_MODE) && !raw_mode
 				&& (vfe2x_ctrl->num_snap <= 1)) {
 				CDBG("Ignore SOF for snapshot\n");
@@ -1096,7 +1096,7 @@ static void vfe_7x_ops(void *driver_data, unsigned id, size_t len,
 				memcpy(((char *)cmd_data) + 4,
 					&vfe2x_ctrl->start_cmd,
 					sizeof(vfe2x_ctrl->start_cmd));
-				/* Send Start cmd here */
+				/*                     */
 				len  = sizeof(vfe2x_ctrl->start_cmd) + 4;
 				msm_adsp_write(vfe_mod, QDSP_CMDQUEUE,
 						cmd_data, len);
@@ -1105,7 +1105,7 @@ static void vfe_7x_ops(void *driver_data, unsigned id, size_t len,
 				CDBG("Send STOP\n");
 				cmd_data = buf;
 				*(uint32_t *)cmd_data = VFE_STOP;
-				/* Send Stop cmd here */
+				/*                    */
 				len  = 4;
 				msm_adsp_write(vfe_mod, QDSP_CMDQUEUE,
 						cmd_data, len);
@@ -1114,7 +1114,7 @@ static void vfe_7x_ops(void *driver_data, unsigned id, size_t len,
 				CDBG("Send Update\n");
 				cmd_data = buf;
 				*(uint32_t *)cmd_data = VFE_UPDATE;
-				/* Send Update cmd here */
+				/*                      */
 				len  = 4;
 				msm_adsp_write(vfe_mod, QDSP_CMDQUEUE,
 						cmd_data, len);
@@ -1166,7 +1166,7 @@ static int vfe_7x_config_axi(int mode,
 	if ((o_mode == SNAPSHOT_MASK_MODE) && (vfe2x_ctrl->num_snap > 1)) {
 		CDBG("%s: BURST mode freebuf cnt %d", __func__,
 			ad->free_buf_cnt);
-		/* Burst */
+		/*       */
 		if (mode == OUTPUT_SEC) {
 			ao->output1buffer1_y_phy = ad->ping.ch_paddr[0];
 			ao->output1buffer1_cbcr_phy = ad->ping.ch_paddr[1];
@@ -1199,7 +1199,7 @@ static int vfe_7x_config_axi(int mode,
 				(unsigned int)ao->output1buffer6_cbcr_phy);
 			CDBG("%x %x\n", (unsigned int)ao->output1buffer7_y_phy,
 				(unsigned int)ao->output1buffer7_cbcr_phy);
-		} else { /*Primary*/
+		} else { /*       */
 			ao->output2buffer1_y_phy = ad->ping.ch_paddr[0];
 			ao->output2buffer1_cbcr_phy = ad->ping.ch_paddr[1];
 			ao->output2buffer2_y_phy = ad->pong.ch_paddr[0];
@@ -1233,7 +1233,7 @@ static int vfe_7x_config_axi(int mode,
 				(unsigned int)ao->output2buffer7_cbcr_phy);
 		}
 	} else if (mode == OUTPUT_SEC) {
-		/* Thumbnail */
+		/*           */
 		if (vfe2x_ctrl->zsl_mode) {
 			ao->output1buffer1_y_phy = ad->ping.ch_paddr[0];
 			ao->output1buffer1_cbcr_phy = ad->ping.ch_paddr[1];
@@ -1262,14 +1262,14 @@ static int vfe_7x_config_axi(int mode,
 			}
 		}
 	} else if (mode == OUTPUT_PRIM && o_mode != SNAPSHOT_MASK_MODE) {
-		/* Preview */
+		/*         */
 		ao->output2buffer1_y_phy = ad->ping.ch_paddr[0];
 		ao->output2buffer1_cbcr_phy = ad->ping.ch_paddr[1];
 		ao->output2buffer2_y_phy = ad->pong.ch_paddr[0];
 		ao->output2buffer2_cbcr_phy = ad->pong.ch_paddr[1];
 		spin_lock_irqsave(&vfe2x_ctrl->liveshot_enabled_lock,
 				flags);
-		if (vfe2x_ctrl->liveshot_enabled) { /* Live shot */
+		if (vfe2x_ctrl->liveshot_enabled) { /*           */
 			ao->output2buffer3_y_phy = ad->pong.ch_paddr[0];
 			ao->output2buffer3_cbcr_phy = ad->pong.ch_paddr[1];
 		} else {
@@ -1394,7 +1394,7 @@ static int vfe2x_configure_pingpong_buffers(int id, int path)
 			outch = &vfe2x_ctrl->zsl_sec;
 	}
 	if (outch->ping.ch_paddr[0] && outch->pong.ch_paddr[0]) {
-		/* Configure Preview Ping Pong */
+		/*                             */
 		CDBG("%s Configure ping/pong address for %d",
 						__func__, path);
 	} else {
@@ -1409,7 +1409,7 @@ static struct buf_info *vfe2x_get_ch(int path)
 	struct buf_info *ch = NULL;
 
 	CDBG("path = %d op_mode = %d\n", path, op_mode);
-	/* TODO: Remove Mode specific stuff */
+	/*                                  */
 	if (op_mode & SNAPSHOT_MASK_MODE) {
 		if (path == VFE_MSG_OUTPUT_SECONDARY)
 			ch = &vfe2x_ctrl->thumb;
@@ -1492,12 +1492,12 @@ static long msm_vfe_subdev_ioctl(struct v4l2_subdev *sd,
 	case VFE_CMD_STATS_REQBUF:
 	case VFE_CMD_STATS_FLUSH_BUFQ:
 	case VFE_CMD_STATS_UNREGBUF:
-		/* for easy porting put in one envelope */
+		/*                                      */
 		rc = vfe2x_stats_bufq_sub_ioctl(cmd, vfe_params->data);
 		return rc;
 	case VFE_CMD_STATS_ENQUEUEBUF:
 		if (sizeof(struct msm_stats_buf_info) != cmd->length) {
-			/* error. the length not match */
+			/*                             */
 			pr_err("%s: stats enqueuebuf input size = %d,\n"
 				"struct size = %d, mitch match\n",\
 				__func__, cmd->length,
@@ -1895,7 +1895,7 @@ static long msm_vfe_subdev_ioctl(struct v4l2_subdev *sd,
 			default:
 				break;
 			}
-		} /* QDSP_CMDQUEUE */
+		} /*               */
 	}
 		break;
 	case CMD_AXI_CFG_SEC: {
@@ -2313,7 +2313,7 @@ int msm_vfe_subdev_init(struct v4l2_subdev *sd)
 
 	msm_camio_set_perf_lvl(S_INIT);
 
-	/* TODO : check is it required */
+	/*                             */
 	extlen = sizeof(struct vfe_frame_extra);
 
 	extdata = kmalloc(extlen, GFP_ATOMIC);

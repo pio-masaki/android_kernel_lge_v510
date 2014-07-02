@@ -26,7 +26,7 @@
 #include "timpani_profile_7x30.h"
 #include <mach/qdsp5v2/audio_dev_ctl.h>
 
-/* define the value for BT_SCO */
+/*                             */
 #define BT_SCO_PCM_CTL_VAL (PCM_CTL__RPCM_WIDTH__LINEAR_V |\
 		PCM_CTL__TPCM_WIDTH__LINEAR_V)
 #define BT_SCO_DATA_FORMAT_PADDING (DATA_FORMAT_PADDING_INFO__RPCM_FORMAT_V |\
@@ -40,7 +40,7 @@ static void snddev_hsed_config_restore_setting(void);
 #endif
 
 static struct adie_codec_action_unit iearpiece_ffa_48KHz_osr256_actions[] =
-	EAR_PRI_MONO_8000_OSR_256; /* 8000 profile also works for 48k */
+	EAR_PRI_MONO_8000_OSR_256; /*                                 */
 
 static struct adie_codec_hwsetting_entry iearpiece_ffa_settings[] = {
 	{
@@ -83,7 +83,7 @@ static struct platform_device msm_iearpiece_ffa_device = {
 };
 
 static struct adie_codec_action_unit imic_ffa_48KHz_osr256_actions[] =
-	AMIC_PRI_MONO_8000_OSR_256; /* 8000 profile also works for 48k */
+	AMIC_PRI_MONO_8000_OSR_256; /*                                 */
 
 static struct adie_codec_hwsetting_entry imic_ffa_settings[] = {
 	{
@@ -321,11 +321,11 @@ static struct platform_device msm_headset_stereo_device = {
 	.dev = { .platform_data = &snddev_ihs_stereo_rx_data },
 };
 
-/*debug FS interface is exposed to test Class D and class AB mode
- * amplifers for headset device folloowing options are supported
- * 0 -> settings will be restored
- * 1 -> Cladd D mode is selected
- * 2 -> Class AB mode is selected
+/*                                                               
+                                                                
+                                 
+                                
+                                 
 */
 #ifdef CONFIG_DEBUG_FS
 static struct adie_codec_action_unit
@@ -477,13 +477,13 @@ static struct adie_codec_hwsetting_entry idual_mic_endfire_settings[] = {
 		.osr = 256,
 		.actions = idual_mic_endfire_8KHz_osr256_actions,
 		.action_sz = ARRAY_SIZE(idual_mic_endfire_8KHz_osr256_actions),
-	}, /* 8KHz profile can be used for 16KHz */
+	}, /*                                    */
 	{
 		.freq_plan = 16000,
 		.osr = 256,
 		.actions = idual_mic_endfire_8KHz_osr256_actions,
 		.action_sz = ARRAY_SIZE(idual_mic_endfire_8KHz_osr256_actions),
-	}, /* 8KHz profile can be used for 48KHz */
+	}, /*                                    */
 	{
 		.freq_plan = 48000,
 		.osr = 256,
@@ -777,13 +777,13 @@ static struct adie_codec_hwsetting_entry ispk_dual_mic_bs_settings[] = {
 		.osr = 256,
 		.actions = ispk_dual_mic_bs_8KHz_osr256_actions,
 		.action_sz = ARRAY_SIZE(ispk_dual_mic_bs_8KHz_osr256_actions),
-	}, /* 8KHz profile can be used for 16Khz */
+	}, /*                                    */
 	{
 		.freq_plan = 16000,
 		.osr = 256,
 		.actions = ispk_dual_mic_bs_8KHz_osr256_actions,
 		.action_sz = ARRAY_SIZE(ispk_dual_mic_bs_8KHz_osr256_actions),
-	}, /* 8KHz profile can be used for 48KHz */
+	}, /*                                    */
 	{
 		.freq_plan = 48000,
 		.osr = 256,
@@ -830,13 +830,13 @@ static struct adie_codec_hwsetting_entry idual_mic_broadside_settings[] = {
 		.osr = 256,
 		.actions = idual_mic_bs_8KHz_osr256_actions,
 		.action_sz = ARRAY_SIZE(idual_mic_bs_8KHz_osr256_actions),
-	}, /* 8KHz profile can be used for 16KHz */
+	}, /*                                    */
 	{
 		.freq_plan = 16000,
 		.osr = 256,
 		.actions = idual_mic_bs_8KHz_osr256_actions,
 		.action_sz = ARRAY_SIZE(idual_mic_bs_8KHz_osr256_actions),
-	}, /* 8KHz profile can be used for 16KHz */
+	}, /*                                    */
 	{
 		.freq_plan = 48000,
 		.osr = 256,

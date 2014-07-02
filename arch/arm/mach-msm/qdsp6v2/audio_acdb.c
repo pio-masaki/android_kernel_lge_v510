@@ -31,38 +31,38 @@ struct sidetone_atomic_cal {
 struct acdb_data {
 	struct mutex		acdb_mutex;
 
-	/* ANC Cal */
+	/*         */
 	struct acdb_atomic_cal_block	anc_cal;
 
-	/* AudProc Cal */
+	/*             */
 	atomic_t			asm_topology;
 	atomic_t			adm_topology[MAX_AUDPROC_TYPES];
 	struct acdb_atomic_cal_block	audproc_cal[MAX_AUDPROC_TYPES];
 	struct acdb_atomic_cal_block	audstrm_cal[MAX_AUDPROC_TYPES];
 	struct acdb_atomic_cal_block	audvol_cal[MAX_AUDPROC_TYPES];
 
-	/* VocProc Cal */
+	/*             */
 	atomic_t			voice_rx_topology;
 	atomic_t			voice_tx_topology;
 	struct acdb_atomic_cal_block	vocproc_cal[MAX_NETWORKS];
 	struct acdb_atomic_cal_block	vocstrm_cal[MAX_NETWORKS];
 	struct acdb_atomic_cal_block	vocvol_cal[MAX_NETWORKS];
-	/* size of cal block tables above*/
+	/*                               */
 	atomic_t			vocproc_cal_size;
 	atomic_t			vocstrm_cal_size;
 	atomic_t			vocvol_cal_size;
-	/* Total size of cal data for all networks */
+	/*                                         */
 	atomic_t			vocproc_total_cal_size;
 	atomic_t			vocstrm_total_cal_size;
 	atomic_t			vocvol_total_cal_size;
 
-	/* AFE cal */
+	/*         */
 	struct acdb_atomic_cal_block	afe_cal[MAX_AUDPROC_TYPES];
 
-	/* Sidetone Cal */
+	/*              */
 	struct sidetone_atomic_cal	sidetone_cal;
 
-	/* Allocation information */
+	/*                        */
 	struct ion_client		*ion_client;
 	struct ion_handle		*ion_handle;
 	atomic_t			map_handle;
@@ -770,7 +770,7 @@ static long acdb_ioctl(struct file *f,
 		goto done;
 	}
 
-	if (size <= 0) {
+	if ((size <= 0) || (size > sizeof(data))) {
 		pr_err("%s: Invalid size sent to driver: %d\n",
 			__func__, size);
 		result = -EFAULT;

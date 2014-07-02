@@ -15,7 +15,7 @@
 #include <linux/types.h>
 #include <mach/board.h>
 
-/* 16bit address - 8 bit context register structure */
+/*                                                  */
 struct reg_struct_type {
 	uint16_t	reg_addr;
 	unsigned char	reg_val;

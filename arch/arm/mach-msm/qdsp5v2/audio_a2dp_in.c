@@ -48,7 +48,7 @@
 #include <mach/qdsp5v2/audio_dev_ctl.h>
 #include <mach/debug_mm.h>
 
-/* FRAME_NUM must be a power of two */
+/*                                  */
 #define FRAME_NUM		(8)
 #define FRAME_SIZE		(2052 * 2)
 #define FRAME_SIZE_SBC		(768 * 2)
@@ -80,31 +80,31 @@ struct audio_a2dp_in {
 
 	struct msm_adsp_module *audrec;
 
-	struct audrec_session_info session_info; /*audrec session info*/
+	struct audrec_session_info session_info; /*                   */
 
-	/* configuration to use on next enable */
+	/*                                     */
 	uint32_t samp_rate;
 	uint32_t channel_mode;
-	uint32_t buffer_size; /* 2048 for mono, 4096 for stereo */
+	uint32_t buffer_size; /*                                */
 	uint32_t enc_type;
 	struct msm_audio_sbc_enc_config cfg;
 
 	uint32_t dsp_cnt;
-	uint32_t in_head; /* next buffer dsp will write */
-	uint32_t in_tail; /* next buffer read() will read */
-	uint32_t in_count; /* number of buffers available to read() */
+	uint32_t in_head; /*                            */
+	uint32_t in_tail; /*                              */
+	uint32_t in_count; /*                                       */
 	uint32_t mode;
 
 	const char *module_name;
 	unsigned queue_ids;
-	uint16_t enc_id; /* Session Id */
+	uint16_t enc_id; /*            */
 
-	uint16_t source; /* Encoding source bit mask */
-	uint32_t device_events; /* device events interested in */
+	uint16_t source; /*                          */
+	uint32_t device_events; /*                             */
 	uint32_t dev_cnt;
 	spinlock_t dev_lock;
 
-	/* data allocated for various buffers */
+	/*                                    */
 	char *data;
 	dma_addr_t phys;
 	void *msm_map;
@@ -112,8 +112,8 @@ struct audio_a2dp_in {
 	int opened;
 	int enabled;
 	int running;
-	int stopped; /* set when stopped, cleared on flush */
-	int abort; /* set when error, like sample rate mismatch */
+	int stopped; /*                                    */
+	int abort; /*                                           */
 	char *build_id;
 };
 
@@ -124,7 +124,7 @@ struct wav_frame {
 	uint16_t frame_count_msw;
 	uint16_t frame_length;
 	uint16_t erased_a2dp;
-	unsigned char raw_bitstream[]; /* samples */
+	unsigned char raw_bitstream[]; /*         */
 };
 
 struct sbc_frame {
@@ -132,7 +132,7 @@ struct sbc_frame {
 	uint16_t bit_rate_lsw;
 	uint16_t frame_length;
 	uint16_t frame_num;
-	unsigned char raw_bitstream[]; /* samples */
+	unsigned char raw_bitstream[]; /*         */
 };
 
 struct audio_frame {
@@ -142,7 +142,7 @@ struct audio_frame {
 	} a2dp;
 } __attribute__((packed));
 
-/* Audrec Queue command sent macro's */
+/*                                   */
 #define audrec_send_bitstreamqueue(audio, cmd, len) \
 	msm_adsp_write(audio->audrec, ((audio->queue_ids & 0xFFFF0000) >> 16),\
 			cmd, len)
@@ -151,7 +151,7 @@ struct audio_frame {
 	msm_adsp_write(audio->audrec, (audio->queue_ids & 0x0000FFFF),\
 			cmd, len)
 
-/* DSP command send functions */
+/*                            */
 static int auda2dp_in_enc_config(struct audio_a2dp_in *audio, int enable);
 static int auda2dp_in_param_config(struct audio_a2dp_in *audio);
 static int auda2dp_in_mem_config(struct audio_a2dp_in *audio);
@@ -193,11 +193,11 @@ static void a2dp_in_listener(u32 evt_id, union auddev_evt_data *evt_payload,
 		if (!audio->running || !audio->enabled)
 			break;
 
-		/* Turn of as per source */
+		/*                       */
 		if (audio->source)
 			auda2dp_in_record_config(audio, 1);
 		else
-			/* Turn off all */
+			/*              */
 			auda2dp_in_record_config(audio, 0);
 
 		break;
@@ -208,8 +208,8 @@ static void a2dp_in_listener(u32 evt_id, union auddev_evt_data *evt_payload,
 		MM_DBG("dev_type %d\n", evt_payload->freq_info.dev_type);
 		MM_DBG("acdb_dev_id %d\n", evt_payload->freq_info.acdb_dev_id);
 		if (audio->running == 1) {
-			/* Stop Recording sample rate does not match
-			   with device sample rate */
+			/*                                          
+                              */
 			if (evt_payload->freq_info.sample_rate !=
 				audio->samp_rate) {
 				auda2dp_in_record_config(audio, 0);
@@ -225,7 +225,7 @@ static void a2dp_in_listener(u32 evt_id, union auddev_evt_data *evt_payload,
 	}
 }
 
-/* ------------------- dsp preproc event handler--------------------- */
+/*                                                                    */
 static void audpreproc_dsp_event(void *data, unsigned id,  void *msg)
 {
 	struct audio_a2dp_in *audio = data;
@@ -236,7 +236,7 @@ static void audpreproc_dsp_event(void *data, unsigned id,  void *msg)
 
 		MM_ERR("ERROR_MSG: stream id %d err idx %d\n",
 		err_msg->stream_id, err_msg->aud_preproc_err_idx);
-		/* Error case */
+		/*            */
 		wake_up(&audio->wait_enable);
 		break;
 	}
@@ -250,10 +250,10 @@ static void audpreproc_dsp_event(void *data, unsigned id,  void *msg)
 		MM_DBG("CMD_ENC_CFG_DONE_MSG: stream id %d enc type \
 			0x%8x\n", enc_cfg_msg->stream_id,
 			enc_cfg_msg->rec_enc_type);
-		/* Encoder enable success */
+		/*                        */
 		if (enc_cfg_msg->rec_enc_type & ENCODE_ENABLE)
 			auda2dp_in_param_config(audio);
-		else { /* Encoder disable success */
+		else { /*                         */
 			audio->running = 0;
 			auda2dp_in_record_config(audio, 0);
 		}
@@ -274,7 +274,7 @@ static void audpreproc_dsp_event(void *data, unsigned id,  void *msg)
 	}
 }
 
-/* ------------------- dsp audrec event handler--------------------- */
+/*                                                                   */
 static void audrec_dsp_event(void *data, unsigned id, size_t len,
 			    void (*getevent)(void *ptr, size_t len))
 {
@@ -294,7 +294,7 @@ static void audrec_dsp_event(void *data, unsigned id, size_t len,
 		getevent(&fatal_err_msg, AUDREC_FATAL_ERR_MSG_LEN);
 		MM_ERR("FATAL_ERR_MSG: err id %d\n",
 				fatal_err_msg.audrec_err_id);
-		/* Error stop the encoder */
+		/*                        */
 		audio->stopped = 1;
 		wake_up(&audio->wait);
 		break;
@@ -343,13 +343,13 @@ static void auda2dp_in_get_dsp_frames(struct audio_a2dp_in *audio)
 		audio->in[index].frame_len = frame->a2dp.sbc.frame_length;
 	}
 
-	/* statistics of read */
+	/*                    */
 	atomic_add(audio->in[index].size, &audio->in_bytes);
 	atomic_add(1, &audio->in_samples);
 
 	audio->in_head = (audio->in_head + 1) & (FRAME_NUM - 1);
 
-	/* If overflow, move the tail index foward. */
+	/*                                          */
 	if (audio->in_head == audio->in_tail)
 		audio->in_tail = (audio->in_tail + 1) & (FRAME_NUM - 1);
 	else
@@ -420,7 +420,7 @@ static int auda2dp_in_param_config(struct audio_a2dp_in *audio)
 	return 0;
 }
 
-/* To Do: msm_snddev_route_enc(audio->enc_id); */
+/*                                             */
 static int auda2dp_in_record_config(struct audio_a2dp_in *audio, int enable)
 {
 	struct audpreproc_afe_cmd_audio_record_cfg cmd;
@@ -462,13 +462,13 @@ static int auda2dp_in_mem_config(struct audio_a2dp_in *audio)
 	cmd.audrec_ext_pkt_start_addr_lsw = audio->phys;
 	cmd.audrec_ext_pkt_buf_number = FRAME_NUM;
 
-	/* prepare buffer pointers:
-	 * Wav:
-	 * Mono: 1024 samples + 4 halfword header
-	 * Stereo: 2048 samples + 4 halfword header
-	 * SBC:
-	 * 768 + 4 halfword header
-	 */
+	/*                         
+        
+                                          
+                                            
+        
+                           
+  */
 	if (audio->enc_type == ENC_TYPE_SBC) {
 		for (n = 0; n < FRAME_NUM; n++) {
 			audio->in[n].data = data + 4;
@@ -499,7 +499,7 @@ static int auda2dp_dsp_read_buffer(struct audio_a2dp_in *audio,
 	return audrec_send_bitstreamqueue(audio, &cmd, sizeof(cmd));
 }
 
-/* must be called with audio->lock held */
+/*                                      */
 static int auda2dp_in_enable(struct audio_a2dp_in *audio)
 {
 	if (audio->enabled)
@@ -521,7 +521,7 @@ static int auda2dp_in_enable(struct audio_a2dp_in *audio)
 	return 0;
 }
 
-/* must be called with audio->lock held */
+/*                                      */
 static int auda2dp_in_disable(struct audio_a2dp_in *audio)
 {
 	if (audio->enabled) {
@@ -554,7 +554,7 @@ static void auda2dp_in_flush(struct audio_a2dp_in *audio)
 	atomic_set(&audio->in_samples, 0);
 }
 
-/* ------------------- device --------------------- */
+/*                                                  */
 static long auda2dp_in_ioctl(struct file *file,
 				unsigned int cmd, unsigned long arg)
 {
@@ -574,7 +574,7 @@ static long auda2dp_in_ioctl(struct file *file,
 	switch (cmd) {
 	case AUDIO_START: {
 		uint32_t freq;
-		/* Poll at 48KHz always */
+		/*                      */
 		freq = 48000;
 		MM_DBG("AUDIO_START\n");
 		rc = msm_snddev_request_freq(&freq, audio->enc_id,
@@ -589,7 +589,7 @@ static long auda2dp_in_ioctl(struct file *file,
 			MM_DBG("msm_snddev_withdraw_freq\n");
 			break;
 		}
-		/*update aurec session info in audpreproc layer*/
+		/*                                             */
 		audio->session_info.session_id = audio->enc_id;
 		audio->session_info.sampling_freq = audio->samp_rate;
 		audpreproc_update_audrec_info(&audio->session_info);
@@ -612,7 +612,7 @@ static long auda2dp_in_ioctl(struct file *file,
 		break;
 	}
 	case AUDIO_STOP: {
-		/*reset the sampling frequency information at audpreproc layer*/
+		/*                                                            */
 		audio->session_info.sampling_freq = 0;
 		audpreproc_update_audrec_info(&audio->session_info);
 		rc = auda2dp_in_disable(audio);
@@ -625,11 +625,11 @@ static long auda2dp_in_ioctl(struct file *file,
 	}
 	case AUDIO_FLUSH: {
 		if (audio->stopped) {
-			/* Make sure we're stopped and we wake any threads
-			 * that might be blocked holding the read_lock.
-			 * While audio->stopped read threads will always
-			 * exit immediately.
-			 */
+			/*                                                
+                                                  
+                                                   
+                       
+    */
 			wake_up(&audio->wait);
 			mutex_lock(&audio->read_lock);
 			auda2dp_in_flush(audio);
@@ -643,7 +643,7 @@ static long auda2dp_in_ioctl(struct file *file,
 			rc = -EFAULT;
 			break;
 		}
-		/* Allow only single frame */
+		/*                         */
 		if ((audio->enc_type == ENC_TYPE_SBC) &&
 				(cfg.buffer_size != FRAME_SIZE_SBC))
 			rc = -EINVAL;
@@ -765,12 +765,12 @@ static ssize_t auda2dp_in_read(struct file *file,
 
 		if (audio->stopped && !audio->in_count) {
 			MM_DBG("Driver in stop state, No more buffer to read");
-			rc = 0;/* End of File */
+			rc = 0;/*             */
 			break;
 		}
 
 		if (audio->abort) {
-			rc = -EPERM; /* Not permitted due to abort */
+			rc = -EPERM; /*                            */
 			break;
 		}
 
@@ -798,8 +798,8 @@ static ssize_t auda2dp_in_read(struct file *file,
 			}
 			spin_lock_irqsave(&audio->dsp_lock, flags);
 			if (index != audio->in_tail) {
-				/* overrun -- data is
-				 * invalid and we need to retry */
+				/*                   
+                                    */
 				spin_unlock_irqrestore(&audio->dsp_lock, flags);
 				continue;
 			}
@@ -833,12 +833,12 @@ static int auda2dp_in_release(struct inode *inode, struct file *file)
 	struct audio_a2dp_in *audio = file->private_data;
 
 	mutex_lock(&audio->lock);
-	/* with draw frequency for session
-	   incase not stopped the driver */
+	/*                                
+                                  */
 	msm_snddev_withdraw_freq(audio->enc_id, SNDDEV_CAP_TX,
 					AUDDEV_CLNT_ENC);
 	auddev_unregister_evt_listner(AUDDEV_CLNT_ENC, audio->enc_id);
-	/*reset the sampling frequency information at audpreproc layer*/
+	/*                                                            */
 	audio->session_info.sampling_freq = 0;
 	audpreproc_update_audrec_info(&audio->session_info);
 	auda2dp_in_disable(audio);
@@ -900,9 +900,9 @@ static int auda2dp_in_open(struct inode *inode, struct file *file)
 		rc = -EACCES;
 		goto done;
 	}
-	/* Settings will be re-config at AUDIO_SET_CONFIG/SBC_ENC_CONFIG,
-	 * but at least we need to have initial config
-	 */
+	/*                                                               
+                                               
+  */
 	audio->channel_mode = AUDREC_CMD_MODE_MONO;
 	audio->buffer_size = FRAME_SIZE_SBC;
 	audio->samp_rate = 48000;
@@ -911,7 +911,7 @@ static int auda2dp_in_open(struct inode *inode, struct file *file)
 	audio->cfg.mode = AUDIO_SBC_MODE_JSTEREO;
 	audio->cfg.number_of_subbands = AUDIO_SBC_BANDS_8;
 	audio->cfg.number_of_blocks = AUDIO_SBC_BLOCKS_16;
-	audio->cfg.bit_rate = 320000; /* max 512kbps(mono), 320kbs(others) */
+	audio->cfg.bit_rate = 320000; /*                                   */
 
 	encid = audpreproc_aenc_alloc(audio->enc_type, &audio->module_name,
 			&audio->queue_ids);

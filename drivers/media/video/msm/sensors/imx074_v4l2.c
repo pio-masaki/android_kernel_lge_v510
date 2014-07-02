@@ -36,53 +36,53 @@ static struct msm_camera_i2c_reg_conf imx074_groupoff_settings[] = {
 };
 
 static struct msm_camera_i2c_reg_conf imx074_prev_settings[] = {
-	{0x0307, 0x2D}, /*pll_multiplier*/
-	{0x0340, 0x06}, /*frame_length_lines_hi*/
-	{0x0341, 0x34}, /*frame_length_lines_lo*/
-	{0x0342, 0x11}, /*line_length_pclk_hi*/
-	{0x0343, 0x78}, /*line_length_pclk_lo*/
-	{0x0347, 0x00}, /*y_addr_start*/
-	{0x034b, 0x2F}, /*y_add_end*/
-	{0x034c, 0x08}, /*x_output_size_msb*/
-	{0x034d, 0x38}, /*x_output_size_lsb*/
-	{0x034e, 0x06}, /*y_output_size_msb*/
-	{0x034f, 0x18}, /*y_output_size_lsb*/
-	{0x0381, 0x01}, /*x_even_inc*/
-	{0x0383, 0x03}, /*x_odd_inc*/
-	{0x0385, 0x01}, /*y_even_inc*/
-	{0x0387, 0x03}, /*y_odd_inc*/
-	{0x3001, 0x80}, /*hmodeadd*/
-	{0x3016, 0x16}, /*vmodeadd*/
-	{0x3069, 0x24}, /*vapplinepos_start*/
-	{0x306b, 0x53}, /*vapplinepos_end*/
-	{0x3086, 0x00}, /*shutter*/
-	{0x30e8, 0x80}, /*haddave*/
-	{0x3301, 0x83}, /*lanesel*/
+	{0x0307, 0x2D}, /*              */
+	{0x0340, 0x06}, /*                     */
+	{0x0341, 0x34}, /*                     */
+	{0x0342, 0x11}, /*                   */
+	{0x0343, 0x78}, /*                   */
+	{0x0347, 0x00}, /*            */
+	{0x034b, 0x2F}, /*         */
+	{0x034c, 0x08}, /*                 */
+	{0x034d, 0x38}, /*                 */
+	{0x034e, 0x06}, /*                 */
+	{0x034f, 0x18}, /*                 */
+	{0x0381, 0x01}, /*          */
+	{0x0383, 0x03}, /*         */
+	{0x0385, 0x01}, /*          */
+	{0x0387, 0x03}, /*         */
+	{0x3001, 0x80}, /*        */
+	{0x3016, 0x16}, /*        */
+	{0x3069, 0x24}, /*                 */
+	{0x306b, 0x53}, /*               */
+	{0x3086, 0x00}, /*       */
+	{0x30e8, 0x80}, /*       */
+	{0x3301, 0x83}, /*       */
 };
 
 static struct msm_camera_i2c_reg_conf imx074_snap_settings[] = {
-	{0x0307, 0x26}, /*pll_multiplier*/
-	{0x0340, 0x0C}, /*frame_length_lines_hi*/
-	{0x0341, 0x90}, /*frame_length_lines_lo*/
-	{0x0342, 0x11}, /*line_length_pclk_hi*/
-	{0x0343, 0x78}, /*line_length_pclk_lo*/
-	{0x0347, 0x00}, /*y_addr_start*/
-	{0x034b, 0x2F}, /*y_add_end*/
-	{0x034c, 0x10}, /*x_output_size_msb*/
-	{0x034d, 0x70}, /*x_output_size_lsb*/
-	{0x034e, 0x0c}, /*y_output_size_msb*/
-	{0x034f, 0x30}, /*y_output_size_lsb*/
-	{0x0381, 0x01}, /*x_even_inc*/
-	{0x0383, 0x01}, /*x_odd_inc*/
-	{0x0385, 0x01}, /*y_even_inc*/
-	{0x0387, 0x01}, /*y_odd_inc*/
-	{0x3001, 0x00}, /*hmodeadd*/
-	{0x3016, 0x06}, /*vmodeadd*/
-	{0x3069, 0x24}, /*vapplinepos_start*/
-	{0x306b, 0x53}, /*vapplinepos_end*/
-	{0x3086, 0x00}, /*shutter*/
-	{0x30e8, 0x00}, /*haddave*/
-	{0x3301, 0x03}, /*lanesel*/
+	{0x0307, 0x26}, /*              */
+	{0x0340, 0x0C}, /*                     */
+	{0x0341, 0x90}, /*                     */
+	{0x0342, 0x11}, /*                   */
+	{0x0343, 0x78}, /*                   */
+	{0x0347, 0x00}, /*            */
+	{0x034b, 0x2F}, /*         */
+	{0x034c, 0x10}, /*                 */
+	{0x034d, 0x70}, /*                 */
+	{0x034e, 0x0c}, /*                 */
+	{0x034f, 0x30}, /*                 */
+	{0x0381, 0x01}, /*          */
+	{0x0383, 0x01}, /*         */
+	{0x0385, 0x01}, /*          */
+	{0x0387, 0x01}, /*         */
+	{0x3001, 0x00}, /*        */
+	{0x3016, 0x06}, /*        */
+	{0x3069, 0x24}, /*                 */
+	{0x306b, 0x53}, /*               */
+	{0x3086, 0x00}, /*       */
+	{0x30e8, 0x00}, /*       */
+	{0x3301, 0x03}, /*       */
 };
 
 static struct msm_camera_i2c_reg_conf imx074_recommend_settings[] = {
@@ -132,7 +132,7 @@ static struct v4l2_subdev_info imx074_subdev_info[] = {
 	.fmt    = 1,
 	.order    = 0,
 	},
-	/* more can be supported, to be added later */
+	/*                                          */
 };
 
 static struct msm_camera_i2c_conf_array imx074_init_conf[] = {
@@ -168,6 +168,44 @@ static struct msm_sensor_output_info_t imx074_dimensions[] = {
 	},
 };
 
+static struct msm_camera_csi_params imx074_csic_params = {
+	.data_format = CSI_10BIT,
+	.lane_cnt    = 4,
+	.lane_assign = 0xe4,
+	.dpcm_scheme = 0,
+	.settle_cnt  = 0x14,
+};
+
+static struct msm_camera_csi_params *imx074_csic_params_array[] = {
+	&imx074_csic_params,
+	&imx074_csic_params,
+};
+
+static struct msm_camera_csid_vc_cfg imx074_cid_cfg[] = {
+	{0, CSI_RAW10, CSI_DECODE_10BIT},
+	{1, CSI_EMBED_DATA, CSI_DECODE_8BIT},
+	{2, CSI_RESERVED_DATA_0, CSI_DECODE_8BIT},
+};
+
+static struct msm_camera_csi2_params imx074_csi_params = {
+	.csid_params = {
+		.lane_cnt = 4,
+		.lut_params = {
+			.num_cid = ARRAY_SIZE(imx074_cid_cfg),
+			.vc_cfg = imx074_cid_cfg,
+		},
+	},
+	.csiphy_params = {
+		.lane_cnt = 4,
+		.settle_cnt = 0x1B,
+	},
+};
+
+static struct msm_camera_csi2_params *imx074_csi_params_array[] = {
+	&imx074_csi_params,
+	&imx074_csi_params,
+};
+
 static struct msm_sensor_output_reg_addr_t imx074_reg_addr = {
 	.x_output = 0x34C,
 	.y_output = 0x34E,
@@ -184,13 +222,6 @@ static struct msm_sensor_exp_gain_info_t imx074_exp_gain_info = {
 	.coarse_int_time_addr = 0x202,
 	.global_gain_addr = 0x204,
 	.vert_offset = 3,
-};
-
-static enum msm_camera_vreg_name_t imx074_veg_seq[] = {
-	CAM_VDIG,
-	CAM_VIO,
-	CAM_VANA,
-	CAM_VAF,
 };
 
 static const struct i2c_device_id imx074_i2c_id[] = {
@@ -271,12 +302,12 @@ static struct msm_sensor_ctrl_t imx074_s_ctrl = {
 	.msm_sensor_reg = &imx074_regs,
 	.sensor_i2c_client = &imx074_sensor_i2c_client,
 	.sensor_i2c_addr = 0x34,
-	.vreg_seq = imx074_veg_seq,
-	.num_vreg_seq = ARRAY_SIZE(imx074_veg_seq),
 	.sensor_output_reg_addr = &imx074_reg_addr,
 	.sensor_id_info = &imx074_id_info,
 	.sensor_exp_gain_info = &imx074_exp_gain_info,
 	.cam_mode = MSM_SENSOR_MODE_INVALID,
+	.csic_params = &imx074_csic_params_array[0],
+	.csi_params = &imx074_csi_params_array[0],
 	.msm_sensor_mutex = &imx074_mut,
 	.sensor_i2c_driver = &imx074_i2c_driver,
 	.sensor_v4l2_subdev_info = imx074_subdev_info,

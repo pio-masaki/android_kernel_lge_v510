@@ -29,13 +29,13 @@ DEFINE_MUTEX(vx6953_mut);
 #define REG_MODE_SELECT					0x0100
 #define MODE_SELECT_STANDBY_MODE			0x00
 #define MODE_SELECT_STREAM				0x01
-/* Integration Time */
+/*                  */
 #define REG_COARSE_INTEGRATION_TIME_HI			0x0202
 #define REG_COARSE_INTEGRATION_TIME_LO			0x0203
-/* Gain */
+/*      */
 #define REG_ANALOGUE_GAIN_CODE_GLOBAL_HI		0x0204
 #define REG_ANALOGUE_GAIN_CODE_GLOBAL_LO		0x0205
-/* Digital Gain */
+/*              */
 #define REG_DIGITAL_GAIN_GREEN_R_HI			0x020E
 #define REG_DIGITAL_GAIN_GREEN_R_LO			0x020F
 #define REG_DIGITAL_GAIN_RED_HI				0x0210
@@ -44,10 +44,10 @@ DEFINE_MUTEX(vx6953_mut);
 #define REG_DIGITAL_GAIN_BLUE_LO			0x0213
 #define REG_DIGITAL_GAIN_GREEN_B_HI			0x0214
 #define REG_DIGITAL_GAIN_GREEN_B_LO			0x0215
-/* output bits setting */
+/*                     */
 #define REG_0x0112					0x0112
 #define REG_0x0113					0x0113
-/* PLL registers */
+/*               */
 #define REG_VT_PIX_CLK_DIV				0x0301
 #define REG_PRE_PLL_CLK_DIV				0x0305
 #define REG_PLL_MULTIPLIER				0x0307
@@ -113,9 +113,9 @@ DEFINE_MUTEX(vx6953_mut);
 #define REG_0x0b08					0x0b08
 #define REG_0x0b09					0x0b09
 #define REG_0x3640					0x3640
-/* Test Pattern */
+/*              */
 #define REG_TEST_PATTERN_MODE				0x0601
-/* 16bit address - 8 bit context register structure */
+/*                                                  */
 #define	VX6953_STM5M0EDOF_OFFSET	9
 #define	Q8		0x00000100
 #define	Q10		0x00000400
@@ -123,29 +123,29 @@ DEFINE_MUTEX(vx6953_mut);
 #define	VX6953_STM5M0EDOF_DEFAULT_MASTER_CLK_RATE	24000000
 #define	VX6953_STM5M0EDOF_OP_PIXEL_CLOCK_RATE	79800000
 #define	VX6953_STM5M0EDOF_VT_PIXEL_CLOCK_RATE	88670000
-/* Full	Size */
+/*           */
 #define	VX6953_FULL_SIZE_WIDTH	2608
 #define	VX6953_FULL_SIZE_HEIGHT		1960
 #define	VX6953_FULL_SIZE_DUMMY_PIXELS	1
 #define	VX6953_FULL_SIZE_DUMMY_LINES	0
-/* Quarter Size	*/
+/*              */
 #define	VX6953_QTR_SIZE_WIDTH	1304
 #define	VX6953_QTR_SIZE_HEIGHT		980
 #define	VX6953_QTR_SIZE_DUMMY_PIXELS	1
 #define	VX6953_QTR_SIZE_DUMMY_LINES		0
-/* Blanking	as measured	on the scope */
-/* Full	Size */
+/*                                   */
+/*           */
 #define	VX6953_HRZ_FULL_BLK_PIXELS	348
 #define	VX6953_VER_FULL_BLK_LINES	40
-/* Quarter Size	*/
+/*              */
 #define	VX6953_HRZ_QTR_BLK_PIXELS	1628
 #define	VX6953_VER_QTR_BLK_LINES	28
 #define	MAX_LINE_LENGTH_PCK		8190
 #define	MAX_FRAME_LENGTH_LINES	16383
-#define	VX6953_REVISION_NUMBER_CUT2	0x10/*revision number	for	Cut2.0*/
-#define	VX6953_REVISION_NUMBER_CUT3	0x20/*revision number	for	Cut3.0*/
+#define	VX6953_REVISION_NUMBER_CUT2	0x10/*                          */
+#define	VX6953_REVISION_NUMBER_CUT3	0x20/*                          */
 static struct msm_sensor_ctrl_t vx6953_s_ctrl;
-static uint32_t fps_divider;/* init to 1 * 0x00000400 */
+static uint32_t fps_divider;/*                        */
 static uint16_t fps;
 static uint8_t vx6953_stm5m0edof_delay_msecs_stdby;
 static struct msm_camera_i2c_reg_conf vx6953_start_settings[] = {
@@ -165,95 +165,95 @@ static struct msm_camera_i2c_reg_conf vx6953_groupoff_settings[] = {
 };
 
 static struct msm_camera_i2c_reg_conf vx6953_prev_settings[] = {
-	{0x0202, 0x03},/*REG = 0x0202 coarse integration_time_hi*/
-	{0x0203, 0xD0},/*REG = 0x0203 coarse_integration_time_lo*/
-	{0x0205, 0xC0},/*REG = 0x0205 analogue_gain_code_global*/
-	{0x0340, 0x03},/*REG = 0x0340 frame_length_lines_hi*/
-	{0x0341, 0xf0},/*REG = 0x0341 frame_length_lines_lo*/
-	{0x0342, 0x0b},/*REG = 0x0342  line_length_pck_hi*/
-	{0x0343, 0x74},/*REG = 0x0343  line_length_pck_lo*/
-	{0x3005, 0x03},/*REG = 0x3005*/
-	{0x3010, 0x00},/*REG = 0x3010*/
-	{0x3011, 0x01},/*REG = 0x3011*/
-	{0x301a, 0x6a},/*REG = 0x301a*/
-	{0x3035, 0x03},/*REG = 0x3035*/
-	{0x3036, 0x2c},/*REG = 0x3036*/
-	{0x3041, 0x00},/*REG = 0x3041*/
-	{0x3042, 0x24},/*REG = 0x3042*/
-	{0x3045, 0x81},/*REG = 0x3045*/
-	{0x0b80, 0x02},/*REG = 0x0b80 edof estimate*/
-	{0x0900, 0x01},/*REG = 0x0900*/
-	{0x0901, 0x22},/*REG = 0x0901*/
-	{0x0902, 0x04},/*REG = 0x0902*/
-	{0x0383, 0x03},/*REG = 0x0383*/
-	{0x0387, 0x03},/*REG = 0x0387*/
-	{0x034c, 0x05},/*REG = 0x034c*/
-	{0x034d, 0x18},/*REG = 0x034d*/
-	{0x034e, 0x03},/*REG = 0x034e*/
-	{0x034f, 0xd4},/*REG = 0x034f*/
-	{0x1716, 0x02},/*0x1716*/
-	{0x1717, 0x04},/*0x1717*/
-	{0x1718, 0x08},/*0x1718*/
-	{0x1719, 0x2c},/*0x1719*/
+	{0x0202, 0x03},/*                                       */
+	{0x0203, 0xD0},/*                                       */
+	{0x0205, 0xC0},/*                                      */
+	{0x0340, 0x03},/*                                  */
+	{0x0341, 0xf0},/*                                  */
+	{0x0342, 0x0b},/*                                */
+	{0x0343, 0x74},/*                                */
+	{0x3005, 0x03},/*            */
+	{0x3010, 0x00},/*            */
+	{0x3011, 0x01},/*            */
+	{0x301a, 0x6a},/*            */
+	{0x3035, 0x03},/*            */
+	{0x3036, 0x2c},/*            */
+	{0x3041, 0x00},/*            */
+	{0x3042, 0x24},/*            */
+	{0x3045, 0x81},/*            */
+	{0x0b80, 0x02},/*                          */
+	{0x0900, 0x01},/*            */
+	{0x0901, 0x22},/*            */
+	{0x0902, 0x04},/*            */
+	{0x0383, 0x03},/*            */
+	{0x0387, 0x03},/*            */
+	{0x034c, 0x05},/*            */
+	{0x034d, 0x18},/*            */
+	{0x034e, 0x03},/*            */
+	{0x034f, 0xd4},/*            */
+	{0x1716, 0x02},/*      */
+	{0x1717, 0x04},/*      */
+	{0x1718, 0x08},/*      */
+	{0x1719, 0x2c},/*      */
 };
 
 static struct msm_camera_i2c_reg_conf vx6953_snap_settings[] = {
-	{0x0202, 0x07},/*REG = 0x0202 coarse_integration_time_hi*/
-	{0x0203, 0x00},/*REG = 0x0203 coarse_integration_time_lo*/
-	{0x0205, 0xc0},/*REG = 0x0205 analogue_gain_code_global*/
-	{0x0340, 0x07},/*REG = 0x0340 frame_length_lines_hi*/
-	{0x0341, 0xd0},/*REG = 0x0341 frame_length_lines_lo*/
-	{0x0342, 0x0b},/*REG = 0x0342 line_length_pck_hi*/
-	{0x0343, 0x8c},/*REG = 0x0343 line_length_pck_lo*/
-	{0x3005, 0x01},/*REG = 0x3005*/
-	{0x3010, 0x00},/*REG = 0x3010*/
-	{0x3011, 0x00},/*REG = 0x3011*/
-	{0x301a, 0x55},/*REG = 0x301a*/
-	{0x3035, 0x01},/*REG = 0x3035*/
-	{0x3036, 0x23},/*REG = 0x3036*/
-	{0x3041, 0x00},/*REG = 0x3041*/
-	{0x3042, 0x24},/*REG = 0x3042*/
-	{0x3045, 0xb7},/*REG = 0x3045*/
-	{0x0b80, 0x01},/*REG = 0x0b80 edof application*/
-	{0x0900, 0x00},/*REG = 0x0900*/
-	{0x0901, 0x00},/*REG = 0x0901*/
-	{0x0902, 0x00},/*REG = 0x0902*/
-	{0x0383, 0x01},/*REG = 0x0383*/
-	{0x0387, 0x01},/*REG = 0x0387*/
-	{0x034c, 0x0A},/*REG = 0x034c*/
-	{0x034d, 0x30},/*REG = 0x034d*/
-	{0x034e, 0x07},/*REG = 0x034e*/
-	{0x034f, 0xA8},/*REG = 0x034f*/
-	{0x1716, 0x02},/*0x1716*/
-	{0x1717, 0x0d},/*0x1717*/
-	{0x1718, 0x07},/*0x1718*/
-	{0x1719, 0x7d},/*0x1719*/
+	{0x0202, 0x07},/*                                       */
+	{0x0203, 0x00},/*                                       */
+	{0x0205, 0xc0},/*                                      */
+	{0x0340, 0x07},/*                                  */
+	{0x0341, 0xd0},/*                                  */
+	{0x0342, 0x0b},/*                               */
+	{0x0343, 0x8c},/*                               */
+	{0x3005, 0x01},/*            */
+	{0x3010, 0x00},/*            */
+	{0x3011, 0x00},/*            */
+	{0x301a, 0x55},/*            */
+	{0x3035, 0x01},/*            */
+	{0x3036, 0x23},/*            */
+	{0x3041, 0x00},/*            */
+	{0x3042, 0x24},/*            */
+	{0x3045, 0xb7},/*            */
+	{0x0b80, 0x01},/*                             */
+	{0x0900, 0x00},/*            */
+	{0x0901, 0x00},/*            */
+	{0x0902, 0x00},/*            */
+	{0x0383, 0x01},/*            */
+	{0x0387, 0x01},/*            */
+	{0x034c, 0x0A},/*            */
+	{0x034d, 0x30},/*            */
+	{0x034e, 0x07},/*            */
+	{0x034f, 0xA8},/*            */
+	{0x1716, 0x02},/*      */
+	{0x1717, 0x0d},/*      */
+	{0x1718, 0x07},/*      */
+	{0x1719, 0x7d},/*      */
 };
 
 static struct msm_camera_i2c_reg_conf vx6953_recommend_settings[] = {
-	{0x0103, 0x01}, /* standby */
-	{0x0100, 0x00}, /* stop streaming */
-	/* patch cut 2*/
-	{0xFB94, 0},	/*intialise Data Xfer Status reg*/
-	{0xFB95, 0},	/*gain 1	  (0x00)*/
-	{0xFB96, 0},	/*gain 1.07   (0x10)*/
-	{0xFB97, 0},	/*gain 1.14   (0x20)*/
-	{0xFB98, 0},	/*gain 1.23   (0x30)*/
-	{0xFB99, 0},	/*gain 1.33   (0x40)*/
-	{0xFB9A, 0},	/*gain 1.45   (0x50)*/
-	{0xFB9B, 0},	/*gain 1.6    (0x60)*/
-	{0xFB9C, 0},	/*gain 1.78   (0x70)*/
-	{0xFB9D, 2},	/*gain 2	  (0x80)*/
-	{0xFB9E, 2},	/*gain 2.29   (0x90)*/
-	{0xFB9F, 3},	/*gain 2.67   (0xA0)*/
-	{0xFBA0, 3},	/*gain 3.2    (0xB0)*/
-	{0xFBA1, 4},	/*gain 4	  (0xC0)*/
-	{0xFBA2, 7},	/*gain 5.33   (0xD0)*/
-	{0xFBA3, 10},	/*gain 8	  (0xE0)*/
-	{0xFBA4, 11},	/*gain 9.14   (0xE4)*/
-	{0xFBA5, 13},	/*gain 10.67  (0xE8)*/
-	{0xFBA6, 15},	/*gain 12.8   (0xEC)*/
-	{0xFBA7, 19},	/*gain 16     (0xF0)*/
+	{0x0103, 0x01}, /*         */
+	{0x0100, 0x00}, /*                */
+	/*            */
+	{0xFB94, 0},	/*                              */
+	{0xFB95, 0},	/*               */
+	{0xFB96, 0},	/*                  */
+	{0xFB97, 0},	/*                  */
+	{0xFB98, 0},	/*                  */
+	{0xFB99, 0},	/*                  */
+	{0xFB9A, 0},	/*                  */
+	{0xFB9B, 0},	/*                  */
+	{0xFB9C, 0},	/*                  */
+	{0xFB9D, 2},	/*               */
+	{0xFB9E, 2},	/*                  */
+	{0xFB9F, 3},	/*                  */
+	{0xFBA0, 3},	/*                  */
+	{0xFBA1, 4},	/*               */
+	{0xFBA2, 7},	/*                  */
+	{0xFBA3, 10},	/*               */
+	{0xFBA4, 11},	/*                  */
+	{0xFBA5, 13},	/*                  */
+	{0xFBA6, 15},	/*                  */
+	{0xFBA7, 19},	/*                  */
 	{0xF800, 0x12},
 	{0xF801, 0x06},
 	{0xF802, 0xf7},
@@ -708,18 +708,18 @@ static struct msm_camera_i2c_reg_conf vx6953_recommend_settings[] = {
 	{0xF9C3, 0x0e},
 	{0xF9C4, 0x79},
 	{0xF9C5, 0x22},
-	/* Offsets:*/
-	{0x35C6, 0x00},/* FIDDLEDARKCAL*/
+	/*         */
+	{0x35C6, 0x00},/*              */
 	{0x35C7, 0x00},
-	{0x35C8, 0x01},/*STOREDISTANCEATSTOPSTREAMING*/
+	{0x35C8, 0x01},/*                            */
 	{0x35C9, 0x20},
-	{0x35CA, 0x01},/*BRUCEFIX*/
+	{0x35CA, 0x01},/*        */
 	{0x35CB, 0x62},
-	{0x35CC, 0x01},/*FIXDATAXFERSTATUSREG*/
+	{0x35CC, 0x01},/*                    */
 	{0x35CD, 0x87},
-	{0x35CE, 0x01},/*FOCUSDISTANCEUPDATE*/
+	{0x35CE, 0x01},/*                   */
 	{0x35CF, 0xA6},
-	{0x35D0, 0x01},/*SKIPEDOFRESET*/
+	{0x35D0, 0x01},/*             */
 	{0x35D1, 0xC2},
 	{0x35D2, 0x00},
 	{0x35D3, 0xFB},
@@ -737,17 +737,17 @@ static struct msm_camera_i2c_reg_conf vx6953_recommend_settings[] = {
 	{0x35DF, 0xFB},
 	{0x35E0, 0x00},
 	{0x35E1, 0x94},
-	{0x35E6, 0x18},/* FIDDLEDARKCAL*/
+	{0x35E6, 0x18},/*              */
 	{0x35E7, 0x2F},
-	{0x35E8, 0x03},/* STOREDISTANCEATSTOPSTREAMING*/
+	{0x35E8, 0x03},/*                             */
 	{0x35E9, 0x93},
-	{0x35EA, 0x18},/* BRUCEFIX*/
+	{0x35EA, 0x18},/*         */
 	{0x35EB, 0x99},
-	{0x35EC, 0x00},/* FIXDATAXFERSTATUSREG*/
+	{0x35EC, 0x00},/*                     */
 	{0x35ED, 0xA3},
-	{0x35EE, 0x21},/* FOCUSDISTANCEUPDATE*/
+	{0x35EE, 0x21},/*                    */
 	{0x35EF, 0x5B},
-	{0x35F0, 0x0E},/* SKIPEDOFRESET*/
+	{0x35F0, 0x0E},/*              */
 	{0x35F1, 0x74},
 	{0x35F2, 0x04},
 	{0x35F3, 0x64},
@@ -765,44 +765,44 @@ static struct msm_camera_i2c_reg_conf vx6953_recommend_settings[] = {
 	{0x35FF, 0xEF},
 	{0x3600, 0x04},
 	{0x3601, 0xF0},
-	/*Jump/Data:*/
-	{0x35C2, 0x3F},/* Jump Reg*/
-	{0x35C3, 0xFF},/* Jump Reg*/
-	{0x35C4, 0x3F},/* Data Reg*/
-	{0x35C5, 0xC0},/* Data Reg*/
-	{0x35C0, 0x01},/* Enable*/
-	/* end of patch cut 2 */
-	/* common settings */
-	{0x0112, 10},/*REG = 0x0112 , 10 bit */
-	{0x0113, 10},/*REG = 0x0113*/
-	{0x0301, 9},/*REG = 0x0301 vt_pix_clk_div*/
-	{0x0305, 4},/*REG = 0x0305 pre_pll_clk_div*/
-	{0x0307, 133},/*REG = 0x0307 pll_multiplier*/
-	{0x0309, 10},/*REG = 0x0309 op_pix_clk_div*/
-	{0x3030, 0x08},/*REG = 0x3030*/
-	{0x0111, 0x02},/*REG = 0x0111*/
-	{0x0b00, 0x01},/*REG = 0x0b00 ,lens shading off */
-	{0x3001, 0x30},/*REG = 0x3001*/
-	{0x3004, 0x33},/*REG = 0x3004*/
-	{0x3007, 0x09},/*REG = 0x3007*/
-	{0x3016, 0x1F},/*REG = 0x3016*/
-	{0x301d, 0x03},/*REG = 0x301d*/
-	{0x317E, 0x11},/*REG = 0x317E*/
-	{0x317F, 0x09},/*REG = 0x317F*/
-	{0x3400, 0x38},/*REG = 0x3400*/
-	{0x0b06, 0x00},/*REG_0x0b06*/
-	{0x0b07, 0x80},/*REG_0x0b07*/
-	{0x0b08, 0x01},/*REG_0x0b08*/
-	{0x0b09, 0x4F},/*REG_0x0b09*/
-	{0x0136, 0x18},/*REG_0x0136*/
-	{0x0137, 0x00},/*/REG_0x0137*/
-	{0x0b83, 0x20},/*REG = 0x0b83*/
-	{0x0b84, 0x90},/*REG = 0x0b84*/
-	{0x0b85, 0x20},/*REG = 0x0b85*/
-	{0x0b88, 0x80},/*REG = 0x0b88*/
-	{0x0b89, 0x00},/*REG = 0x0b89*/
-	{0x0b8a, 0x00},/*REG = 0x0b8a*/
-	/* end of common settings */
+	/*          */
+	{0x35C2, 0x3F},/*         */
+	{0x35C3, 0xFF},/*         */
+	{0x35C4, 0x3F},/*         */
+	{0x35C5, 0xC0},/*         */
+	{0x35C0, 0x01},/*       */
+	/*                    */
+	/*                 */
+	{0x0112, 10},/*                      */
+	{0x0113, 10},/*            */
+	{0x0301, 9},/*                           */
+	{0x0305, 4},/*                            */
+	{0x0307, 133},/*                           */
+	{0x0309, 10},/*                           */
+	{0x3030, 0x08},/*            */
+	{0x0111, 0x02},/*            */
+	{0x0b00, 0x01},/*                               */
+	{0x3001, 0x30},/*            */
+	{0x3004, 0x33},/*            */
+	{0x3007, 0x09},/*            */
+	{0x3016, 0x1F},/*            */
+	{0x301d, 0x03},/*            */
+	{0x317E, 0x11},/*            */
+	{0x317F, 0x09},/*            */
+	{0x3400, 0x38},/*            */
+	{0x0b06, 0x00},/*          */
+	{0x0b07, 0x80},/*          */
+	{0x0b08, 0x01},/*          */
+	{0x0b09, 0x4F},/*          */
+	{0x0136, 0x18},/*          */
+	{0x0137, 0x00},/*           */
+	{0x0b83, 0x20},/*            */
+	{0x0b84, 0x90},/*            */
+	{0x0b85, 0x20},/*            */
+	{0x0b88, 0x80},/*            */
+	{0x0b89, 0x00},/*            */
+	{0x0b8a, 0x00},/*            */
+	/*                        */
 };
 
 static struct v4l2_subdev_info vx6953_subdev_info[] = {
@@ -812,7 +812,7 @@ static struct v4l2_subdev_info vx6953_subdev_info[] = {
 	.fmt    = 1,
 	.order    = 0,
 	},
-	/* more can be supported, to be added later */
+	/*                                          */
 };
 
 static struct msm_camera_i2c_conf_array vx6953_init_conf[] = {
@@ -846,6 +846,19 @@ static struct msm_sensor_output_info_t vx6953_dimensions[] = {
 		.op_pixel_clk = 192000000,
 		.binning_factor = 1,
 	},
+};
+
+static struct msm_camera_csi_params vx6953_csi_params = {
+	.data_format = CSI_8BIT,
+	.lane_cnt    = 1,
+	.lane_assign = 0xe4,
+	.dpcm_scheme = 0,
+	.settle_cnt  = 7,
+};
+
+static struct msm_camera_csi_params *vx6953_csi_params_array[] = {
+	&vx6953_csi_params,
+	&vx6953_csi_params,
 };
 
 static struct msm_sensor_output_reg_addr_t vx6953_reg_addr = {
@@ -928,7 +941,7 @@ static int vx6953_enable_edof(enum edof_mode_t edof_mode)
 {
 	int rc = 0;
 	if (edof_mode == VX6953_EDOF_ESTIMATION) {
-		/* EDof Estimation mode for preview */
+		/*                                  */
 		msm_camera_i2c_write_tbl(
 			vx6953_s_ctrl.sensor_i2c_client,
 			vx6953_edof_estimation,
@@ -936,7 +949,7 @@ static int vx6953_enable_edof(enum edof_mode_t edof_mode)
 			vx6953_s_ctrl.msm_sensor_reg->default_data_type);
 		CDBG("VX6953_EDOF_ESTIMATION");
 	} else if (edof_mode == VX6953_EDOF_APPLICATION) {
-		/* EDof Application mode for Capture */
+		/*                                   */
 		msm_camera_i2c_write_tbl(
 			vx6953_s_ctrl.sensor_i2c_client,
 			vx6953_edof_application,
@@ -944,7 +957,7 @@ static int vx6953_enable_edof(enum edof_mode_t edof_mode)
 			vx6953_s_ctrl.msm_sensor_reg->default_data_type);
 		CDBG("VX6953_EDOF_APPLICATION");
 	} else {
-		/* EDOF disabled */
+		/*               */
 		msm_camera_i2c_write_tbl(
 			vx6953_s_ctrl.sensor_i2c_client,
 			vx6953_edof_default,
@@ -960,26 +973,26 @@ static struct msm_camera_i2c_reg_conf vx6953_standby[] = {
 };
 
 static struct msm_camera_i2c_reg_conf patch_tbl_cut2[] = {
-	{0xFB94, 0},	/*intialise Data Xfer Status reg*/
-	{0xFB95, 0},	/*gain 1	  (0x00)*/
-	{0xFB96, 0},	/*gain 1.07   (0x10)*/
-	{0xFB97, 0},	/*gain 1.14   (0x20)*/
-	{0xFB98, 0},	/*gain 1.23   (0x30)*/
-	{0xFB99, 0},	/*gain 1.33   (0x40)*/
-	{0xFB9A, 0},	/*gain 1.45   (0x50)*/
-	{0xFB9B, 0},	/*gain 1.6    (0x60)*/
-	{0xFB9C, 0},	/*gain 1.78   (0x70)*/
-	{0xFB9D, 2},	/*gain 2	  (0x80)*/
-	{0xFB9E, 2},	/*gain 2.29   (0x90)*/
-	{0xFB9F, 3},	/*gain 2.67   (0xA0)*/
-	{0xFBA0, 3},	/*gain 3.2    (0xB0)*/
-	{0xFBA1, 4},	/*gain 4	  (0xC0)*/
-	{0xFBA2, 7},	/*gain 5.33   (0xD0)*/
-	{0xFBA3, 10},	/*gain 8	  (0xE0)*/
-	{0xFBA4, 11},	/*gain 9.14   (0xE4)*/
-	{0xFBA5, 13},	/*gain 10.67  (0xE8)*/
-	{0xFBA6, 15},	/*gain 12.8   (0xEC)*/
-	{0xFBA7, 19},	/*gain 16     (0xF0)*/
+	{0xFB94, 0},	/*                              */
+	{0xFB95, 0},	/*               */
+	{0xFB96, 0},	/*                  */
+	{0xFB97, 0},	/*                  */
+	{0xFB98, 0},	/*                  */
+	{0xFB99, 0},	/*                  */
+	{0xFB9A, 0},	/*                  */
+	{0xFB9B, 0},	/*                  */
+	{0xFB9C, 0},	/*                  */
+	{0xFB9D, 2},	/*               */
+	{0xFB9E, 2},	/*                  */
+	{0xFB9F, 3},	/*                  */
+	{0xFBA0, 3},	/*                  */
+	{0xFBA1, 4},	/*               */
+	{0xFBA2, 7},	/*                  */
+	{0xFBA3, 10},	/*               */
+	{0xFBA4, 11},	/*                  */
+	{0xFBA5, 13},	/*                  */
+	{0xFBA6, 15},	/*                  */
+	{0xFBA7, 19},	/*                  */
 	{0xF800, 0x12},
 	{0xF801, 0x06},
 	{0xF802, 0xf7},
@@ -1434,18 +1447,18 @@ static struct msm_camera_i2c_reg_conf patch_tbl_cut2[] = {
 	{0xF9C3, 0x0e},
 	{0xF9C4, 0x79},
 	{0xF9C5, 0x22},
-	/* Offsets:*/
-	{0x35C6, 0x00},/* FIDDLEDARKCAL*/
+	/*         */
+	{0x35C6, 0x00},/*              */
 	{0x35C7, 0x00},
-	{0x35C8, 0x01},/*STOREDISTANCEATSTOPSTREAMING*/
+	{0x35C8, 0x01},/*                            */
 	{0x35C9, 0x20},
-	{0x35CA, 0x01},/*BRUCEFIX*/
+	{0x35CA, 0x01},/*        */
 	{0x35CB, 0x62},
-	{0x35CC, 0x01},/*FIXDATAXFERSTATUSREG*/
+	{0x35CC, 0x01},/*                    */
 	{0x35CD, 0x87},
-	{0x35CE, 0x01},/*FOCUSDISTANCEUPDATE*/
+	{0x35CE, 0x01},/*                   */
 	{0x35CF, 0xA6},
-	{0x35D0, 0x01},/*SKIPEDOFRESET*/
+	{0x35D0, 0x01},/*             */
 	{0x35D1, 0xC2},
 	{0x35D2, 0x00},
 	{0x35D3, 0xFB},
@@ -1463,17 +1476,17 @@ static struct msm_camera_i2c_reg_conf patch_tbl_cut2[] = {
 	{0x35DF, 0xFB},
 	{0x35E0, 0x00},
 	{0x35E1, 0x94},
-	{0x35E6, 0x18},/* FIDDLEDARKCAL*/
+	{0x35E6, 0x18},/*              */
 	{0x35E7, 0x2F},
-	{0x35E8, 0x03},/* STOREDISTANCEATSTOPSTREAMING*/
+	{0x35E8, 0x03},/*                             */
 	{0x35E9, 0x93},
-	{0x35EA, 0x18},/* BRUCEFIX*/
+	{0x35EA, 0x18},/*         */
 	{0x35EB, 0x99},
-	{0x35EC, 0x00},/* FIXDATAXFERSTATUSREG*/
+	{0x35EC, 0x00},/*                     */
 	{0x35ED, 0xA3},
-	{0x35EE, 0x21},/* FOCUSDISTANCEUPDATE*/
+	{0x35EE, 0x21},/*                    */
 	{0x35EF, 0x5B},
-	{0x35F0, 0x0E},/* SKIPEDOFRESET*/
+	{0x35F0, 0x0E},/*              */
 	{0x35F1, 0x74},
 	{0x35F2, 0x04},
 	{0x35F3, 0x64},
@@ -1491,12 +1504,12 @@ static struct msm_camera_i2c_reg_conf patch_tbl_cut2[] = {
 	{0x35FF, 0xEF},
 	{0x3600, 0x04},
 	{0x3601, 0xF0},
-	/*Jump/Data:*/
-	{0x35C2, 0x3F},/* Jump Reg*/
-	{0x35C3, 0xFF},/* Jump Reg*/
-	{0x35C4, 0x3F},/* Data Reg*/
-	{0x35C5, 0xC0},/* Data Reg*/
-	{0x35C0, 0x01},/* Enable*/
+	/*          */
+	{0x35C2, 0x3F},/*         */
+	{0x35C3, 0xFF},/*         */
+	{0x35C4, 0x3F},/*         */
+	{0x35C5, 0xC0},/*         */
+	{0x35C0, 0x01},/*       */
 };
 struct msm_camera_i2c_reg_conf init_tbl[] = {
 	{0x0112, 10},
@@ -1531,105 +1544,105 @@ struct msm_camera_i2c_reg_conf init_tbl[] = {
 	{0x0b88, 0x80},
 	{0x0b89, 0x00},
 	{0x0b8a, 0x00},
-	{0x0340, 0x03},   /*REG = 0x0340 frame_length_lines_hi*/
-	{0x0341, 0xf0},   /*REG = 0x0341 frame_length_lines_lo*/
-	{0x0342, 0x0b},   /*REG = 0x0342  line_length_pck_hi*/
-	{0x0343, 0x74},   /*REG = 0x0343  line_length_pck_lo*/
-	{0x3005, 0x03},   /*REG = 0x3005*/
-	{0x3010, 0x00},   /*REG = 0x3010*/
-	{0x3011, 0x01},   /*REG = 0x3011*/
-	{0x301a, 0x6a},   /*REG = 0x301a*/
-	{0x3035, 0x03},   /*REG = 0x3035*/
-	{0x3036, 0x2c},   /*REG = 0x3036*/
-	{0x3041, 0x00},   /*REG = 0x3041*/
-	{0x3042, 0x24},   /*REG = 0x3042*/
-	{0x3045, 0x81},   /*REG = 0x3045*/
-	{0x0b80, 0x02},   /*REG = 0x0b80 edof estimate*/
-	{0x0900, 0x01},   /*REG = 0x0900*/
-	{0x0901, 0x22},   /*REG = 0x0901*/
-	{0x0902, 0x04},   /*REG = 0x0902*/
-	{0x0383, 0x03},   /*REG = 0x0383*/
-	{0x0387, 0x03},   /*REG = 0x0387*/
-	{0x034c, 0x05},   /*REG = 0x034c*/
-	{0x034d, 0x18},   /*REG = 0x034d*/
-	{0x034e, 0x03},   /*REG = 0x034e*/
-	{0x034f, 0xd4},   /*REG = 0x034f*/
-	{0x1716, 0x02},   /*0x1716*/
-	{0x1717, 0x04},   /*0x1717*/
-	{0x1718, 0x08},   /*0x1718*/
-	{0x1719, 0x2c},   /*0x1719*/
+	{0x0340, 0x03},   /*                                  */
+	{0x0341, 0xf0},   /*                                  */
+	{0x0342, 0x0b},   /*                                */
+	{0x0343, 0x74},   /*                                */
+	{0x3005, 0x03},   /*            */
+	{0x3010, 0x00},   /*            */
+	{0x3011, 0x01},   /*            */
+	{0x301a, 0x6a},   /*            */
+	{0x3035, 0x03},   /*            */
+	{0x3036, 0x2c},   /*            */
+	{0x3041, 0x00},   /*            */
+	{0x3042, 0x24},   /*            */
+	{0x3045, 0x81},   /*            */
+	{0x0b80, 0x02},   /*                          */
+	{0x0900, 0x01},   /*            */
+	{0x0901, 0x22},   /*            */
+	{0x0902, 0x04},   /*            */
+	{0x0383, 0x03},   /*            */
+	{0x0387, 0x03},   /*            */
+	{0x034c, 0x05},   /*            */
+	{0x034d, 0x18},   /*            */
+	{0x034e, 0x03},   /*            */
+	{0x034f, 0xd4},   /*            */
+	{0x1716, 0x02},   /*      */
+	{0x1717, 0x04},   /*      */
+	{0x1718, 0x08},   /*      */
+	{0x1719, 0x2c},   /*      */
 };
 
 struct msm_camera_i2c_reg_conf mode_tbl1[] = {
-	{REG_0x0112, 10},/*REG = 0x0112 , 10 bit */
-	{REG_0x0113, 10},/*REG = 0x0113*/
-	{REG_VT_PIX_CLK_DIV, 9},/*REG = 0x0301 vt_pix_clk_div*/
-	{REG_PRE_PLL_CLK_DIV, 4},/*REG = 0x0305 pre_pll_clk_div*/
-	{REG_PLL_MULTIPLIER, 133},/*REG = 0x0307 pll_multiplier*/
-	{REG_OP_PIX_CLK_DIV, 10},/*REG = 0x0309 op_pix_clk_div*/
-	{REG_FRAME_LENGTH_LINES_HI, 0x03},/*REG = 0x0340 frame_length_lines_hi*/
-	{REG_FRAME_LENGTH_LINES_LO, 0xf0},/*REG = 0x0341 frame_length_lines_lo*/
-	{REG_LINE_LENGTH_PCK_HI, 0x0b},   /*REG = 0x0342  line_length_pck_hi*/
-	{REG_LINE_LENGTH_PCK_LO, 0x74},   /*REG = 0x0343  line_length_pck_lo*/
-	{REG_0x3005, 0x03},   /*REG = 0x3005*/
-	{0x3010, 0x00},   /*REG = 0x3010*/
-	{REG_0x3011, 0x01},   /*REG = 0x3011*/
-	{REG_0x301a, 0x6a},   /*REG = 0x301a*/
-	{REG_0x3035, 0x03},   /*REG = 0x3035*/
-	{REG_0x3036, 0x2c},   /*REG = 0x3036*/
-	{REG_0x3041, 0x00},   /*REG = 0x3041*/
-	{0x3042, 0x24},   /*REG = 0x3042*/
-	{REG_0x3045, 0x81},   /*REG = 0x3045*/
-	{REG_0x0b80, 0x02},   /*REG = 0x0b80 edof estimate*/
-	{REG_0x0900, 0x01},   /*REG = 0x0900*/
-	{REG_0x0901, 0x22},   /*REG = 0x0901*/
-	{REG_0x0902, 0x04},   /*REG = 0x0902*/
-	{REG_0x0383, 0x03},   /*REG = 0x0383*/
-	{REG_0x0387, 0x03},   /*REG = 0x0387*/
-	{REG_0x034c, 0x05},   /*REG = 0x034c*/
-	{REG_0x034d, 0x18},   /*REG = 0x034d*/
-	{REG_0x034e, 0x03},   /*REG = 0x034e*/
-	{REG_0x034f, 0xd4},   /*REG = 0x034f*/
-	{REG_0x1716, 0x02},   /*0x1716*/
-	{REG_0x1717, 0x04},   /*0x1717*/
-	{REG_0x1718, 0x08},   /*0x1718*/
-	{REG_0x1719, 0x2c},   /*0x1719*/
+	{REG_0x0112, 10},/*                      */
+	{REG_0x0113, 10},/*            */
+	{REG_VT_PIX_CLK_DIV, 9},/*                           */
+	{REG_PRE_PLL_CLK_DIV, 4},/*                            */
+	{REG_PLL_MULTIPLIER, 133},/*                           */
+	{REG_OP_PIX_CLK_DIV, 10},/*                           */
+	{REG_FRAME_LENGTH_LINES_HI, 0x03},/*                                  */
+	{REG_FRAME_LENGTH_LINES_LO, 0xf0},/*                                  */
+	{REG_LINE_LENGTH_PCK_HI, 0x0b},   /*                                */
+	{REG_LINE_LENGTH_PCK_LO, 0x74},   /*                                */
+	{REG_0x3005, 0x03},   /*            */
+	{0x3010, 0x00},   /*            */
+	{REG_0x3011, 0x01},   /*            */
+	{REG_0x301a, 0x6a},   /*            */
+	{REG_0x3035, 0x03},   /*            */
+	{REG_0x3036, 0x2c},   /*            */
+	{REG_0x3041, 0x00},   /*            */
+	{0x3042, 0x24},   /*            */
+	{REG_0x3045, 0x81},   /*            */
+	{REG_0x0b80, 0x02},   /*                          */
+	{REG_0x0900, 0x01},   /*            */
+	{REG_0x0901, 0x22},   /*            */
+	{REG_0x0902, 0x04},   /*            */
+	{REG_0x0383, 0x03},   /*            */
+	{REG_0x0387, 0x03},   /*            */
+	{REG_0x034c, 0x05},   /*            */
+	{REG_0x034d, 0x18},   /*            */
+	{REG_0x034e, 0x03},   /*            */
+	{REG_0x034f, 0xd4},   /*            */
+	{REG_0x1716, 0x02},   /*      */
+	{REG_0x1717, 0x04},   /*      */
+	{REG_0x1718, 0x08},   /*      */
+	{REG_0x1719, 0x2c},   /*      */
 };
 
 struct msm_camera_i2c_reg_conf mode_tbl2[] = {
-	{REG_0x0112, 10},/*REG = 0x0112 , 10 bit */
-	{REG_0x0113, 10},/*REG = 0x0113*/
-	{REG_VT_PIX_CLK_DIV, 9},/*REG = 0x0301 vt_pix_clk_div*/
-	{REG_PRE_PLL_CLK_DIV, 4},/*REG = 0x0305 pre_pll_clk_div*/
-	{REG_PLL_MULTIPLIER, 133},/*REG = 0x0307 pll_multiplier*/
-	{REG_OP_PIX_CLK_DIV, 10},/*REG = 0x0309 op_pix_clk_div*/
-	{REG_FRAME_LENGTH_LINES_HI, 0x07},/*REG = 0x0340 frame_length_lines_hi*/
-	{REG_FRAME_LENGTH_LINES_LO, 0xd0},/*REG = 0x0341 frame_length_lines_lo*/
-	{REG_LINE_LENGTH_PCK_HI, 0x0b},/*REG = 0x0342 line_length_pck_hi*/
-	{REG_LINE_LENGTH_PCK_LO, 0x8c},/*REG = 0x0343 line_length_pck_lo*/
-	{REG_0x3005, 0x01},/*REG = 0x3005*/
-	{0x3010, 0x00},/*REG = 0x3010*/
-	{REG_0x3011, 0x00},/*REG = 0x3011*/
-	{REG_0x301a, 0x55},/*REG = 0x301a*/
-	{REG_0x3035, 0x01},/*REG = 0x3035*/
-	{REG_0x3036, 0x23},/*REG = 0x3036*/
-	{REG_0x3041, 0x00},/*REG = 0x3041*/
-	{0x3042, 0x24},/*REG = 0x3042*/
-	{REG_0x3045, 0xb7},/*REG = 0x3045*/
-	{REG_0x0b80, 0x01},/*REG = 0x0b80 edof application*/
-	{REG_0x0900, 0x00},/*REG = 0x0900*/
-	{REG_0x0901, 0x00},/*REG = 0x0901*/
-	{REG_0x0902, 0x00},/*REG = 0x0902*/
-	{REG_0x0383, 0x01},/*REG = 0x0383*/
-	{REG_0x0387, 0x01},/*REG = 0x0387*/
-	{REG_0x034c, 0x0A},/*REG = 0x034c*/
-	{REG_0x034d, 0x30},/*REG = 0x034d*/
-	{REG_0x034e, 0x07},/*REG = 0x034e*/
-	{REG_0x034f, 0xA8},/*REG = 0x034f*/
-	{REG_0x1716, 0x02},/*0x1716*/
-	{REG_0x1717, 0x0d},/*0x1717*/
-	{REG_0x1718, 0x07},/*0x1718*/
-	{REG_0x1719, 0x7d},/*0x1719*/
+	{REG_0x0112, 10},/*                      */
+	{REG_0x0113, 10},/*            */
+	{REG_VT_PIX_CLK_DIV, 9},/*                           */
+	{REG_PRE_PLL_CLK_DIV, 4},/*                            */
+	{REG_PLL_MULTIPLIER, 133},/*                           */
+	{REG_OP_PIX_CLK_DIV, 10},/*                           */
+	{REG_FRAME_LENGTH_LINES_HI, 0x07},/*                                  */
+	{REG_FRAME_LENGTH_LINES_LO, 0xd0},/*                                  */
+	{REG_LINE_LENGTH_PCK_HI, 0x0b},/*                               */
+	{REG_LINE_LENGTH_PCK_LO, 0x8c},/*                               */
+	{REG_0x3005, 0x01},/*            */
+	{0x3010, 0x00},/*            */
+	{REG_0x3011, 0x00},/*            */
+	{REG_0x301a, 0x55},/*            */
+	{REG_0x3035, 0x01},/*            */
+	{REG_0x3036, 0x23},/*            */
+	{REG_0x3041, 0x00},/*            */
+	{0x3042, 0x24},/*            */
+	{REG_0x3045, 0xb7},/*            */
+	{REG_0x0b80, 0x01},/*                             */
+	{REG_0x0900, 0x00},/*            */
+	{REG_0x0901, 0x00},/*            */
+	{REG_0x0902, 0x00},/*            */
+	{REG_0x0383, 0x01},/*            */
+	{REG_0x0387, 0x01},/*            */
+	{REG_0x034c, 0x0A},/*            */
+	{REG_0x034d, 0x30},/*            */
+	{REG_0x034e, 0x07},/*            */
+	{REG_0x034f, 0xA8},/*            */
+	{REG_0x1716, 0x02},/*      */
+	{REG_0x1717, 0x0d},/*      */
+	{REG_0x1718, 0x07},/*      */
+	{REG_0x1719, 0x7d},/*      */
 };
 
 static int32_t vx6953_sensor_setting(int update_type, int rt)
@@ -1643,11 +1656,11 @@ static int32_t vx6953_sensor_setting(int update_type, int rt)
 		switch (update_type) {
 		case REG_INIT:
 		if (rt == RES_PREVIEW || rt == RES_CAPTURE) {
-						/* reset fps_divider */
+						/*                   */
 			fps = 30 * Q8;
-			/* stop streaming */
+			/*                */
 
-			/* Reset everything first */
+			/*                        */
 			msm_camera_i2c_write_tbl(
 				vx6953_s_ctrl.sensor_i2c_client,
 				vx6953_standby,
@@ -1664,7 +1677,7 @@ static int32_t vx6953_sensor_setting(int update_type, int rt)
 				ARRAY_SIZE(vx6953_stop_settings),
 				vx6953_s_ctrl.msm_sensor_reg->
 				default_data_type);
-				/*vx6953_stm5m0edof_delay_msecs_stdby*/
+				/*                                   */
 			msleep(vx6953_stm5m0edof_delay_msecs_stdby);
 			msm_camera_i2c_write_tbl(
 				vx6953_s_ctrl.sensor_i2c_client,
@@ -1711,7 +1724,7 @@ static int32_t vx6953_sensor_setting(int update_type, int rt)
 				analogue_gain_code_global},
 			{REG_0x3030,
 				vx6953_regs.reg_pat_init[0].reg_0x3030},
-			/* 953 specific registers */
+			/*                        */
 			{REG_0x0111,
 				vx6953_regs.reg_pat_init[0].reg_0x0111},
 			{REG_0x0b00,
@@ -1734,24 +1747,24 @@ static int32_t vx6953_sensor_setting(int update_type, int rt)
 				vx6953_regs.reg_pat_init[0].reg_0x3400},
 			{0x0b06,
 				vx6953_regs.reg_pat_init[0].reg_0x0b06},
-			/*Single_defect_correct_weight = auto*/
+			/*                                   */
 			{0x0b07,
 				vx6953_regs.reg_pat_init[0].reg_0x0b07},
-			/*Dynamic couplet correction ENABLED*/
+			/*                                  */
 			{0x0b08,
 				vx6953_regs.reg_pat_init[0].reg_0x0b08},
-			/*Dynamic couplet correction weight*/
+			/*                                 */
 			{0x0b09,
 				vx6953_regs.reg_pat_init[0].reg_0x0b09},
-			/* Clock Setup */
-			/* Tell sensor ext clk is 24MHz*/
+			/*             */
+			/*                             */
 			{0x0136,
 				vx6953_regs.reg_pat_init[0].reg_0x0136},
 			{0x0137,
 				vx6953_regs.reg_pat_init[0].reg_0x0137},
-			/* The white balance gains must be written
-			to the sensor every frame. */
-			/* Edof */
+			/*                                        
+                              */
+			/*      */
 			{REG_0x0b83,
 				vx6953_regs.reg_pat_init[0].reg_0x0b83},
 			{REG_0x0b84,
@@ -1764,7 +1777,7 @@ static int32_t vx6953_sensor_setting(int update_type, int rt)
 				vx6953_regs.reg_pat_init[0].reg_0x0b89},
 			{REG_0x0b8a,
 				vx6953_regs.reg_pat_init[0].reg_0x0b8a},
-			/* Mode specific regieters */
+			/*                         */
 			{REG_FRAME_LENGTH_LINES_HI,
 				vx6953_regs.reg_pat[rt].
 				frame_length_lines_hi},
@@ -1795,9 +1808,9 @@ static int32_t vx6953_sensor_setting(int update_type, int rt)
 				vx6953_regs.reg_pat[rt].reg_0x3042},
 			{REG_0x3045,
 				vx6953_regs.reg_pat[rt].reg_0x3045},
-			/*EDOF: Estimation settings for Preview mode
-			Application settings for capture mode
-			(standard settings - Not tuned) */
+			/*                                          
+                                        
+                                   */
 			{REG_0x0b80,
 				vx6953_regs.reg_pat[rt].reg_0x0b80},
 			{REG_0x0900,
@@ -1810,7 +1823,7 @@ static int32_t vx6953_sensor_setting(int update_type, int rt)
 				vx6953_regs.reg_pat[rt].reg_0x0383},
 			{REG_0x0387,
 				vx6953_regs.reg_pat[rt].reg_0x0387},
-			/* Change output size / frame rate */
+			/*                                 */
 			{REG_0x034c,
 				vx6953_regs.reg_pat[rt].reg_0x034c},
 			{REG_0x034d,
@@ -1828,10 +1841,10 @@ static int32_t vx6953_sensor_setting(int update_type, int rt)
 			{REG_0x1719,
 				vx6953_regs.reg_pat[rt].reg_0x1719},
 			};
-			/* stop streaming */
+			/*                */
 			msleep(20);
 
-			/* Reset everything first */
+			/*                        */
 			msm_camera_i2c_write_tbl(
 				vx6953_s_ctrl.sensor_i2c_client,
 				vx6953_standby,
@@ -1848,7 +1861,7 @@ static int32_t vx6953_sensor_setting(int update_type, int rt)
 				ARRAY_SIZE(vx6953_stop_settings),
 				vx6953_s_ctrl.msm_sensor_reg->
 				default_data_type);
-			/*vx6953_stm5m0edof_delay_msecs_stdby*/
+			/*                                   */
 			msleep(vx6953_stm5m0edof_delay_msecs_stdby);
 
 			msleep(vx6953_stm5m0edof_delay_msecs_stdby);
@@ -1866,6 +1879,13 @@ static int32_t vx6953_sensor_setting(int update_type, int rt)
 				ARRAY_SIZE(init_mode_tbl),
 				vx6953_s_ctrl.msm_sensor_reg->
 				default_data_type);
+
+
+			vx6953_s_ctrl.curr_csic_params =
+				vx6953_s_ctrl.csic_params[0];
+			v4l2_subdev_notify(&vx6953_s_ctrl.sensor_v4l2_subdev,
+				NOTIFY_CSIC_CFG,
+				vx6953_s_ctrl.curr_csic_params);
 
 			msleep(vx6953_stm5m0edof_delay_msecs_stdby);
 			if (rt == RES_PREVIEW) {
@@ -1889,7 +1909,7 @@ static int32_t vx6953_sensor_setting(int update_type, int rt)
 			}
 			msleep(vx6953_stm5m0edof_delay_msecs_stdby);
 
-			/* Start sensor streaming */
+			/*                        */
 			msm_camera_i2c_write_tbl(
 				vx6953_s_ctrl.sensor_i2c_client,
 				vx6953_start_settings,
@@ -1925,7 +1945,7 @@ static int32_t vx6953_init_config(void)
 {
 	int32_t rc = 0;
 	int rt;
-	/* change sensor resolution	if needed */
+	/*                                    */
 	CDBG("%s called\n", __func__);
 	rt = RES_PREVIEW;
 	vx6953_stm5m0edof_delay_msecs_stdby =
@@ -1956,7 +1976,7 @@ static int32_t vx6953_update_config(int rt)
 		vx6953_enable_edof(VX6953_EDOF_APPLICATION);
 
 	return rc;
-} /*end of vx6953_snapshot_config*/
+} /*                             */
 
 static int32_t vx6953_set_sensor_mode(struct msm_sensor_ctrl_t *s_ctrl,
 	int update_type, int rt)
@@ -2022,6 +2042,7 @@ static struct msm_sensor_ctrl_t vx6953_s_ctrl = {
 	.sensor_id_info = &vx6953_id_info,
 	.sensor_exp_gain_info = &vx6953_exp_gain_info,
 	.cam_mode = MSM_SENSOR_MODE_INVALID,
+	.csic_params = &vx6953_csi_params_array[0],
 	.msm_sensor_mutex = &vx6953_mut,
 	.sensor_i2c_driver = &vx6953_i2c_driver,
 	.sensor_v4l2_subdev_info = vx6953_subdev_info,

@@ -15,9 +15,9 @@
 #include <mach/qdsp5v2/audio_def.h>
 
 struct snddev_virtual_data {
-	u32 capability; /* RX or TX */
+	u32 capability; /*          */
 	const char *name;
-	u32 copp_id; /* audpp routing */
-	u32 acdb_id; /* Audio Cal purpose */
+	u32 copp_id; /*               */
+	u32 acdb_id; /*                   */
 };
 #endif

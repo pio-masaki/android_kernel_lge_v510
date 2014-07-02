@@ -20,25 +20,25 @@
 #define ADRV_STATUS_IBUF_GIVEN 0x00000004
 #define ADRV_STATUS_FSYNC 0x00000008
 
-#define PCM_BUFSZ_MIN 4800	/* Hold one stereo MP3 frame */
-#define PCM_BUF_MAX_COUNT 5	/* DSP only accepts 5 buffers at most
-				   but support 2 buffers currently */
+#define PCM_BUFSZ_MIN 4800	/*                           */
+#define PCM_BUF_MAX_COUNT 5	/*                                   
+                                       */
 #define ROUTING_MODE_FTRT 1
 #define ROUTING_MODE_RT 2
-/* Decoder status received from AUDPPTASK */
+/*                                        */
 #define  AUDPP_DEC_STATUS_SLEEP	0
 #define	 AUDPP_DEC_STATUS_INIT  1
 #define  AUDPP_DEC_STATUS_CFG   2
 #define  AUDPP_DEC_STATUS_PLAY  3
 #define  AUDPP_DEC_STATUS_EOS   5
 
-/* worst case delay of 3secs(3000ms) for AV Sync Query response */
+/*                                                              */
 #define AVSYNC_EVENT_TIMEOUT 3000
 
 struct buffer {
 	void *data;
 	unsigned size;
-	unsigned used;		/* Input usage actual DSP produced PCM size  */
+	unsigned used;		/*                                           */
 	unsigned addr;
 };
 struct audio;
@@ -58,8 +58,8 @@ struct codec_operations {
 struct audio {
 	spinlock_t dsp_lock;
 
-	uint8_t out_needed; /* number of buffers the dsp is waiting for */
-	struct list_head out_queue; /* queue to retain output buffers */
+	uint8_t out_needed; /*                                          */
+	struct list_head out_queue; /*                                */
 	atomic_t out_bytes;
 
 	struct mutex lock;
@@ -68,26 +68,26 @@ struct audio {
 
 	struct msm_adsp_module *audplay;
 
-	/* configuration to use on next enable */
+	/*                                     */
 	uint32_t out_sample_rate;
 	uint32_t out_channel_mode;
-	uint32_t out_bits; /* bits per sample (used by PCM decoder) */
+	uint32_t out_bits; /*                                       */
 
-	/* data allocated for various buffers */
+	/*                                    */
 	char *data;
-	int32_t phys; /* physical address of write buffer */
+	int32_t phys; /*                                  */
 
 	uint32_t drv_status;
-	int wflush; /* Write flush */
+	int wflush; /*             */
 	int opened;
 	int enabled;
 	int running;
-	int stopped; /* set when stopped, cleared on flush */
+	int stopped; /*                                    */
 	int buf_refresh;
-	int teos; /* valid only if tunnel mode & no data left for decoder */
-	enum msm_aud_decoder_state dec_state;	/* Represents decoder state */
-	int reserved; /* A byte is being reserved */
-	char rsv_byte; /* Handle odd length user data */
+	int teos; /*                                                      */
+	enum msm_aud_decoder_state dec_state;	/*                          */
+	int reserved; /*                          */
+	char rsv_byte; /*                             */
 
 	const char *module_name;
 	unsigned queue_id;
@@ -110,20 +110,20 @@ struct audio {
 	spinlock_t event_queue_lock;
 	struct mutex get_event_lock;
 	int event_abort;
-	/* AV sync Info */
-	int avsync_flag;              /* Flag to indicate feedback from DSP */
-	wait_queue_head_t avsync_wait;/* Wait queue for AV Sync Message     */
-	/* flags, 48 bits sample/bytes counter per channel */
+	/*              */
+	int avsync_flag;              /*                                    */
+	wait_queue_head_t avsync_wait;/*                                    */
+	/*                                                 */
 	uint16_t avsync[AUDPP_AVSYNC_CH_COUNT * AUDPP_AVSYNC_NUM_WORDS + 1];
 
 	uint32_t device_events;
-	uint32_t device_switch;       /* Flag to indicate device switch */
+	uint32_t device_switch;       /*                                */
 	uint64_t bytecount_consumed;
 	uint64_t bytecount_head;
 	uint64_t bytecount_given;
 	uint64_t bytecount_query;
 
-	struct list_head pmem_region_queue; /* protected by lock */
+	struct list_head pmem_region_queue; /*                   */
 
 	int eq_enable;
 	int eq_needs_commit;
@@ -136,4 +136,4 @@ struct audio {
 	uint32_t buffer_count;
 };
 
-#endif /* !CODEC_UTILS_H */
+#endif /*                */

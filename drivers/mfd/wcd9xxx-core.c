@@ -199,8 +199,8 @@ static int wcd9xxx_slim_read_device(struct wcd9xxx *wcd9xxx, unsigned short reg,
 
 	return ret;
 }
-/* Interface specifies whether the write is to the interface or general
- * registers.
+/*                                                                     
+             
  */
 static int wcd9xxx_slim_write_device(struct wcd9xxx *wcd9xxx,
 		unsigned short reg, int bytes, void *src, bool interface)
@@ -328,7 +328,7 @@ static int wcd9xxx_check_codec_type(struct wcd9xxx *wcd9xxx,
 		i++;
 	}
 
-	/* Read codec version */
+	/*                    */
 	ret = wcd9xxx_reg_read(wcd9xxx, WCD9XXX_A_CHIP_VERSION);
 	if (ret < 0)
 		goto exit;
@@ -492,7 +492,7 @@ static ssize_t codec_debug_write(struct file *filp,
 	lbuf[cnt] = '\0';
 
 	if (!strncmp(access_str, "poke", 6)) {
-		/* write */
+		/*       */
 		rc = get_parameters(lbuf, param, 2);
 		if ((param[0] <= 0x3FF) && (param[1] <= 0xFF) &&
 			(rc == 0))
@@ -501,7 +501,7 @@ static ssize_t codec_debug_write(struct file *filp,
 		else
 			rc = -EINVAL;
 	} else if (!strncmp(access_str, "peek", 6)) {
-		/* read */
+		/*      */
 		rc = get_parameters(lbuf, param, 1);
 		if ((param[0] <= 0x3FF) && (rc == 0))
 			read_data = wcd9xxx_interface_reg_read(debugCodec,
@@ -668,7 +668,7 @@ int wcd9xxx_i2c_write_device(u16 reg, u8 *value,
 	data[1] = *value;
 	msg->buf = data;
 	ret = i2c_transfer(wcd9xxx->client->adapter, wcd9xxx->xfer_msg, 1);
-	/* Try again if the write fails */
+	/*                              */
 	if (ret != 1) {
 		ret = i2c_transfer(wcd9xxx->client->adapter,
 						wcd9xxx->xfer_msg, 1);
@@ -712,7 +712,7 @@ int wcd9xxx_i2c_read_device(unsigned short reg,
 		ret = i2c_transfer(wcd9xxx->client->adapter,
 				wcd9xxx->xfer_msg, 2);
 
-		/* Try again if read fails first time */
+		/*                                    */
 		if (ret != 2) {
 			ret = i2c_transfer(wcd9xxx->client->adapter,
 							wcd9xxx->xfer_msg, 2);
@@ -1095,7 +1095,7 @@ static int wcd9xxx_slim_get_laddr(struct slim_device *sb,
 		ret = slim_get_logical_addr(sb, e_addr, e_len, laddr);
 		if (!ret)
 			break;
-		/* Give SLIMBUS time to report present and be ready. */
+		/*                                                   */
 		usleep_range(1000, 1000);
 		pr_debug_ratelimited("%s: retyring get logical addr\n",
 				     __func__);
@@ -1286,17 +1286,17 @@ static int wcd9xxx_suspend(struct wcd9xxx *wcd9xxx, pm_message_t pmesg)
 
 	pr_debug("%s: enter\n", __func__);
 	/*
-	 * pm_qos_update_request() can be called after this suspend chain call
-	 * started. thus suspend can be called while lock is being held
-	 */
+                                                                       
+                                                                
+  */
 	mutex_lock(&wcd9xxx->pm_lock);
 	if (wcd9xxx->pm_state == WCD9XXX_PM_SLEEPABLE) {
 		pr_debug("%s: suspending system, state %d, wlock %d\n",
 			 __func__, wcd9xxx->pm_state, wcd9xxx->wlock_holders);
 		wcd9xxx->pm_state = WCD9XXX_PM_ASLEEP;
 	} else if (wcd9xxx->pm_state == WCD9XXX_PM_AWAKE) {
-		/* unlock to wait for pm_state == WCD9XXX_PM_SLEEPABLE
-		 * then set to WCD9XXX_PM_ASLEEP */
+		/*                                                    
+                                   */
 		pr_debug("%s: waiting to suspend system, state %d, wlock %d\n",
 			 __func__, wcd9xxx->pm_state, wcd9xxx->wlock_holders);
 		mutex_unlock(&wcd9xxx->pm_lock);

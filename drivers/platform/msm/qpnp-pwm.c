@@ -11,9 +11,9 @@
  * GNU General Public License for more details.
  */
 /*
- * Qualcomm QPNP Pulse Width Modulation (PWM) driver
- *
- * The HW module is also called LPG (Light Pattern Generator).
+                                                    
+  
+                                                              
  */
 
 #define pr_fmt(fmt) "%s: " fmt, __func__
@@ -31,7 +31,7 @@
 #define QPNP_LPG_CHANNEL_BASE	"qpnp-lpg-channel-base"
 #define QPNP_LPG_LUT_BASE	"qpnp-lpg-lut-base"
 
-/* LPG Control for LPG_PATTERN_CONFIG */
+/*                                    */
 #define QPNP_RAMP_DIRECTION_SHIFT	4
 #define QPNP_RAMP_DIRECTION_MASK	0x10
 #define QPNP_PATTERN_REPEAT_SHIFT	3
@@ -42,7 +42,7 @@
 #define QPNP_EN_PAUSE_HI_MASK		0x02
 #define QPNP_EN_PAUSE_LO_MASK		0x01
 
-/* LPG Control for LPG_PWM_SIZE_CLK */
+/*                                  */
 #define QPNP_PWM_SIZE_SHIFT			4
 #define QPNP_PWM_SIZE_MASK			0x30
 #define QPNP_PWM_FREQ_CLK_SELECT_SHIFT		0
@@ -59,7 +59,7 @@ do { \
 #define QPNP_GET_PWM_SIZE(reg) ((reg & QPNP_PWM_SIZE_MASK) \
 					>> QPNP_PWM_SIZE_SHIFT)
 
-/* LPG Control for LPG_PWM_FREQ_PREDIV_CLK */
+/*                                         */
 #define QPNP_PWM_FREQ_PRE_DIVIDE_SHIFT		5
 #define QPNP_PWM_FREQ_PRE_DIVIDE_MASK		0x60
 #define QPNP_PWM_FREQ_EXP_MASK			0x07
@@ -71,7 +71,7 @@ do { \
 	val |= pre_div_exp & QPNP_PWM_FREQ_EXP_MASK;	\
 } while (0)
 
-/* LPG Control for LPG_PWM_TYPE_CONFIG */
+/*                                     */
 #define QPNP_EN_GLITCH_REMOVAL_SHIFT		5
 #define QPNP_EN_GLITCH_REMOVAL_MASK		0x20
 #define QPNP_EN_FULL_SCALE_SHIFT		3
@@ -80,14 +80,14 @@ do { \
 #define QPNP_EN_PHASE_STAGGER_MASK		0x04
 #define QPNP_PHASE_STAGGER_MASK			0x03
 
-/* LPG Control for PWM_VALUE_LSB */
+/*                               */
 #define QPNP_PWM_VALUE_LSB_MASK			0xFF
 
-/* LPG Control for PWM_VALUE_MSB */
+/*                               */
 #define QPNP_PWM_VALUE_MSB_SHIFT		8
 #define QPNP_PWM_VALUE_MSB_MASK			0x01
 
-/* LPG Control for ENABLE_CONTROL */
+/*                                */
 #define QPNP_EN_PWM_HIGH_SHIFT			7
 #define QPNP_EN_PWM_HIGH_MASK			0x80
 #define QPNP_EN_PWM_LO_SHIFT			6
@@ -104,16 +104,16 @@ do { \
 
 #define QPNP_DISABLE_PWM(value)  (value &= ~QPNP_EN_PWM_OUTPUT_MASK)
 
-/* LPG Control for RAMP_CONTROL */
+/*                              */
 #define QPNP_RAMP_START_MASK			0x01
 
 #define QPNP_ENABLE_LUT(value) (value |= QPNP_RAMP_START_MASK)
 #define QPNP_DISABLE_LUT(value) (value &= ~QPNP_RAMP_START_MASK)
 
-/* LPG Control for RAMP_STEP_DURATION_LSB */
+/*                                        */
 #define QPNP_RAMP_STEP_DURATION_LSB_MASK	0xFF
 
-/* LPG Control for RAMP_STEP_DURATION_MSB */
+/*                                        */
 #define QPNP_RAMP_STEP_DURATION_MSB_SHIFT	8
 #define QPNP_RAMP_STEP_DURATION_MSB_MASK	0x01
 
@@ -121,24 +121,24 @@ do { \
 #define QPNP_GET_RAMP_STEP_DURATION(ramp_time_ms) \
 		((ramp_time_ms * QPNP_PWM_1KHZ) / 1000)
 
-/* LPG Control for PAUSE_HI_MULTIPLIER_LSB */
+/*                                         */
 #define QPNP_PAUSE_HI_MULTIPLIER_LSB_MASK	0xFF
 
-/* LPG Control for PAUSE_HI_MULTIPLIER_MSB */
+/*                                         */
 #define QPNP_PAUSE_HI_MULTIPLIER_MSB_SHIFT	8
 #define QPNP_PAUSE_HI_MULTIPLIER_MSB_MASK	0x1F
 
-/* LPG Control for PAUSE_LO_MULTIPLIER_LSB */
+/*                                         */
 #define QPNP_PAUSE_LO_MULTIPLIER_LSB_MASK	0xFF
 
-/* LPG Control for PAUSE_LO_MULTIPLIER_MSB */
+/*                                         */
 #define QPNP_PAUSE_LO_MULTIPLIER_MSB_SHIFT	8
 #define QPNP_PAUSE_LO_MULTIPLIER_MSB_MASK	0x1F
 
-/* LPG Control for HI_INDEX */
+/*                          */
 #define QPNP_HI_INDEX_MASK			0x3F
 
-/* LPG Control for LO_INDEX */
+/*                          */
 #define QPNP_LO_INDEX_MASK			0x3F
 
 #define NUM_CLOCKS				3
@@ -158,7 +158,7 @@ do { \
 #define SPMI_LPG_REG_ADDR(b, n)	(b + SPMI_LPG_REG_ADDR_BASE + (n))
 #define SPMI_MAX_BUF_LEN	8
 
-/* SPMI LPG registers */
+/*                    */
 enum qpnp_lpg_registers_list {
 	QPNP_LPG_PATTERN_CONFIG,
 	QPNP_LPG_PWM_SIZE_CLK,
@@ -180,10 +180,10 @@ enum qpnp_lpg_registers_list {
 };
 
 /*
- * Formula from HSID,
- * pause_time (hi/lo) = (pause_cnt- 1)*(ramp_ms)
- * OR,
- * pause_cnt = (pause_time / ramp_ms) + 1
+                     
+                                                
+      
+                                         
  */
 #define QPNP_SET_PAUSE_CNT(to_pause_cnt, from_pause, ramp_ms) \
 	(to_pause_cnt = (from_pause / (ramp_ms ? ramp_ms : 1)) + 1)
@@ -242,7 +242,7 @@ struct qpnp_pwm_config {
 	struct pwm_period_config	period;
 };
 
-/* Public facing structure */
+/*                         */
 struct pwm_device {
 	struct qpnp_lpg_chip	*chip;
 	struct qpnp_pwm_config	pwm_config;
@@ -256,7 +256,7 @@ struct qpnp_lpg_chip {
 	u8	qpnp_lpg_registers[QPNP_TOTAL_LPG_SPMI_REGISTERS];
 };
 
-/* Internal functions */
+/*                    */
 static inline void qpnp_set_pattern_config(u8 *val,
 			struct qpnp_lut_config *lut_config)
 {
@@ -338,15 +338,15 @@ static int qpnp_lpg_save_and_write(u8 value, u8 mask, u8 *reg, u16 base_addr,
 }
 
 /*
- * PWM Frequency = Clock Frequency / (N * T)
- *	or
- * PWM Period = Clock Period * (N * T)
- *	where
- * N = 2^9 or 2^6 for 9-bit or 6-bit PWM size
- * T = Pre-divide * 2^m, where m = 0..7 (exponent)
- *
- * This is the formula to figure out m for the best pre-divide and clock:
- * (PWM Period / N) = (Pre-divide * Clock Period) * 2^m
+                                            
+     
+                                      
+        
+                                             
+                                                  
+  
+                                                                         
+                                                       
  */
 static void qpnp_lpg_calc_period(unsigned int period_us,
 				   struct pwm_period_config *period)
@@ -356,7 +356,7 @@ static void qpnp_lpg_calc_period(unsigned int period_us,
 	unsigned int	last_err, cur_err, min_err;
 	unsigned int	tmp_p, period_n;
 
-	/* PWM Period / N */
+	/*                */
 	if (period_us < ((unsigned)(-1) / NSEC_PER_USEC)) {
 		period_n = (period_us * NSEC_PER_USEC) >> 6;
 		n = 6;
@@ -371,8 +371,8 @@ static void qpnp_lpg_calc_period(unsigned int period_us,
 	best_div = 0;
 	for (clk = 0; clk < NUM_CLOCKS; clk++) {
 		for (div = 0; div < NUM_LPG_PRE_DIVIDE; div++) {
-			/* period_n = (PWM Period / N) */
-			/* tmp_p = (Pre-divide * Clock Period) * 2^m */
+			/*                             */
+			/*                                           */
 			tmp_p = pt_t[div][clk];
 			for (m = 0; m <= QPNP_PWM_M_MAX; m++) {
 				if (period_n > tmp_p)
@@ -388,7 +388,7 @@ static void qpnp_lpg_calc_period(unsigned int period_us,
 				}
 
 				if (m && cur_err > last_err)
-					/* Break for bigger cur_err */
+					/*                          */
 					break;
 
 				last_err = cur_err;
@@ -397,7 +397,7 @@ static void qpnp_lpg_calc_period(unsigned int period_us,
 		}
 	}
 
-	/* Use higher resolution */
+	/*                       */
 	if (best_m >= 3 && n == 6) {
 		n += 3;
 		best_m -= 3;
@@ -416,7 +416,7 @@ static void qpnp_lpg_calc_pwm_value(struct pwm_device *pwm,
 	unsigned int		max_pwm_value, tmp;
 	struct qpnp_pwm_config	*pwm_config = &pwm->pwm_config;
 
-	/* Figure out pwm_value with overflow handling */
+	/*                                             */
 	tmp = 1 << (sizeof(tmp) * 8 - pwm_config->period.pwm_size);
 	if (duty_us < tmp) {
 		tmp = duty_us << pwm_config->period.pwm_size;
@@ -469,7 +469,7 @@ static int qpnp_lpg_change_table(struct pwm_device *pwm,
 			 QPNP_PWM_VALUE_MSB_SHIFT) & QPNP_PWM_VALUE_MSB_MASK;
 	}
 
-	/* Write with max allowable burst mode, each entry is of two bytes */
+	/*                                                                 */
 	for (i = 0; i < list_len;) {
 		if (i + burst_size >= list_len)
 			burst_size = list_len - i;
@@ -1015,11 +1015,11 @@ static int _pwm_enable(struct pwm_device *pwm)
 	return rc;
 }
 
-/* APIs */
-/**
- * pwm_request - request a PWM device
- * @channel_id: PWM id or channel
- * @lable: the label to identify the user
+/*      */
+/* 
+                                     
+                                 
+                                         
  */
 struct pwm_device *pwm_request(int pwm_id, const char *lable)
 {
@@ -1054,9 +1054,9 @@ struct pwm_device *pwm_request(int pwm_id, const char *lable)
 }
 EXPORT_SYMBOL_GPL(pwm_request);
 
-/**
- * pwm_free - free a PWM device
- * @pwm: the PWM device
+/* 
+                               
+                       
  */
 void pwm_free(struct pwm_device *pwm)
 {
@@ -1082,11 +1082,11 @@ void pwm_free(struct pwm_device *pwm)
 }
 EXPORT_SYMBOL_GPL(pwm_free);
 
-/**
- * pwm_config - change a PWM device configuration
- * @pwm: the PWM device
- * @period_us: period in microseconds
- * @duty_us: duty cycle in microseconds
+/* 
+                                                 
+                       
+                                     
+                                       
  */
 int pwm_config(struct pwm_device *pwm, int duty_us, int period_us)
 {
@@ -1111,9 +1111,9 @@ int pwm_config(struct pwm_device *pwm, int duty_us, int period_us)
 }
 EXPORT_SYMBOL_GPL(pwm_config);
 
-/**
- * pwm_enable - start a PWM output toggling
- * @pwm: the PWM device
+/* 
+                                           
+                       
  */
 int pwm_enable(struct pwm_device *pwm)
 {
@@ -1135,9 +1135,9 @@ int pwm_enable(struct pwm_device *pwm)
 }
 EXPORT_SYMBOL_GPL(pwm_enable);
 
-/**
- * pwm_disable - stop a PWM output toggling
- * @pwm: the PWM device
+/* 
+                                           
+                       
  */
 void pwm_disable(struct pwm_device *pwm)
 {
@@ -1166,10 +1166,10 @@ void pwm_disable(struct pwm_device *pwm)
 }
 EXPORT_SYMBOL_GPL(pwm_disable);
 
-/**
- * pwm_change_mode - Change the PWM mode configuration
- * @pwm: the PWM device
- * @mode: Mode selection value
+/* 
+                                                      
+                       
+                              
  */
 int pwm_change_mode(struct pwm_device *pwm, enum pm_pwm_mode mode)
 {
@@ -1198,11 +1198,11 @@ int pwm_change_mode(struct pwm_device *pwm, enum pm_pwm_mode mode)
 }
 EXPORT_SYMBOL_GPL(pwm_change_mode);
 
-/**
- * pwm_config_period - change PWM period
- *
- * @pwm: the PWM device
- * @pwm_p: period in struct qpnp_lpg_period
+/* 
+                                        
+  
+                       
+                                           
  */
 int pwm_config_period(struct pwm_device *pwm,
 			     struct pwm_period_config *period)
@@ -1261,10 +1261,10 @@ out_unlock:
 }
 EXPORT_SYMBOL(pwm_config_period);
 
-/**
- * pwm_config_pwm_value - change a PWM device configuration
- * @pwm: the PWM device
- * @pwm_value: the duty cycle in raw PWM value (< 2^pwm_size)
+/* 
+                                                           
+                       
+                                                             
  */
 int pwm_config_pwm_value(struct pwm_device *pwm, int pwm_value)
 {
@@ -1305,12 +1305,12 @@ out_unlock:
 }
 EXPORT_SYMBOL_GPL(pwm_config_pwm_value);
 
-/**
- * pwm_lut_config - change LPG LUT device configuration
- * @pwm: the PWM device
- * @period_us: period in micro second
- * @duty_pct: array of duty cycles in percent, like 20, 50.
- * @lut_params: Lookup table parameters
+/* 
+                                                       
+                       
+                                     
+                                                           
+                                       
  */
 int pwm_lut_config(struct pwm_device *pwm, int period_us,
 		int duty_pct[], struct lut_params lut_params)
@@ -1439,7 +1439,7 @@ static int qpnp_parse_lpg_dt_config(struct device_node *of_lpg_node,
 		return rc;
 	}
 
-	/* Read optional properties */
+	/*                          */
 	qpnp_check_optional_dt_bindings(of_property_read_u32(of_lpg_node,
 		"qcom,ramp-step-duration", &lut_config->ramp_step_ms));
 	qpnp_check_optional_dt_bindings(of_property_read_u32(of_lpg_node,
@@ -1471,7 +1471,7 @@ out:
 	return rc;
 }
 
-/* Fill in lpg device elements based on values found in device tree. */
+/*                                                                   */
 static int qpnp_parse_dt_config(struct spmi_device *spmi,
 					struct qpnp_lpg_chip *chip)
 {
@@ -1505,7 +1505,7 @@ static int qpnp_parse_dt_config(struct spmi_device *spmi,
 	}
 
 	lpg_config->lut_base_addr = res->start;
-	/* Each entry of LUT is of 2 bytes */
+	/*                                 */
 	lpg_config->lut_size = resource_size(res) >> 1;
 
 	lut_config->duty_pct_list = kzalloc(lpg_config->lut_size *
@@ -1561,7 +1561,7 @@ static int qpnp_parse_dt_config(struct spmi_device *spmi,
 	_pwm_enable(pwm_dev);
 
 read_opt_props:
-	/* Initialize optional config parameters from DT if provided */
+	/*                                                           */
 	of_property_read_string(node, "qcom,channel-owner",
 				&pwm_dev->pwm_config.lable);
 
@@ -1656,8 +1656,8 @@ static struct spmi_driver qpnp_lpg_driver = {
 	.id_table	= qpnp_lpg_id,
 };
 
-/**
- * qpnp_lpg_init() - register spmi driver for qpnp-lpg
+/* 
+                                                      
  */
 int __init qpnp_lpg_init(void)
 {

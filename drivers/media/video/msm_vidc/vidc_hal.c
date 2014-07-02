@@ -25,7 +25,7 @@
 #define FIRMWARE_SIZE			0X00A00000
 #define REG_ADDR_OFFSET_BITMASK	0x000FFFFF
 
-/*Workaround for virtio */
+/*                      */
 #define HFI_VIRTIO_FW_BIAS		0x0
 
 struct hal_device_data hal_ctxt;
@@ -343,7 +343,7 @@ static void write_register(u8 *base_addr, u32 reg, u32 value, u8 *vaddr)
 
 	reg &= REG_ADDR_OFFSET_BITMASK;
 	if (reg == (u32)VIDC_CPU_CS_SCIACMDARG2) {
-		/* workaround to offset of FW bias */
+		/*                                 */
 		struct hfi_queue_header *qhdr;
 		struct hfi_queue_table_header *qtbl_hdr =
 			(struct hfi_queue_table_header *)vaddr;
@@ -1394,7 +1394,7 @@ int vidc_hal_session_set_property(void *sess,
 			sizeof(struct hfi_debug_config);
 		break;
 	}
-	/* FOLLOWING PROPERTIES ARE NOT IMPLEMENTED IN CORE YET */
+	/*                                                      */
 	case HAL_CONFIG_BUFFER_REQUIREMENTS:
 	case HAL_CONFIG_PRIORITY:
 	case HAL_CONFIG_BATCH_INFO:
@@ -1519,7 +1519,7 @@ int vidc_hal_session_get_property(void *sess,
 		break;
 	case HAL_SYS_DEBUG_CONFIG:
 		break;
-	/*FOLLOWING PROPERTIES ARE NOT IMPLEMENTED IN CORE YET*/
+	/*                                                    */
 	case HAL_CONFIG_BUFFER_REQUIREMENTS:
 	case HAL_CONFIG_PRIORITY:
 	case HAL_CONFIG_BATCH_INFO:

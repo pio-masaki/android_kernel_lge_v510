@@ -37,46 +37,46 @@
 
 
 static struct kgsl_iommu_register_list kgsl_iommuv0_reg[KGSL_IOMMU_REG_MAX] = {
-	{ 0, 0 },			/* GLOBAL_BASE */
-	{ 0x0, 1 },			/* SCTLR */
-	{ 0x10, 1 },			/* TTBR0 */
-	{ 0x14, 1 },			/* TTBR1 */
-	{ 0x20, 1 },			/* FSR */
-	{ 0x800, 1 },			/* TLBIALL */
-	{ 0x820, 1 },			/* RESUME */
-	{ 0x03C, 1 },			/* TLBLKCR */
-	{ 0x818, 1 },			/* V2PUR */
-	{ 0x2C, 1 },			/* FSYNR0 */
-	{ 0x30, 1 },			/* FSYNR0 */
-	{ 0, 0 },			/* TLBSYNC, not in v0 */
-	{ 0, 0 },			/* TLBSTATUS, not in v0 */
-	{ 0, 0 }			/* IMPLDEF_MICRO_MMU_CRTL, not in v0 */
+	{ 0, 0 },			/*             */
+	{ 0x0, 1 },			/*       */
+	{ 0x10, 1 },			/*       */
+	{ 0x14, 1 },			/*       */
+	{ 0x20, 1 },			/*     */
+	{ 0x800, 1 },			/*         */
+	{ 0x820, 1 },			/*        */
+	{ 0x03C, 1 },			/*         */
+	{ 0x818, 1 },			/*       */
+	{ 0x2C, 1 },			/*        */
+	{ 0x30, 1 },			/*        */
+	{ 0, 0 },			/*                    */
+	{ 0, 0 },			/*                      */
+	{ 0, 0 }			/*                                   */
 };
 
 static struct kgsl_iommu_register_list kgsl_iommuv1_reg[KGSL_IOMMU_REG_MAX] = {
-	{ 0, 0 },			/* GLOBAL_BASE */
-	{ 0x0, 1 },			/* SCTLR */
-	{ 0x20, 1 },			/* TTBR0 */
-	{ 0x28, 1 },			/* TTBR1 */
-	{ 0x58, 1 },			/* FSR */
-	{ 0x618, 1 },			/* TLBIALL */
-	{ 0x008, 1 },			/* RESUME */
-	{ 0, 0 },			/* TLBLKCR not in V1 */
-	{ 0, 0 },			/* V2PUR not in V1 */
-	{ 0x68, 1 },			/* FSYNR0 */
-	{ 0x6C, 1 },			/* FSYNR1 */
-	{ 0x7F0, 1 },			/* TLBSYNC */
-	{ 0x7F4, 1 },			/* TLBSTATUS */
-	{ 0x2000, 0 }			/* IMPLDEF_MICRO_MMU_CRTL */
+	{ 0, 0 },			/*             */
+	{ 0x0, 1 },			/*       */
+	{ 0x20, 1 },			/*       */
+	{ 0x28, 1 },			/*       */
+	{ 0x58, 1 },			/*     */
+	{ 0x618, 1 },			/*         */
+	{ 0x008, 1 },			/*        */
+	{ 0, 0 },			/*                   */
+	{ 0, 0 },			/*                 */
+	{ 0x68, 1 },			/*        */
+	{ 0x6C, 1 },			/*        */
+	{ 0x7F0, 1 },			/*         */
+	{ 0x7F4, 1 },			/*           */
+	{ 0x2000, 0 }			/*                        */
 };
 
-/* naming mismatch with iommu things */
+/*                                   */
 static void _iommu_lock(void)
 {
 	return;
 }
 
-/* naming mismatch with iommu things */
+/*                                   */
 static void _iommu_unlock(void)
 {
 	return;
@@ -86,8 +86,8 @@ static void _iommu_unlock(void)
 struct remote_iommu_petersons_spinlock kgsl_iommu_sync_lock_vars;
 
 /*
- * One page allocation for a guard region to protect against over-zealous
- * GPU pre-fetch
+                                                                         
+                
  */
 
 static struct page *kgsl_guard_page;
@@ -139,15 +139,15 @@ static struct kgsl_iommu_device *get_iommu_device(struct kgsl_iommu_unit *unit,
 	return NULL;
 }
 
-/* These functions help find the nearest allocated memory entries on either side
- * of a faulting address. If we know the nearby allocations memory we can
- * get a better determination of what we think should have been located in the
- * faulting region
+/*                                                                              
+                                                                         
+                                                                              
+                  
  */
 
 /*
- * A local structure to make it easy to store the interesting bits for the
- * memory entries on either side of the faulting address
+                                                                          
+                                                        
  */
 
 struct _mem_entry {
@@ -159,8 +159,8 @@ struct _mem_entry {
 };
 
 /*
- * Find the closest alloated memory block with an smaller GPU address then the
- * given address
+                                                                              
+                
  */
 
 static void _prev_entry(struct kgsl_process_private *priv,
@@ -176,9 +176,9 @@ static void _prev_entry(struct kgsl_process_private *priv,
 			break;
 
 		/*
-		 * If this is closer to the faulting address, then copy
-		 * the entry
-		 */
+                                                         
+              
+   */
 
 		if (entry->memdesc.gpuaddr > ret->gpuaddr) {
 			ret->gpuaddr = entry->memdesc.gpuaddr;
@@ -193,8 +193,8 @@ static void _prev_entry(struct kgsl_process_private *priv,
 }
 
 /*
- * Find the closest alloated memory block with a greater starting GPU address
- * then the given address
+                                                                             
+                         
  */
 
 static void _next_entry(struct kgsl_process_private *priv,
@@ -210,9 +210,9 @@ static void _next_entry(struct kgsl_process_private *priv,
 			break;
 
 		/*
-		 * If this is closer to the faulting address, then copy
-		 * the entry
-		 */
+                                                         
+              
+   */
 
 		if (entry->memdesc.gpuaddr < ret->gpuaddr) {
 			ret->gpuaddr = entry->memdesc.gpuaddr;
@@ -236,7 +236,7 @@ static void _find_mem_entries(struct kgsl_mmu *mmu, unsigned int faultaddr,
 	memset(preventry, 0, sizeof(*preventry));
 	memset(nextentry, 0, sizeof(*nextentry));
 
-	/* Set the maximum possible size as an initial value */
+	/*                                                   */
 	nextentry->gpuaddr = 0xFFFFFFFF;
 
 	mutex_lock(&kgsl_driver.process_mutex);
@@ -349,9 +349,9 @@ static int kgsl_iommu_fault_handler(struct iommu_domain *domain,
 	iommu = mmu->priv;
 
 	/*
-	 * set the fault bits and stuff before any printks so that if fault
-	 * handler runs then it will know it's dealing with a pagefault
-	 */
+                                                                    
+                                                                
+  */
 	kgsl_sharedmem_readl(&device->memstore, &curr_context_id,
 		KGSL_MEMSTORE_OFFSET(KGSL_MEMSTORE_GLOBAL, current_context));
 
@@ -362,7 +362,7 @@ static int kgsl_iommu_fault_handler(struct iommu_domain *domain,
 			KGSL_MEMSTORE_OFFSET(KGSL_MEMSTORE_GLOBAL,
 			eoptimestamp));
 
-		/* save pagefault timestamp for GFT */
+		/*                                  */
 		set_bit(KGSL_CONTEXT_PAGEFAULT, &context->priv);
 		context->pagefault_ts = curr_global_ts;
 
@@ -375,7 +375,7 @@ static int kgsl_iommu_fault_handler(struct iommu_domain *domain,
 
 	if (adreno_dev->ft_pf_policy & KGSL_FT_PAGEFAULT_GPUHALT_ENABLE) {
 		adreno_set_gpu_fault(adreno_dev, ADRENO_IOMMU_PAGE_FAULT);
-		/* turn off GPU IRQ so we don't get faults from it too */
+		/*                                                     */
 		kgsl_pwrctrl_irq(device, KGSL_PWRFLAGS_OFF);
 		adreno_dispatcher_schedule(device);
 	}
@@ -434,11 +434,11 @@ static int kgsl_iommu_fault_handler(struct iommu_domain *domain,
 			write ? "write" : "read");
 
 	/*
-	 * We do not want the h/w to resume fetching data from an iommu unit
-	 * that has faulted, this is better for debugging as it will stall
-	 * the GPU and trigger a snapshot. To stall the transaction return
-	 * EBUSY error.
-	 */
+                                                                     
+                                                                   
+                                                                   
+                
+  */
 	if (adreno_dev->ft_pf_policy & KGSL_FT_PAGEFAULT_GPUHALT_ENABLE)
 		ret = -EBUSY;
 done:
@@ -446,11 +446,11 @@ done:
 }
 
 /*
- * kgsl_iommu_disable_clk - Disable iommu clocks
- * @mmu - Pointer to mmu structure
- *
- * Disables iommu clocks
- * Return - void
+                                                
+                                  
+  
+                        
+                
  */
 static void kgsl_iommu_disable_clk(struct kgsl_mmu *mmu)
 {
@@ -476,16 +476,16 @@ static void kgsl_iommu_disable_clk(struct kgsl_mmu *mmu)
 }
 
 /*
- * kgsl_iommu_disable_clk_event - An event function that is executed when
- * the required timestamp is reached. It disables the IOMMU clocks if
- * the timestamp on which the clocks can be disabled has expired.
- * @device - The kgsl device pointer
- * @data - The data passed during event creation, it is the MMU pointer
- * @id - Context ID, should always be KGSL_MEMSTORE_GLOBAL
- * @ts - The current timestamp that has expired for the device
- *
- * Disables IOMMU clocks if timestamp has expired
- * Return - void
+                                                                         
+                                                                     
+                                                                 
+                                    
+                                                                       
+                                                          
+                                                              
+  
+                                                 
+                
  */
 static void kgsl_iommu_clk_disable_event(struct kgsl_device *device, void *data,
 					unsigned int id, unsigned int ts,
@@ -507,9 +507,9 @@ static void kgsl_iommu_clk_disable_event(struct kgsl_device *device, void *data,
 		kgsl_iommu_disable_clk(mmu);
 		iommu->clk_event_queued = false;
 	} else {
-		/* add new event to fire when ts is reached, this can happen
-		 * if we queued an event and someone requested the clocks to
-		 * be disbaled on a later timestamp */
+		/*                                                          
+                                                              
+                                      */
 		if (kgsl_add_event(device, id, iommu->iommu_last_cmd_ts,
 			kgsl_iommu_clk_disable_event, mmu, mmu)) {
 				KGSL_DRV_ERR(device,
@@ -520,18 +520,18 @@ static void kgsl_iommu_clk_disable_event(struct kgsl_device *device, void *data,
 }
 
 /*
- * kgsl_iommu_disable_clk_on_ts - Sets up event to disable IOMMU clocks
- * @mmu - The kgsl MMU pointer
- * @ts - Timestamp on which the clocks should be disabled
- * @ts_valid - Indicates whether ts parameter is valid, if this parameter
- * is false then it means that the calling function wants to disable the
- * IOMMU clocks immediately without waiting for any timestamp
- *
- * Creates an event to disable the IOMMU clocks on timestamp and if event
- * already exists then updates the timestamp of disabling the IOMMU clocks
- * with the passed in ts if it is greater than the current value at which
- * the clocks will be disabled
- * Return - void
+                                                                       
+                              
+                                                         
+                                                                         
+                                                                        
+                                                             
+  
+                                                                         
+                                                                          
+                                                                         
+                              
+                
  */
 static void
 kgsl_iommu_disable_clk_on_ts(struct kgsl_mmu *mmu, unsigned int ts,
@@ -560,12 +560,12 @@ kgsl_iommu_disable_clk_on_ts(struct kgsl_mmu *mmu, unsigned int ts,
 }
 
 /*
- * kgsl_iommu_enable_clk - Enable iommu clocks
- * @mmu - Pointer to mmu structure
- * @ctx_id - The context bank whose clocks are to be turned on
- *
- * Enables iommu clocks of a given context
- * Return: 0 on success else error code
+                                              
+                                  
+                                                              
+  
+                                          
+                                       
  */
 static int kgsl_iommu_enable_clk(struct kgsl_mmu *mmu,
 				int ctx_id)
@@ -615,15 +615,15 @@ done:
 }
 
 /*
- * kgsl_iommu_pt_equal - Check if pagetables are equal
- * @mmu - Pointer to mmu structure
- * @pt - Pointer to pagetable
- * @pt_base - Address of a pagetable that the IOMMU register is
- * programmed with
- *
- * Checks whether the pt_base is equal to the base address of
- * the pagetable which is contained in the pt structure
- * Return - Non-zero if the pagetable addresses are equal else 0
+                                                      
+                                  
+                             
+                                                               
+                  
+  
+                                                             
+                                                       
+                                                                
  */
 static int kgsl_iommu_pt_equal(struct kgsl_mmu *mmu,
 				struct kgsl_pagetable *pt,
@@ -633,7 +633,7 @@ static int kgsl_iommu_pt_equal(struct kgsl_mmu *mmu,
 	phys_addr_t domain_ptbase = iommu_pt ?
 				iommu_get_pt_base_addr(iommu_pt->domain) : 0;
 
-	/* Only compare the valid address bits of the pt_base */
+	/*                                                    */
 	domain_ptbase &= KGSL_IOMMU_CTX_TTBR0_ADDR_MASK;
 
 	pt_base &= KGSL_IOMMU_CTX_TTBR0_ADDR_MASK;
@@ -643,10 +643,10 @@ static int kgsl_iommu_pt_equal(struct kgsl_mmu *mmu,
 }
 
 /*
- * kgsl_iommu_destroy_pagetable - Free up reaources help by a pagetable
- * @mmu_specific_pt - Pointer to pagetable which is to be freed
- *
- * Return - void
+                                                                       
+                                                               
+  
+                
  */
 static void kgsl_iommu_destroy_pagetable(struct kgsl_pagetable *pt)
 {
@@ -659,11 +659,11 @@ static void kgsl_iommu_destroy_pagetable(struct kgsl_pagetable *pt)
 }
 
 /*
- * kgsl_iommu_create_pagetable - Create a IOMMU pagetable
- *
- * Allocate memory to hold a pagetable and allocate the IOMMU
- * domain which is the actual IOMMU pagetable
- * Return - void
+                                                         
+  
+                                                             
+                                             
+                
  */
 void *kgsl_iommu_create_pagetable(void)
 {
@@ -687,7 +687,7 @@ void *kgsl_iommu_create_pagetable(void)
 				sizeof(struct kgsl_iommu_pt));
 		return NULL;
 	}
-	/* L2 redirect is not stable on IOMMU v2 */
+	/*                                       */
 	if (msm_soc_version_supports_iommu_v1())
 		kgsl_layout.domain_flags = MSM_IOMMU_DOMAIN_PT_CACHEABLE;
 
@@ -709,16 +709,16 @@ void *kgsl_iommu_create_pagetable(void)
 }
 
 /*
- * kgsl_detach_pagetable_iommu_domain - Detach the IOMMU unit from a
- * pagetable
- * @mmu - Pointer to the device mmu structure
- * @priv - Flag indicating whether the private or user context is to be
- * detached
- *
- * Detach the IOMMU unit with the domain that is contained in the
- * hwpagetable of the given mmu. After detaching the IOMMU unit is not
- * in use because the PTBR will not be set after a detach
- * Return - void
+                                                                    
+            
+                                             
+                                                                       
+           
+  
+                                                                 
+                                                                      
+                                                         
+                
  */
 static void kgsl_detach_pagetable_iommu_domain(struct kgsl_mmu *mmu)
 {
@@ -731,9 +731,9 @@ static void kgsl_detach_pagetable_iommu_domain(struct kgsl_mmu *mmu)
 		iommu_pt = mmu->defaultpagetable->priv;
 		for (j = 0; j < iommu_unit->dev_count; j++) {
 			/*
-			 * If there is a 2nd default pagetable then priv domain
-			 * is attached with this pagetable
-			 */
+                                                          
+                                     
+    */
 			if (mmu->priv_bank_table &&
 				(KGSL_IOMMU_CONTEXT_PRIV == j))
 				iommu_pt = mmu->priv_bank_table->priv;
@@ -750,17 +750,17 @@ static void kgsl_detach_pagetable_iommu_domain(struct kgsl_mmu *mmu)
 }
 
 /*
- * kgsl_attach_pagetable_iommu_domain - Attach the IOMMU unit to a
- * pagetable, i.e set the IOMMU's PTBR to the pagetable address and
- * setup other IOMMU registers for the device so that it becomes
- * active
- * @mmu - Pointer to the device mmu structure
- * @priv - Flag indicating whether the private or user context is to be
- * attached
- *
- * Attach the IOMMU unit with the domain that is contained in the
- * hwpagetable of the given mmu.
- * Return - 0 on success else error code
+                                                                  
+                                                                   
+                                                                
+         
+                                             
+                                                                       
+           
+  
+                                                                 
+                                
+                                        
  */
 static int kgsl_attach_pagetable_iommu_domain(struct kgsl_mmu *mmu)
 {
@@ -769,17 +769,17 @@ static int kgsl_attach_pagetable_iommu_domain(struct kgsl_mmu *mmu)
 	int i, j, ret = 0;
 
 	/*
-	 * Loop through all the iommu devcies under all iommu units and
-	 * attach the domain
-	 */
+                                                                
+                     
+  */
 	for (i = 0; i < iommu->unit_count; i++) {
 		struct kgsl_iommu_unit *iommu_unit = &iommu->iommu_units[i];
 		iommu_pt = mmu->defaultpagetable->priv;
 		for (j = 0; j < iommu_unit->dev_count; j++) {
 			/*
-			 * If there is a 2nd default pagetable then priv domain
-			 * is attached to this pagetable
-			 */
+                                                          
+                                   
+    */
 			if (mmu->priv_bank_table &&
 				(KGSL_IOMMU_CONTEXT_PRIV == j))
 				iommu_pt = mmu->priv_bank_table->priv;
@@ -805,15 +805,15 @@ done:
 }
 
 /*
- * _get_iommu_ctxs - Get device pointer to IOMMU contexts
- * @mmu - Pointer to mmu device
- * data - Pointer to the platform data containing information about
- * iommu devices for one iommu unit
- * unit_id - The IOMMU unit number. This is not a specific ID but just
- * a serial number. The serial numbers are treated as ID's of the
- * IOMMU units
- *
- * Return - 0 on success else error code
+                                                         
+                               
+                                                                   
+                                   
+                                                                      
+                                                                 
+              
+  
+                                        
  */
 static int _get_iommu_ctxs(struct kgsl_mmu *mmu,
 	struct kgsl_device_iommu_data *data, unsigned int unit_id)
@@ -865,18 +865,18 @@ static int _get_iommu_ctxs(struct kgsl_mmu *mmu,
 }
 
 /*
- * kgsl_iommu_start_sync_lock - Initialize some variables during MMU start up
- * for GPU CPU synchronization
- * @mmu - Pointer to mmu device
- *
- * Return - 0 on success else error code
+                                                                             
+                              
+                               
+  
+                                        
  */
 static int kgsl_iommu_start_sync_lock(struct kgsl_mmu *mmu)
 {
 	struct kgsl_iommu *iommu = mmu->priv;
 	uint32_t lock_gpu_addr = 0;
 
-	/* iommu v1 or v0 here, cp has v1 */
+	/*                                */
 	if (KGSL_DEVICE_3D0 != mmu->device->id ||
 		!msm_soc_version_supports_iommu_v1() ||
 		!kgsl_mmu_is_perprocess(mmu) ||
@@ -888,7 +888,7 @@ static int kgsl_iommu_start_sync_lock(struct kgsl_mmu *mmu)
 		"The GPU microcode does not support IOMMUv1 sync opcodes\n");
 		return -ENXIO;
 	}
-	/* Store Lock variables GPU address  */
+	/*                                   */
 	lock_gpu_addr = (iommu->sync_lock_desc.gpuaddr +
 			iommu->sync_lock_offset);
 
@@ -907,10 +907,10 @@ static int kgsl_iommu_start_sync_lock(struct kgsl_mmu *mmu)
 }
 
 /*
- * kgsl_get_sync_lock - Init Sync Lock between GPU and CPU
- * @mmu - Pointer to mmu device
- *
- * Return - 0 on success else error code
+                                                          
+                               
+  
+                                        
  */
 static int kgsl_iommu_init_sync_lock(struct kgsl_mmu *mmu)
 {
@@ -924,11 +924,11 @@ static int kgsl_iommu_init_sync_lock(struct kgsl_mmu *mmu)
 		!kgsl_mmu_is_perprocess(mmu))
 		return status;
 
-	/* Return if already initialized */
+	/*                               */
 	if (iommu->sync_lock_initialized)
 		return status;
 
-	/* Get the physical address of the Lock variables */
+	/*                                                */
 	lock_phy_addr = (msm_iommu_lock_initialize()
 			- MSM_SHARED_RAM_BASE + msm_shared_ram_phys);
 
@@ -938,7 +938,7 @@ static int kgsl_iommu_init_sync_lock(struct kgsl_mmu *mmu)
 		return -ENXIO;
 	}
 
-	/* Align the physical address to PAGE boundary and store the offset */
+	/*                                                                  */
 	page_offset = (lock_phy_addr & (PAGE_SIZE - 1));
 	lock_phy_addr = (lock_phy_addr & ~(PAGE_SIZE - 1));
 	iommu->sync_lock_desc.physaddr = (unsigned int)lock_phy_addr;
@@ -953,18 +953,18 @@ static int kgsl_iommu_init_sync_lock(struct kgsl_mmu *mmu)
 	if (status)
 		return status;
 
-	/* Flag Sync Lock is Initialized  */
+	/*                                */
 	iommu->sync_lock_initialized = 1;
 
 	return status;
 }
 
 /*
- * kgsl_iommu_sync_lock - Acquire Sync Lock between GPU and CPU
- * @mmu - Pointer to mmu device
- * @cmds - Pointer to array of commands
- *
- * Return - int - number of commands.
+                                                               
+                               
+                                       
+  
+                                     
  */
 inline unsigned int kgsl_iommu_sync_lock(struct kgsl_mmu *mmu,
 						unsigned int *cmds)
@@ -986,7 +986,7 @@ inline unsigned int kgsl_iommu_sync_lock(struct kgsl_mmu *mmu,
 	cmds += adreno_add_idle_cmds(adreno_dev, cmds);
 
 	*cmds++ = cp_type3_packet(CP_WAIT_REG_MEM, 5);
-	/* MEM SPACE = memory, FUNCTION = equals */
+	/*                                       */
 	*cmds++ = 0x13;
 	*cmds++ = lock_vars->flag[PROC_GPU];
 	*cmds++ = 0x1;
@@ -1000,7 +1000,7 @@ inline unsigned int kgsl_iommu_sync_lock(struct kgsl_mmu *mmu,
 	cmds += adreno_add_idle_cmds(adreno_dev, cmds);
 
 	*cmds++ = cp_type3_packet(CP_WAIT_REG_MEM, 5);
-	/* MEM SPACE = memory, FUNCTION = equals */
+	/*                                       */
 	*cmds++ = 0x13;
 	*cmds++ = lock_vars->flag[PROC_GPU];
 	*cmds++ = 0x1;
@@ -1018,11 +1018,11 @@ inline unsigned int kgsl_iommu_sync_lock(struct kgsl_mmu *mmu,
 }
 
 /*
- * kgsl_iommu_sync_lock - Release Sync Lock between GPU and CPU
- * @mmu - Pointer to mmu device
- * @cmds - Pointer to array of commands
- *
- * Return - int - number of commands.
+                                                               
+                               
+                                       
+  
+                                     
  */
 inline unsigned int kgsl_iommu_sync_unlock(struct kgsl_mmu *mmu,
 					unsigned int *cmds)
@@ -1042,7 +1042,7 @@ inline unsigned int kgsl_iommu_sync_unlock(struct kgsl_mmu *mmu,
 	*cmds++ = 0;
 
 	*cmds++ = cp_type3_packet(CP_WAIT_REG_MEM, 5);
-	/* MEM SPACE = memory, FUNCTION = equals */
+	/*                                       */
 	*cmds++ = 0x13;
 	*cmds++ = lock_vars->flag[PROC_GPU];
 	*cmds++ = 0x0;
@@ -1055,12 +1055,12 @@ inline unsigned int kgsl_iommu_sync_unlock(struct kgsl_mmu *mmu,
 }
 
 /*
- * kgsl_get_iommu_ctxt - Get device pointer to IOMMU contexts
- * @mmu - Pointer to mmu device
- *
- * Get the device pointers for the IOMMU user and priv contexts of the
- * kgsl device
- * Return - 0 on success else error code
+                                                             
+                               
+  
+                                                                      
+              
+                                        
  */
 static int kgsl_get_iommu_ctxt(struct kgsl_mmu *mmu)
 {
@@ -1071,7 +1071,7 @@ static int kgsl_get_iommu_ctxt(struct kgsl_mmu *mmu)
 	struct kgsl_iommu *iommu = mmu->device->mmu.priv;
 	int i, ret = 0;
 
-	/* Go through the IOMMU data and get all the context devices */
+	/*                                                           */
 	if (KGSL_IOMMU_MAX_UNITS < pdata_dev->iommu_count) {
 		KGSL_CORE_ERR("Too many IOMMU units defined\n");
 		ret = -EINVAL;
@@ -1089,11 +1089,11 @@ done:
 }
 
 /*
- * kgsl_set_register_map - Map the IOMMU regsiters in the memory descriptors
- * of the respective iommu units
- * @mmu - Pointer to mmu structure
- *
- * Return - 0 on success else error code
+                                                                            
+                                
+                                  
+  
+                                        
  */
 static int kgsl_set_register_map(struct kgsl_mmu *mmu)
 {
@@ -1108,7 +1108,7 @@ static int kgsl_set_register_map(struct kgsl_mmu *mmu)
 	for (; i < pdata_dev->iommu_count; i++) {
 		struct kgsl_device_iommu_data data = pdata_dev->iommu_data[i];
 		iommu_unit = &iommu->iommu_units[i];
-		/* set up the IOMMU register map for the given IOMMU unit */
+		/*                                                        */
 		if (!data.physstart || !data.physend) {
 			KGSL_CORE_ERR("The register range for IOMMU unit not"
 					" specified\n");
@@ -1138,7 +1138,7 @@ static int kgsl_set_register_map(struct kgsl_mmu *mmu)
 	iommu->unit_count = pdata_dev->iommu_count;
 	return ret;
 err:
-	/* Unmap any mapped IOMMU regions */
+	/*                                */
 	for (; i >= 0; i--) {
 		iommu_unit = &iommu->iommu_units[i];
 		iounmap(iommu_unit->reg_map.hostptr);
@@ -1149,13 +1149,13 @@ err:
 }
 
 /*
- * kgsl_iommu_get_pt_base_addr - Get the address of the pagetable that the
- * IOMMU ttbr0 register is programmed with
- * @mmu - Pointer to mmu
- * @pt - kgsl pagetable pointer that contains the IOMMU domain pointer
- *
- * Return - actual pagetable address that the ttbr0 register is programmed
- * with
+                                                                          
+                                          
+                        
+                                                                      
+  
+                                                                          
+       
  */
 static phys_addr_t kgsl_iommu_get_pt_base_addr(struct kgsl_mmu *mmu,
 						struct kgsl_pagetable *pt)
@@ -1166,13 +1166,13 @@ static phys_addr_t kgsl_iommu_get_pt_base_addr(struct kgsl_mmu *mmu,
 }
 
 /*
- * kgsl_iommu_get_default_ttbr0 - Return the ttbr0 value programmed by
- * iommu driver
- * @mmu - Pointer to mmu structure
- * @hostptr - Pointer to the IOMMU register map. This is used to match
- * the iommu device whose lsb value is to be returned
- * @ctx_id - The context bank whose lsb valus is to be returned
- * Return - returns the ttbr0 value programmed by iommu driver
+                                                                      
+               
+                                  
+                                                                      
+                                                     
+                                                               
+                                                              
  */
 static phys_addr_t kgsl_iommu_get_default_ttbr0(struct kgsl_mmu *mmu,
 				unsigned int unit_id,
@@ -1197,9 +1197,9 @@ static int kgsl_iommu_setstate(struct kgsl_mmu *mmu,
 	int ret = 0;
 
 	if (mmu->flags & KGSL_FLAGS_STARTED) {
-		/* page table not current, then setup mmu to use new
-		 *  specified page table
-		 */
+		/*                                                  
+                          
+   */
 		if (mmu->hwpagetable != pagetable) {
 			unsigned int flags = 0;
 			mmu->hwpagetable = pagetable;
@@ -1215,18 +1215,18 @@ static int kgsl_iommu_setstate(struct kgsl_mmu *mmu,
 }
 
 /*
- * kgsl_iommu_setup_regs - map iommu registers into a pagetable
- * @mmu: Pointer to mmu structure
- * @pt: the pagetable
- *
- * To do pagetable switches from the GPU command stream, the IOMMU
- * registers need to be mapped into the GPU's pagetable. This function
- * is used differently on different targets. On 8960, the registers
- * are mapped into every pagetable during kgsl_setup_pt(). On
- * all other targets, the registers are mapped only into the second
- * context bank.
- *
- * Return - 0 on success else error code
+                                                               
+                                 
+                     
+  
+                                                                  
+                                                                      
+                                                                   
+                                                             
+                                                                   
+                
+  
+                                        
  */
 static int kgsl_iommu_setup_regs(struct kgsl_mmu *mmu,
 				    struct kgsl_pagetable *pt)
@@ -1245,7 +1245,7 @@ static int kgsl_iommu_setup_regs(struct kgsl_mmu *mmu,
 			goto err;
 	}
 
-	/* Map Lock variables to GPU pagetable */
+	/*                                     */
 	if (iommu->sync_lock_initialized) {
 		status = kgsl_mmu_map_global(pt, &iommu->sync_lock_desc);
 		if (status)
@@ -1262,13 +1262,13 @@ err:
 }
 
 /*
- * kgsl_iommu_cleanup_regs - unmap iommu registers from a pagetable
- * @mmu: Pointer to mmu structure
- * @pt: the pagetable
- *
- * Removes mappings created by kgsl_iommu_setup_regs().
- *
- * Return - 0 on success else error code
+                                                                   
+                                 
+                     
+  
+                                                       
+  
+                                        
  */
 static void kgsl_iommu_cleanup_regs(struct kgsl_mmu *mmu,
 					struct kgsl_pagetable *pt)
@@ -1284,13 +1284,13 @@ static void kgsl_iommu_cleanup_regs(struct kgsl_mmu *mmu,
 
 
 /*
- * kgsl_iommu_get_reg_ahbaddr - Returns the ahb address of the register
- * @mmu - Pointer to mmu structure
- * @iommu_unit - The iommu unit for which base address is requested
- * @ctx_id - The context ID of the IOMMU ctx
- * @reg - The register for which address is required
- *
- * Return - The address of register which can be used in type0 packet
+                                                                       
+                                  
+                                                                   
+                                            
+                                                    
+  
+                                                                     
  */
 static unsigned int kgsl_iommu_get_reg_ahbaddr(struct kgsl_mmu *mmu,
 					int iommu_unit, int ctx_id,
@@ -1310,10 +1310,10 @@ static unsigned int kgsl_iommu_get_reg_ahbaddr(struct kgsl_mmu *mmu,
 static int kgsl_iommu_init(struct kgsl_mmu *mmu)
 {
 	/*
-	 * intialize device mmu
-	 *
-	 * call this with the global lock held
-	 */
+                        
+   
+                                       
+  */
 	int status = 0;
 	struct kgsl_iommu *iommu;
 
@@ -1334,25 +1334,25 @@ static int kgsl_iommu_init(struct kgsl_mmu *mmu)
 		goto done;
 
 	/*
-	 * IOMMU-v1 requires hardware halt support to do in stream
-	 * pagetable switching. This check assumes that if there are
-	 * multiple units, they will be matching hardware.
-	 */
-	/* name mismatch fixup between v0 and v1 here */
+                                                           
+                                                             
+                                                   
+  */
+	/*                                            */
 	mmu->pt_per_process = KGSL_MMU_USE_PER_PROCESS_PT &&
 				(msm_soc_version_supports_iommu_v1() ||
 				 iommu->iommu_units[0].iommu_halt_enable);
 
 	/*
-	 * For IOMMU per-process pagetables, the allocatable range
-	 * and the kernel global range must both be outside
-	 * the userspace address range. There is a 1Mb gap
-	 * between these address ranges to make overrun
-	 * detection easier.
-	 * For the shared pagetable case use 2GB and because
-	 * mirroring the CPU address space is not possible and
-	 * we're better off with extra room.
-	 */
+                                                           
+                                                    
+                                                   
+                                                
+                     
+                                                     
+                                                       
+                                     
+  */
 	if (mmu->pt_per_process) {
 #ifndef CONFIG_MSM_KGSL_CFF_DUMP
 		mmu->pt_base = PAGE_OFFSET;
@@ -1386,11 +1386,11 @@ static int kgsl_iommu_init(struct kgsl_mmu *mmu)
 	iommu->ctx_offset = KGSL_IOMMU_CTX_OFFSET_V0;
 
 	/*
-	 * Due to not bringing in the iommu rename, iommu_v1 is
-	 * actually iommu_v0.  Keep our internal representation
-	 * constant, but our interface with iommu drive needs the
-	 * correct vixes
-	 */
+                                                        
+                                                        
+                                                          
+                 
+  */
 	if (msm_soc_version_supports_iommu_v1()) {
 		iommu->iommu_reg_list = kgsl_iommuv0_reg;
 		iommu->ctx_offset = KGSL_IOMMU_CTX_OFFSET_V0;
@@ -1399,17 +1399,17 @@ static int kgsl_iommu_init(struct kgsl_mmu *mmu)
 		iommu->ctx_offset = KGSL_IOMMU_CTX_OFFSET_V1;
 	}
 
-	/* A nop is required in an indirect buffer when switching
-	 * pagetables in-stream */
+	/*                                                       
+                         */
 	kgsl_sharedmem_writel(mmu->device, &mmu->setstate_memory,
 				KGSL_IOMMU_SETSTATE_NOP_OFFSET,
 				cp_nop_packet(1));
 
 	if (cpu_is_msm8960()) {
 		/*
-		 * 8960 doesn't have a second context bank, so the IOMMU
-		 * registers must be mapped into every pagetable.
-		 */
+                                                          
+                                                   
+   */
 		iommu_ops.mmu_setup_pt = kgsl_iommu_setup_regs;
 		iommu_ops.mmu_cleanup_pt = kgsl_iommu_cleanup_regs;
 	}
@@ -1434,20 +1434,20 @@ done:
 }
 
 /*
- * kgsl_iommu_setup_defaultpagetable - Setup the initial defualtpagetable
- * for iommu. This function is only called once during first start, successive
- * start do not call this funciton.
- * @mmu - Pointer to mmu structure
- *
- * Create the  initial defaultpagetable and setup the iommu mappings to it
- * Return - 0 on success else error code
+                                                                         
+                                                                              
+                                   
+                                  
+  
+                                                                          
+                                        
  */
 static int kgsl_iommu_setup_defaultpagetable(struct kgsl_mmu *mmu)
 {
 	int status = 0;
 
-	/* If chip is not 8960 then we use the 2nd context bank for pagetable
-	 * switching on the 3D side for which a separate table is allocated */
+	/*                                                                   
+                                                                     */
 	if (!cpu_is_msm8960() && msm_soc_version_supports_iommu_v1()) {
 		mmu->priv_bank_table =
 			kgsl_mmu_getpagetable(mmu,
@@ -1461,7 +1461,7 @@ static int kgsl_iommu_setup_defaultpagetable(struct kgsl_mmu *mmu)
 			goto err;
 	}
 	mmu->defaultpagetable = kgsl_mmu_getpagetable(mmu, KGSL_MMU_GLOBAL_PT);
-	/* Return error if the default pagetable doesn't exist */
+	/*                                                     */
 	if (mmu->defaultpagetable == NULL) {
 		status = -ENOMEM;
 		goto err;
@@ -1481,12 +1481,12 @@ err:
 }
 
 /*
- * kgsl_iommu_lock_rb_in_tlb - Allocates tlb entries and locks the
- * virtual to physical address translation of ringbuffer for 3D
- * device into tlb.
- * @mmu - Pointer to mmu structure
- *
- * Return - void
+                                                                  
+                                                               
+                   
+                                  
+  
+                
  */
 static void kgsl_iommu_lock_rb_in_tlb(struct kgsl_mmu *mmu)
 {
@@ -1519,14 +1519,14 @@ static void kgsl_iommu_lock_rb_in_tlb(struct kgsl_mmu *mmu)
 					iommu_unit->dev_count) &
 					KGSL_IOMMU_TLBLKCR_FLOOR_MASK) <<
 					KGSL_IOMMU_TLBLKCR_FLOOR_SHIFT);
-			/* Do not invalidate locked entries on tlbiall flush */
+			/*                                                   */
 			tlblkcr	|= ((1 & KGSL_IOMMU_TLBLKCR_TLBIALLCFG_MASK)
 				<< KGSL_IOMMU_TLBLKCR_TLBIALLCFG_SHIFT);
 			tlblkcr	|= ((1 & KGSL_IOMMU_TLBLKCR_TLBIASIDCFG_MASK)
 				<< KGSL_IOMMU_TLBLKCR_TLBIASIDCFG_SHIFT);
 			tlblkcr	|= ((1 & KGSL_IOMMU_TLBLKCR_TLBIVAACFG_MASK)
 				<< KGSL_IOMMU_TLBLKCR_TLBIVAACFG_SHIFT);
-			/* Enable tlb locking */
+			/*                    */
 			tlblkcr |= ((1 & KGSL_IOMMU_TLBLKCR_LKE_MASK)
 				<< KGSL_IOMMU_TLBLKCR_LKE_SHIFT);
 			KGSL_IOMMU_SET_CTX_REG(iommu, iommu_unit,
@@ -1534,10 +1534,10 @@ static void kgsl_iommu_lock_rb_in_tlb(struct kgsl_mmu *mmu)
 					TLBLKCR, tlblkcr);
 		}
 		for (j = 0; j < iommu_unit->dev_count; j++) {
-			/* skip locking entries for private bank on 8960 */
+			/*                                               */
 			if (cpu_is_msm8960() &&  KGSL_IOMMU_CONTEXT_PRIV == j)
 				continue;
-			/* Lock the ringbuffer virtual address into tlb */
+			/*                                              */
 			vaddr = rb->buffer_desc.gpuaddr;
 			for (k = 0; k < num_tlb_entries; k++) {
 				v2pxx = 0;
@@ -1577,7 +1577,7 @@ static void kgsl_iommu_lock_rb_in_tlb(struct kgsl_mmu *mmu)
 						iommu_unit->dev[j].ctx_id,
 						TLBLKCR);
 			mb();
-			/* Disable tlb locking */
+			/*                     */
 			tlblkcr &= ~(KGSL_IOMMU_TLBLKCR_LKE_MASK
 				<< KGSL_IOMMU_TLBLKCR_LKE_SHIFT);
 			KGSL_IOMMU_SET_CTX_REG(iommu, iommu_unit,
@@ -1603,7 +1603,7 @@ static int kgsl_iommu_start(struct kgsl_mmu *mmu)
 		if (status)
 			return -ENOMEM;
 
-		/* Initialize the sync lock between GPU and CPU */
+		/*                                              */
 		if (msm_soc_version_supports_iommu_v1() &&
 			(device->id == KGSL_DEVICE_3D0))
 				kgsl_iommu_init_sync_lock(mmu);
@@ -1612,8 +1612,8 @@ static int kgsl_iommu_start(struct kgsl_mmu *mmu)
 	if (status)
 		return status;
 
-	/* We use the GPU MMU to control access to IOMMU registers on 8960 with
-	 * a225, hence we still keep the MMU active on 8960 */
+	/*                                                                     
+                                                     */
 	if (cpu_is_msm8960() && KGSL_DEVICE_3D0 == mmu->device->id) {
 		struct kgsl_mh *mh = &(mmu->device->mh);
 		BUG_ON(iommu->iommu_units[0].reg_map.gpuaddr != 0 &&
@@ -1641,20 +1641,20 @@ static int kgsl_iommu_start(struct kgsl_mmu *mmu)
 		KGSL_CORE_ERR("clk enable failed\n");
 		goto done;
 	}
-	/* Get the lsb value of pagetables set in the IOMMU ttbr0 register as
-	 * that value should not change when we change pagetables, so while
-	 * changing pagetables we can use this lsb value of the pagetable w/o
-	 * having to read it again
-	 */
+	/*                                                                   
+                                                                    
+                                                                      
+                           
+  */
 	msm_iommu_lock();
 	for (i = 0; i < iommu->unit_count; i++) {
 		struct kgsl_iommu_unit *iommu_unit = &iommu->iommu_units[i];
 		for (j = 0; j < iommu_unit->dev_count; j++) {
 
 			/*
-			 * For IOMMU V1 do not halt IOMMU on pagefault if
-			 * FT pagefault policy is set accordingly
-			 */
+                                                    
+                                            
+    */
 			if ((!msm_soc_version_supports_iommu_v1()) &&
 				(!(adreno_dev->ft_pf_policy &
 				   KGSL_FT_PAGEFAULT_GPUHALT_ENABLE))) {
@@ -1687,7 +1687,7 @@ static int kgsl_iommu_start(struct kgsl_mmu *mmu)
 	kgsl_iommu_lock_rb_in_tlb(mmu);
 	msm_iommu_unlock();
 
-	/* For complete CFF */
+	/*                  */
 	kgsl_cffdump_setmem(mmu->device, mmu->setstate_memory.gpuaddr +
 				KGSL_IOMMU_SETSTATE_NOP_OFFSET,
 				cp_nop_packet(1), sizeof(unsigned int));
@@ -1712,9 +1712,9 @@ kgsl_iommu_unmap(struct kgsl_pagetable *pt,
 	unsigned int range = memdesc->size;
 	struct kgsl_iommu_pt *iommu_pt = pt->priv;
 
-	/* All GPU addresses as assigned are page aligned, but some
-	   functions purturb the gpuaddr with an offset, so apply the
-	   mask here to make sure we have the right address */
+	/*                                                         
+                                                              
+                                                     */
 
 	unsigned int gpuaddr = memdesc->gpuaddr &  KGSL_MMU_ALIGN_MASK;
 
@@ -1731,9 +1731,9 @@ kgsl_iommu_unmap(struct kgsl_pagetable *pt,
 			range, ret);
 
 	/*
-	 * Flushing only required if per process pagetables are used. With
-	 * global case, flushing will happen inside iommu_map function
-	 */
+                                                                   
+                                                               
+  */
 	if (!ret && kgsl_mmu_is_perprocess(pt->mmu))
 		*tlb_flags = UINT_MAX;
 	return 0;
@@ -1772,7 +1772,7 @@ kgsl_iommu_map(struct kgsl_pagetable *pt,
 				page_to_phys(kgsl_guard_page),
 				protflags & ~IOMMU_WRITE,
 				ret);
-			/* cleanup the partial mapping */
+			/*                             */
 			iommu_unmap_range(iommu_pt->domain, iommu_virt_addr,
 					  size);
 		}
@@ -1815,12 +1815,12 @@ static void kgsl_iommu_stop(struct kgsl_mmu *mmu)
 {
 	struct kgsl_iommu *iommu = mmu->priv;
 	/*
-	 *  stop device mmu
-	 *
-	 *  call this with the global lock held
-	 */
+                    
+   
+                                        
+  */
 	if (mmu->flags & KGSL_FLAGS_STARTED) {
-		/* detach iommu attachment */
+		/*                         */
 		kgsl_detach_pagetable_iommu_domain(mmu);
 		mmu->hwpagetable = NULL;
 
@@ -1828,7 +1828,7 @@ static void kgsl_iommu_stop(struct kgsl_mmu *mmu)
 
 		kgsl_iommu_pagefault_resume(mmu);
 	}
-	/* switch off MMU clocks and cancel any events it has queued */
+	/*                                                           */
 	iommu->clk_event_queued = false;
 	kgsl_cancel_events(mmu->device, mmu);
 	kgsl_iommu_disable_clk(mmu);
@@ -1855,7 +1855,7 @@ static int kgsl_iommu_close(struct kgsl_mmu *mmu)
 		kgsl_sg_free(reg_map->sg, reg_map->sglen);
 		reg_map->priv &= ~KGSL_MEMDESC_GLOBAL;
 	}
-	/* clear IOMMU GPU CPU sync structures */
+	/*                                     */
 	kgsl_sg_free(iommu->sync_lock_desc.sg, iommu->sync_lock_desc.sglen);
 	memset(&iommu->sync_lock_desc, 0, sizeof(iommu->sync_lock_desc));
 	iommu->sync_lock_vars = NULL;
@@ -1875,11 +1875,11 @@ kgsl_iommu_get_current_ptbase(struct kgsl_mmu *mmu)
 {
 	phys_addr_t pt_base;
 	struct kgsl_iommu *iommu = mmu->priv;
-	/* We cannot enable or disable the clocks in interrupt context, this
-	 function is called from interrupt context if there is an axi error */
+	/*                                                                  
+                                                                     */
 	if (in_interrupt())
 		return 0;
-	/* Return the current pt base by reading IOMMU pt_base register */
+	/*                                                              */
 	kgsl_iommu_enable_clk(mmu, KGSL_IOMMU_CONTEXT_USER);
 	pt_base = KGSL_IOMMU_GET_CTX_REG(iommu, (&iommu->iommu_units[0]),
 					KGSL_IOMMU_CONTEXT_USER,
@@ -1889,16 +1889,16 @@ kgsl_iommu_get_current_ptbase(struct kgsl_mmu *mmu)
 }
 
 /*
- * kgsl_iommu_default_setstate - Change the IOMMU pagetable or flush IOMMU tlb
- * of the primary context bank
- * @mmu - Pointer to mmu structure
- * @flags - Flags indicating whether pagetable has to chnage or tlb is to be
- * flushed or both
- *
- * Based on flags set the new pagetable fo the IOMMU unit or flush it's tlb or
- * do both by doing direct register writes to the IOMMu registers through the
- * cpu
- * Return - void
+                                                                              
+                              
+                                  
+                                                                            
+                  
+  
+                                                                              
+                                                                             
+      
+                
  */
 static int kgsl_iommu_default_setstate(struct kgsl_mmu *mmu,
 					uint32_t flags)
@@ -1918,27 +1918,27 @@ static int kgsl_iommu_default_setstate(struct kgsl_mmu *mmu,
 		return ret;
 	}
 
-	/* For v0 SMMU GPU needs to be idle for tlb invalidate as well */
-	/* naming mismatch for iommu */
+	/*                                                             */
+	/*                           */
 	if (msm_soc_version_supports_iommu_v1()) {
 		ret = kgsl_idle(mmu->device);
 		if (ret)
 			return ret;
 	}
 
-	/* Acquire GPU-CPU sync Lock here */
+	/*                                */
 	msm_iommu_lock();
 
 	if (flags & KGSL_MMUFLAGS_PTUPDATE) {
-	/* naming mismatch for iommu */
+	/*                           */
 		if (!msm_soc_version_supports_iommu_v1()) {
 			ret = kgsl_idle(mmu->device);
 			if (ret)
 				goto unlock;
 		}
 		for (i = 0; i < iommu->unit_count; i++) {
-			/* get the lsb value which should not change when
-			 * changing ttbr0 */
+			/*                                               
+                     */
 			pt_val = kgsl_iommu_get_default_ttbr0(mmu, i,
 						KGSL_IOMMU_CONTEXT_USER);
 
@@ -1961,7 +1961,7 @@ static int kgsl_iommu_default_setstate(struct kgsl_mmu *mmu,
 				KGSL_IOMMU_CONTEXT_USER, TTBR0);
 		}
 	}
-	/* Flush tlb */
+	/*           */
 	if (flags & KGSL_MMUFLAGS_TLBFLUSH) {
 		unsigned long wait_for_flush;
 		for (i = 0; i < iommu->unit_count; i++) {
@@ -1969,13 +1969,13 @@ static int kgsl_iommu_default_setstate(struct kgsl_mmu *mmu,
 				KGSL_IOMMU_CONTEXT_USER, TLBIALL, 1);
 			mb();
 			/*
-			 * Wait for flush to complete by polling the flush
-			 * status bit of TLBSTATUS register for not more than
-			 * 2 s. After 2s just exit, at that point the SMMU h/w
-			 * may be stuck and will eventually cause GPU to hang
-			 * or bring the system down.
-			 */
-			 /* naming mismatch */
+                                                     
+                                                        
+                                                         
+                                                        
+                               
+    */
+			 /*                 */
 			if (!msm_soc_version_supports_iommu_v1()) {
 				wait_for_flush = jiffies +
 						msecs_to_jiffies(2000);
@@ -1999,22 +1999,22 @@ static int kgsl_iommu_default_setstate(struct kgsl_mmu *mmu,
 	}
 unlock:
 
-	/* Release GPU-CPU sync Lock here */
+	/*                                */
 	msm_iommu_unlock();
 
-	/* Disable smmu clock */
+	/*                    */
 	kgsl_iommu_disable_clk_on_ts(mmu, 0, false);
 	return ret;
 }
 
 /*
- * kgsl_iommu_get_reg_gpuaddr - Returns the gpu address of IOMMU regsiter
- * @mmu - Pointer to mmu structure
- * @iommu_unit - The iommu unit for which base address is requested
- * @ctx_id - The context ID of the IOMMU ctx
- * @reg - The register for which address is required
- *
- * Return - The gpu address of register which can be used in type3 packet
+                                                                         
+                                  
+                                                                   
+                                            
+                                                    
+  
+                                                                         
  */
 static unsigned int kgsl_iommu_get_reg_gpuaddr(struct kgsl_mmu *mmu,
 					int iommu_unit, int ctx_id, int reg)
@@ -2033,10 +2033,10 @@ static unsigned int kgsl_iommu_get_reg_gpuaddr(struct kgsl_mmu *mmu,
 			iommu->iommu_reg_list[reg].reg_offset;
 }
 /*
- * kgsl_iommu_hw_halt_supported - Returns whether IOMMU halt command is
- * supported
- * @mmu - Pointer to mmu structure
- * @iommu_unit - The iommu unit for which the property is requested
+                                                                       
+            
+                                  
+                                                                   
  */
 static int kgsl_iommu_hw_halt_supported(struct kgsl_mmu *mmu, int iommu_unit)
 {
@@ -2070,7 +2070,7 @@ struct kgsl_mmu_ops iommu_ops = {
 	.mmu_pt_equal = kgsl_iommu_pt_equal,
 	.mmu_get_pt_base_addr = kgsl_iommu_get_pt_base_addr,
 	.mmu_hw_halt_supported = kgsl_iommu_hw_halt_supported,
-	/* These callbacks will be set on some chipsets */
+	/*                                              */
 	.mmu_setup_pt = NULL,
 	.mmu_cleanup_pt = NULL,
 	.mmu_sync_lock = kgsl_iommu_sync_lock,

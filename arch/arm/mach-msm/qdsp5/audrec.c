@@ -40,20 +40,20 @@
 
 static DEFINE_MUTEX(audrec_lock);
 
-#define MAX_ENC_COUNT 8 /* Max encoder supported */
+#define MAX_ENC_COUNT 8 /*                       */
 
 #define ENC_SESSION_FREE 0
 #define ENC_SESSION_ACTIVE 1
 
 struct enc_session {
-	unsigned enc_type;  /* Param to identify type of encoder */
-	unsigned audrec_obj_idx;  /* Param to identify REC_OBJ or Session ID */
-	audrec_event_func event_func; /* Event Call back
-					routine for the encoder */
-	void *private;	/* private data element passed as
-				part of Event Call back  routine */
-	unsigned state; /* Current state of the encoder session ,
-				free, active*/
+	unsigned enc_type;  /*                                   */
+	unsigned audrec_obj_idx;  /*                                         */
+	audrec_event_func event_func; /*                
+                             */
+	void *private;	/*                               
+                                     */
+	unsigned state; /*                                       
+                */
 };
 
 struct audrec_state {
@@ -86,7 +86,7 @@ static void audrectask_dsp_event(void *data, unsigned id, size_t len,
 {
 	struct audrec_state *audrec = data;
 	int cnt;
-	uint16_t msg[5]; /* Max size of message */
+	uint16_t msg[5]; /*                     */
 	getevent(msg, len);
 
 	switch (id) {
@@ -260,7 +260,7 @@ void audrectask_disable(unsigned enc_type, void *private)
 	mutex_lock(audrec->lock);
 
 	if (--audrec->enc_count == 0) {
-		MM_DBG("\n"); /* Macro prints the file name and function */
+		MM_DBG("\n"); /*                                         */
 		msm_adsp_disable(audrec->audrec_mod);
 		msm_adsp_put(audrec->audrec_mod);
 		audrec->audrec_mod = NULL;

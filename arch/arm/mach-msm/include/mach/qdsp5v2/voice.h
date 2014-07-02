@@ -18,20 +18,20 @@
 #define VOICE_DALRPC_CPU 0
 
 
-/* Commands sent to Modem */
+/*                        */
 #define CMD_VOICE_INIT                  0x1
 #define CMD_ACQUIRE_DONE                0x2
 #define CMD_RELEASE_DONE                0x3
 #define CMD_DEVICE_INFO                 0x4
 #define CMD_DEVICE_CHANGE               0x6
 
-/* EVENTS received from MODEM */
+/*                            */
 #define EVENT_ACQUIRE_START             0x51
 #define EVENT_RELEASE_START             0x52
 #define EVENT_CHANGE_START              0x54
 #define EVENT_NETWORK_RECONFIG          0x53
 
-/* voice state */
+/*             */
 enum {
 	VOICE_INIT = 0,
 	VOICE_ACQUIRE,
@@ -50,7 +50,7 @@ enum {
 	VOICE_DALRPC_CMD = DALDEVICE_FIRST_DEVICE_API_IDX
 };
 
-/* device state */
+/*              */
 enum {
 	DEV_INIT = 0,
 	DEV_READY,
@@ -59,7 +59,7 @@ enum {
 	DEV_REL_DONE,
 };
 
-/* Voice Event */
+/*             */
 enum{
 	VOICE_RELEASE_START = 1,
 	VOICE_CHANGE_START,
@@ -67,7 +67,7 @@ enum{
 	VOICE_NETWORK_RECONFIG,
 };
 
-/* Device Event */
+/*              */
 #define DEV_CHANGE_READY                0x1
 
 #define VOICE_CALL_START	0x1
@@ -87,7 +87,7 @@ struct voice_init {
 };
 
 
-/* Device information payload structure */
+/*                                      */
 struct voice_device {
 	struct voice_header hdr;
 	uint32_t rx_device;
@@ -99,7 +99,7 @@ struct voice_device {
 	uint32_t tx_sample;
 };
 
-/*Voice command structure*/
+/*                       */
 struct voice_network {
 	struct voice_header hdr;
 	uint32_t network_info;
@@ -107,7 +107,7 @@ struct voice_network {
 
 struct device_data {
 	uint32_t dev_acdb_id;
-	uint32_t volume; /* in percentage */
+	uint32_t volume; /*               */
 	uint32_t mute;
 	uint32_t sample;
 	uint32_t enabled;

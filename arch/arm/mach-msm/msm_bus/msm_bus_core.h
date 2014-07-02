@@ -36,7 +36,7 @@
 	(((slv >= MSM_BUS_SLAVE_FIRST) && (slv <= MSM_BUS_SLAVE_LAST)) ? 1 : 0)
 
 #define INTERLEAVED_BW(fab_pdata, bw, ports) \
-	((fab_pdata->il_flag) ? msm_bus_div64((bw), (ports)) : (bw))
+	((fab_pdata->il_flag) ? msm_bus_div64((ports), (bw)) : (bw))
 #define INTERLEAVED_VAL(fab_pdata, n) \
 	((fab_pdata->il_flag) ? (n) : 1)
 
@@ -185,10 +185,10 @@ struct msm_bus_board_algorithm {
 	int (*get_iid)(int id);
 };
 
-/**
- * Used to store the list of fabrics and other info to be
- * maintained outside the fabric structure.
- * Used while calculating path, and to find fabric ptrs
+/* 
+                                                         
+                                           
+                                                       
  */
 struct msm_bus_fabnodeinfo {
 	struct list_head list;
@@ -238,4 +238,4 @@ static inline void msm_bus_dbg_commit_data(const char *fabname,
 }
 #endif
 
-#endif /*_ARCH_ARM_MACH_MSM_BUS_CORE_H*/
+#endif /*                             */

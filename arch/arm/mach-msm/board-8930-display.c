@@ -1,4 +1,4 @@
-/* Copyright (c) 2011-2013, The Linux Foundation. All rights reserved.
+/* Copyright (c) 2011-2012, The Linux Foundation. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -30,25 +30,25 @@
 
 #ifdef CONFIG_FB_MSM_TRIPLE_BUFFER
 #define MSM_FB_PRIM_BUF_SIZE \
-		(roundup((1920 * 1088 * 4), 4096) * 3) /* 4 bpp x 3 pages */
+		(roundup((1920 * 1088 * 4), 4096) * 3) /*                 */
 #else
 #define MSM_FB_PRIM_BUF_SIZE \
-		(roundup((1920 * 1088 * 4), 4096) * 2) /* 4 bpp x 2 pages */
+		(roundup((1920 * 1088 * 4), 4096) * 2) /*                 */
 #endif
-/* Note: must be multiple of 4096 */
+/*                                */
 #define MSM_FB_SIZE roundup(MSM_FB_PRIM_BUF_SIZE, 4096)
 
 #ifdef CONFIG_FB_MSM_OVERLAY0_WRITEBACK
 #define MSM_FB_OVERLAY0_WRITEBACK_SIZE roundup((1376 * 768 * 3 * 2), 4096)
 #else
 #define MSM_FB_OVERLAY0_WRITEBACK_SIZE (0)
-#endif  /* CONFIG_FB_MSM_OVERLAY0_WRITEBACK */
+#endif  /*                                  */
 
 #ifdef CONFIG_FB_MSM_OVERLAY1_WRITEBACK
 #define MSM_FB_OVERLAY1_WRITEBACK_SIZE roundup((1920 * 1088 * 3 * 2), 4096)
 #else
 #define MSM_FB_OVERLAY1_WRITEBACK_SIZE (0)
-#endif  /* CONFIG_FB_MSM_OVERLAY1_WRITEBACK */
+#endif  /*                                  */
 
 #define MDP_VSYNC_GPIO 0
 
@@ -58,7 +58,6 @@
 #define MIPI_VIDEO_CHIMEI_WXGA_PANEL_NAME	"mipi_video_chimei_wxga"
 #define MIPI_VIDEO_SIMULATOR_VGA_PANEL_NAME	"mipi_video_simulator_vga"
 #define MIPI_CMD_RENESAS_FWVGA_PANEL_NAME	"mipi_cmd_renesas_fwvga"
-#define MIPI_VIDEO_NT_HD_PANEL_NAME		"mipi_video_nt35590_720p"
 #define HDMI_PANEL_NAME	"hdmi_msm"
 #define TVOUT_PANEL_NAME	"tvout_msm"
 
@@ -70,17 +69,10 @@ static struct resource msm_fb_resources[] = {
 
 static int msm_fb_detect_panel(const char *name)
 {
-	if (machine_is_msm8930_evt()) {
-		if (!strncmp(name, MIPI_VIDEO_NT_HD_PANEL_NAME,
-			strnlen(MIPI_VIDEO_NT_HD_PANEL_NAME,
-				PANEL_NAME_MAX_LEN)))
-			return 0;
-	} else {
-		if (!strncmp(name, MIPI_CMD_NOVATEK_QHD_PANEL_NAME,
+	if (!strncmp(name, MIPI_CMD_NOVATEK_QHD_PANEL_NAME,
 			strnlen(MIPI_CMD_NOVATEK_QHD_PANEL_NAME,
 				PANEL_NAME_MAX_LEN)))
-			return 0;
-	}
+		return 0;
 
 #if !defined(CONFIG_FB_MSM_LVDS_MIPI_PANEL_DETECT) && \
 	!defined(CONFIG_FB_MSM_MIPI_PANEL_DETECT)
@@ -143,16 +135,16 @@ static void pm8917_gpio_set_backlight(int bl_level)
 }
 
 /*
- * TODO: When physical 8930/PM8038 hardware becomes
- * available, replace mipi_dsi_cdp_panel_power with
- * appropriate function.
+                                                   
+                                                   
+                        
  */
 #define DISP_RST_GPIO 58
 #define DISP_3D_2D_MODE 1
 static int mipi_dsi_cdp_panel_power(int on)
 {
 	static struct regulator *reg_l8, *reg_l23, *reg_l2;
-	/* Control backlight GPIO (24) directly when using PM8917 */
+	/*                                                        */
 	int gpio24 = PM8917_GPIO_PM_TO_SYS(24);
 	int rc;
 
@@ -203,29 +195,18 @@ static int mipi_dsi_cdp_panel_power(int on)
 			gpio_free(DISP_RST_GPIO);
 			return -ENODEV;
 		}
-		if (machine_is_msm8930_evt()) {
-			rc = gpio_direction_output(DISP_RST_GPIO, 1);
-			if (rc) {
-				pr_err("gpio_direction_output failed for %d gpio rc=%d\n",
-						DISP_RST_GPIO, rc);
-				return -ENODEV;
-			}
-		}
-
-		if (!machine_is_msm8930_evt()) {
-			rc = gpio_request(DISP_3D_2D_MODE, "disp_3d_2d");
-			if (rc) {
-				pr_err("request gpio DISP_3D_2D_MODE failed, rc=%d\n",
+		rc = gpio_request(DISP_3D_2D_MODE, "disp_3d_2d");
+		if (rc) {
+			pr_err("request gpio DISP_3D_2D_MODE failed, rc=%d\n",
 				 rc);
-				gpio_free(DISP_3D_2D_MODE);
-				return -ENODEV;
-			}
-			rc = gpio_direction_output(DISP_3D_2D_MODE, 0);
-			if (rc) {
-				pr_err("gpio_direction_output failed for %d gpio rc=%d\n",
-						DISP_3D_2D_MODE, rc);
-				return -ENODEV;
-			}
+			gpio_free(DISP_3D_2D_MODE);
+			return -ENODEV;
+		}
+		rc = gpio_direction_output(DISP_3D_2D_MODE, 0);
+		if (rc) {
+			pr_err("gpio_direction_output failed for %d gpio rc=%d\n",
+			DISP_3D_2D_MODE, rc);
+			return -ENODEV;
 		}
 		if (socinfo_get_pmic_model() == PMIC_MODEL_PM8917) {
 			rc = gpio_request(gpio24, "disp_bl");
@@ -278,8 +259,7 @@ static int mipi_dsi_cdp_panel_power(int on)
 		gpio_set_value(DISP_RST_GPIO, 0);
 		usleep(20);
 		gpio_set_value(DISP_RST_GPIO, 1);
-		if (!machine_is_msm8930_evt())
-			gpio_set_value(DISP_3D_2D_MODE, 1);
+		gpio_set_value(DISP_3D_2D_MODE, 1);
 		usleep(20);
 	} else {
 
@@ -315,8 +295,7 @@ static int mipi_dsi_cdp_panel_power(int on)
 			pr_err("set_optimum_mode l2 failed, rc=%d\n", rc);
 			return -EINVAL;
 		}
-		if (!machine_is_msm8930_evt())
-			gpio_set_value(DISP_3D_2D_MODE, 0);
+		gpio_set_value(DISP_3D_2D_MODE, 0);
 		usleep(20);
 	}
 	return 0;
@@ -347,7 +326,7 @@ static struct msm_bus_vectors mdp_init_vectors[] = {
 
 #ifdef CONFIG_FB_MSM_HDMI_AS_PRIMARY
 static struct msm_bus_vectors hdmi_as_primary_vectors[] = {
-	/* If HDMI is used as primary */
+	/*                            */
 	{
 		.src = MSM_BUS_MASTER_MDP_PORT0,
 		.dst = MSM_BUS_SLAVE_EBI_CH0,
@@ -392,7 +371,7 @@ static struct msm_bus_vectors mdp_ui_vectors[] = {
 };
 
 static struct msm_bus_vectors mdp_vga_vectors[] = {
-	/* VGA and less video */
+	/*                    */
 	{
 		.src = MSM_BUS_MASTER_MDP_PORT0,
 		.dst = MSM_BUS_SLAVE_EBI_CH0,
@@ -402,7 +381,7 @@ static struct msm_bus_vectors mdp_vga_vectors[] = {
 };
 
 static struct msm_bus_vectors mdp_720p_vectors[] = {
-	/* 720p and less video */
+	/*                     */
 	{
 		.src = MSM_BUS_MASTER_MDP_PORT0,
 		.dst = MSM_BUS_SLAVE_EBI_CH0,
@@ -412,7 +391,7 @@ static struct msm_bus_vectors mdp_720p_vectors[] = {
 };
 
 static struct msm_bus_vectors mdp_1080p_vectors[] = {
-	/* 1080p and less video */
+	/*                      */
 	{
 		.src = MSM_BUS_MASTER_MDP_PORT0,
 		.dst = MSM_BUS_SLAVE_EBI_CH0,
@@ -502,27 +481,21 @@ static struct platform_device mipi_dsi_toshiba_panel_device = {
 	}
 };
 
-static struct platform_device mipi_dsi_NT35590_panel_device = {
-	.name = "mipi_NT35590",
-	.id = 0,
-	/* todo: add any platform data */
-};
-
 #define FPGA_3D_GPIO_CONFIG_ADDR	0xB5
 
 static struct mipi_dsi_phy_ctrl dsi_novatek_cmd_mode_phy_db = {
 
-/* DSI_BIT_CLK at 500MHz, 2 lane, RGB888 */
-	{0x09, 0x08, 0x05, 0x00, 0x20},	/* regulator */
-	/* timing   */
+/*                                       */
+	{0x09, 0x08, 0x05, 0x00, 0x20},	/*           */
+	/*          */
 	{0xab, 0x8a, 0x18, 0x00, 0x92, 0x97, 0x1b, 0x8c,
 	0x0c, 0x03, 0x04, 0xa0},
-	{0x5f, 0x00, 0x00, 0x10},	/* phy ctrl */
-	{0xff, 0x00, 0x06, 0x00},	/* strength */
-	/* pll control */
+	{0x5f, 0x00, 0x00, 0x10},	/*          */
+	{0xff, 0x00, 0x06, 0x00},	/*          */
+	/*             */
 	{0x0, 0xe, 0x30, 0xda, 0x00, 0x10, 0x0f, 0x61,
 	0x40, 0x07, 0x03,
-	0x00, 0x1a, 0x00, 0x00, 0x02, 0x0e, 0x01, 0x00, 0x02},
+	0x00, 0x1a, 0x00, 0x00, 0x02, 0x00, 0x20, 0x00, 0x02},
 };
 
 static struct mipi_dsi_panel_platform_data novatek_pdata = {
@@ -585,9 +558,7 @@ static struct platform_device hdmi_msm_device = {
 	.resource = hdmi_msm_resources,
 	.dev.platform_data = &hdmi_msm_data,
 };
-#else
-static int hdmi_panel_power(int on) { return 0; }
-#endif /* CONFIG_FB_MSM_HDMI_MSM_PANEL */
+#endif /*                              */
 
 #ifdef CONFIG_FB_MSM_WRITEBACK_MSM_PANEL
 static struct platform_device wfd_panel_device = {
@@ -652,12 +623,25 @@ static struct lcdc_platform_data dtv_pdata = {
 	.bus_scale_table = &dtv_bus_scale_pdata,
 	.lcdc_power_save = hdmi_panel_power,
 };
+
+static int hdmi_panel_power(int on)
+{
+	int rc;
+
+	pr_debug("%s: HDMI Core: %s\n", __func__, (on ? "ON" : "OFF"));
+	rc = hdmi_core_power(on, 1);
+	if (rc)
+		rc = hdmi_cec_power(on);
+
+	pr_debug("%s: HDMI Core: %s Success\n", __func__, (on ? "ON" : "OFF"));
+	return rc;
+}
 #endif
 
 #ifdef CONFIG_FB_MSM_HDMI_MSM_PANEL
 static int hdmi_enable_5v(int on)
 {
-	static struct regulator *reg_ext_5v;	/* HDMI_5V */
+	static struct regulator *reg_ext_5v;	/*         */
 	static int prev_on;
 	int rc;
 
@@ -697,7 +681,7 @@ static int hdmi_enable_5v(int on)
 
 static int hdmi_core_power(int on, int show)
 {
-	/* Both HDMI "avdd" and "vcc" are powered by 8038_l23 regulator */
+	/*                                                              */
 	static struct regulator *reg_8038_l23;
 	static int prev_on;
 	int rc;
@@ -823,26 +807,12 @@ static int hdmi_cec_power(int on)
 error:
 	return rc;
 }
-
-static int hdmi_panel_power(int on)
-{
-	int rc;
-
-	pr_debug("%s: HDMI Core: %s\n", __func__, (on ? "ON" : "OFF"));
-	rc = hdmi_core_power(on, 1);
-	if (rc)
-		rc = hdmi_cec_power(on);
-
-	pr_debug("%s: HDMI Core: %s Success\n", __func__, (on ? "ON" : "OFF"));
-	return rc;
-}
-#endif /* CONFIG_FB_MSM_HDMI_MSM_PANEL */
+#endif /*                              */
 
 void __init msm8930_init_fb(void)
 {
 	platform_device_register(&msm_fb_device);
 
-	platform_device_register(&mipi_dsi_NT35590_panel_device);
 #ifdef CONFIG_FB_MSM_WRITEBACK_MSM_PANEL
 	platform_device_register(&wfd_panel_device);
 	platform_device_register(&wfd_device);

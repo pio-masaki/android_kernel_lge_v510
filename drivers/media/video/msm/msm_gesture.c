@@ -109,7 +109,7 @@ static int msm_gesture_proc_ctrl_cmd(struct msm_gesture_ctrl *p_gesture_ctrl,
 	} else
 		tmp_cmd->value = NULL;
 
-	/* send command to config thread in usersspace, and get return value */
+	/*                                                                   */
 	rc = msm_server_send_ctrl((struct msm_ctrl_cmd *)ctrl_data,
 			MSM_GES_RESP_V4L2);
 	D("%s: msm_server_control rc=%d\n", __func__, rc);
@@ -353,7 +353,7 @@ static int msm_gesture_init_ctrl(struct v4l2_subdev *sd,
 	v4l2_ctrl_new_custom(&p_gesture_ctrl->ctrl_handler,
 		&msm_gesture_ctrl_filter, p_gesture_ctrl);
 	if (p_gesture_ctrl->ctrl_handler.error) {
-		int err = p_gesture_ctrl->ctrl_handler.error;
+		//                                             
 		D("%s: error adding control %d", __func__, err);
 		p_gesture_ctrl->ctrl_handler.error = 0;
 	}
@@ -474,7 +474,7 @@ static int msm_gesture_node_register(void)
 	gesture_subdev->entity.group_id = GESTURE_DEV;
 	gesture_subdev->entity.name = gesture_subdev->name;
 
-	/* events */
+	/*        */
 	gesture_subdev->flags |= V4L2_SUBDEV_FL_HAS_EVENTS;
 
 	sd_info.sdev_type = GESTURE_DEV;

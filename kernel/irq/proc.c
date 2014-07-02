@@ -99,13 +99,13 @@ static ssize_t write_irq_affinity(int type, struct file *file,
 	}
 
 	/*
-	 * Do not allow disabling IRQs completely - it's a too easy
-	 * way to make the system unusable accidentally :-) At least
-	 * one online CPU still has to be targeted.
-	 */
+                                                            
+                                                             
+                                            
+  */
 	if (!cpumask_intersects(new_value, cpu_online_mask)) {
-		/* Special case for empty set - allow the architecture
-		   code to set default SMP affinity. */
+		/*                                                    
+                                       */
 		err = irq_select_affinity_usr(irq, new_value) ? -EINVAL : count;
 	} else {
 		irq_set_affinity(irq, new_value);
@@ -193,10 +193,10 @@ static ssize_t default_affinity_write(struct file *file,
 	}
 
 	/*
-	 * Do not allow disabling IRQs completely - it's a too easy
-	 * way to make the system unusable accidentally :-) At least
-	 * one online CPU still has to be targeted.
-	 */
+                                                            
+                                                             
+                                            
+  */
 	if (!cpumask_intersects(new_value, cpu_online_mask)) {
 		err = -EINVAL;
 		goto out;
@@ -266,45 +266,6 @@ static const struct file_operations irq_spurious_proc_fops = {
 	.release	= single_release,
 };
 
-static int irq_wake_depth_proc_show(struct seq_file *m, void *v)
-{
-	struct irq_desc *desc = irq_to_desc((long) m->private);
-
-	seq_printf(m, "wake_depth %u\n", desc->wake_depth);
-	return 0;
-}
-
-static int irq_wake_depth_proc_open(struct inode *inode, struct file *file)
-{
-	return single_open(file, irq_wake_depth_proc_show, PDE(inode)->data);
-}
-
-static const struct file_operations irq_wake_depth_proc_fops = {
-	.open		= irq_wake_depth_proc_open,
-	.read		= seq_read,
-	.llseek		= seq_lseek,
-	.release	= single_release,
-};
-
-static int irq_disable_depth_proc_show(struct seq_file *m, void *v)
-{
-	struct irq_desc *desc = irq_to_desc((long) m->private);
-
-	seq_printf(m, "disable_depth %u\n", desc->depth);
-	return 0;
-}
-
-static int irq_disable_depth_proc_open(struct inode *inode, struct file *file)
-{
-	return single_open(file, irq_disable_depth_proc_show, PDE(inode)->data);
-}
-
-static const struct file_operations irq_disable_depth_proc_fops = {
-	.open		= irq_disable_depth_proc_open,
-	.read		= seq_read,
-	.llseek		= seq_lseek,
-	.release	= single_release,
-};
 #define MAX_NAMELEN 128
 
 static int name_unique(unsigned int irq, struct irqaction *new_action)
@@ -338,7 +299,7 @@ void register_handler_proc(unsigned int irq, struct irqaction *action)
 	memset(name, 0, MAX_NAMELEN);
 	snprintf(name, MAX_NAMELEN, "%s", action->name);
 
-	/* create /proc/irq/1234/handler/ */
+	/*                                */
 	action->dir = proc_mkdir(name, desc->dir);
 }
 
@@ -356,21 +317,21 @@ void register_irq_proc(unsigned int irq, struct irq_desc *desc)
 	memset(name, 0, MAX_NAMELEN);
 	sprintf(name, "%d", irq);
 
-	/* create /proc/irq/1234 */
+	/*                       */
 	desc->dir = proc_mkdir(name, root_irq_dir);
 	if (!desc->dir)
 		return;
 
 #ifdef CONFIG_SMP
-	/* create /proc/irq/<irq>/smp_affinity */
+	/*                                     */
 	proc_create_data("smp_affinity", 0600, desc->dir,
 			 &irq_affinity_proc_fops, (void *)(long)irq);
 
-	/* create /proc/irq/<irq>/affinity_hint */
+	/*                                      */
 	proc_create_data("affinity_hint", 0400, desc->dir,
 			 &irq_affinity_hint_proc_fops, (void *)(long)irq);
 
-	/* create /proc/irq/<irq>/smp_affinity_list */
+	/*                                          */
 	proc_create_data("smp_affinity_list", 0600, desc->dir,
 			 &irq_affinity_list_proc_fops, (void *)(long)irq);
 
@@ -380,10 +341,6 @@ void register_irq_proc(unsigned int irq, struct irq_desc *desc)
 
 	proc_create_data("spurious", 0444, desc->dir,
 			 &irq_spurious_proc_fops, (void *)(long)irq);
-	proc_create_data("disable_depth", 0444, desc->dir,
-			 &irq_disable_depth_proc_fops, (void *)(long)irq);
-	proc_create_data("wake_depth", 0444, desc->dir,
-			 &irq_wake_depth_proc_fops, (void *)(long)irq);
 }
 
 void unregister_irq_proc(unsigned int irq, struct irq_desc *desc)
@@ -429,7 +386,7 @@ void init_irq_proc(void)
 	unsigned int irq;
 	struct irq_desc *desc;
 
-	/* create /proc/irq */
+	/*                  */
 	root_irq_dir = proc_mkdir("irq", NULL);
 	if (!root_irq_dir)
 		return;
@@ -437,8 +394,8 @@ void init_irq_proc(void)
 	register_default_affinity_proc();
 
 	/*
-	 * Create entries for all existing IRQs.
-	 */
+                                         
+  */
 	for_each_irq_desc(irq, desc) {
 		if (!desc)
 			continue;
@@ -473,7 +430,7 @@ int show_interrupts(struct seq_file *p, void *v)
 	if (i == ACTUAL_NR_IRQS)
 		return arch_show_interrupts(p, prec);
 
-	/* print header and calculate the width of the first column */
+	/*                                                          */
 	if (i == 0) {
 		for (prec = 3, j = 1000; prec < 10 && j <= nr_irqs; ++prec)
 			j *= 10;

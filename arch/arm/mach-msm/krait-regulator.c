@@ -31,28 +31,28 @@
 #include "spm.h"
 
 /*
- *                   supply
- *                   from
- *                   pmic
- *                   gang
- *                    |        LDO BYP [6]
- *                    |         /
- *                    |        /
- *                    |_______/   _____
- *                    |                |
- *                 ___|___             |
- *		  |       |            |
- *		  |       |               /
- *		  |  LDO  |              /
- *		  |       |             /    BHS[6]
- *                |_______|            |
- *                    |                |
- *                    |________________|
- *                    |
- *            ________|________
- *           |                 |
- *           |      KRAIT      |
- *           |_________________|
+                           
+                         
+                         
+                         
+                                          
+                                 
+                                
+                                       
+                                        
+                                        
+                            
+                               
+                              
+                                       
+                                        
+                                        
+                                        
+                       
+                               
+                                
+                                
+                                
  */
 
 #define V_RETENTION			600000
@@ -62,7 +62,7 @@
 #define PMIC_VOLTAGE_MAX		1355000
 #define LV_RANGE_STEP			5000
 
-/* use LDO for core voltage below LDO_THRESH */
+/*                                           */
 #define CORE_VOLTAGE_LDO_THRESH		750000
 
 #define LOAD_PER_PHASE			3200000
@@ -88,7 +88,7 @@
 #define APC_PWR_GATE_CTL	0x00000014
 #define APC_LDO_VREF_SET	0x00000018
 
-/* bit definitions for APC_PWR_GATE_CTL */
+/*                                      */
 #define BHS_CNT_BIT_POS		24
 #define BHS_CNT_MASK		KRAIT_MASK(31, 24)
 #define BHS_CNT_DEFAULT		64
@@ -110,24 +110,24 @@
 #define BHS_EN_BIT_POS		0
 #define BHS_EN_MASK		KRAIT_MASK(0, 0)
 
-/* bit definitions for APC_LDO_VREF_SET register */
+/*                                               */
 #define VREF_RET_POS		8
 #define VREF_RET_MASK		KRAIT_MASK(14, 8)
 
 #define VREF_LDO_BIT_POS	0
 #define VREF_LDO_MASK		KRAIT_MASK(6, 0)
 
-/**
- * struct pmic_gang_vreg -
- * @name:			the string used to represent the gang
- * @pmic_vmax_uV:		the current pmic gang voltage
- * @pmic_phase_count:		the number of phases turned on in the gang
- * @krait_power_vregs:		a list of krait consumers this gang supplies to
- * @krait_power_vregs_lock:	lock to prevent simultaneous access to the list
- *				and its nodes. This needs to be taken by each
- *				regulator's callback functions to prevent
- *				simultaneous updates to the pmic's phase
- *				voltage.
+/* 
+                          
+                                                 
+                                                
+                                                                 
+                                                                       
+                                                                           
+                                                   
+                                               
+                                              
+              
  */
 struct pmic_gang_vreg {
 	const char		*name;
@@ -167,10 +167,10 @@ static void krait_masked_write(struct krait_power_vreg *kvreg,
 	writel_relaxed(reg_val, kvreg->reg_base + reg);
 
 	/*
-	 * Barrier to ensure that the reads and writes from
-	 * other regulator regions (they are 1k apart) execute in
-	 * order to the above write.
-	 */
+                                                    
+                                                          
+                             
+  */
 	mb();
 }
 
@@ -208,22 +208,22 @@ static int switch_to_using_hs(struct krait_power_vreg *kvreg)
 		return 0;
 
 	/*
-	 * enable ldo bypass - the krait is powered still by LDO since
-	 * LDO is enabled and BHS is disabled
-	 */
+                                                               
+                                      
+  */
 	krait_masked_write(kvreg, APC_PWR_GATE_CTL, LDO_BYP_MASK, LDO_BYP_MASK);
 
-	/* enable bhs */
+	/*            */
 	krait_masked_write(kvreg, APC_PWR_GATE_CTL, BHS_EN_MASK, BHS_EN_MASK);
 
 	/*
-	 * wait for the bhs to settle - note that
-	 * after the voltage has settled both BHS and LDO are supplying power
-	 * to the krait. This avoids glitches during switching
-	 */
+                                          
+                                                                      
+                                                       
+  */
 	udelay(BHS_SETTLING_DELAY_US);
 
-	/* disable ldo - only the BHS provides voltage to the cpu after this */
+	/*                                                                   */
 	krait_masked_write(kvreg, APC_PWR_GATE_CTL,
 				LDO_PWR_DWN_MASK, LDO_PWR_DWN_MASK);
 
@@ -237,28 +237,28 @@ static int switch_to_using_ldo(struct krait_power_vreg *kvreg)
 		return 0;
 
 	/*
-	 * if the krait is in ldo mode and a voltage change is requested on the
-	 * ldo switch to using hs before changing ldo voltage
-	 */
+                                                                        
+                                                      
+  */
 	if (kvreg->mode == LDO_MODE)
 		switch_to_using_hs(kvreg);
 
 	set_krait_ldo_uv(kvreg);
 
 	/*
-	 * enable ldo - note that both LDO and BHS are are supplying voltage to
-	 * the cpu after this. This avoids glitches during switching from BHS
-	 * to LDO.
-	 */
+                                                                        
+                                                                      
+           
+  */
 	krait_masked_write(kvreg, APC_PWR_GATE_CTL, LDO_PWR_DWN_MASK, 0);
 
-	/* wait for the ldo to settle */
+	/*                            */
 	udelay(LDO_SETTLING_DELAY_US);
 
 	/*
-	 * disable BHS and disable LDO bypass seperate from enabling
-	 * the LDO above.
-	 */
+                                                             
+                  
+  */
 	krait_masked_write(kvreg, APC_PWR_GATE_CTL,
 		BHS_EN_MASK | LDO_BYP_MASK, 0);
 
@@ -269,9 +269,9 @@ static int switch_to_using_ldo(struct krait_power_vreg *kvreg)
 static int set_pmic_gang_phases(int phase_count)
 {
 	/*
-	 * TODO : spm writes for phase control,
-	 * pmic phase control is not working yet
-	 */
+                                        
+                                         
+  */
 	return 0;
 }
 
@@ -331,16 +331,16 @@ static int pmic_gang_set_voltage_increase(struct krait_power_vreg *from,
 	int settling_us;
 
 	/*
-	 * since pmic gang voltage is increasing set the gang voltage
-	 * prior to changing ldo/hs states of the requesting krait
-	 */
+                                                              
+                                                           
+  */
 	rc = set_pmic_gang_voltage(vmax);
 	if (rc < 0) {
 		dev_err(&from->rdev->dev, "%s failed set voltage %d rc = %d\n",
 				pvreg->name, vmax, rc);
 	}
 
-	/* delay until the voltage is settled when it is raised */
+	/*                                                      */
 	settling_us = DIV_ROUND_UP(vmax - pvreg->pmic_vmax_uV, SLEW_RATE);
 	udelay(settling_us);
 
@@ -360,10 +360,10 @@ static int pmic_gang_set_voltage_decrease(struct krait_power_vreg *from,
 	int rc = 0;
 
 	/*
-	 * since pmic gang voltage is decreasing ldos might get out of their
-	 * operating range. Hence configure such kraits to be in hs mode prior
-	 * to setting the pmic gang voltage
-	 */
+                                                                     
+                                                                       
+                                    
+  */
 	rc = configure_ldo_or_hs(from, vmax);
 	if (rc < 0) {
 		dev_err(&from->rdev->dev, "%s failed ldo/hs conf %d rc = %d\n",
@@ -414,9 +414,9 @@ static unsigned int pmic_gang_set_phases(struct krait_power_vreg *from,
 		}
 
 		/*
-		 * delay until the phases are settled when
-		 * the count is raised
-		 */
+                                            
+                        
+   */
 		if (phase_count > pvreg->pmic_phase_count)
 			udelay(PHASE_SETTLING_TIME_US);
 
@@ -497,10 +497,10 @@ static int krait_power_set_voltage(struct regulator_dev *rdev,
 	int vmax;
 
 	/*
-	 * if the voltage requested is below LDO_THRESHOLD this cpu could
-	 * switch to LDO mode. Hence round the voltage as per the LDO
-	 * resolution
-	 */
+                                                                  
+                                                              
+              
+  */
 	if (min_uV < CORE_VOLTAGE_LDO_THRESH) {
 		if (min_uV < KRAIT_LDO_VOLTAGE_MIN)
 			min_uV = KRAIT_LDO_VOLTAGE_MIN;
@@ -511,13 +511,13 @@ static int krait_power_set_voltage(struct regulator_dev *rdev,
 
 	vmax = get_vmax(kvreg, min_uV);
 
-	/* round up the pmic voltage as per its resolution */
+	/*                                                 */
 	vmax = ROUND_UP_VOLTAGE(vmax, LV_RANGE_STEP);
 
 	/*
-	 * Assign the voltage before updating the gang voltage as we iterate
-	 * over all the core voltages and choose HS or LDO for each of them
-	 */
+                                                                     
+                                                                    
+  */
 	kvreg->uV = min_uV;
 
 	rc = pmic_gang_set_voltage(kvreg, vmax);
@@ -585,16 +585,16 @@ static struct regulator_ops krait_power_ops = {
 static void kvreg_hw_init(struct krait_power_vreg *kvreg)
 {
 	/*
-	 * bhs_cnt value sets the ramp-up time from power collapse,
-	 * initialize the ramp up time
-	 */
+                                                            
+                               
+  */
 	krait_masked_write(kvreg, APC_PWR_GATE_CTL,
 		BHS_CNT_MASK, BHS_CNT_DEFAULT << BHS_CNT_BIT_POS);
 
 	krait_masked_write(kvreg, APC_PWR_GATE_CTL,
 		CLK_SRC_SEL_MASK, CLK_SRC_DEFAULT << CLK_SRC_SEL_BIT_POS);
 
-	/* BHS has six different segments, turn them all on */
+	/*                                                  */
 	krait_masked_write(kvreg, APC_PWR_GATE_CTL,
 		BHS_SEG_EN_MASK, BHS_SEG_EN_DEFAULT << BHS_SEG_EN_BIT_POS);
 }
@@ -606,7 +606,7 @@ static int __devinit krait_power_probe(struct platform_device *pdev)
 	struct regulator_init_data *init_data = pdev->dev.platform_data;
 	int rc = 0;
 
-	/* Initialize the pmic gang if it hasn't been initialized already */
+	/*                                                                */
 	if (the_gang == NULL) {
 		rc = pvreg_init(pdev);
 		if (rc < 0) {
@@ -617,7 +617,7 @@ static int __devinit krait_power_probe(struct platform_device *pdev)
 	}
 
 	if (pdev->dev.of_node) {
-		/* Get init_data from device tree. */
+		/*                                 */
 		init_data = of_get_regulator_init_data(&pdev->dev,
 							pdev->dev.of_node);
 		init_data->constraints.valid_ops_mask
@@ -736,17 +736,17 @@ module_exit(krait_power_exit);
 
 void secondary_cpu_hs_init(void *base_ptr)
 {
-	/* 605mV retention and 705mV operational voltage */
+	/*                                               */
 	writel_relaxed(0x1C30, base_ptr + APC_LDO_VREF_SET);
 	writel_relaxed(0x430000, base_ptr + 0x20);
 	writel_relaxed(0x21, base_ptr + 0x1C);
 
-	/* Turn on the BHS, turn off LDO Bypass and power down LDO */
+	/*                                                         */
 	writel_relaxed(0x403F007F, base_ptr + APC_PWR_GATE_CTL);
 	mb();
 	udelay(1);
 
-	/* Finally turn on the bypass so that BHS supplies power */
+	/*                                                       */
 	writel_relaxed(0x403F3F7F, base_ptr + APC_PWR_GATE_CTL);
 }
 

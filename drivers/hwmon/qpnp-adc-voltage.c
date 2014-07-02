@@ -31,7 +31,7 @@
 #include <linux/qpnp/qpnp-adc.h>
 #include <linux/platform_device.h>
 
-/* QPNP VADC register definition */
+/*                               */
 #define QPNP_VADC_REVISION1				0x0
 #define QPNP_VADC_REVISION2				0x1
 #define QPNP_VADC_REVISION3				0x2
@@ -159,7 +159,7 @@ static int32_t qpnp_vadc_configure_interrupt(void)
 	int rc = 0;
 	u8 data = 0;
 
-	/* Configure interrupt as an Edge trigger */
+	/*                                        */
 	rc = qpnp_vadc_write_reg(QPNP_VADC_INT_SET_TYPE,
 					QPNP_VADC_INT_CLR_MASK);
 	if (rc < 0) {
@@ -167,7 +167,7 @@ static int32_t qpnp_vadc_configure_interrupt(void)
 		return rc;
 	}
 
-	/* Configure interrupt for rising edge trigger */
+	/*                                             */
 	rc = qpnp_vadc_write_reg(QPNP_VADC_INT_POLARITY_HIGH,
 					QPNP_VADC_INT_CLR_MASK);
 	if (rc < 0) {
@@ -175,7 +175,7 @@ static int32_t qpnp_vadc_configure_interrupt(void)
 		return rc;
 	}
 
-	/* Disable low level interrupt triggering */
+	/*                                        */
 	data = QPNP_VADC_INT_CLR_MASK;
 	rc = qpnp_vadc_write_reg(QPNP_VADC_INT_POLARITY_LOW,
 					(~data & QPNP_VADC_INT_CLR_MASK));
@@ -227,7 +227,7 @@ int32_t qpnp_vadc_configure(
 		return rc;
 	}
 
-	/* Mode selection */
+	/*                */
 	mode_ctrl = chan_prop->mode_sel << QPNP_VADC_OP_MODE_SHIFT;
 	rc = qpnp_vadc_write_reg(QPNP_VADC_MODE_CTL, mode_ctrl);
 	if (rc < 0) {
@@ -236,7 +236,7 @@ int32_t qpnp_vadc_configure(
 	}
 
 
-	/* Channel selection */
+	/*                   */
 	rc = qpnp_vadc_write_reg(QPNP_VADC_ADC_CH_SEL_CTL,
 						chan_prop->amux_channel);
 	if (rc < 0) {
@@ -244,7 +244,7 @@ int32_t qpnp_vadc_configure(
 		return rc;
 	}
 
-	/* Digital parameter setup */
+	/*                         */
 	decimation = chan_prop->decimation <<
 				QPNP_VADC_ADC_DIG_DEC_RATIO_SEL_SHIFT;
 	rc = qpnp_vadc_write_reg(QPNP_VADC_ADC_DIG_PARAM, decimation);
@@ -253,7 +253,7 @@ int32_t qpnp_vadc_configure(
 		return rc;
 	}
 
-	/* HW settling time delay */
+	/*                        */
 	rc = qpnp_vadc_write_reg(QPNP_VADC_HW_SETTLE_DELAY,
 						chan_prop->hw_settle_time);
 	if (rc < 0) {
@@ -263,7 +263,7 @@ int32_t qpnp_vadc_configure(
 
 	if (chan_prop->mode_sel == (ADC_OP_NORMAL_MODE <<
 					QPNP_VADC_OP_MODE_SHIFT)) {
-		/* Normal measurement mode */
+		/*                         */
 		rc = qpnp_vadc_write_reg(QPNP_VADC_FAST_AVG_CTL,
 						chan_prop->fast_avg_setup);
 		if (rc < 0) {
@@ -272,7 +272,7 @@ int32_t qpnp_vadc_configure(
 		}
 	} else if (chan_prop->mode_sel == (ADC_OP_CONVERSION_SEQUENCER <<
 					QPNP_VADC_OP_MODE_SHIFT)) {
-		/* Conversion sequence mode */
+		/*                          */
 		conv_sequence = ((ADC_SEQ_HOLD_100US <<
 				QPNP_VADC_CONV_SEQ_HOLDOFF_SHIFT) |
 				ADC_CONV_SEQ_TIMEOUT_5MS);
@@ -300,7 +300,7 @@ int32_t qpnp_vadc_configure(
 	if (rc)
 		return rc;
 
-	/* Request conversion */
+	/*                    */
 	rc = qpnp_vadc_write_reg(QPNP_VADC_CONV_REQ, QPNP_VADC_CONV_REQ_SET);
 	if (rc < 0) {
 		pr_err("Request conversion failed\n");
@@ -495,7 +495,7 @@ static uint32_t qpnp_vadc_calib_device(void)
 					calib_read_1;
 	vadc->adc->amux_prop->chan_prop->adc_graph[CALIB_ABSOLUTE].adc_gnd =
 					calib_read_2;
-	/* Ratiometric Calibration */
+	/*                         */
 	conv.amux_channel = VDD_VADC;
 	conv.decimation = DECIMATION_TYPE2;
 	conv.mode_sel = ADC_OP_NORMAL_MODE << QPNP_VADC_OP_MODE_SHIFT;

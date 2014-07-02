@@ -1,5 +1,5 @@
 /* Copyright (c) 2011-2012, The Linux Foundation. All rights reserved.
- * Copyright (c) 2012, LGE Inc.
+ * Copyright (c) 2012,2013 LGE Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -28,7 +28,7 @@
 #include <linux/spi/spi.h>
 #include <linux/dma-mapping.h>
 #include <linux/platform_data/qcom_crypto_device.h>
-#include <linux/ion.h>
+#include <linux/msm_ion.h>
 #include <linux/memory.h>
 #include <linux/memblock.h>
 #include <linux/msm_thermal.h>
@@ -67,9 +67,6 @@
 #ifdef CONFIG_MSM_RTB
 #include <mach/msm_rtb.h>
 #endif
-#ifdef CONFIG_SND_SOC_CS8427
-#include <sound/cs8427.h>
-#endif
 #ifdef CONFIG_IR_GPIO_CIR
 #include <media/gpio-ir-recv.h>
 #endif
@@ -95,24 +92,24 @@
 
 #define MSM_PMEM_ADSP_SIZE         0x7800000
 #define MSM_PMEM_AUDIO_SIZE        0x4CF000
-#define MSM_PMEM_SIZE              0x4000000 /* 64 Mbytes */
+#define MSM_PMEM_SIZE              0x4000000 /*           */
 
 #ifdef CONFIG_MSM_MULTIMEDIA_USE_ION
 #define HOLE_SIZE		0x20000
 #define MSM_CONTIG_MEM_SIZE  0x65000
 #ifdef CONFIG_MSM_IOMMU
 
-#define MSM_ION_MM_SIZE		0x3800000
+#define MSM_ION_MM_SIZE		0x5C00000
 #define MSM_ION_SF_SIZE		0
-#define MSM_ION_QSECOM_SIZE	0x780000 /* (7.5MB) */
+#define MSM_ION_QSECOM_SIZE	0x780000 /*         */
 #define MSM_ION_HEAP_NUM	7
 #else
 #define MSM_ION_MM_SIZE		MSM_PMEM_ADSP_SIZE
 #define MSM_ION_SF_SIZE		MSM_PMEM_SIZE
-#define MSM_ION_QSECOM_SIZE	0x600000 /* (6MB) */
+#define MSM_ION_QSECOM_SIZE	0x600000 /*       */
 #define MSM_ION_HEAP_NUM	8
 #endif
-#define MSM_ION_MM_FW_SIZE	(0x200000 - HOLE_SIZE) /* (2MB - 128KB) */
+#define MSM_ION_MM_FW_SIZE	(0x200000 - HOLE_SIZE) /*               */
 #define MSM_ION_MFC_SIZE	SZ_8K
 #define MSM_ION_AUDIO_SIZE	MSM_PMEM_AUDIO_SIZE
 #else
@@ -126,7 +123,7 @@
 #define MSM_MM_FW_SIZE		(0x200000 - HOLE_SIZE)
 #define APQ8064_FW_START	APQ8064_FIXED_AREA_START
 
-/* PCIe power enable pmic gpio */
+/*                             */
 #define PCIE_PWR_EN_PMIC_GPIO 13
 #define PCIE_RST_N_PMIC_MPP 1
 
@@ -239,7 +236,7 @@ static struct platform_device apq8064_android_pmem_audio_device = {
 	.id = 4,
 	.dev = { .platform_data = &android_pmem_audio_pdata },
 };
-#endif /* CONFIG_MSM_MULTIMEDIA_USE_ION */
+#endif /*                               */
 #endif
 
 struct fmem_platform_data apq8064_fmem_pdata = {
@@ -272,7 +269,7 @@ static void __init size_pmem_devices(void)
 	android_pmem_pdata.size = pmem_size;
 	android_pmem_audio_pdata.size = MSM_PMEM_AUDIO_SIZE;
 #endif
-#endif /*CONFIG_ANDROID_PMEM*/
+#endif /*                   */
 }
 
 #ifdef CONFIG_ANDROID_PMEM
@@ -281,8 +278,8 @@ static void __init reserve_memory_for(struct android_pmem_platform_data *p)
 {
 	apq8064_reserve_table[p->memory_type].size += p->size;
 }
-#endif /*CONFIG_MSM_MULTIMEDIA_USE_ION*/
-#endif /*CONFIG_ANDROID_PMEM*/
+#endif /*                             */
+#endif /*                   */
 
 static void __init reserve_pmem_memory(void)
 {
@@ -291,7 +288,7 @@ static void __init reserve_pmem_memory(void)
 	reserve_memory_for(&android_pmem_adsp_pdata);
 	reserve_memory_for(&android_pmem_pdata);
 	reserve_memory_for(&android_pmem_audio_pdata);
-#endif /*CONFIG_MSM_MULTIMEDIA_USE_ION*/
+#endif /*                             */
 	apq8064_reserve_table[MEMTYPE_EBI1].size += msm_contig_mem_size;
 #endif
 }
@@ -301,7 +298,7 @@ static int apq8064_paddr_to_memtype(unsigned int paddr)
 	return MEMTYPE_EBI1;
 }
 
-#define FMEM_ENABLED 1
+#define FMEM_ENABLED 0
 
 #ifdef CONFIG_ION_MSM
 #ifdef CONFIG_MSM_MULTIMEDIA_USE_ION
@@ -335,20 +332,19 @@ static struct ion_co_heap_pdata fw_co_apq8064_ion_pdata = {
 };
 #endif
 
-/**
- * These heaps are listed in the order they will be allocated. Due to
- * video hardware restrictions and content protection the FW heap has to
- * be allocated adjacent (below) the MM heap and the MFC heap has to be
- * allocated after the MM heap to ensure MFC heap is not more than 256MB
- * away from the base address of the FW heap.
- * However, the order of FW heap and MM heap doesn't matter since these
- * two heaps are taken care of by separate code to ensure they are adjacent
- * to each other.
- * Don't swap the order unless you know what you are doing!
+/* 
+                                                                     
+                                                                        
+                                                                       
+                                                                        
+                                             
+                                                                       
+                                                                           
+                 
+                                                           
  */
-static struct ion_platform_data apq8064_ion_pdata = {
-	.nr = MSM_ION_HEAP_NUM,
-	.heaps = {
+
+static struct ion_platform_heap ion_heaps[] = {
 		{
 			.id	= ION_SYSTEM_HEAP_ID,
 			.type	= ION_HEAP_TYPE_SYSTEM,
@@ -411,7 +407,11 @@ static struct ion_platform_data apq8064_ion_pdata = {
 			.extra_data = (void *) &co_apq8064_ion_pdata,
 		},
 #endif
-	}
+};
+
+static struct ion_platform_data apq8064_ion_pdata = {
+	.nr = MSM_ION_HEAP_NUM,
+	.heaps = ion_heaps,
 };
 
 static struct platform_device apq8064_ion_dev = {
@@ -451,17 +451,17 @@ static void __init apq8064_reserve_fixed_area(unsigned long fixed_area_size)
 #endif
 }
 
-/**
- * Reserve memory for ION and calculate amount of reusable memory for fmem.
- * We only reserve memory for heaps that are not reusable. However, we only
- * support one reusable heap at the moment so we ignore the reusable flag for
- * other than the first heap with reusable flag set. Also handle special case
- * for video heaps (MM,FW, and MFC). Video requires heaps MM and MFC to be
- * at a higher address than FW in addition to not more than 256MB away from the
- * base address of the firmware. This means that if MM is reusable the other
- * two heaps must be allocated in the same region as FW. This is handled by the
- * mem_is_fmem flag in the platform data. In addition the MM heap must be
- * adjacent to the FW heap for content protection purposes.
+/* 
+                                                                           
+                                                                           
+                                                                             
+                                                                             
+                                                                          
+                                                                               
+                                                                            
+                                                                               
+                                                                         
+                                                           
  */
 static void __init reserve_ion_memory(void)
 {
@@ -480,14 +480,14 @@ static void __init reserve_ion_memory(void)
 	fixed_middle_size = 0;
 	fixed_high_size = 0;
 
-	/* We only support 1 reusable heap. Check if more than one heap
-	 * is specified as reusable and set as non-reusable if found.
-	 */
+	/*                                                             
+                                                              
+  */
 	for (i = 0; i < apq8064_ion_pdata.nr; ++i) {
 		const struct ion_platform_heap *heap =
 			&(apq8064_ion_pdata.heaps[i]);
 
-		if (heap->type == ION_HEAP_TYPE_CP && heap->extra_data) {
+		if ((int)heap->type == (int)ION_HEAP_TYPE_CP && heap->extra_data) {
 			struct ion_cp_heap_pdata *data = heap->extra_data;
 
 			reusable_count += (data->reusable) ? 1 : 0;
@@ -509,21 +509,17 @@ static void __init reserve_ion_memory(void)
 			int fixed_position = NOT_FIXED;
 			int mem_is_fmem = 0;
 
-			switch (heap->type) {
-			case ION_HEAP_TYPE_CP:
+			if ((int)heap->type == ION_HEAP_TYPE_CP) {
 				mem_is_fmem = ((struct ion_cp_heap_pdata *)
 					heap->extra_data)->mem_is_fmem;
 				fixed_position = ((struct ion_cp_heap_pdata *)
 					heap->extra_data)->fixed_position;
-				break;
-			case ION_HEAP_TYPE_CARVEOUT:
+			}
+			else if (heap->type == ION_HEAP_TYPE_CARVEOUT) {
 				mem_is_fmem = ((struct ion_co_heap_pdata *)
 					heap->extra_data)->mem_is_fmem;
 				fixed_position = ((struct ion_co_heap_pdata *)
 					heap->extra_data)->fixed_position;
-				break;
-			default:
-				break;
 			}
 
 			if (fixed_position != NOT_FIXED)
@@ -552,9 +548,9 @@ static void __init reserve_ion_memory(void)
 		apq8064_fmem_pdata.reserved_size_high = fixed_high_size;
 	}
 
-	/* Since the fixed area may be carved out of lowmem,
-	 * make sure the length is a multiple of 1M.
-	 */
+	/*                                                  
+                                             
+  */
 	fixed_size = (fixed_size + HOLE_SIZE + SECTION_SIZE - 1)
 		& SECTION_MASK;
 	apq8064_reserve_fixed_area(fixed_size);
@@ -570,18 +566,14 @@ static void __init reserve_ion_memory(void)
 			int fixed_position = NOT_FIXED;
 			struct ion_cp_heap_pdata *pdata = NULL;
 
-			switch (heap->type) {
-			case ION_HEAP_TYPE_CP:
-				pdata =
-				(struct ion_cp_heap_pdata *)heap->extra_data;
+			if ((int)heap->type == ION_HEAP_TYPE_CP) {
+				pdata = (struct ion_cp_heap_pdata *)
+					heap->extra_data;
 				fixed_position = pdata->fixed_position;
-				break;
-			case ION_HEAP_TYPE_CARVEOUT:
+			}
+			else if (heap->type == ION_HEAP_TYPE_CARVEOUT) {
 				fixed_position = ((struct ion_co_heap_pdata *)
 					heap->extra_data)->fixed_position;
-				break;
-			default:
-				break;
 			}
 
 			switch (fixed_position) {
@@ -653,7 +645,7 @@ static void __init locate_unstable_memory(void)
 	low = meminfo.bank[0].start;
 	high = mb->start + mb->size;
 
-	/* Check if 32 bit overflow occured */
+	/*                                  */
 	if (high < mb->start)
 		high = -PAGE_SIZE;
 
@@ -703,6 +695,52 @@ static int __init ext_display_setup(char *param)
 }
 early_param("ext_display", ext_display_setup);
 
+static unsigned long limit_mem;
+
+static int __init limit_mem_setup(char *param)
+{
+	limit_mem = memparse(param, NULL);
+	return 0;
+}
+early_param("limit_mem", limit_mem_setup);
+
+static void __init limit_mem_reserve(void)
+{
+	unsigned long to_remove;
+	unsigned long reserved_mem;
+	unsigned long i;
+	phys_addr_t base;
+
+	if (!limit_mem)
+		return;
+
+	reserved_mem = ALIGN(memblock.reserved.total_size, PAGE_SIZE);
+
+	to_remove = memblock.memory.total_size - reserved_mem - limit_mem;
+
+	pr_info("Limiting memory from %lu KB to to %lu kB by removing %lu kB\n",
+			(memblock.memory.total_size - reserved_mem) / 1024,
+			limit_mem / 1024,
+			to_remove / 1024);
+
+	/*                                              */
+	for (i = 0; i < to_remove; i += PAGE_SIZE) {
+		base = memblock_find_in_range(memblock.current_limit,
+				MEMBLOCK_ALLOC_ANYWHERE, PAGE_SIZE, PAGE_SIZE);
+		if (!base)
+			break;
+		memblock_remove(base, PAGE_SIZE);
+	}
+	/*                                                  */
+	for (; i < to_remove; i += SECTION_SIZE) {
+		base = memblock_find_in_range(0, MEMBLOCK_ALLOC_ACCESSIBLE,
+				SECTION_SIZE, SECTION_SIZE);
+		if (!base)
+			break;
+		memblock_remove(base, SECTION_SIZE);
+	}
+}
+
 static void __init apq8064_reserve(void)
 {
 	msm_reserve();
@@ -720,6 +758,7 @@ static void __init apq8064_reserve(void)
 #endif
 	}
 	lge_reserve();
+	limit_mem_reserve();
 }
 
 static void __init place_movable_zone(void)
@@ -739,14 +778,8 @@ static void __init apq8064_early_reserve(void)
 	place_movable_zone();
 }
 #ifdef CONFIG_USB_EHCI_MSM_HSIC
-/* Bandwidth requests (zero) if no vote placed */
+/*                                             */
 static struct msm_bus_vectors hsic_init_vectors[] = {
-	{
-		.src = MSM_BUS_MASTER_SPS,
-		.dst = MSM_BUS_SLAVE_EBI_CH0,
-		.ab = 0,
-		.ib = 0,
-	},
 	{
 		.src = MSM_BUS_MASTER_SPS,
 		.dst = MSM_BUS_SLAVE_SPS,
@@ -755,19 +788,13 @@ static struct msm_bus_vectors hsic_init_vectors[] = {
 	},
 };
 
-/* Bus bandwidth requests in Bytes/sec */
+/*                                     */
 static struct msm_bus_vectors hsic_max_vectors[] = {
-	{
-		.src = MSM_BUS_MASTER_SPS,
-		.dst = MSM_BUS_SLAVE_EBI_CH0,
-		.ab = 60000000,		/* At least 480Mbps on bus. */
-		.ib = 960000000,	/* MAX bursts rate */
-	},
 	{
 		.src = MSM_BUS_MASTER_SPS,
 		.dst = MSM_BUS_SLAVE_SPS,
 		.ab = 0,
-		.ib = 512000000, /*vote for 64Mhz dfab clk rate*/
+		.ib = 256000000, /*                            */
 	},
 };
 
@@ -832,11 +859,11 @@ static int usb_diag_update_pid_and_serial_num(uint32_t pid, const char *snum)
 
 	pr_debug("%s: dload:%p pid:%x serial_num:%s\n",
 				__func__, dload, pid, snum);
-	/* update pid */
+	/*            */
 	dload->magic_struct.pid = PID_MAGIC_ID;
 	dload->pid = pid;
 
-	/* update serial number */
+	/*                      */
 	dload->magic_struct.serial_num = 0;
 	if (!snum) {
 		memset(dload->serial_number, 0, SERIAL_NUMBER_LENGTH);
@@ -862,7 +889,7 @@ static struct platform_device android_usb_device = {
 	},
 };
 
-/* Bandwidth requests (zero) if no vote placed */
+/*                                             */
 static struct msm_bus_vectors usb_init_vectors[] = {
 	{
 		.src = MSM_BUS_MASTER_SPS,
@@ -872,13 +899,13 @@ static struct msm_bus_vectors usb_init_vectors[] = {
 	},
 };
 
-/* Bus bandwidth requests in Bytes/sec */
+/*                                     */
 static struct msm_bus_vectors usb_max_vectors[] = {
 	{
 		.src = MSM_BUS_MASTER_SPS,
 		.dst = MSM_BUS_SLAVE_EBI_CH0,
-		.ab = 60000000,		/* At least 480Mbps on bus. */
-		.ib = 960000000,	/* MAX bursts rate */
+		.ab = 60000000,		/*                          */
+		.ib = 960000000,	/*                 */
 	},
 };
 
@@ -900,9 +927,9 @@ static struct msm_bus_scale_pdata usb_bus_scale_pdata = {
 };
 
 static int phy_init_seq[] = {
-	0x38, 0x81, /* update DC voltage level */
-	0x24, 0x82, /* set pre-emphasis and rise/fall time */
-	0x33, 0x83, /* set source impedance adjusment */
+	0x38, 0x81, /*                         */
+	0x24, 0x82, /*                                     */
+	0x33, 0x83, /*                                */
 	-1
 };
 
@@ -941,14 +968,14 @@ static struct i2c_board_info smb349_charger_i2c_info[] __initdata = {
 };
 #endif
 
-/* Micbias setting is based on 8660 CDP/MTP/FLUID requirement
- * 4 micbiases are used to power various analog and digital
- * microphones operating at 1800 mV. Technically, all micbiases
- * can source from single cfilter since all microphones operate
- * at the same voltage level. The arrangement below is to make
- * sure all cfilters are exercised. LDO_H regulator ouput level
- * does not need to be as high as 2.85V. It is choosen for
- * microphone sensitivity purpose.
+/*                                                           
+                                                           
+                                                               
+                                                               
+                                                              
+                                                               
+                                                          
+                                  
  */
 
 static struct wcd9xxx_pdata apq8064_tabla20_platform_data = {
@@ -1018,99 +1045,6 @@ static struct slim_device apq8064_slim_tabla20 = {
 	},
 };
 
-#ifdef CONFIG_SND_SOC_CS8427
-/* enable the level shifter for cs8427 to make sure the I2C
- * clock is running at 100KHz and voltage levels are at 3.3
- * and 5 volts
- */
-static int enable_100KHz_ls(int enable)
-{
-	int ret = 0;
-	if (enable) {
-		ret = gpio_request(SX150X_GPIO(1, 10),
-					"cs8427_100KHZ_ENABLE");
-		if (ret) {
-			pr_err("%s: Failed to request gpio %d\n", __func__,
-				SX150X_GPIO(1, 10));
-			return ret;
-		}
-		gpio_direction_output(SX150X_GPIO(1, 10), 1);
-	} else
-		gpio_free(SX150X_GPIO(1, 10));
-	return ret;
-}
-
-static struct cs8427_platform_data cs8427_i2c_platform_data = {
-	.irq = SX150X_GPIO(1, 4),
-	.reset_gpio = SX150X_GPIO(1, 6),
-	.enable = enable_100KHz_ls,
-};
-
-static struct i2c_board_info cs8427_device_info[] __initdata = {
-	{
-		I2C_BOARD_INFO("cs8427", CS8427_ADDR4),
-		.platform_data = &cs8427_i2c_platform_data,
-	},
-};
-#endif
-
-/* configuration data for mxt1386e using V2.1 firmware */
-static const u8 mxt1386e_config_data_v2_1[] = {
-	/* T6 Object */
-	0, 0, 0, 0, 0, 0,
-	/* T38 Object */
-	14, 2, 0, 24, 5, 12, 0, 0, 0, 0,
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	0, 0, 0, 0,
-	/* T7 Object */
-	100, 10, 50,
-	/* T8 Object */
-	25, 0, 20, 20, 0, 0, 0, 0, 0, 0,
-	/* T9 Object */
-	139, 0, 0, 26, 42, 0, 32, 80, 2, 5,
-	0, 5, 5, 0, 10, 30, 10, 10, 255, 2,
-	85, 5, 0, 5, 9, 5, 12, 35, 70, 40,
-	20, 5, 0, 0, 0,
-	/* T18 Object */
-	0, 0,
-	/* T24 Object */
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	0, 0, 0, 0, 0, 0, 0, 0, 0,
-	/* T25 Object */
-	1, 0, 60, 115, 156, 99,
-	/* T27 Object */
-	0, 0, 0, 0, 0, 0, 0,
-	/* T40 Object */
-	0, 0, 0, 0, 0,
-	/* T42 Object */
-	0, 0, 255, 0, 255, 0, 0, 0, 0, 0,
-	/* T43 Object */
-	0, 0, 0, 0, 0, 0, 0, 64, 0, 8,
-	16,
-	/* T46 Object */
-	68, 0, 16, 16, 0, 0, 0, 0, 0,
-	/* T47 Object */
-	0, 0, 0, 0, 0, 0, 3, 64, 66, 0,
-	/* T48 Object */
-	1, 64, 64, 0, 0, 0, 0, 0, 0, 0,
-	32, 40, 0, 10, 10, 0, 0, 100, 10, 90,
-	0, 0, 0, 0, 0, 0, 0, 10, 1, 10,
-	52, 10, 12, 0, 33, 0, 1, 0, 0, 0,
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	0, 0, 0, 0,
-	/* T56 Object */
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	0,
-};
-
 #define MSM_WCNSS_PHYS	0x03000000
 #define MSM_WCNSS_SIZE	0x280000
 
@@ -1161,13 +1095,19 @@ static struct platform_device msm_device_iris_fm __devinitdata = {
 #endif
 
 #ifdef CONFIG_QSEECOM
-/* qseecom bus scaling */
+/*                     */
 static struct msm_bus_vectors qseecom_clks_init_vectors[] = {
 	{
-		.src = MSM_BUS_MASTER_SPS,
+		.src = MSM_BUS_MASTER_ADM_PORT0,
 		.dst = MSM_BUS_SLAVE_EBI_CH0,
-		.ib = 0,
 		.ab = 0,
+		.ib = 0,
+	},
+	{
+		.src = MSM_BUS_MASTER_ADM_PORT1,
+		.dst = MSM_BUS_SLAVE_GSBI1_UART,
+		.ab = 0,
+		.ib = 0,
 	},
 	{
 		.src = MSM_BUS_MASTER_SPDM,
@@ -1179,10 +1119,16 @@ static struct msm_bus_vectors qseecom_clks_init_vectors[] = {
 
 static struct msm_bus_vectors qseecom_enable_dfab_vectors[] = {
 	{
-		.src = MSM_BUS_MASTER_SPS,
+		.src = MSM_BUS_MASTER_ADM_PORT0,
 		.dst = MSM_BUS_SLAVE_EBI_CH0,
-		.ib = (492 * 8) * 1000000UL,
-		.ab = (492 * 8) *  100000UL,
+		.ab = 70000000UL,
+		.ib = 70000000UL,
+	},
+	{
+		.src = MSM_BUS_MASTER_ADM_PORT1,
+		.dst = MSM_BUS_SLAVE_GSBI1_UART,
+		.ab = 2480000000UL,
+		.ib = 2480000000UL,
 	},
 	{
 		.src = MSM_BUS_MASTER_SPDM,
@@ -1194,10 +1140,37 @@ static struct msm_bus_vectors qseecom_enable_dfab_vectors[] = {
 
 static struct msm_bus_vectors qseecom_enable_sfpb_vectors[] = {
 	{
-		.src = MSM_BUS_MASTER_SPS,
+		.src = MSM_BUS_MASTER_ADM_PORT0,
 		.dst = MSM_BUS_SLAVE_EBI_CH0,
-		.ib = 0,
 		.ab = 0,
+		.ib = 0,
+	},
+	{
+		.src = MSM_BUS_MASTER_ADM_PORT1,
+		.dst = MSM_BUS_SLAVE_GSBI1_UART,
+		.ab = 0,
+		.ib = 0,
+	},
+	{
+		.src = MSM_BUS_MASTER_SPDM,
+		.dst = MSM_BUS_SLAVE_SPDM,
+		.ib = (64 * 8) * 1000000UL,
+		.ab = (64 * 8) *  100000UL,
+	},
+};
+
+static struct msm_bus_vectors qseecom_enable_dfab_sfpb_vectors[] = {
+	{
+		.src = MSM_BUS_MASTER_ADM_PORT0,
+		.dst = MSM_BUS_SLAVE_EBI_CH0,
+		.ab = 70000000UL,
+		.ib = 70000000UL,
+	},
+	{
+		.src = MSM_BUS_MASTER_ADM_PORT1,
+		.dst = MSM_BUS_SLAVE_GSBI1_UART,
+		.ab = 2480000000UL,
+		.ib = 2480000000UL,
 	},
 	{
 		.src = MSM_BUS_MASTER_SPDM,
@@ -1214,11 +1187,15 @@ static struct msm_bus_paths qseecom_hw_bus_scale_usecases[] = {
 	},
 	{
 		ARRAY_SIZE(qseecom_enable_dfab_vectors),
-		qseecom_enable_sfpb_vectors,
+		qseecom_enable_dfab_vectors,
 	},
 	{
 		ARRAY_SIZE(qseecom_enable_sfpb_vectors),
 		qseecom_enable_sfpb_vectors,
+	},
+	{
+		ARRAY_SIZE(qseecom_enable_dfab_sfpb_vectors),
+		qseecom_enable_dfab_sfpb_vectors,
 	},
 };
 
@@ -1770,7 +1747,7 @@ static struct platform_device *common_devices[] __initdata = {
 	&apq8064_android_pmem_device,
 	&apq8064_android_pmem_adsp_device,
 	&apq8064_android_pmem_audio_device,
-#endif /*CONFIG_MSM_MULTIMEDIA_USE_ION*/
+#endif /*                             */
 #endif
 #ifdef CONFIG_ION_MSM
 	&apq8064_ion_dev,
@@ -1849,7 +1826,6 @@ static struct platform_device *common_devices[] __initdata = {
 	&msm_pil_vidc,
 	&msm_gss,
 	&apq8064_rtb_device,
-	&apq8064_cpu_idle_device,
 	&apq8064_device_cache_erp,
 	&msm8960_device_ebi1_ch0_erp,
 	&msm8960_device_ebi1_ch1_erp,
@@ -1868,6 +1844,7 @@ static struct platform_device *common_devices[] __initdata = {
 	&apq8064_iommu_domain_device,
 	&msm_tsens_device,
 	&apq8064_cache_dump_device,
+	&adsp_loader_device,
 };
 
 static struct platform_device *cdp_devices[] __initdata = {
@@ -1896,7 +1873,7 @@ static struct slim_boardinfo apq8064_slim_devices[] = {
 		.bus_num = 1,
 		.slim_slave = &apq8064_slim_tabla20,
 	},
-	/* add more slimbus slaves as needed */
+	/*                                   */
 };
 
 static struct msm_i2c_platform_data apq8064_i2c_qup_gsbi1_pdata = {
@@ -1923,7 +1900,7 @@ static void __init apq8064_i2c_init(void)
 
 	gsbi_mem = ioremap_nocache(MSM_GSBI1_PHYS, 4);
 	writel_relaxed(GSBI_DUAL_MODE_CODE, gsbi_mem);
-	/* Ensure protocol code is written before proceeding */
+	/*                                                   */
 	wmb();
 	iounmap(gsbi_mem);
 	apq8064_i2c_qup_gsbi1_pdata.use_gsbi_shared_mode = 1;
@@ -1934,7 +1911,7 @@ static void __init apq8064_i2c_init(void)
 	apq8064_device_qup_i2c_gsbi4.dev.platform_data =
 					&apq8064_i2c_qup_gsbi4_pdata;
 
-	/* Setting protocol code to 0x60 for dual UART/I2C in GSBI4 */
+	/*                                                          */
 	gsbi_mem = ioremap_nocache(MSM_GSBI4_PHYS, 4);
 	if (lge_get_uart_mode()) {
 		writel_relaxed(GSBI_DUAL_MODE_CODE, gsbi_mem);
@@ -1946,7 +1923,7 @@ static void __init apq8064_i2c_init(void)
 	iounmap(gsbi_mem);
 }
 
-/* Sensors DSPS platform data */
+/*                            */
 #define DSPS_PIL_GENERIC_NAME		"dsps"
 static void __init apq8064_init_dsps(void)
 {
@@ -1968,7 +1945,7 @@ static void __init register_i2c_devices(void)
 		apq8064_camera_board_info.board_info,
 		apq8064_camera_board_info.num_i2c_board_info,
 	};
-	/* Enabling flash LED for camera */
+	/*                               */
 	struct i2c_registry apq8064_lge_camera_i2c_devices = {
 		I2C_FFA,
 		APQ_8064_GSBI1_QUP_I2C_BUS_ID,
@@ -1983,7 +1960,7 @@ static void __init register_i2c_devices(void)
 		apq8064_camera_i2c_devices.info,
 		apq8064_camera_i2c_devices.len);
 
-	/* Enabling flash LED for camera */
+	/*                               */
 	i2c_register_board_info(apq8064_lge_camera_i2c_devices.bus,
 		apq8064_lge_camera_i2c_devices.info,
 		apq8064_lge_camera_i2c_devices.len);
@@ -1992,6 +1969,8 @@ static void __init register_i2c_devices(void)
 
 static void __init apq8064_common_init(void)
 {
+	struct msm_rpmrs_level rpmrs_level;
+
 	platform_device_register(&msm_gpio_device);
 	msm_tsens_early_init(&apq_tsens_pdata);
 	msm_thermal_init(&msm_thermal_pdata);
@@ -2023,13 +2002,22 @@ static void __init apq8064_common_init(void)
 	platform_add_devices(common_devices, ARRAY_SIZE(common_devices));
 	platform_add_devices(common_not_mpq_devices,
 			ARRAY_SIZE(common_not_mpq_devices));
-	apq8064_device_hsic_host.dev.platform_data = &msm_hsic_pdata;
-	device_initialize(&apq8064_device_hsic_host.dev);
+	if (!mako_charger_mode) {
+		rpmrs_level =
+			msm_rpmrs_levels[MSM_PM_SLEEP_MODE_WAIT_FOR_INTERRUPT];
+		msm_hsic_pdata.swfi_latency = rpmrs_level.latency_us;
+		rpmrs_level =
+			msm_rpmrs_levels[MSM_PM_SLEEP_MODE_POWER_COLLAPSE_STANDALONE];
+		apq8064_device_hsic_host.dev.platform_data = &msm_hsic_pdata;
+		device_initialize(&apq8064_device_hsic_host.dev);
+	}
 	apq8064_pm8xxx_gpio_mpp_init();
 	apq8064_init_mmc();
 
-	mdm_8064_device.dev.platform_data = &mdm_platform_data;
-	platform_device_register(&mdm_8064_device);
+	if (!mako_charger_mode) {
+		mdm_8064_device.dev.platform_data = &mdm_platform_data;
+		platform_device_register(&mdm_8064_device);
+	}
 
 	platform_device_register(&apq8064_slim_ctrl);
 	slim_register_board_info(apq8064_slim_devices,

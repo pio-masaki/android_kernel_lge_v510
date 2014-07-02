@@ -83,7 +83,7 @@ static ssize_t dsp_write(struct file *file, const char __user *buf,
 			}
 		}
 #if defined(CONFIG_MACH_MAHIMAHI)
-		/* assert DSP NMI */
+		/*                */
 		msm_proc_comm(PCOM_CUSTOMER_CMD1, 0, 0);
 		msleep(250);
 #endif
@@ -121,7 +121,7 @@ static ssize_t dsp_read(struct file *file, char __user *buf,
 
 	addr = (*pos + DSP_RAM_BASE);
 
-	/* don't blow up if we're unaligned */
+	/*                                  */
 	if (addr & (PAGE_SIZE - 1))
 		mapsize *= 2;
 

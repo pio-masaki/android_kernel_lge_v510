@@ -23,7 +23,7 @@
 #define ADC_CHANGE_REV	HW_REV_EVB1
 #define IBAT_CURRENT		825
 
-/* Ref resistance value = 665K */
+/*                             */
 #define ADC_NO_INIT_CABLE   0
 #define ADC_CABLE_MHL_1K    30000
 #define ADC_CABLE_U_28P7K   60000
@@ -40,7 +40,7 @@
 #define ADC_CABLE_910K      1140000
 #define ADC_CABLE_NONE      1800000
 
-/* Ref resistance value = 200K */
+/*                             */
 #define ADC_NO_INIT_CABLE2   0
 #define ADC_CABLE_MHL_1K2    50000
 #define ADC_CABLE_U_28P7K2   200000
@@ -61,7 +61,7 @@
 #define C_MHL_1K_TA_MA      500
 #define C_U_28P7K_TA_MA     500
 #define C_28P7K_TA_MA       500
-#define C_56K_TA_MA         1500 /* it will be changed in future */
+#define C_56K_TA_MA         1500 /*                              */
 #define C_100K_TA_MA        500
 #define C_130K_TA_MA        1500
 #define C_180K_TA_MA        700
@@ -70,14 +70,14 @@
 #define C_270K_TA_MA        800
 #define C_330K_TA_MA        500
 #define C_620K_TA_MA        500
-#define C_910K_TA_MA        1500//[ORG]500
-#define C_NONE_TA_MA        900 //900mA for open cable
+#define C_910K_TA_MA        1500//        
+#define C_NONE_TA_MA        900 //                    
 
 #define C_NO_INIT_USB_MA    0
 #define C_MHL_1K_USB_MA     500
 #define C_U_28P7K_USB_MA    500
 #define C_28P7K_USB_MA      500
-#define C_56K_USB_MA        1500 /* it will be changed in future */
+#define C_56K_USB_MA        1500 /*                              */
 #define C_100K_USB_MA       500
 #define C_130K_USB_MA       1500
 #define C_180K_USB_MA       500
@@ -86,8 +86,8 @@
 #define C_270K_USB_MA       500
 #define C_330K_USB_MA       500
 #define C_620K_USB_MA       500
-#define C_910K_USB_MA       1500//[ORG]500
+#define C_910K_USB_MA       1500//        
 #define C_NONE_USB_MA       500
 #endif
 	
-#endif // __ASM_ARCH_MSM_BOARD_MAKO_H
+#endif //                            

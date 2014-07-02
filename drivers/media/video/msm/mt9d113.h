@@ -63,4 +63,4 @@ enum mt9d113_setting {
 	RES_PREVIEW,
 	RES_CAPTURE
 };
-#endif /* MT9D113_H */
+#endif /*           */

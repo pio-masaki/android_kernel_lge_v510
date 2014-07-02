@@ -27,23 +27,23 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 *====*====*====*====*====*====*====*====*====*====*====*====*====*====*====*/
-/*===========================================================================
+/*                                                                           
 
-                      EDIT HISTORY FOR FILE
+                                           
 
-This section contains comments describing changes made to this file.
-Notice that changes are listed in reverse chronological order.
+                                                                    
+                                                              
    
-$Header: //source/qcom/qct/multimedia2/AdspSvc/7XXX/qdsp5cmd/video/qdsp5vdecmsg.h#2 $ $DateTime: 2008/07/30 10:50:23 $ $Author: pavanr $                     
-Revision History:                                              
+                                                                                                                                                             
+                                                               
   
-when       who     what, where, why
---------   ---     ----------------------------------------------------------
-05/10/08   ac      initial version
-===========================================================================*/
+                                   
+                                                                             
+                                  
+                                                                           */
 
 /*
- * Message to inform ARM which VDEC_SUBFRAME_PKT_CMD processed by VIDDEC TASK
+                                                                             
  */
 
 #define	VIDDEC_MSG_SUBF_DONE	0x0000
@@ -57,7 +57,7 @@ typedef struct {
 
 
 /*
- * Message to inform ARM one frame has been decoded
+                                                   
  */
 
 #define	VIDDEC_MSG_FRAME_DONE	0x0001
@@ -71,7 +71,7 @@ typedef struct {
 
 
 /*
- * Message to inform ARM that post processing frame has been decoded
+                                                                    
  */
 
 #define	VIDDEC_MSG_PP_ENABLE_CMD_DONE	0x0002
@@ -85,7 +85,7 @@ typedef struct {
 
 
 /*
- * Message to inform ARM that one post processing frame has been decoded
+                                                                        
  */
 
 

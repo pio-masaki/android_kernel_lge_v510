@@ -132,14 +132,14 @@ static int __dwc3_gadget_ep0_queue(struct dwc3_ep *dep,
 	list_add_tail(&req->list, &dep->request_list);
 
 	/*
-	 * Gadget driver might not be quick enough to queue a request
-	 * before we get a Transfer Not Ready event on this endpoint.
-	 *
-	 * In that case, we will set DWC3_EP_PENDING_REQUEST. When that
-	 * flag is set, it's telling us that as soon as Gadget queues the
-	 * required request, we should kick the transfer here because the
-	 * IRQ we were waiting for is long gone.
-	 */
+                                                              
+                                                              
+   
+                                                                
+                                                                  
+                                                                  
+                                         
+  */
 	if (dep->flags & DWC3_EP_PENDING_REQUEST) {
 		unsigned	direction;
 
@@ -186,7 +186,7 @@ int dwc3_gadget_ep0_queue(struct usb_ep *ep, struct usb_request *request,
 		goto out;
 	}
 
-	/* we share one TRB for ep0/1 */
+	/*                            */
 	if (!list_empty(&dep->request_list)) {
 		ret = -EBUSY;
 		goto out;
@@ -208,7 +208,7 @@ static void dwc3_ep0_stall_and_restart(struct dwc3 *dwc)
 {
 	struct dwc3_ep		*dep = dwc->eps[0];
 
-	/* stall is always issued on EP0 */
+	/*                               */
 	__dwc3_gadget_ep_set_halt(dep, 1);
 	dep->flags = DWC3_EP_ENABLED;
 	dwc->delayed_status = false;
@@ -254,7 +254,7 @@ static void dwc3_ep0_status_cmpl(struct usb_ep *ep, struct usb_request *req)
 {
 }
 /*
- * ch 9.4.5
+           
  */
 static int dwc3_ep0_handle_status(struct dwc3 *dwc,
 		struct usb_ctrlrequest *ctrl)
@@ -268,17 +268,17 @@ static int dwc3_ep0_handle_status(struct dwc3 *dwc,
 	switch (recip) {
 	case USB_RECIP_DEVICE:
 		/*
-		 * We are self-powered. U1/U2/LTM will be set later
-		 * once we handle this states. RemoteWakeup is 0 on SS
-		 */
+                                                     
+                                                        
+   */
 		usb_status |= dwc->is_selfpowered << USB_DEVICE_SELF_POWERED;
 		break;
 
 	case USB_RECIP_INTERFACE:
 		/*
-		 * Function Remote Wake Capable	D0
-		 * Function Remote Wakeup	D1
-		 */
+                                    
+                              
+   */
 		break;
 
 	case USB_RECIP_ENDPOINT:
@@ -321,9 +321,9 @@ static int dwc3_ep0_handle_feature(struct dwc3 *dwc,
 	case USB_RECIP_DEVICE:
 
 		/*
-		 * 9.4.1 says only only for SS, in AddressState only for
-		 * default control pipe
-		 */
+                                                          
+                         
+   */
 		switch (wValue) {
 		case USB_DEVICE_U1_ENABLE:
 		case USB_DEVICE_U2_ENABLE:
@@ -334,7 +334,7 @@ static int dwc3_ep0_handle_feature(struct dwc3 *dwc,
 				return -EINVAL;
 		}
 
-		/* XXX add U[12] & LTM */
+		/*                     */
 		switch (wValue) {
 		case USB_DEVICE_REMOTE_WAKEUP:
 			break;
@@ -363,10 +363,10 @@ static int dwc3_ep0_handle_feature(struct dwc3 *dwc,
 		switch (wValue) {
 		case USB_INTRF_FUNC_SUSPEND:
 			if (wIndex & USB_INTRF_FUNC_SUSPEND_LP)
-				/* XXX enable Low power suspend */
+				/*                              */
 				;
 			if (wIndex & USB_INTRF_FUNC_SUSPEND_RW)
-				/* XXX enable remote wakeup */
+				/*                          */
 				;
 			break;
 		default:
@@ -450,7 +450,7 @@ static int dwc3_ep0_set_config(struct dwc3 *dwc, struct usb_ctrlrequest *ctrl)
 
 	case DWC3_ADDRESS_STATE:
 		ret = dwc3_ep0_delegate_req(dwc, ctrl);
-		/* if the cfg matches and the cfg is non zero */
+		/*                                            */
 		if (cfg && (!ret || (ret == USB_GADGET_DELAYED_STATUS))) {
 			dwc->dev_state = DWC3_CONFIGURED_STATE;
 			dwc->resize_fifos = true;
@@ -577,14 +577,14 @@ static void dwc3_ep0_complete_data(struct dwc3 *dwc,
 	ur->actual += transferred;
 
 	if ((epnum & 1) && ur->actual < ur->length) {
-		/* for some reason we did not get everything out */
+		/*                                               */
 
 		dwc3_ep0_stall_and_restart(dwc);
 	} else {
 		/*
-		 * handle the case where we have to send a zero packet. This
-		 * seems to be case when req.length > maxpacket. Could it be?
-		 */
+                                                              
+                                                               
+   */
 		if (r)
 			dwc3_gadget_giveback(ep0, r, 0);
 	}
@@ -693,10 +693,10 @@ static void dwc3_ep0_do_control_data(struct dwc3 *dwc,
 		dwc->ep0_bounced = true;
 
 		/*
-		 * REVISIT in case request length is bigger than EP0
-		 * wMaxPacketSize, we will need two chained TRBs to handle
-		 * the transfer.
-		 */
+                                                      
+                                                            
+                  
+   */
 		ret = dwc3_ep0_start_trans(dwc, event->endpoint_number,
 				dwc->ep0_bounce_addr, dep->endpoint.maxpacket,
 				DWC3_TRBCTL_CONTROL_DATA);
@@ -747,23 +747,23 @@ static void dwc3_ep0_xfernotready(struct dwc3 *dwc,
 	dwc->setup_packet_pending = true;
 
 	/*
-	 * This part is very tricky: If we has just handled
-	 * XferNotReady(Setup) and we're now expecting a
-	 * XferComplete but, instead, we receive another
-	 * XferNotReady(Setup), we should STALL and restart
-	 * the state machine.
-	 *
-	 * In all other cases, we just continue waiting
-	 * for the XferComplete event.
-	 *
-	 * We are a little bit unsafe here because we're
-	 * not trying to ensure that last event was, indeed,
-	 * XferNotReady(Setup).
-	 *
-	 * Still, we don't expect any condition where that
-	 * should happen and, even if it does, it would be
-	 * another error condition.
-	 */
+                                                    
+                                                 
+                                                 
+                                                    
+                      
+   
+                                                
+                               
+   
+                                                 
+                                                     
+                        
+   
+                                                   
+                                                   
+                            
+  */
 	if (dwc->ep0_next_event == DWC3_EP0_COMPLETE) {
 		switch (event->status) {
 		case DEPEVT_STATUS_CONTROL_SETUP:
@@ -771,9 +771,9 @@ static void dwc3_ep0_xfernotready(struct dwc3 *dwc,
 			dwc3_ep0_stall_and_restart(dwc);
 			break;
 		case DEPEVT_STATUS_CONTROL_DATA:
-			/* FALLTHROUGH */
+			/*             */
 		case DEPEVT_STATUS_CONTROL_STATUS:
-			/* FALLTHROUGH */
+			/*             */
 		default:
 			dev_vdbg(dwc->dev, "waiting for XferComplete\n");
 		}
@@ -805,13 +805,13 @@ static void dwc3_ep0_xfernotready(struct dwc3 *dwc,
 		}
 
 		/*
-		 * One of the possible error cases is when Host _does_
-		 * request for Data Phase, but it does so on the wrong
-		 * direction.
-		 *
-		 * Here, we already know ep0_next_event is DATA (see above),
-		 * so we only need to check for direction.
-		 */
+                                                        
+                                                        
+               
+    
+                                                              
+                                            
+   */
 		if (dwc->ep0_expect_in != event->endpoint_number) {
 			dev_vdbg(dwc->dev, "Wrong direction for Data phase\n");
 			dwc3_ep0_stall_and_restart(dwc);

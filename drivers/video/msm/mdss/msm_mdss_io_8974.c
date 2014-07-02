@@ -78,7 +78,7 @@ int mdss_dsi_clk_div_config(u8 bpp, u8 lanes,
 		pll_divider_config.clk_rate = 454000000;
 
 	rate = (pll_divider_config.clk_rate / 2)
-			 / 1000000; /* Half Bit Clock In Mhz */
+			 / 1000000; /*                       */
 
 	if (rate < 43) {
 		vco = rate * 16;
@@ -97,13 +97,13 @@ int mdss_dsi_clk_div_config(u8 bpp, u8 lanes,
 		div_ratio = 2;
 		pll_analog_posDiv = 1;
 	} else {
-		/* DSI PLL Direct path configuration */
+		/*                                   */
 		vco = rate * 1;
 		div_ratio = 1;
 		pll_analog_posDiv = 1;
 	}
 
-	/* find the mnd settings from mnd_table entry */
+	/*                                            */
 	for (; mnd_entry != mnd_table + ARRAY_SIZE(mnd_table); ++mnd_entry) {
 		if (((mnd_entry->lanes) == lanes) &&
 			((mnd_entry->bpp) == bpp))
@@ -176,10 +176,10 @@ void mdss_dsi_clk_enable(void)
 		return;
 	}
 
-	if (clk_set_rate(dsi_byte_div_clk, 1) < 0)	/* divided by 1 */
+	if (clk_set_rate(dsi_byte_div_clk, 1) < 0)	/*              */
 		pr_err("%s: dsi_byte_div_clk - clk_set_rate failed\n",
 					__func__);
-	if (clk_set_rate(dsi_esc_clk, 2) < 0) /* divided by 2 */
+	if (clk_set_rate(dsi_esc_clk, 2) < 0) /*              */
 		pr_err("%s: dsi_esc_clk - clk_set_rate failed\n",
 					__func__);
 	clk_enable(dsi_byte_div_clk);

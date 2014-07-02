@@ -24,8 +24,8 @@ struct msm_lpa_platform_data {
 	u32 obuf_hlb_size;
 	u32 dsp_proc_id;
 	u32 app_proc_id;
-	struct lpa_mem_config nosb_config; /* no summing  */
-	struct lpa_mem_config sb_config; /* summing required */
+	struct lpa_mem_config nosb_config; /*             */
+	struct lpa_mem_config sb_config; /*                  */
 };
 
 #endif

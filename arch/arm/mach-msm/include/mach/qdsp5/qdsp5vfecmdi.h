@@ -27,27 +27,27 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 *====*====*====*====*====*====*====*====*====*====*====*====*====*====*====*/
-/*===========================================================================
+/*                                                                           
 
-                      EDIT HISTORY FOR FILE
+                                           
 
-This section contains comments describing changes made to this file.
-Notice that changes are listed in reverse chronological order.
+                                                                    
+                                                              
    
-$Header: //source/qcom/qct/multimedia2/AdspSvc/7XXX/qdsp5cmd/video/qdsp5vfecmdi.h#2 $ $DateTime: 2008/07/30 10:50:23 $ $Author: pavanr $                     
-Revision History:                                              
+                                                                                                                                                             
+                                                               
   
-when       who     what, where, why
---------   ---     ----------------------------------------------------------
-06/12/08   sv      initial version
-===========================================================================*/
+                                   
+                                                                             
+                                  
+                                                                           */
 
-/******************************************************************************
- * Commands through vfeCommandScaleQueue
- *****************************************************************************/
+/*                                                                             
+                                        
+                                                                             */
 
 /*
- * Command to program scaler for op1 . max op of scaler is VGA
+                                                              
  */
 
 
@@ -93,7 +93,7 @@ typedef struct {
 
 
 /*
- * Command to program scaler for op2
+                                    
  */
 
 #define	VFE_CMD_SCALE_OP2_CFG		0x0001
@@ -137,12 +137,12 @@ typedef struct {
 } __attribute__((packed)) vfe_cmd_scale_op2_cfg;
 
 
-/******************************************************************************
- * Commands through vfeCommandTableQueue
- *****************************************************************************/
+/*                                                                             
+                                        
+                                                                             */
 
 /*
- * Command to program the AXI ip paths
+                                      
  */
 
 #define	VFE_CMD_AXI_IP_CFG		0x0000
@@ -163,7 +163,7 @@ typedef struct {
 
 
 /*
- * Command to program axi op paths
+                                  
  */
 
 #define	VFE_CMD_AXI_OP_CFG	0x0001
@@ -199,7 +199,7 @@ typedef struct {
 
 
 /*
- * Command to program the roll off correction module
+                                                    
  */
 
 #define	VFE_CMD_ROLLOFF_CFG	0x0002
@@ -217,7 +217,7 @@ typedef struct {
 } __attribute__((packed)) vfe_cmd_rolloff_cfg;
 
 /*
- * Command to program RGB gamma table
+                                     
  */
 
 #define	VFE_CMD_RGB_GAMMA_CFG		0x0003
@@ -234,7 +234,7 @@ typedef struct {
 
 
 /*
- * Command to program luma gamma table for the noise reduction path
+                                                                   
  */
 
 #define	VFE_CMD_Y_GAMMA_CFG		0x0004
@@ -252,13 +252,13 @@ typedef struct {
 
 
 
-/******************************************************************************
- * Commands through vfeCommandQueue
- *****************************************************************************/
+/*                                                                             
+                                   
+                                                                             */
 
 /*
- * Command to reset the VFE to a known good state.All previously programmed 
- * Params will be lost
+                                                                            
+                      
  */
 
 
@@ -272,7 +272,7 @@ typedef struct {
 
 
 /*
- * Command to start VFE processing based on the config params
+                                                             
  */
 
 
@@ -309,7 +309,7 @@ typedef struct {
 
 
 /*
- * Command to halt all processing
+                                 
  */
 
 #define	VFE_CMD_STOP		0x0002
@@ -321,8 +321,8 @@ typedef struct {
 
 
 /*
- * Command to commit the params that have been programmed to take
- * effect on the next frame
+                                                                 
+                           
  */
 
 #define	VFE_CMD_UPDATE		0x0003
@@ -335,7 +335,7 @@ typedef struct {
 
 
 /*
- * Command to program CAMIF module
+                                  
  */
 
 #define	VFE_CMD_CAMIF_CFG	0x0004
@@ -379,7 +379,7 @@ typedef struct {
 
 
 /*
- * Command to program the black level module
+                                            
  */
 
 #define	VFE_CMD_BLACK_LVL_CFG		0x0005
@@ -396,7 +396,7 @@ typedef struct {
 
 
 /*
- * Command to program the active region by cropping the region of interest
+                                                                          
  */
 
 #define	VFE_CMD_ACTIVE_REGION_CFG	0x0006
@@ -413,8 +413,8 @@ typedef struct {
 
 
 /*
- * Command to program the defective pixel correction(DPC) ,
- * adaptive bayer filter (ABF) and demosaic modules
+                                                           
+                                                   
  */
 
 #define	VFE_CMD_DEMOSAIC_CFG		0x0007
@@ -445,7 +445,7 @@ typedef struct {
 
 
 /*
- * Command to program the ip format
+                                   
  */
 
 #define	VFE_CMD_IP_FORMAT_CFG		0x0008
@@ -474,7 +474,7 @@ typedef struct {
 
 
 /*
- * Command to program max and min allowed op values
+                                                   
  */
 
 #define	VFE_CMD_OP_CLAMP_CFG		0x0009
@@ -489,7 +489,7 @@ typedef struct {
 
 
 /*
- * Command to program chroma sub sample module
+                                              
  */
 
 #define	VFE_CMD_CHROMA_SUBSAMPLE_CFG		0x000A
@@ -512,7 +512,7 @@ typedef struct {
 
 
 /*
- * Command to program the white balance module
+                                              
  */
 
 #define	VFE_CMD_WHITE_BALANCE_CFG	0x000B
@@ -526,7 +526,7 @@ typedef struct {
 
 
 /*
- * Command to program the color processing module
+                                                 
  */
 
 #define	VFE_CMD_COLOR_PROCESS_CFG	0x000C
@@ -558,7 +558,7 @@ typedef struct {
 
 
 /*
- * Command to program adaptive filter module
+                                            
  */
 
 #define	VFE_CMD_ADP_FILTER_CFG		0x000D
@@ -579,7 +579,7 @@ typedef struct {
 
 
 /*
- * Command to program for frame skip pattern for op1 and op2
+                                                            
  */
 
 #define	VFE_CMD_FRAME_SKIP_CFG		0x000E
@@ -594,7 +594,7 @@ typedef struct {
 
 
 /*
- * Command to program field-of-view crop for digital zoom
+                                                         
  */
 
 #define	VFE_CMD_FOV_CROP	0x000F
@@ -609,7 +609,7 @@ typedef struct {
 
 
 /*
- * Command to program auto focus(AF) statistics module
+                                                      
  */
 
 #define	VFE_CMD_STATS_AUTOFOCUS_CFG	0x0010
@@ -633,8 +633,8 @@ typedef struct {
 
 
 /*
- * Command to program White balance(wb) and exposure (exp)
- * statistics module
+                                                          
+                    
  */
 
 #define	VFE_CMD_STATS_WB_EXP_CFG	0x0011
@@ -664,7 +664,7 @@ typedef struct {
 
 
 /*
- * Command to program histogram(hg) stats module
+                                                
  */
 
 #define	VFE_CMD_STATS_HG_CFG		0x0012
@@ -685,7 +685,7 @@ typedef struct {
 
 
 /*
- * Command to acknowledge last MSG_VFE_OP1 message
+                                                  
  */
 
 #define	VFE_CMD_OP1_ACK		0x0013
@@ -700,7 +700,7 @@ typedef struct {
 
 
 /*
- * Command to acknowledge last MSG_VFE_OP2 message
+                                                  
  */
 
 #define	VFE_CMD_OP2_ACK		0x0014
@@ -715,7 +715,7 @@ typedef struct {
 
 
 /*
- * Command to acknowledge MSG_VFE_STATS_AUTOFOCUS msg
+                                                     
  */
 
 #define	VFE_CMD_STATS_AF_ACK		0x0015
@@ -729,7 +729,7 @@ typedef struct {
 
 
 /*
- * Command to acknowledge MSG_VFE_STATS_WB_EXP msg
+                                                  
  */
 
 #define	VFE_CMD_STATS_WB_EXP_ACK	0x0016
@@ -742,7 +742,7 @@ typedef struct {
 
 
 /*
- * Command to acknowledge MSG_VFE_EPOCH1 message
+                                                
  */
 
 #define	VFE_CMD_EPOCH1_ACK	0x0017
@@ -754,7 +754,7 @@ typedef struct {
 
 
 /*
- * Command to acknowledge MSG_VFE_EPOCH2 message
+                                                
  */
 
 #define	VFE_CMD_EPOCH2_ACK	0x0018
@@ -767,7 +767,7 @@ typedef struct {
 
 
 /*
- * Command to configure, enable or disable synchronous timer1
+                                                             
  */
 
 #define	VFE_CMD_SYNC_TIMER1_CFG		0x0019
@@ -789,7 +789,7 @@ typedef struct {
 
 
 /*
- * Command to configure, enable or disable synchronous timer1
+                                                             
  */
 
 #define	VFE_CMD_SYNC_TIMER2_CFG		0x001A
@@ -811,7 +811,7 @@ typedef struct {
 
 
 /*
- * Command to configure and start asynchronous timer1
+                                                     
  */
 
 #define	VFE_CMD_ASYNC_TIMER1_START	0x001B
@@ -832,7 +832,7 @@ typedef struct {
 
 
 /*
- * Command to configure and start asynchronous timer2
+                                                     
  */
 
 #define	VFE_CMD_ASYNC_TIMER2_START	0x001C
@@ -853,7 +853,7 @@ typedef struct {
 
 
 /*
- * Command to program partial configurations of auto focus(af)
+                                                              
  */
 
 #define	VFE_CMD_STATS_AF_UPDATE		0x001D
@@ -871,7 +871,7 @@ typedef struct {
 
 
 /*
- * Command to program partial cfg of wb and exp
+                                               
  */
 
 #define	VFE_CMD_STATS_WB_EXP_UPDATE	0x001E
@@ -894,7 +894,7 @@ typedef struct {
 
 
 /*
- * Command to re program the CAMIF FRAME CONFIG settings
+                                                        
  */
 
 #define	VFE_CMD_UPDATE_CAMIF_FRAME_CFG		0x001F

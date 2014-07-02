@@ -40,7 +40,7 @@
 #define MSM_FRAME_AXI_MAX_BUF 32
 
 /*
- * This function executes in interrupt context.
+                                               
  */
 
 void *msm_isp_sync_alloc(int size,
@@ -226,7 +226,7 @@ static int msm_isp_notify_VFE_BUF_EVT(struct msm_cam_media_controller *pmctl,
 		temp_free_buf = free_buf;
 		if (msm_mctl_reserve_free_buf(pmctl, NULL,
 					&buf_handle, &free_buf)) {
-			/* Write the same buffer into PONG */
+			/*                                 */
 			free_buf = temp_free_buf;
 		}
 		cfgcmd.cmd_type = CMD_CONFIG_PONG_ADDR;
@@ -248,7 +248,7 @@ static int msm_isp_notify_VFE_BUF_EVT(struct msm_cam_media_controller *pmctl,
 		D("%s:VFE_MSG_JPEG_CAPTURE y_ping=%x cbcr_ping=%x\n",
 			__func__, free_buf.ch_paddr[0], free_buf.ch_paddr[1]);
 		rc = v4l2_subdev_call(sd, core, ioctl, 0, &vfe_params);
-		/* Write the same buffer into PONG */
+		/*                                 */
 		free_buf.ch_paddr[0] = pmctl->pong_imem_y;
 		free_buf.ch_paddr[1] = pmctl->pong_imem_cbcr;
 		cfgcmd.cmd_type = CMD_CONFIG_PONG_ADDR;
@@ -278,20 +278,20 @@ static int msm_isp_notify_VFE_BUF_EVT(struct msm_cam_media_controller *pmctl,
 }
 
 /*
- * This function executes in interrupt context.
+                                               
  */
 static int msm_isp_notify_vfe(struct msm_cam_media_controller *pmctl,
 	struct v4l2_subdev *sd,	unsigned int notification,  void *arg)
 {
 	int rc = 0;
-// Start LGE_BSP_CAMERA::john.park@lge.com 2012-08-15 v4l2_event data type changing from static to kmalloc for preventing stack-overflow 	
-#if 0 // prevent stack-overflow	
+//                                                                                                                                        
+#if 0 //                        
 	struct v4l2_event v4l2_evt;
 #else
 	#define	v4l2_evt (*_v4l2_evt)
 	struct v4l2_event *_v4l2_evt;
 #endif
-// End LGE_BSP_CAMERA::john.park@lge.com 2012-08-15 v4l2_event data type changing from static to kmalloc for preventing stack-overflow
+//                                                                                                                                    
 	struct msm_isp_event_ctrl *isp_event;
 	struct msm_free_buf buf;
 
@@ -313,8 +313,8 @@ static int msm_isp_notify_vfe(struct msm_cam_media_controller *pmctl,
 		return -ENOMEM;
 	}
 
-// Start LGE_BSP_CAMERA::john.park@lge.com 2012-08-15 v4l2_event data type changing from static to kmalloc for preventing stack-overflow 
-#if 1 // prevent stack-overflow
+//                                                                                                                                       
+#if 1 //                       
 	_v4l2_evt = kmalloc( sizeof(struct v4l2_event), GFP_ATOMIC);
 	if (!_v4l2_evt) {
 		pr_err("%s failed: Insufficient memory. return", __func__);
@@ -322,7 +322,7 @@ static int msm_isp_notify_vfe(struct msm_cam_media_controller *pmctl,
 		return -ENOMEM;
 	}
 #endif
-// End LGE_BSP_CAMERA::john.park@lge.com 2012-08-15 v4l2_event data type changing from static to kmalloc for preventing stack-overflow
+//                                                                                                                                    
 	v4l2_evt.type = V4L2_EVENT_PRIVATE_START +
 					MSM_CAM_RESP_STAT_EVT_MSG;
 	v4l2_evt.id = 0;
@@ -437,7 +437,7 @@ static int msm_isp_notify_vfe(struct msm_cam_media_controller *pmctl,
 			isp_stats->frameCounter;
 		stats.buffer = isp_stats->buffer;
 		stats.fd = isp_stats->fd;
-		/* buf_idx used for O(0) lookup */
+		/*                              */
 		stats.buf_idx = isp_stats->buf_idx;
 		switch (isp_stats->id) {
 		case MSG_ID_STATS_AEC:
@@ -508,12 +508,12 @@ static int msm_isp_notify_vfe(struct msm_cam_media_controller *pmctl,
 	v4l2_event_queue(pmctl->config_device->config_stat_event_queue.pvdev,
 			 &v4l2_evt);
 
-// Start LGE_BSP_CAMERA::john.park@lge.com 2012-08-15 v4l2_event data type changing from static to kmalloc for preventing stack-overflow 
-#if 1 // prevent stack-overflow
+//                                                                                                                                       
+#if 1 //                       
 	kfree(_v4l2_evt);
 	#undef v4l2_evt
 #endif
-// End LGE_BSP_CAMERA::john.park@lge.com 2012-08-15 v4l2_event data type changing from static to kmalloc for preventing stack-overflow
+//                                                                                                                                    
 
 	return rc;
 }
@@ -586,10 +586,10 @@ static int msm_axi_config(struct v4l2_subdev *sd,
 	case CMD_AXI_CFG_TERT1:
 	case CMD_AXI_CFG_TERT2:
 	case CMD_AXI_CFG_TERT3:
-		/* Dont need to pass buffer information.
-		 * subdev will get the buffer from media
-		 * controller free queue.
-		 */
+		/*                                      
+                                          
+                           
+   */
 		return msm_isp_subdev_ioctl(sd, &cfgcmd, NULL);
 
 	default:
@@ -730,7 +730,7 @@ static int msm_vfe_stats_buf_ioctl(struct v4l2_subdev *sd,
 	CDBG("%s\n", __func__);
 	return rc;
 }
-/* config function simliar to origanl msm_ioctl_config*/
+/*                                                    */
 int msm_isp_config(struct msm_cam_media_controller *pmctl,
 			 unsigned int cmd, unsigned long arg)
 {
@@ -746,7 +746,7 @@ int msm_isp_config(struct msm_cam_media_controller *pmctl,
 	D("%s: cmd %d\n", __func__, _IOC_NR(cmd));
 	switch (cmd) {
 	case MSM_CAM_IOCTL_CONFIG_VFE:
-		/* Coming from config thread for update */
+		/*                                      */
 		rc = msm_config_vfe(sd, pmctl, argp);
 		break;
 

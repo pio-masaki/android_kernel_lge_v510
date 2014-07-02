@@ -15,11 +15,11 @@
 
 struct mt9d113_i2c_reg_conf const
 	pll_tbl_settings[] = {
-		{0x0014, 0x21F9 }, /*PLL control: BYPASS PLL = 8697*/
-		{0x0010, 0x0115 }, /*PLL Dividers = 277*/
-		{0x0012, 0x0F5  }, /*PLL P Dividers = 245*/
-		{0x0014, 0x21FB }, /*PLL control: PLL_ENABLE on = 8699*/
-		{0x0014, 0x20FB }, /*PLL control: SEL_LOCK_DET on = 8443*/
+		{0x0014, 0x21F9 }, /*                              */
+		{0x0010, 0x0115 }, /*                  */
+		{0x0012, 0x0F5  }, /*                    */
+		{0x0014, 0x21FB }, /*                                 */
+		{0x0014, 0x20FB }, /*                                   */
 };
 
 struct mt9d113_i2c_reg_conf const
@@ -88,7 +88,7 @@ struct mt9d113_i2c_reg_conf const
 
 struct mt9d113_i2c_reg_conf const
 	patch_settings[] = {
-		{0x098C, 0x0415},    /* MCU_ADDRESS*/
+		{0x098C, 0x0415},    /*            */
 		{0x0990, 0xF601},
 		{0x0992, 0x42C1},
 		{0x0994, 0x0326},

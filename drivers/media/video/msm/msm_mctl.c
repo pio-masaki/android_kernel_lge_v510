@@ -48,14 +48,14 @@
 #endif
 
 #define MSM_V4L2_SWFI_LATENCY 3
-/* VFE required buffer number for streaming */
+/*                                          */
 static struct msm_isp_color_fmt msm_isp_formats[] = {
 	{
 	.name	   = "NV12YUV",
 	.depth	  = 12,
 	.bitsperpxl = 8,
 	.fourcc	 = V4L2_PIX_FMT_NV12,
-	.pxlcode	= V4L2_MBUS_FMT_YUYV8_2X8, /* YUV sensor */
+	.pxlcode	= V4L2_MBUS_FMT_YUYV8_2X8, /*            */
 	.colorspace = V4L2_COLORSPACE_JPEG,
 	},
 	{
@@ -63,7 +63,7 @@ static struct msm_isp_color_fmt msm_isp_formats[] = {
 	.depth	  = 12,
 	.bitsperpxl = 8,
 	.fourcc	 = V4L2_PIX_FMT_NV21,
-	.pxlcode	= V4L2_MBUS_FMT_YUYV8_2X8, /* YUV sensor */
+	.pxlcode	= V4L2_MBUS_FMT_YUYV8_2X8, /*            */
 	.colorspace = V4L2_COLORSPACE_JPEG,
 	},
 	{
@@ -71,7 +71,7 @@ static struct msm_isp_color_fmt msm_isp_formats[] = {
 	.depth	  = 8,
 	.bitsperpxl = 8,
 	.fourcc	 = V4L2_PIX_FMT_NV12,
-	.pxlcode	= V4L2_MBUS_FMT_SBGGR10_1X10, /* Bayer sensor */
+	.pxlcode	= V4L2_MBUS_FMT_SBGGR10_1X10, /*              */
 	.colorspace = V4L2_COLORSPACE_JPEG,
 	},
 	{
@@ -79,7 +79,7 @@ static struct msm_isp_color_fmt msm_isp_formats[] = {
 	.depth	  = 8,
 	.bitsperpxl = 8,
 	.fourcc	 = V4L2_PIX_FMT_NV21,
-	.pxlcode	= V4L2_MBUS_FMT_SBGGR10_1X10, /* Bayer sensor */
+	.pxlcode	= V4L2_MBUS_FMT_SBGGR10_1X10, /*              */
 	.colorspace = V4L2_COLORSPACE_JPEG,
 	},
 	{
@@ -87,7 +87,7 @@ static struct msm_isp_color_fmt msm_isp_formats[] = {
 	.depth	  = 8,
 	.bitsperpxl = 8,
 	.fourcc	 = V4L2_PIX_FMT_NV16,
-	.pxlcode	= V4L2_MBUS_FMT_SBGGR10_1X10, /* Bayer sensor */
+	.pxlcode	= V4L2_MBUS_FMT_SBGGR10_1X10, /*              */
 	.colorspace = V4L2_COLORSPACE_JPEG,
 	},
 	{
@@ -95,7 +95,7 @@ static struct msm_isp_color_fmt msm_isp_formats[] = {
 	.depth	  = 8,
 	.bitsperpxl = 8,
 	.fourcc	 = V4L2_PIX_FMT_NV61,
-	.pxlcode	= V4L2_MBUS_FMT_SBGGR10_1X10, /* Bayer sensor */
+	.pxlcode	= V4L2_MBUS_FMT_SBGGR10_1X10, /*              */
 	.colorspace = V4L2_COLORSPACE_JPEG,
 	},
 	{
@@ -103,7 +103,7 @@ static struct msm_isp_color_fmt msm_isp_formats[] = {
 	.depth	  = 8,
 	.bitsperpxl = 8,
 	.fourcc	 = V4L2_PIX_FMT_NV21,
-	.pxlcode	= V4L2_MBUS_FMT_SGRBG10_1X10, /* Bayer sensor */
+	.pxlcode	= V4L2_MBUS_FMT_SGRBG10_1X10, /*              */
 	.colorspace = V4L2_COLORSPACE_JPEG,
 	},
 	{
@@ -111,7 +111,7 @@ static struct msm_isp_color_fmt msm_isp_formats[] = {
 	.depth	  = 8,
 	.bitsperpxl = 8,
 	.fourcc	 = V4L2_PIX_FMT_YUV420M,
-	.pxlcode	= V4L2_MBUS_FMT_SBGGR10_1X10, /* Bayer sensor */
+	.pxlcode	= V4L2_MBUS_FMT_SBGGR10_1X10, /*              */
 	.colorspace = V4L2_COLORSPACE_JPEG,
 	},
 	{
@@ -119,7 +119,7 @@ static struct msm_isp_color_fmt msm_isp_formats[] = {
 	.depth	  = 10,
 	.bitsperpxl = 10,
 	.fourcc	 = V4L2_PIX_FMT_SBGGR10,
-	.pxlcode	= V4L2_MBUS_FMT_SBGGR10_1X10, /* Bayer sensor */
+	.pxlcode	= V4L2_MBUS_FMT_SBGGR10_1X10, /*              */
 	.colorspace = V4L2_COLORSPACE_JPEG,
 	},
 	{
@@ -127,7 +127,7 @@ static struct msm_isp_color_fmt msm_isp_formats[] = {
 	.depth	  = 10,
 	.bitsperpxl = 10,
 	.fourcc	 = V4L2_PIX_FMT_SBGGR10,
-	.pxlcode	= V4L2_MBUS_FMT_SGRBG10_1X10, /* Bayer sensor */
+	.pxlcode	= V4L2_MBUS_FMT_SGRBG10_1X10, /*              */
 	.colorspace = V4L2_COLORSPACE_JPEG,
 	},
 	{
@@ -135,7 +135,7 @@ static struct msm_isp_color_fmt msm_isp_formats[] = {
 	.depth	  = 16,
 	.bitsperpxl = 16,
 	.fourcc	 = V4L2_PIX_FMT_YUYV,
-	.pxlcode	= V4L2_MBUS_FMT_YUYV8_2X8, /* YUV sensor */
+	.pxlcode	= V4L2_MBUS_FMT_YUYV8_2X8, /*            */
 	.colorspace = V4L2_COLORSPACE_JPEG,
 	},
 	{
@@ -143,7 +143,7 @@ static struct msm_isp_color_fmt msm_isp_formats[] = {
 	.depth	  = 16,
 	.bitsperpxl = 16,
 	.fourcc	 = V4L2_PIX_FMT_STATS_AE,
-	.pxlcode	= V4L2_MBUS_FMT_SBGGR10_1X10, /* YUV sensor */
+	.pxlcode	= V4L2_MBUS_FMT_SBGGR10_1X10, /*            */
 	.colorspace = V4L2_COLORSPACE_JPEG,
 	},
 	{
@@ -151,7 +151,7 @@ static struct msm_isp_color_fmt msm_isp_formats[] = {
 	.depth	  = 16,
 	.bitsperpxl = 16,
 	.fourcc	 = V4L2_PIX_FMT_STATS_AWB,
-	.pxlcode	= V4L2_MBUS_FMT_SBGGR10_1X10, /* YUV sensor */
+	.pxlcode	= V4L2_MBUS_FMT_SBGGR10_1X10, /*            */
 	.colorspace = V4L2_COLORSPACE_JPEG,
 	},
 	{
@@ -159,7 +159,7 @@ static struct msm_isp_color_fmt msm_isp_formats[] = {
 	.depth	  = 16,
 	.bitsperpxl = 16,
 	.fourcc	 = V4L2_PIX_FMT_STATS_AF,
-	.pxlcode	= V4L2_MBUS_FMT_SBGGR10_1X10, /* YUV sensor */
+	.pxlcode	= V4L2_MBUS_FMT_SBGGR10_1X10, /*            */
 	.colorspace = V4L2_COLORSPACE_JPEG,
 	},
 	{
@@ -167,7 +167,7 @@ static struct msm_isp_color_fmt msm_isp_formats[] = {
 	.depth    = 16,
 	.bitsperpxl = 16,
 	.fourcc  = V4L2_PIX_FMT_STATS_IHST,
-	.pxlcode        = V4L2_MBUS_FMT_SBGGR10_1X10, /* YUV sensor */
+	.pxlcode        = V4L2_MBUS_FMT_SBGGR10_1X10, /*            */
 	.colorspace = V4L2_COLORSPACE_JPEG,
 	},
 };
@@ -194,16 +194,16 @@ static int msm_get_sensor_info(
 	info.flash_enabled = sdata->flash_data->flash_type !=
 					MSM_CAMERA_FLASH_NONE;
 	info.pxlcode = pcam->usr_fmts[0].pxlcode;
-	info.flashtype = sdata->flash_type; /* two flash_types here? */
+	info.flashtype = sdata->flash_type; /*                       */
 	info.camera_type = sdata->camera_type;
-	/* sensor_type needed to add YUV/SOC in probing */
+	/*                                              */
 	info.sensor_type = sdata->sensor_type;
 	info.mount_angle = sdata->sensor_platform_info->mount_angle;
 	info.actuator_enabled = sdata->actuator_info ? 1 : 0;
 	info.strobe_flash_enabled = sdata->strobe_flash_data ? 1 : 0;
 	info.ispif_supported = mctl->ispif_sdev ? 1 : 0;
 
-	/* copy back to user space */
+	/*                         */
 	if (copy_to_user((void *)arg,
 				&info,
 				sizeof(struct msm_camsensor_info))) {
@@ -270,8 +270,8 @@ static int msm_mctl_add_intf_to_mctl_map(
 	return rc;
 }
 
-/* called by the server or the config nodes to handle user space
-	commands*/
+/*                                                              
+         */
 static int msm_mctl_cmd(struct msm_cam_media_controller *p_mctl,
 			unsigned int cmd, unsigned long arg)
 {
@@ -283,9 +283,9 @@ static int msm_mctl_cmd(struct msm_cam_media_controller *p_mctl,
 	}
 	D("%s:%d: cmd %d\n", __func__, __LINE__, cmd);
 
-	/* ... call sensor, ISPIF or VEF subdev*/
+	/*                                     */
 	switch (cmd) {
-		/* sensor config*/
+		/*              */
 	case MSM_CAM_IOCTL_GET_SENSOR_INFO:
 			rc = msm_get_sensor_info(p_mctl, argp);
 			break;
@@ -485,7 +485,7 @@ static int msm_mctl_cmd(struct msm_cam_media_controller *p_mctl,
 		rc = msm_mctl_pp_mctl_divert_done(p_mctl,
 			(void __user *)arg);
 		break;
-			/* ISFIF config*/
+			/*             */
 	case MSM_CAM_IOCTL_AXI_CONFIG:
 		if (p_mctl->axi_sdev) {
 			v4l2_set_subdev_hostdata(p_mctl->axi_sdev, p_mctl);
@@ -545,7 +545,7 @@ static int msm_mctl_cmd(struct msm_cam_media_controller *p_mctl,
 		break;
 
 	default:
-		/* ISP config*/
+		/*           */
 		D("%s:%d: go to default. Calling msm_isp_config\n",
 			__func__, __LINE__);
 		rc = p_mctl->isp_config(p_mctl, cmd, arg);
@@ -573,7 +573,7 @@ static int msm_mctl_open(struct msm_cam_media_controller *p_mctl,
 	sinfo = (struct msm_camera_sensor_info *) s_ctrl->sensordata;
 	camdev = sinfo->pdata;
 	mutex_lock(&p_mctl->lock);
-	/* open sub devices - once only*/
+	/*                             */
 	if (!p_mctl->opencnt) {
 		struct msm_sensor_csi_info csi_info;
 		wake_lock(&p_mctl->wake_lock);
@@ -586,7 +586,7 @@ static int msm_mctl_open(struct msm_cam_media_controller *p_mctl,
 			goto register_sdev_failed;
 		}
 
-		/* then sensor - move sub dev later */
+		/*                                  */
 		rc = v4l2_subdev_call(p_mctl->sensor_sdev, core, s_power, 1);
 		if (rc < 0) {
 			pr_err("%s: sensor powerup failed: %d\n", __func__, rc);
@@ -642,7 +642,7 @@ static void msm_mctl_release(struct msm_cam_media_controller *p_mctl)
 	struct msm_sensor_ctrl_t *s_ctrl = get_sctrl(p_mctl->sensor_sdev);
 	struct msm_camera_sensor_info *sinfo =
 		(struct msm_camera_sensor_info *) s_ctrl->sensordata;
-	pr_err("%s called\n", __func__); /* LGE_CHANGE, patch for IOMMU page fault, 2012.09.06, jungryoul.choi@lge.com */
+	pr_err("%s called\n", __func__); /*                                                                            */
 	v4l2_subdev_call(p_mctl->sensor_sdev, core, ioctl,
 		VIDIOC_MSM_SENSOR_RELEASE, NULL);
 
@@ -662,18 +662,6 @@ static void msm_mctl_release(struct msm_cam_media_controller *p_mctl)
 			VIDIOC_MSM_AXI_RELEASE, NULL);
 	}
 
-/* LGE_CHANGE_S, Workaround of MIPI signal misjudgment suggested by QCT case, 2013-09-13, john.park@lge.com */
-#if 1
-	if (p_mctl->csiphy_sdev) {
-		v4l2_subdev_call(p_mctl->csiphy_sdev, core, ioctl,
-			VIDIOC_MSM_CSIPHY_RELEASE,
-			sinfo->sensor_platform_info->csi_lane_params);
-	}
-	if (p_mctl->csid_sdev) {
-		v4l2_subdev_call(p_mctl->csid_sdev, core, ioctl,
-			VIDIOC_MSM_CSID_RELEASE, NULL);
-	}
-#else   // QCT original 
 	if (p_mctl->csid_sdev) {
 		v4l2_subdev_call(p_mctl->csid_sdev, core, ioctl,
 			VIDIOC_MSM_CSID_RELEASE, NULL);
@@ -684,8 +672,6 @@ static void msm_mctl_release(struct msm_cam_media_controller *p_mctl)
 			VIDIOC_MSM_CSIPHY_RELEASE,
 			sinfo->sensor_platform_info->csi_lane_params);
 	}
-#endif
-/* LGE_CHANGE_E, Workaround of MIPI signal misjudgment suggested by QCT case, 2013-09-13, john.park@lge.com */
 
 	if (p_mctl->act_sdev) {
 		v4l2_subdev_call(p_mctl->act_sdev, core, s_power, 0);
@@ -693,25 +679,23 @@ static void msm_mctl_release(struct msm_cam_media_controller *p_mctl)
 	}
 
 	v4l2_subdev_call(p_mctl->sensor_sdev, core, s_power, 0);
-	pr_err("%s called X\n", __func__); /* LGE_CHANGE, patch for IOMMU page fault, 2012.09.06, jungryoul.choi@lge.com */
-	p_mctl->hardware_running = 0; /* LGE_CHANGE, patch for IOMMU page fault, 2012.09.06, jungryoul.choi@lge.com */
+	pr_err("%s called X\n", __func__); /*                                                                            */
+	p_mctl->hardware_running = 0; /*                                                                            */
 
-//Start LGE_BSP_CAMERA : qcom-daemon - jonghwan.ko@lge.com
-#if !defined(CONFIG_LGE_GK_CAMERA)
+//                                                        
        pr_err(" %s : Call VIDIOC_MSM_ISPIF_REL  ",__func__);
 	v4l2_subdev_call(p_mctl->ispif_sdev,
 			core, ioctl, VIDIOC_MSM_ISPIF_REL, NULL);
 	v4l2_subdev_call(p_mctl->ispif_sdev,
 			core, ioctl, VIDIOC_MSM_ISPIF_REL, NULL);
-#endif
-//End  LGE_BSP_CAMERA : qcom-daemon - jonghwan.ko@lge.com
+//                                                       
 	pm_qos_update_request(&p_mctl->pm_qos_req_list,
 				PM_QOS_DEFAULT_VALUE);
 	pm_qos_remove_request(&p_mctl->pm_qos_req_list);
 
-/* LGE_CHANGE_S, fixed kernel crash issue, 2013.04.11, youngil.yun[Start] */
+/*                                                                        */
 	if(&(p_mctl->wake_lock.link) != NULL)
-/* LGE_CHANGE_E, fixed kernel crash issue, 2013.04.11, youngil.yun[End] */
+/*                                                                      */
 		wake_unlock(&p_mctl->wake_lock);
 }
 
@@ -738,7 +722,7 @@ int msm_mctl_init_user_formats(struct msm_cam_v4l2_device *pcam)
 	if (!pcam->usr_fmts)
 		return -ENOMEM;
 
-	/* from sensor to ISP.. fill the data structure */
+	/*                                              */
 	for (i = 0; i < numfmt_sensor; i++) {
 		rc = v4l2_subdev_call(sd, video, enum_mbus_fmt, i, &pxlcode);
 		D("rc is  %d\n", rc);
@@ -748,7 +732,7 @@ int msm_mctl_init_user_formats(struct msm_cam_v4l2_device *pcam)
 		}
 
 		for (j = 0; j < ARRAY_SIZE(msm_isp_formats); j++) {
-			/* find the corresponding format */
+			/*                               */
 			if (pxlcode == msm_isp_formats[j].pxlcode) {
 				pcam->usr_fmts[numfmt] = msm_isp_formats[j];
 				D("pcam->usr_fmts=0x%x\n", (u32)pcam->usr_fmts);
@@ -769,12 +753,12 @@ int msm_mctl_init_user_formats(struct msm_cam_v4l2_device *pcam)
 	}
 
 	D("Found %d supported formats.\n", pcam->num_fmts);
-	/* set the default pxlcode, in any case, it will be set through
-	 * setfmt */
+	/*                                                             
+           */
 	return 0;
 }
 
-/* this function plug in the implementation of a v4l2_subdev */
+/*                                                           */
 int msm_mctl_init(struct msm_cam_v4l2_device *pcam)
 {
 	struct msm_cam_media_controller *pmctl = NULL;
@@ -799,14 +783,14 @@ int msm_mctl_init(struct msm_cam_v4l2_device *pcam)
 	mutex_init(&pmctl->lock);
 	pmctl->opencnt = 0;
 
-	/* init module operations*/
+	/*                       */
 	pmctl->mctl_open = msm_mctl_open;
 	pmctl->mctl_cmd = msm_mctl_cmd;
 	pmctl->mctl_release = msm_mctl_release;
 	pmctl->isp_config = msm_isp_config;
 	pmctl->isp_notify = msm_isp_notify;
 
-	/* init mctl buf */
+	/*               */
 	msm_mctl_buf_init(pcam);
 	memset(&pmctl->pp_info, 0, sizeof(pmctl->pp_info));
 	pmctl->vfe_output_mode = 0;
@@ -817,9 +801,9 @@ int msm_mctl_init(struct msm_cam_v4l2_device *pcam)
 	pmctl->sensor_sdev = pcam->sensor_sdev;
 	pmctl->sdata = pcam->sdata;
 	v4l2_set_subdev_hostdata(pcam->sensor_sdev, pmctl);
-/* LGE_CHANGE_S, Patch for ION free, 2013.1.8, gayoung85.lee[Start] */
+/*                                                                  */
 #ifdef CONFIG_MSM_MULTIMEDIA_USE_ION
-#if defined(CONFIG_LGE_GK_CAMERA) ||defined(CONFIG_MACH_APQ8064_AWIFI)
+#if defined(CONFIG_MACH_APQ8064_PALMAN)
 	pmctl->client = msm_camera_v4l2_get_ion_client(pcam);
 #else		
 	if (!pmctl->client) {
@@ -828,7 +812,7 @@ int msm_mctl_init(struct msm_cam_v4l2_device *pcam)
 	}
 #endif
 #endif
-/* LGE_CHANGE_E, Patch for ION free, 2013.1.8, gayoung85.lee[End] */
+/*                                                                */
 	return 0;
 }
 
@@ -843,26 +827,26 @@ int msm_mctl_free(struct msm_cam_v4l2_device *pcam)
 		pr_err("%s: invalid mctl controller", __func__);
 		return -EINVAL;
 	}
-/* LGE_CHANGE_S, Patch for ION free, 2013.1.8, gayoung85.lee[Start] */
-#if defined(CONFIG_LGE_GK_CAMERA) ||defined(CONFIG_MACH_APQ8064_AWIFI)
+/*                                                                  */
+#if defined(CONFIG_MACH_APQ8064_PALMAN)
 #ifdef CONFIG_MSM_MULTIMEDIA_USE_ION
     msm_camera_v4l2_put_ion_client(pcam);
 #endif
 #endif
-/* LGE_CHANGE_E, Patch for ION free, 2013.1.8, gayoung85.lee[End] */
+/*                                                                */
 	mutex_destroy(&pmctl->lock);
 	wake_lock_destroy(&pmctl->wake_lock);
-	/*clear out mctl fields*/
+	/*                     */
 	memset(pmctl, 0, sizeof(struct msm_cam_media_controller));
 	msm_cam_server_free_mctl(pcam->mctl_handle);
 	return rc;
 }
 
-/* mctl node v4l2_file_operations */
+/*                                */
 static int msm_mctl_dev_open(struct file *f)
 {
 	int rc = -EINVAL, i;
-	/* get the video device */
+	/*                      */
 	struct msm_cam_v4l2_device *pcam  = NULL;
 	struct msm_cam_v4l2_dev_inst *pcam_inst;
 	struct msm_cam_media_controller *pmctl;
@@ -884,7 +868,7 @@ static int msm_mctl_dev_open(struct file *f)
 		if (pcam->mctl_node.dev_inst[i] == NULL)
 			break;
 	}
-	/* if no instance is available, return error */
+	/*                                           */
 	if (i == MSM_DEV_INST_MAX) {
 		mutex_unlock(&pcam->mctl_node.dev_lock);
 		return rc;
@@ -922,15 +906,15 @@ static int msm_mctl_dev_open(struct file *f)
 			pcam->mctl_node.pvdev);
 
 	pcam_inst->vbqueue_initialized = 0;
-/* LGE_CHANGE_S, Patch for ION free, 2013.1.8, gayoung85.lee[Start] */
-#if defined(CONFIG_LGE_GK_CAMERA) ||defined(CONFIG_MACH_APQ8064_AWIFI)
+/*                                                                  */
+#if defined(CONFIG_MACH_APQ8064_PALMAN)
 #ifdef CONFIG_MSM_MULTIMEDIA_USE_ION
 	pmctl->client = msm_camera_v4l2_get_ion_client(pcam);
 #endif
 #else
 	kref_get(&pmctl->refcount);
 #endif
-/* LGE_CHANGE_E, Patch for ION free, 2013.1.8, gayoung85.lee[End] */
+/*                                                                */
 	f->private_data = &pcam_inst->eventHandle;
 
 	D("f->private_data = 0x%x, pcam = 0x%x\n",
@@ -995,12 +979,12 @@ static int msm_mctl_dev_close(struct file *f)
 	pmctl = msm_cam_server_get_mctl(pcam->mctl_handle);
 	mutex_lock(&pcam->mctl_node.dev_lock);
 	mutex_lock(&pcam_inst->inst_lock);
-/* LGE_CHANGE_S, Patch for ION free, 2013.1.8, gayoung85.lee[Start] */
-#if defined(CONFIG_LGE_GK_CAMERA) ||defined(CONFIG_MACH_APQ8064_AWIFI)
+/*                                                                  */
+#if defined(CONFIG_MACH_APQ8064_PALMAN)
 	if (pcam_inst->vbqueue_initialized)
 		vb2_queue_release(&pcam_inst->vid_bufq);	
 #endif
-/* LGE_CHANGE_E, Patch for ION free, 2013.1.8, gayoung85.lee[End] */
+/*                                                                */
 	D("%s : active %d ", __func__, pcam->mctl_node.active);
 	if (pcam->mctl_node.active == 1) {
 		rc = msm_cam_server_close_mctl_session(pcam);
@@ -1015,12 +999,12 @@ static int msm_mctl_dev_close(struct file *f)
 	pcam_inst->streamon = 0;
 	pcam->mctl_node.use_count--;
 	pcam->mctl_node.dev_inst_map[pcam_inst->image_mode] = NULL;
-/* LGE_CHANGE_S, Patch for ION free, 2013.1.8, gayoung85.lee[Start] */
-#if !defined(CONFIG_LGE_GK_CAMERA) && !defined(CONFIG_MACH_APQ8064_AWIFI)
+/*                                                                  */
+#if !defined(CONFIG_MACH_APQ8064_PALMAN)
 	if (pcam_inst->vbqueue_initialized)
 		vb2_queue_release(&pcam_inst->vid_bufq);
 #endif
-/* LGE_CHANGE_E, Patch for ION free, 2013.1.8, gayoung85.lee[End] */
+/*                                                                */
 	D("%s Closing down instance %p ", __func__, pcam_inst);
 	pcam->mctl_node.dev_inst[pcam_inst->my_index] = NULL;
 	msm_destroy_v4l2_event_queue(&pcam_inst->eventHandle);
@@ -1032,8 +1016,8 @@ static int msm_mctl_dev_close(struct file *f)
 
 	kfree(pcam_inst);
 	f->private_data = NULL;
-/* LGE_CHANGE_S, Patch for ION free, 2013.1.8, gayoung85.lee[Start] */
-#if defined(CONFIG_LGE_GK_CAMERA) ||defined(CONFIG_MACH_APQ8064_AWIFI)
+/*                                                                  */
+#if defined(CONFIG_MACH_APQ8064_PALMAN)
 #ifdef CONFIG_MSM_MULTIMEDIA_USE_ION
     msm_camera_v4l2_put_ion_client(pcam);
 #endif
@@ -1043,7 +1027,7 @@ static int msm_mctl_dev_close(struct file *f)
 		kref_put(&pmctl->refcount, msm_release_ion_client);
 	}
 #endif
-/* LGE_CHANGE_E, Patch for ION free, 2013.1.8, gayoung85.lee[End] */
+/*                                                                */
 	mutex_unlock(&pcam->mctl_node.dev_lock);
 	D("%s : use_count %d X ", __func__, pcam->mctl_node.use_count);
 	return rc;
@@ -1058,9 +1042,9 @@ static struct v4l2_file_operations g_msm_mctl_fops = {
 };
 
 /*
- *
- * implementation of mctl node v4l2_ioctl_ops
- *
+  
+                                             
+  
  */
 static int msm_mctl_v4l2_querycap(struct file *f, void *pctx,
 				struct v4l2_capability *pcaps)
@@ -1174,7 +1158,7 @@ static int msm_mctl_v4l2_reqbufs(struct file *f, void *pctx,
 		return rc;
 	}
 	if (!pb->count) {
-		/* Deallocation. free buf_offset array */
+		/*                                     */
 		D("%s Inst %p freeing buffer offsets array",
 			__func__, pcam_inst);
 		for (j = 0 ; j < pcam_inst->buf_count ; j++) {
@@ -1183,8 +1167,8 @@ static int msm_mctl_v4l2_reqbufs(struct file *f, void *pctx,
 		}
 		kfree(pcam_inst->buf_offset);
 		pcam_inst->buf_offset = NULL;
-		/* If the userspace has deallocated all the
-		 * buffers, then release the vb2 queue */
+		/*                                         
+                                         */
 		if (pcam_inst->vbqueue_initialized) {
 			vb2_queue_release(&pcam_inst->vid_bufq);
 			pcam_inst->vbqueue_initialized = 0;
@@ -1192,7 +1176,7 @@ static int msm_mctl_v4l2_reqbufs(struct file *f, void *pctx,
 	} else {
 		D("%s Inst %p Allocating buf_offset array",
 			__func__, pcam_inst);
-		/* Allocation. allocate buf_offset array */
+		/*                                       */
 		pcam_inst->buf_offset = (struct msm_cam_buf_offset **)
 			kzalloc(pb->count * sizeof(struct msm_cam_buf_offset *),
 							GFP_KERNEL);
@@ -1228,7 +1212,7 @@ static int msm_mctl_v4l2_reqbufs(struct file *f, void *pctx,
 static int msm_mctl_v4l2_querybuf(struct file *f, void *pctx,
 					struct v4l2_buffer *pb)
 {
-	/* get the video device */
+	/*                      */
 	int rc = 0;
 	struct msm_cam_v4l2_dev_inst *pcam_inst;
 	pcam_inst = container_of(f->private_data,
@@ -1246,7 +1230,7 @@ static int msm_mctl_v4l2_qbuf(struct file *f, void *pctx,
 					struct v4l2_buffer *pb)
 {
 	int rc = 0, i = 0;
-	/* get the camera device */
+	/*                       */
 	struct msm_cam_v4l2_dev_inst *pcam_inst;
 	pcam_inst = container_of(f->private_data,
 		struct msm_cam_v4l2_dev_inst, eventHandle);
@@ -1262,7 +1246,7 @@ static int msm_mctl_v4l2_qbuf(struct file *f, void *pctx,
 	}
 
 	if (pb->type == V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE) {
-		/* Reject the buffer if planes array was not allocated */
+		/*                                                     */
 		if (pb->m.planes == NULL) {
 			pr_err("%s Planes array is null ", __func__);
 			mutex_unlock(&pcam_inst->inst_lock);
@@ -1299,7 +1283,7 @@ static int msm_mctl_v4l2_dqbuf(struct file *f, void *pctx,
 					struct v4l2_buffer *pb)
 {
 	int rc = 0, i;
-	/* get the camera device */
+	/*                       */
 	struct msm_cam_v4l2_dev_inst *pcam_inst;
 	pcam_inst = container_of(f->private_data,
 		struct msm_cam_v4l2_dev_inst, eventHandle);
@@ -1316,7 +1300,7 @@ static int msm_mctl_v4l2_dqbuf(struct file *f, void *pctx,
 	D("%s, videobuf_dqbuf returns %d\n", __func__, rc);
 
 	if (pb->type == V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE) {
-		/* Reject the buffer if planes array was not allocated */
+		/*                                                     */
 		if (pb->m.planes == NULL) {
 			pr_err("%s Planes array is null\n", __func__);
 			mutex_unlock(&pcam_inst->inst_lock);
@@ -1343,7 +1327,7 @@ static int msm_mctl_v4l2_streamon(struct file *f, void *pctx,
 					enum v4l2_buf_type buf_type)
 {
 	int rc = 0;
-	/* get the camera device */
+	/*                       */
 	struct msm_cam_v4l2_device *pcam  = video_drvdata(f);
 	struct msm_cam_v4l2_dev_inst *pcam_inst;
 	pcam_inst = container_of(f->private_data,
@@ -1363,11 +1347,11 @@ static int msm_mctl_v4l2_streamon(struct file *f, void *pctx,
 	}
 
 	D("%s Calling videobuf_streamon", __func__);
-	/* if HW streaming on is successful, start buffer streaming */
+	/*                                                          */
 	rc = vb2_streamon(&pcam_inst->vid_bufq, buf_type);
 	D("%s, videobuf_streamon returns %d\n", __func__, rc);
 
-	/* turn HW (VFE/sensor) streaming */
+	/*                                */
 	pcam_inst->streamon = 1;
 	mutex_unlock(&pcam_inst->inst_lock);
 	mutex_unlock(&pcam->mctl_node.dev_lock);
@@ -1379,7 +1363,7 @@ static int msm_mctl_v4l2_streamoff(struct file *f, void *pctx,
 					enum v4l2_buf_type buf_type)
 {
 	int rc = 0;
-	/* get the camera device */
+	/*                       */
 	struct msm_cam_v4l2_device *pcam  = video_drvdata(f);
 	struct msm_cam_v4l2_dev_inst *pcam_inst;
 	pcam_inst = container_of(f->private_data,
@@ -1394,15 +1378,15 @@ static int msm_mctl_v4l2_streamoff(struct file *f, void *pctx,
 		return -EINVAL;
 	}
 
-	/* first turn of HW (VFE/sensor) streaming so that buffers are
-		not in use when we free the buffers */
+	/*                                                            
+                                      */
 	mutex_lock(&pcam->mctl_node.dev_lock);
 	mutex_lock(&pcam_inst->inst_lock);
 	pcam_inst->streamon = 0;
 	if (rc < 0)
 		pr_err("%s: hw failed to stop streaming\n", __func__);
 
-	/* stop buffer streaming */
+	/*                       */
 	rc = vb2_streamoff(&pcam_inst->vid_bufq, buf_type);
 	D("%s, videobuf_streamoff returns %d\n", __func__, rc);
 	mutex_unlock(&pcam_inst->inst_lock);
@@ -1413,7 +1397,7 @@ static int msm_mctl_v4l2_streamoff(struct file *f, void *pctx,
 static int msm_mctl_v4l2_enum_fmt_cap(struct file *f, void *pctx,
 					struct v4l2_fmtdesc *pfmtdesc)
 {
-	/* get the video device */
+	/*                      */
 	struct msm_cam_v4l2_device *pcam  = video_drvdata(f);
 	const struct msm_isp_color_fmt *isp_fmt;
 
@@ -1467,8 +1451,8 @@ static int msm_mctl_v4l2_g_fmt_cap_mplane(struct file *f,
 	return rc;
 }
 
-/* This function will readjust the format parameters based in HW
-  capabilities. Called by s_fmt_cap
+/*                                                              
+                                   
 */
 static int msm_mctl_v4l2_try_fmt_cap(struct file *f, void *pctx,
 					struct v4l2_format *pfmt)
@@ -1492,8 +1476,8 @@ static int msm_mctl_v4l2_try_fmt_cap_mplane(struct file *f, void *pctx,
 	return rc;
 }
 
-/* This function will reconfig the v4l2 driver and HW device, it should be
-   called after the streaming is stopped.
+/*                                                                        
+                                         
 */
 static int msm_mctl_v4l2_s_fmt_cap(struct file *f, void *pctx,
 					struct v4l2_format *pfmt)
@@ -1580,7 +1564,7 @@ static int msm_mctl_v4l2_s_crop(struct file *f, void *pctx,
 	return rc;
 }
 
-/* Stream type-dependent parameter ioctls */
+/*                                        */
 static int msm_mctl_v4l2_g_parm(struct file *f, void *pctx,
 				struct v4l2_streamparm *a)
 {
@@ -1624,7 +1608,7 @@ static int msm_mctl_v4l2_s_parm(struct file *f, void *pctx,
 		pr_err("%s: invalid mctl controller", __func__);
 		return -EINVAL;
 	}
-	/* save msm_dev node idx for subdev notify lookup */
+	/*                                                */
 	SET_DEVID_MODE(pcam_inst->inst_handle, pmctl->pcam_ptr->vnode_id);
 	SET_IMG_MODE(pcam_inst->inst_handle, pcam_inst->image_mode);
 	SET_MCTLPP_INST_IDX(pcam_inst->inst_handle, pcam_inst->my_index);
@@ -1650,7 +1634,7 @@ static int msm_mctl_v4l2_subscribe_event(struct v4l2_fh *fh,
 		(struct msm_cam_v4l2_dev_inst *)container_of(fh,
 		struct msm_cam_v4l2_dev_inst, eventHandle);
 
-	D("%s:fh = 0x%x, type = 0x%x\n", __func__, (u32)fh, sub->type);
+	pr_err("%s:fh = 0x%x, type = 0x%x\n", __func__, (u32)fh, sub->type);
 
 	if (sub->type == V4L2_EVENT_ALL)
 		sub->type = V4L2_EVENT_PRIVATE_START+MSM_CAM_APP_NOTIFY_EVENT;
@@ -1722,7 +1706,7 @@ static long msm_mctl_v4l2_private_ioctl(struct file *file, void *fh,
 	return rc;
 }
 
-/* mctl node v4l2_ioctl_ops */
+/*                          */
 static const struct v4l2_ioctl_ops g_msm_mctl_ioctl_ops = {
 	.vidioc_querycap = msm_mctl_v4l2_querycap,
 
@@ -1741,7 +1725,7 @@ static const struct v4l2_ioctl_ops g_msm_mctl_ioctl_ops = {
 	.vidioc_streamon = msm_mctl_v4l2_streamon,
 	.vidioc_streamoff = msm_mctl_v4l2_streamoff,
 
-	/* format ioctls */
+	/*               */
 	.vidioc_enum_fmt_vid_cap = msm_mctl_v4l2_enum_fmt_cap,
 	.vidioc_enum_fmt_vid_cap_mplane = msm_mctl_v4l2_enum_fmt_cap,
 	.vidioc_try_fmt_vid_cap = msm_mctl_v4l2_try_fmt_cap,
@@ -1754,11 +1738,11 @@ static const struct v4l2_ioctl_ops g_msm_mctl_ioctl_ops = {
 	.vidioc_g_jpegcomp = msm_mctl_v4l2_g_jpegcomp,
 	.vidioc_s_jpegcomp = msm_mctl_v4l2_s_jpegcomp,
 
-	/* Stream type-dependent parameter ioctls */
+	/*                                        */
 	.vidioc_g_parm =  msm_mctl_v4l2_g_parm,
 	.vidioc_s_parm =  msm_mctl_v4l2_s_parm,
 
-	/* event subscribe/unsubscribe */
+	/*                             */
 	.vidioc_subscribe_event = msm_mctl_v4l2_subscribe_event,
 	.vidioc_unsubscribe_event = msm_mctl_v4l2_unsubscribe_event,
 	.vidioc_default = msm_mctl_v4l2_private_ioctl,
@@ -1772,7 +1756,7 @@ int msm_setup_mctl_node(struct msm_cam_v4l2_device *pcam)
 	struct platform_device *pdev = NULL;
 	D("%s\n", __func__);
 
-	/* first register the v4l2 device */
+	/*                                */
 	if (pcam->sensor_sdev->flags & V4L2_SUBDEV_FL_IS_I2C) {
 		client = v4l2_get_subdevdata(pcam->sensor_sdev);
 		pcam->mctl_node.v4l2_dev.dev = &client->dev;
@@ -1781,27 +1765,27 @@ int msm_setup_mctl_node(struct msm_cam_v4l2_device *pcam)
 		pcam->mctl_node.v4l2_dev.dev = &pdev->dev;
 	}
 
-	/* first register the v4l2 device */
+	/*                                */
 	rc = v4l2_device_register(pcam->mctl_node.v4l2_dev.dev,
 				&pcam->mctl_node.v4l2_dev);
 	if (rc < 0)
 		return -EINVAL;
-	/*	else
-			pcam->v4l2_dev.notify = msm_cam_v4l2_subdev_notify; */
+	/*     
+                                                       */
 
-	/* now setup video device */
+	/*                        */
 	pvdev = video_device_alloc();
 	if (pvdev == NULL) {
 		pr_err("%s: video_device_alloc failed\n", __func__);
 		return rc;
 	}
 
-	/* init video device's driver interface */
+	/*                                      */
 	D("sensor name = %s, sizeof(pvdev->name)=%d\n",
 			pcam->sensor_sdev->name, sizeof(pvdev->name));
 
-	/* device info - strlcpy is safer than strncpy but
-	   only if architecture supports*/
+	/*                                                
+                                 */
 	strlcpy(pvdev->name, pcam->sensor_sdev->name,
 			sizeof(pvdev->name));
 
@@ -1811,7 +1795,7 @@ int msm_setup_mctl_node(struct msm_cam_v4l2_device *pcam)
 	pvdev->minor	  = -1;
 	pvdev->vfl_type   = 1;
 
-	/* register v4l2 video device to kernel as /dev/videoXX */
+	/*                                                      */
 	D("%s video_register_device\n", __func__);
 	rc = video_register_device(pvdev,
 			VFL_TYPE_GRABBER,
@@ -1823,7 +1807,7 @@ int msm_setup_mctl_node(struct msm_cam_v4l2_device *pcam)
 	D("%s: video device registered as /dev/video%d\n",
 			__func__, pvdev->num);
 
-	/* connect pcam and mctl video dev to each other */
+	/*                                               */
 	pcam->mctl_node.pvdev	= pvdev;
 	video_set_drvdata(pcam->mctl_node.pvdev, pcam);
 

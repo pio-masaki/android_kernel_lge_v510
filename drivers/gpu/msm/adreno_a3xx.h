@@ -22,4 +22,4 @@ unsigned int a3xx_busy_cycles(struct adreno_device *adreno_dev);
 int a3xx_rb_init(struct adreno_device *adreno_dev,
 			struct adreno_ringbuffer *rb);
 
-#endif /*__A3XX_H */
+#endif /*         */

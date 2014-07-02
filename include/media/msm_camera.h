@@ -1,4 +1,4 @@
-/* Copyright (c) 2009-2013, The Linux Foundation. All rights reserved.
+/* Copyright (c) 2009-2012, The Linux Foundation. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -265,12 +265,12 @@ struct v4l2_event_and_payload {
 };
 
 struct msm_stats_reqbuf {
-	int num_buf;		/* how many buffers requested */
-	int stats_type;	/* stats type */
+	int num_buf;		/*                            */
+	int stats_type;	/*            */
 };
 
 struct msm_stats_flush_bufq {
-	int stats_type;	/* enum msm_stats_enum_type */
+	int stats_type;	/*                          */
 };
 
 struct msm_mctl_pp_cmd {
@@ -318,20 +318,20 @@ struct msm_mctl_post_proc_cmd {
 #define MSM_CAM_CTRL_CMD_DONE  0
 #define MSM_CAM_SENSOR_VFE_CMD 1
 
-/* Should be same as VIDEO_MAX_PLANES in videodev2.h */
+/*                                                   */
 #define MAX_PLANES 8
 
-/*****************************************************
- *  structure
- *****************************************************/
+/*                                                    
+             
+                                                     */
 
-/* define five type of structures for userspace <==> kernel
- * space communication:
- * command 1 - 2 are from userspace ==> kernel
- * command 3 - 4 are from kernel ==> userspace
- *
- * 1. control command: control command(from control thread),
- *                     control status (from config thread);
+/*                                                         
+                       
+                                              
+                                              
+  
+                                                            
+                                                           
  */
 struct msm_ctrl_cmd {
 	uint16_t type;
@@ -339,56 +339,56 @@ struct msm_ctrl_cmd {
 	void *value;
 	uint16_t status;
 	uint32_t timeout_ms;
-	int resp_fd; /* FIXME: to be used by the kernel, pass-through for now */
-	int vnode_id;  /* video dev id. Can we overload resp_fd? */
+	int resp_fd; /*                                                       */
+	int vnode_id;  /*                                        */
 	int queue_idx;
 	uint32_t evt_id;
-	uint32_t stream_type; /* used to pass value to qcamera server */
-	int config_ident; /*used as identifier for config node*/
+	uint32_t stream_type; /*                                      */
+	int config_ident; /*                                  */
 };
 
 struct msm_cam_evt_msg {
-	unsigned short type;	/* 1 == event (RPC), 0 == message (adsp) */
+	unsigned short type;	/*                                       */
 	unsigned short msg_id;
-	unsigned int len;	/* size in, number of bytes out */
+	unsigned int len;	/*                              */
 	uint32_t frame_id;
 	void *data;
 	struct timespec timestamp;
 };
 
 struct msm_pp_frame_sp {
-	/* phy addr of the buffer */
+	/*                        */
 	unsigned long  phy_addr;
 	uint32_t       y_off;
 	uint32_t       cbcr_off;
-	/* buffer length */
+	/*               */
 	uint32_t       length;
 	int32_t        fd;
 	uint32_t       addr_offset;
-	/* mapped addr */
+	/*             */
 	unsigned long  vaddr;
 };
 
 struct msm_pp_frame_mp {
-	/* phy addr of the plane */
+	/*                       */
 	unsigned long  phy_addr;
-	/* offset of plane data */
+	/*                      */
 	uint32_t       data_offset;
-	/* plane length */
+	/*              */
 	uint32_t       length;
 	int32_t        fd;
 	uint32_t       addr_offset;
-	/* mapped addr */
+	/*             */
 	unsigned long  vaddr;
 };
 
 struct msm_pp_frame {
-	uint32_t       handle; /* stores vb cookie */
+	uint32_t       handle; /*                  */
 	uint32_t       frame_id;
 	unsigned short buf_idx;
 	int            path;
 	unsigned short image_type;
-	unsigned short num_planes; /* 1 for sp */
+	unsigned short num_planes; /*          */
 	struct timeval timestamp;
 	union {
 		struct msm_pp_frame_sp sp;
@@ -429,9 +429,9 @@ struct msm_cam_evt_divert_frame {
 };
 
 struct msm_mctl_pp_cmd_ack_event {
-	uint32_t cmd;        /* VPE_CMD_ZOOM? */
-	int      status;     /* 0 done, < 0 err */
-	uint32_t cookie;     /* daemon's cookie */
+	uint32_t cmd;        /*               */
+	int      status;     /*                 */
+	uint32_t cookie;     /*                 */
 };
 
 struct msm_mctl_pp_event_info {
@@ -464,26 +464,26 @@ struct msm_isp_event_ctrl {
 #define MSM_CAM_APP_NOTIFY_EVENT  0
 #define MSM_CAM_APP_NOTIFY_ERROR_EVENT  1
 
-/* this one is used to send ctrl/status up to config thread */
+/*                                                          */
 
 struct msm_stats_event_ctrl {
-	/* 0 - ctrl_cmd from control thread,
-	 * 1 - stats/event kernel,
-	 * 2 - V4L control or read request */
+	/*                                  
+                           
+                                    */
 	int resptype;
 	int timeout_ms;
 	struct msm_ctrl_cmd ctrl_cmd;
-	/* struct  vfe_event_t  stats_event; */
+	/*                                   */
 	struct msm_cam_evt_msg stats_event;
 };
 
-/* 2. config command: config command(from config thread); */
+/*                                                        */
 struct msm_camera_cfg_cmd {
-	/* what to config:
-	 * 1 - sensor config, 2 - vfe config */
+	/*                
+                                      */
 	uint16_t cfg_type;
 
-	/* sensor config type */
+	/*                    */
 	uint16_t cmd_type;
 	uint16_t queue;
 	uint16_t length;
@@ -570,7 +570,7 @@ struct msm_camera_cfg_cmd {
 #define CMD_AXI_STOP   0xE2
 #define CMD_AXI_RESET  0xE3
 #define CMD_AXI_ABORT  0xE4
-
+#define CMD_AXI_STOP_RECOVERY 0xE5 /*                                                                                                 */
 
 
 #define AXI_CMD_PREVIEW      BIT(0)
@@ -580,7 +580,7 @@ struct msm_camera_cfg_cmd {
 #define AXI_CMD_RAW_CAPTURE  BIT(4)
 #define AXI_CMD_LIVESHOT     BIT(5)
 
-/* vfe config command: config command(from config thread)*/
+/*                                                       */
 struct msm_vfe_cfg_cmd {
 	int cmd_type;
 	uint16_t length;
@@ -644,23 +644,23 @@ struct camera_enable_cmd {
 #define FRAME_MAX			5
 
 enum msm_stats_enum_type {
-	MSM_STATS_TYPE_AEC, /* legacy based AEC */
-	MSM_STATS_TYPE_AF,  /* legacy based AF */
-	MSM_STATS_TYPE_AWB, /* legacy based AWB */
-	MSM_STATS_TYPE_RS,  /* legacy based RS */
-	MSM_STATS_TYPE_CS,  /* legacy based CS */
-	MSM_STATS_TYPE_IHIST,   /* legacy based HIST */
-	MSM_STATS_TYPE_SKIN,    /* legacy based SKIN */
-	MSM_STATS_TYPE_BG,  /* Bayer Grids */
-	MSM_STATS_TYPE_BF,  /* Bayer Focus */
-	MSM_STATS_TYPE_BHIST,   /* Bayer Hist */
-	MSM_STATS_TYPE_AE_AW,   /* legacy stats for vfe 2.x*/
-	MSM_STATS_TYPE_COMP, /* Composite stats */
-	MSM_STATS_TYPE_MAX  /* MAX */
+	MSM_STATS_TYPE_AEC, /*                  */
+	MSM_STATS_TYPE_AF,  /*                 */
+	MSM_STATS_TYPE_AWB, /*                  */
+	MSM_STATS_TYPE_RS,  /*                 */
+	MSM_STATS_TYPE_CS,  /*                 */
+	MSM_STATS_TYPE_IHIST,   /*                   */
+	MSM_STATS_TYPE_SKIN,    /*                   */
+	MSM_STATS_TYPE_BG,  /*             */
+	MSM_STATS_TYPE_BF,  /*             */
+	MSM_STATS_TYPE_BHIST,   /*            */
+	MSM_STATS_TYPE_AE_AW,   /*                         */
+	MSM_STATS_TYPE_COMP, /*                 */
+	MSM_STATS_TYPE_MAX  /*     */
 };
 
 struct msm_stats_buf_info {
-	int type; /* msm_stats_enum_type */
+	int type; /*                     */
 	int fd;
 	void *vaddr;
 	uint32_t offset;
@@ -701,8 +701,8 @@ struct outputCfg {
 
 #define OUTPUT_1	0
 #define OUTPUT_2	1
-#define OUTPUT_1_AND_2            2   /* snapshot only */
-#define OUTPUT_1_AND_3            3   /* video */
+#define OUTPUT_1_AND_2            2   /*               */
+#define OUTPUT_1_AND_3            3   /*       */
 #define CAMIF_TO_AXI_VIA_OUTPUT_2 4
 #define OUTPUT_1_AND_CAMIF_TO_AXI_VIA_OUTPUT_2 5
 #define OUTPUT_2_AND_CAMIF_TO_AXI_VIA_OUTPUT_1 6
@@ -843,33 +843,33 @@ struct msm_stats_buf {
 	int buf_idx;
 };
 #define MSM_V4L2_EXT_CAPTURE_MODE_DEFAULT 0
-/* video capture mode in VIDIOC_S_PARM */
+/*                                     */
 #define MSM_V4L2_EXT_CAPTURE_MODE_PREVIEW \
 	(MSM_V4L2_EXT_CAPTURE_MODE_DEFAULT+1)
-/* extendedmode for video recording in VIDIOC_S_PARM */
+/*                                                   */
 #define MSM_V4L2_EXT_CAPTURE_MODE_VIDEO \
 	(MSM_V4L2_EXT_CAPTURE_MODE_DEFAULT+2)
-/* extendedmode for the full size main image in VIDIOC_S_PARM */
+/*                                                            */
 #define MSM_V4L2_EXT_CAPTURE_MODE_MAIN (MSM_V4L2_EXT_CAPTURE_MODE_DEFAULT+3)
-/* extendedmode for the thumb nail image in VIDIOC_S_PARM */
+/*                                                        */
 #define MSM_V4L2_EXT_CAPTURE_MODE_THUMBNAIL \
 	(MSM_V4L2_EXT_CAPTURE_MODE_DEFAULT+4)
-/* ISP_PIX_OUTPUT1: no pp, directly send output1 buf to user */
+/*                                                           */
 #define MSM_V4L2_EXT_CAPTURE_MODE_ISP_PIX_OUTPUT1 \
 	(MSM_V4L2_EXT_CAPTURE_MODE_DEFAULT+5)
-/* ISP_PIX_OUTPUT2: no pp, directly send output2 buf to user */
+/*                                                           */
 #define MSM_V4L2_EXT_CAPTURE_MODE_ISP_PIX_OUTPUT2 \
 	(MSM_V4L2_EXT_CAPTURE_MODE_DEFAULT+6)
-/* raw image type */
+/*                */
 #define MSM_V4L2_EXT_CAPTURE_MODE_RAW \
 	(MSM_V4L2_EXT_CAPTURE_MODE_DEFAULT+7)
-/* RDI dump */
+/*          */
 #define MSM_V4L2_EXT_CAPTURE_MODE_RDI \
 	(MSM_V4L2_EXT_CAPTURE_MODE_DEFAULT+8)
-/* RDI dump 1 */
+/*            */
 #define MSM_V4L2_EXT_CAPTURE_MODE_RDI1 \
 	(MSM_V4L2_EXT_CAPTURE_MODE_DEFAULT+9)
-/* RDI dump 2 */
+/*            */
 #define MSM_V4L2_EXT_CAPTURE_MODE_RDI2 \
 	(MSM_V4L2_EXT_CAPTURE_MODE_DEFAULT+10)
 #define MSM_V4L2_EXT_CAPTURE_MODE_AEC \
@@ -909,19 +909,19 @@ struct msm_stats_buf {
 #define MSM_V4L2_PID_PP_PLANE_INFO          (V4L2_CID_PRIVATE_BASE+18)
 #define MSM_V4L2_PID_MAX                    MSM_V4L2_PID_PP_PLANE_INFO
 
-/* camera operation mode for video recording - two frame output queues */
+/*                                                                     */
 #define MSM_V4L2_CAM_OP_DEFAULT         0
-/* camera operation mode for video recording - two frame output queues */
+/*                                                                     */
 #define MSM_V4L2_CAM_OP_PREVIEW         (MSM_V4L2_CAM_OP_DEFAULT+1)
-/* camera operation mode for video recording - two frame output queues */
+/*                                                                     */
 #define MSM_V4L2_CAM_OP_VIDEO           (MSM_V4L2_CAM_OP_DEFAULT+2)
-/* camera operation mode for standard shapshot - two frame output queues */
+/*                                                                       */
 #define MSM_V4L2_CAM_OP_CAPTURE         (MSM_V4L2_CAM_OP_DEFAULT+3)
-/* camera operation mode for zsl shapshot - three output queues */
+/*                                                              */
 #define MSM_V4L2_CAM_OP_ZSL             (MSM_V4L2_CAM_OP_DEFAULT+4)
-/* camera operation mode for raw snapshot - one frame output queue */
+/*                                                                 */
 #define MSM_V4L2_CAM_OP_RAW             (MSM_V4L2_CAM_OP_DEFAULT+5)
-/* camera operation mode for jpeg snapshot - one frame output queue */
+/*                                                                  */
 #define MSM_V4L2_CAM_OP_JPEG_CAPTURE    (MSM_V4L2_CAM_OP_DEFAULT+6)
 
 
@@ -996,7 +996,7 @@ struct msm_snapshot_pp_status {
 #define CFG_GET_EEPROM_DATA		34
 #define CFG_SET_ACTUATOR_INFO		35
 #define CFG_GET_ACTUATOR_INFO           36
-/* TBD: QRD */
+/*          */
 #define CFG_SET_SATURATION            37
 #define CFG_SET_SHARPNESS             38
 #define CFG_SET_TOUCHAEC              39
@@ -1018,28 +1018,8 @@ struct msm_snapshot_pp_status {
 #define CFG_SET_VISION_MODE           55
 #define CFG_SET_VISION_AE             56
 #define CFG_HDR_UPDATE                57
-/* LGE_CHANGE_S, Added For CE1702 For GK/GV, 2012.10.22, jungki.kim[Start] */
-#define CFG_SET_AF_MODE               58     //AF Mode Settings for CE1702 by jungki.kim
-#define CFG_SET_MANUAL_FOCUS_LENGTH   59     //Support Manual Focus by jungki.kim
-#define CFG_SET_LED_FLASH_MODE        60     //Support LED Flash only for CE1702 by jungki.kim
-#define CFG_SET_ANTIBANDING_CE1702    61     //Set Antibanding for CE1702 by jungki.kim
-#define CFG_SET_STOP_AF               62     //Stop AF for CE1702 by jungki.kim
-#define CFG_SET_AF_WINDOW             63     //Set AF Window for CE1702 by jungki.kim
-#define CFG_SET_AE_WINDOW             64     //Set AE Window for CE1702 by jungki.kim
-#define CFG_SET_OBJECT_TRACKING       65     //add the object tracking method for GK project, 2012.10.19 youngil.yun@lge.com
-#define CFG_SET_AEC_AWB_LOCK_CE1702   66     //Support AEC/AWB Lock for CE1702 by jungki.kim
-#define CFG_SET_DIM_INFO              67     //add the CFG parameter for GK project, 2012.10.19 youngil.yun@lge.com
-#define CFG_GET_CAM_OPEN_MODE         68     //Get Current Previewing Mode by jungki.kim@lge.com
-#define CFG_SET_MANUAL_SCENE_MODE     69     //Support ManualSceneMode for CE1702 by gayoung85.lee
-#define CFG_SET_GYRO_DATA             70     //Set Gyro Data For GK/GV by junghee.eim@lge.com
-#define CFG_SET_WDR                   71     //Support WDR for CE1702 by gayoung85.lee
-#define CFG_SET_EXIF_ROTATION         72     //Insert Rotation Information In EXIF by jungki.kim@lge.com
-#define CFG_SET_EXIF_GPS              73     //Set GPS Exif Tags For GK/GV by jungki.kim@lge.com
-#define CFG_SET_ASD                   74     //Supprort ASD for CE1702 by gayoung85.lee
-#define CFG_SET_EXIF_THUMBNAIL_SIZE   75     // fixed cts failure!, 2013.01.07 junghee.eim@lge.com
-#define CFG_MOVE_FOCUS_MANUAL         76     // LGE_CHANGE, Manual focus for A-pjt, 2013-07-16, seungmin.hong@lge.com
-#define CFG_MAX                       77
-/* LGE_CHANGE_E, Added For CE1702 For GK/GV, 2012.10.22, jungki.kim[End] */
+#define CFG_MAX			58
+
 #define MOVE_NEAR	0
 #define MOVE_FAR	1
 
@@ -1055,13 +1035,13 @@ struct msm_snapshot_pp_status {
 #define SENSOR_QVGA_SIZE		2
 #define SENSOR_INVALID_SIZE		3
 
-/* QRD */
+/*     */
 #define CAMERA_EFFECT_BW		10
 #define CAMERA_EFFECT_BLUISH	12
 #define CAMERA_EFFECT_REDDISH	13
 #define CAMERA_EFFECT_GREENISH	14
 
-/* QRD */
+/*     */
 #define CAMERA_ANTIBANDING_OFF		0
 #define CAMERA_ANTIBANDING_50HZ		2
 #define CAMERA_ANTIBANDING_60HZ		1
@@ -1088,7 +1068,6 @@ struct msm_snapshot_pp_status {
 #define CAMERA_BRIGHTNESS_LV7			7
 #define CAMERA_BRIGHTNESS_LV8			8
 
-
 #define CAMERA_SATURATION_LV0			0
 #define CAMERA_SATURATION_LV1			1
 #define CAMERA_SATURATION_LV2			2
@@ -1114,7 +1093,7 @@ struct msm_snapshot_pp_status {
 #define CAMERA_SETAE_AVERAGE		0
 #define CAMERA_SETAE_CENWEIGHT	1
 
-#define  CAMERA_WB_AUTO               1 /* This list must match aeecamera.h */
+#define  CAMERA_WB_AUTO               1	/*                                  */
 #define  CAMERA_WB_CUSTOM             2
 #define  CAMERA_WB_INCANDESCENT       3
 #define  CAMERA_WB_FLUORESCENT        4
@@ -1300,56 +1279,47 @@ struct sensor_init_cfg {
 	uint8_t pict_res;
 };
 
-//Start :randy@qualcomm.com for calibration 2012.04.15
+//                                                    
 #define ROLLOFF_CALDATA_SIZE    (17 * 13)
 typedef struct
 {
-    unsigned short           mesh_rolloff_table_size;     // TableSize
-    uint8_t                  r_gain[ROLLOFF_CALDATA_SIZE];   // RGain
-    uint8_t                  gr_gain[ROLLOFF_CALDATA_SIZE];  // GRGain
-    uint8_t                  gb_gain[ROLLOFF_CALDATA_SIZE];  // GBGain
-    uint8_t                  b_gain[ROLLOFF_CALDATA_SIZE];   // BGain
+    unsigned short           mesh_rolloff_table_size;     //          
+    uint8_t                  r_gain[ROLLOFF_CALDATA_SIZE];   //      
+    uint8_t                  gr_gain[ROLLOFF_CALDATA_SIZE];  //       
+    uint8_t                  gb_gain[ROLLOFF_CALDATA_SIZE];  //       
+    uint8_t                  b_gain[ROLLOFF_CALDATA_SIZE];   //      
 	uint8_t					 red_ref[17];
 
 } rolloff_caldata_array_type;
 
 struct sensor_calib_data {
-	/* Color Related Measurements */
+	/*                            */
 	uint16_t r_over_g;
 	uint16_t b_over_g;
 	uint16_t gr_over_gb;
 
-	/* Lens Related Measurements */
+	/*                           */
 	uint16_t macro_2_inf;
 	uint16_t inf_2_macro;
 	uint16_t stroke_amt;
 	uint16_t af_pos_1m;
 	uint16_t af_pos_inf;
-	/* Lens Shading Calibration Data */
+	/*                               */
 	rolloff_caldata_array_type rolloff;
 };
-//End :randy@qualcomm.com for calibration 2012.04.15
+//                                                  
 
-enum msm_sensor_resolution_t {
-	MSM_SENSOR_RES_FULL,
-	MSM_SENSOR_RES_QTR,
-	MSM_SENSOR_RES_2,
-	MSM_SENSOR_RES_3,
-	MSM_SENSOR_RES_4,
-	MSM_SENSOR_RES_5,
-	MSM_SENSOR_RES_6,
-/* LGE_CHANGE_E, Define For CE1702 output mode, 2012.11.10, elin.lee*/
-	MSM_SENSOR_RES_7,
-	MSM_SENSOR_RES_8,
-	MSM_SENSOR_RES_9,
-	MSM_SENSOR_RES_10,
-	MSM_SENSOR_RES_ZSL,//SENSOR_MODE_ZSL
-	MSM_SENSOR_RES_BURST,//SENSOR_MODE_BURSTSHOT
-	MSM_SENSOR_RES_HDR,//SENSOR_MODE_HDR
-	MSM_SENSOR_RES_LLS,//SENSOR_MODE_LOW_LIGHT_SHOT
-	MSM_SENSOR_RES_YUV_PREVIEW, //SENSOR_MODE_LOW_LIGHT_SHOT
-/* LGE_CHANGE_E, Define For CE1702 output mode, 2012.11.10, elin.lee*/	
-	MSM_SENSOR_INVALID_RES,
+enum msm_sensor_resolution_t
+{
+  MSM_SENSOR_RES_FULL,
+  MSM_SENSOR_RES_QTR,
+  MSM_SENSOR_RES_2,
+  MSM_SENSOR_RES_3,
+  MSM_SENSOR_RES_4,
+  MSM_SENSOR_RES_5,
+  MSM_SENSOR_RES_6,
+  MSM_SENSOR_RES_7,
+  MSM_SENSOR_INVALID_RES,
 };
 
 struct msm_sensor_output_info_t {
@@ -1680,49 +1650,11 @@ struct msm_cam_clk_setting {
 	uint16_t num_clk_info;
 	uint8_t enable;
 };
-
-/* LGE_CHANGE_S, add the object tracking method for GK project, 2012.10.19 youngil.yun@lge.com */
-struct rec_t {
-  uint16_t x;
-  uint16_t y;
-  uint16_t dx;
-  uint16_t dy;
-  uint16_t mode;
-};
-/* LGE_CHANGE_E, add the object tracking method for GK project, 2012.10.19 youngil.yun@lge.com */
-
-/* LGE_CHANGE_S, Set GPS Exif Tags For GK/GV, 2012.11.7, jungki.kim[Start] */
-struct k_exif_gps_t {
-	uint32_t altitude;
-	char altiRef;
-	char latRef;
-	char lonRef;
-	uint32_t gpsTimeStamp[3];
-	uint32_t latitude[3];
-	uint32_t longitude[3];
-	uint32_t gpsDateStamp[3];
-	char gpsProcessingMethod[109];
-};
-/* LGE_CHANGE_E, Set GPS Exif Tags For GK/GV, 2012.11.7, jungki.kim[End] */
-
-/* LGE_CHANGE_S, add the changing image size for GK project, 2012.10.19 youngil.yun@lge.com */
-struct dimen_t {
-  uint16_t preview_width;
-  uint16_t preview_height;
-  uint16_t picture_width;
-  uint16_t picture_height;
-  uint16_t video_width;
-  uint16_t video_height;
-  uint16_t thumbnail_width;
-  uint16_t thumbnail_heigh;
-};
-/* LGE_CHANGE_E, add the changing image size for GK project, 2012.10.19 youngil.yun@lge.com */
-
 struct sensor_cfg_data {
-	int cfgtype;
-	int mode;
-	int rs;
-	uint8_t max_steps;
+  int cfgtype;
+  int mode;
+  int rs;
+  uint8_t max_steps;
 
 	union {
 		int8_t effect;
@@ -1746,7 +1678,7 @@ struct sensor_cfg_data {
 		struct msm_eeprom_data_t eeprom_data;
 		struct csi_lane_params_t csi_lane_params;
 		struct sensor_hdr_update_parm_t hdr_update_parm;
-		/* QRD */
+		/*     */
 		uint16_t antibanding;
 		uint8_t contrast;
 		uint8_t saturation;
@@ -1762,27 +1694,7 @@ struct sensor_cfg_data {
 		void *setting;
 		int32_t vision_mode_enable;
 		int32_t vision_ae;
-/* LGE_CHANGE_S, Added For CE1702 For GK/GV, 2012.10.22, jungki.kim[Start] */
-		int32_t afmode;			//AF Mode Settings for CE1702 by jungki.kim
-		int32_t zoom;				//Zoom Ratio Settings for CE1702 by jungki.kim
-		int32_t focus_length;		//Support Manual Focus by jungki.kim
-		int32_t flash_mode;		//Support LED Flash only for CE1702 by jungki.kim
-		int16_t af_window[4];		//Set AF Window for CE1702 by jungki.kim
-		int16_t ae_window[4];		//Set AE Window for CE1702 by jungki.kim
-		uint32_t curr_mode;		//Check Current Mode for CE1702 by jungki.kim
-		struct rec_t rect_info;		//add the object tracking method for GK project, 2012.10.19 youngil.yun@lge.com
-		int32_t aec_awb_lock;		//Support AEC/AWB Lock by jungki.kim
-		struct dimen_t dimension;	//add the cfg info struct for GK project, 2012.10.19 youngil.yun@lge.com
-		int32_t cam_op_mode;		//Get Current Previewing Mode by jungki.kim@lge.com
-		int32_t scene_mode;		//Support ManualSceneMode for CE1702 by gayoung85.lee
-		char model_name[20];		//Send Basic EXIF Tags To CE1702 Sensor by jungki.kim@lge.com
-		int32_t wdr_mode;			//Support the WDR for GK project by gayoung85.lee
-		int rotation;				//Insert Rotation Information In EXIF by jungki.kim@lge.com
-		struct k_exif_gps_t gps;		//Set GPS Exif Tags For GK/GV by jungki.kim@lge.com
-		int32_t asd_onoff;	//Support ASD for CE1702 by gayoung85.lee
-/* LGE_CHANGE_E, Added For CE1702 For GK/GV, 2012.10.22, jungki.kim[End] */
-
-	} cfg;
+  } cfg;
 };
 
 enum gpio_operation_type {
@@ -1841,9 +1753,9 @@ struct reg_settings_t {
 };
 
 struct region_params_t {
-	/* [0] = ForwardDirection Macro boundary
-	   [1] = ReverseDirection Inf boundary
-	 */
+	/*                                      
+                                       
+  */
 	uint16_t step_bound[2];
 	uint16_t code_per_step;
 };
@@ -1853,9 +1765,9 @@ struct msm_actuator_move_params_t {
 	int8_t sign_dir;
 	int16_t dest_step_pos;
 	int32_t num_steps;
-/* LGE_CHANGE_S, AF offset enable, 2012-09-28, sungmin.woo@lge.com */
+/*                                                                 */
 	int32_t af_status;
-/* LGE_CHANGE_E, AF offset enable, 2012-09-28, sungmin.woo@lge.com */
+/*                                                                 */
 	struct damping_params_t *ringing_params;
 };
 
@@ -1935,9 +1847,9 @@ struct msm_calib_wb {
 	uint16_t gr_over_gb;
 };
 
-#if 1 // LGE_BSP_CAMERA::kyounghoon.noh@lge.com 2012-08-14
+#if 1 //                                                  
 struct msm_calib_ver {
-	uint16_t cal_ver; // rafal47 0813
+	uint16_t cal_ver; //             
 };
 #endif
 
@@ -1997,7 +1909,7 @@ struct msm_camera_eeprom_info_t {
 	struct msm_eeprom_support lsc50;
 	struct msm_eeprom_support lsc40;
 	struct msm_eeprom_support dpc;
-	struct msm_eeprom_support cal_ver; // Start LGE_BSP_CAMERA::kyounghoon.noh@lge.com 2012-08-14
+	struct msm_eeprom_support cal_ver; //                                                        
 	struct msm_eeprom_support raw;
 };
 #endif
@@ -2086,8 +1998,8 @@ struct msm_camsensor_info {
 	uint8_t support_3d;
 	enum flash_type flashtype;
 	enum sensor_type_t sensor_type;
-	uint32_t pxlcode; /* enum v4l2_mbus_pixelcode */
-	uint32_t camera_type; /* msm_camera_type */
+	uint32_t pxlcode; /*                          */
+	uint32_t camera_type; /*                 */
 	int mount_angle;
 	uint32_t max_width;
 	uint32_t max_height;
@@ -2109,7 +2021,7 @@ struct img_plane_info {
 	uint32_t width;
 	uint32_t height;
 	uint32_t pixelformat;
-	uint8_t buffer_type; /*Single/Multi planar*/
+	uint8_t buffer_type; /*                   */
 	uint8_t output_port;
 	uint32_t ext_mode;
 	uint8_t num_planes;
@@ -2265,25 +2177,25 @@ enum msm_cam_hw_idx {
 };
 
 struct msm_camera_irq_cfg {
-	/* Bit mask of all the camera hardwares that needs to
-	 * be composited into a single IRQ to the MSM.
-	 * Current usage: (may be updated based on hw changes)
-	 * Bits 31:13 - Reserved.
-	 * Bits 12:0
-	 * 12 - MSM_CAM_HW_JPEG2
-	 * 11 - MSM_CAM_HW_JPEG1
-	 * 10 - MSM_CAM_HW_JPEG0
-	 *  9 - MSM_CAM_HW_VFE1
-	 *  8 - MSM_CAM_HW_VFE0
-	 *  7 - MSM_CAM_HW_CPP
-	 *  6 - MSM_CAM_HW_ISPIF
-	 *  5 - MSM_CAM_HW_CSI3
-	 *  4 - MSM_CAM_HW_CSI2
-	 *  3 - MSM_CAM_HW_CSI1
-	 *  2 - MSM_CAM_HW_CSI0
-	 *  1 - MSM_CAM_HW_CCI
-	 *  0 - MSM_CAM_HW_MICRO
-	 */
+	/*                                                   
+                                               
+                                                       
+                          
+             
+                         
+                         
+                         
+                        
+                        
+                       
+                         
+                        
+                        
+                        
+                        
+                       
+                         
+  */
 	uint32_t cam_hw_mask;
 	uint8_t  irq_idx;
 	uint8_t  num_hwcore;
@@ -2311,12 +2223,12 @@ struct msm_cpp_frame_strip_info {
 	int src_start_y;
 	int src_end_y;
 
-	/* Padding is required for upscaler because it does not
-	 * pad internally like other blocks, also needed for rotation
-	 * rotation expects all the blocks in the stripe to be the same size
-	 * Padding is done such that all the extra padded pixels
-	 * are on the right and bottom
-	*/
+	/*                                                     
+                                                              
+                                                                     
+                                                         
+                               
+ */
 	int pad_bottom;
 	int pad_top;
 	int pad_right;
@@ -2387,22 +2299,22 @@ struct intf_mctl_mapping_cfg {
 
 #define V4L2_EVENT_CPP_FRAME_DONE  (V4L2_EVENT_PRIVATE_START + 0)
 
-/* Instance Handle - inst_handle
- * Data bundle containing the information about where
- * to get a buffer for a particular camera instance.
- * This is a bitmask containing the following data:
- * Buffer Handle Bitmask:
- *      ------------------------------------
- *      Bits    :  Purpose
- *      ------------------------------------
- *      31      :  is Dev ID valid?
- *      30 - 24 :  Dev ID.
- *      23      :  is Image mode valid?
- *      22 - 16 :  Image mode.
- *      15      :  is MCTL PP inst idx valid?
- *      14 - 8  :  MCTL PP inst idx.
- *      7       :  is Video inst idx valid?
- *      6 - 0   :  Video inst idx.
+/*                              
+                                                     
+                                                    
+                                                   
+                         
+                                            
+                          
+                                            
+                                   
+                          
+                                       
+                              
+                                             
+                                    
+                                           
+                                  
  */
 #define CLR_DEVID_MODE(handle)	(handle &= 0x00FFFFFF)
 #define SET_DEVID_MODE(handle, data)	\
@@ -2428,4 +2340,4 @@ struct intf_mctl_mapping_cfg {
 #define SET_VIDEO_INST_IDX(handle, data)	\
 	(handle |= (0x1 << 7) | (data & 0x7F))
 
-#endif /* __LINUX_MSM_CAMERA_H */
+#endif /*                      */

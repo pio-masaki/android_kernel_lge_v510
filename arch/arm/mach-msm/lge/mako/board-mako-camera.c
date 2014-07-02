@@ -15,6 +15,7 @@
 #include <linux/i2c.h>
 #include <linux/gpio.h>
 #include <linux/platform_data/flash_lm3559.h>
+#include <media/msm_camera.h>
 #include <asm/mach-types.h>
 #include <mach/board.h>
 #include <mach/msm_bus_board.h>
@@ -27,76 +28,76 @@
 #ifdef CONFIG_MSM_CAMERA
 static struct gpiomux_setting cam_settings[] = {
 	{
-		.func = GPIOMUX_FUNC_GPIO, /*suspend*/
+		.func = GPIOMUX_FUNC_GPIO, /*       */
 		.drv = GPIOMUX_DRV_2MA,
 		.pull = GPIOMUX_PULL_DOWN,
 	},
 
 	{
-		.func = GPIOMUX_FUNC_1, /*active 1*/
+		.func = GPIOMUX_FUNC_1, /*        */
 		.drv = GPIOMUX_DRV_2MA,
 		.pull = GPIOMUX_PULL_NONE,
 	},
 
 	{
-		.func = GPIOMUX_FUNC_GPIO, /*active 2*/
+		.func = GPIOMUX_FUNC_GPIO, /*        */
 		.drv = GPIOMUX_DRV_2MA,
 		.pull = GPIOMUX_PULL_NONE,
 	},
 
 	{
-		.func = GPIOMUX_FUNC_1, /*active 3*/
+		.func = GPIOMUX_FUNC_1, /*        */
 		.drv = GPIOMUX_DRV_8MA,
 		.pull = GPIOMUX_PULL_NONE,
 	},
 
 	{
-		.func = GPIOMUX_FUNC_4, /*active 4*/
+		.func = GPIOMUX_FUNC_4, /*        */
 		.drv = GPIOMUX_DRV_2MA,
 		.pull = GPIOMUX_PULL_NONE,
 	},
 
 	{
-		.func = GPIOMUX_FUNC_6, /*active 5*/
+		.func = GPIOMUX_FUNC_6, /*        */
 		.drv = GPIOMUX_DRV_8MA,
 		.pull = GPIOMUX_PULL_UP,
 	},
 
 	{
-		.func = GPIOMUX_FUNC_2, /*active 6*/
+		.func = GPIOMUX_FUNC_2, /*        */
 		.drv = GPIOMUX_DRV_2MA,
 		.pull = GPIOMUX_PULL_UP,
 	},
 
 	{
-		.func = GPIOMUX_FUNC_3, /*active 7*/
+		.func = GPIOMUX_FUNC_3, /*        */
 		.drv = GPIOMUX_DRV_8MA,
 		.pull = GPIOMUX_PULL_UP,
 	},
 
 	{
-		.func = GPIOMUX_FUNC_GPIO, /*i2c suspend*/
+		.func = GPIOMUX_FUNC_GPIO, /*           */
 		.drv = GPIOMUX_DRV_2MA,
 		.pull = GPIOMUX_PULL_KEEPER,
 	},
 
 	{
-		.func = GPIOMUX_FUNC_9, /*active 9*/
+		.func = GPIOMUX_FUNC_9, /*        */
 		.drv = GPIOMUX_DRV_8MA,
 		.pull = GPIOMUX_PULL_NONE,
 	},
 	{
-		.func = GPIOMUX_FUNC_A, /*active 10*/
+		.func = GPIOMUX_FUNC_A, /*         */
 		.drv = GPIOMUX_DRV_8MA,
 		.pull = GPIOMUX_PULL_NONE,
 	},
 	{
-		.func = GPIOMUX_FUNC_6, /*active 11*/
+		.func = GPIOMUX_FUNC_6, /*         */
 		.drv = GPIOMUX_DRV_8MA,
 		.pull = GPIOMUX_PULL_NONE,
 	},
 	{
-		.func = GPIOMUX_FUNC_4, /*active 12*/
+		.func = GPIOMUX_FUNC_4, /*         */
 		.drv = GPIOMUX_DRV_2MA,
 		.pull = GPIOMUX_PULL_NONE,
 	},
@@ -105,50 +106,61 @@ static struct gpiomux_setting cam_settings[] = {
 
 static struct msm_gpiomux_config apq8064_cam_common_configs[] = {
 	{
-		.gpio = GPIO_CAM_FLASH_EN, /* 7 */
+		.gpio = GPIO_CAM_FLASH_EN, /*   */
 		.settings = {
 			[GPIOMUX_ACTIVE]    = &cam_settings[2],
 			[GPIOMUX_SUSPENDED] = &cam_settings[0],
 		},
 	},
 	{
-		.gpio = GPIO_CAM_MCLK0, /* 5 */
+		.gpio = GPIO_CAM_MCLK0, /*   */
 		.settings = {
 			[GPIOMUX_ACTIVE]    = &cam_settings[1],
 			[GPIOMUX_SUSPENDED] = &cam_settings[0],
 		},
 	},
 
+/*                                                       */
+#if 1
 	{
-		.gpio = GPIO_CAM_MCLK2, /* 2 */
+		.gpio = GPIO_CAM_MCLK2, /*   */
 		.settings = {
 			[GPIOMUX_ACTIVE]    = &cam_settings[4],
 			[GPIOMUX_SUSPENDED] = &cam_settings[0],
 		},
 	},
+#else
 	{
-		.gpio = GPIO_CAM2_RST_N, /* 34 */
+		.gpio = GPIO_CAM_MCLK1, /*   */
+		.settings = {
+			[GPIOMUX_ACTIVE]    = &cam_settings[1],
+			[GPIOMUX_SUSPENDED] = &cam_settings[0],
+		},
+	},
+#endif
+	{
+		.gpio = GPIO_CAM2_RST_N, /*    */
 		.settings = {
 			[GPIOMUX_ACTIVE]    = &cam_settings[2],
 			[GPIOMUX_SUSPENDED] = &cam_settings[0],
 		},
 	},
 	{
-		.gpio = GPIO_CAM1_RST_N, /* 32 */
+		.gpio = GPIO_CAM1_RST_N, /*    */
 		.settings = {
 			[GPIOMUX_ACTIVE]    = &cam_settings[2],
 			[GPIOMUX_SUSPENDED] = &cam_settings[0],
 		},
 	},
 	{
-		.gpio = GPIO_CAM_I2C_SDA, /* 12 */
+		.gpio = GPIO_CAM_I2C_SDA, /*    */
 		.settings = {
 			[GPIOMUX_ACTIVE]    = &cam_settings[3],
 			[GPIOMUX_SUSPENDED] = &cam_settings[8],
 		},
 	},
 	{
-		.gpio = GPIO_CAM_I2C_SCL, /* 13 */
+		.gpio = GPIO_CAM_I2C_SCL, /*    */
 		.settings = {
 			[GPIOMUX_ACTIVE]    = &cam_settings[3],
 			[GPIOMUX_SUSPENDED] = &cam_settings[8],
@@ -375,7 +387,12 @@ static struct msm_camera_gpio_conf apq8064_back_cam_gpio_conf = {
 
 #ifdef CONFIG_IMX119
 static struct gpio apq8064_front_cam_gpio[] = {
+/*                                                       */
+#if 1
 	{GPIO_CAM_MCLK2, GPIOF_DIR_IN, "CAMIF_MCLK"},
+#else
+	{GPIO_CAM_MCLK1, GPIOF_DIR_IN, "CAMIF_MCLK"},
+#endif
 	{GPIO_CAM2_RST_N, GPIOF_DIR_OUT, "CAM_RESET"},
 };
 
@@ -450,7 +467,7 @@ static struct msm_camera_sensor_info msm_camera_sensor_imx111_data = {
 
 #ifdef CONFIG_IMX091_ACT
 static struct i2c_board_info msm_act_main_cam_i2c_info = {
-	I2C_BOARD_INFO("msm_actuator", I2C_SLAVE_ADDR_IMX091_ACT), /* 0x18 */
+	I2C_BOARD_INFO("msm_actuator", I2C_SLAVE_ADDR_IMX091_ACT), /*      */
 };
 
 static struct msm_actuator_info msm_act_main_cam_0_info = {
@@ -543,7 +560,7 @@ static struct msm_camera_sensor_info msm_camera_sensor_imx119_data = {
 };
 #endif
 
-/* Enabling flash LED for camera */
+/*                               */
 static struct lm3559_flash_platform_data lm3559_flash_pdata[] = {
 	{
 		.scl_gpio = GPIO_CAM_FLASH_I2C_SCL,
@@ -606,25 +623,25 @@ void __init apq8064_init_cam(void)
 static struct i2c_board_info apq8064_camera_i2c_boardinfo[] = {
 #ifdef CONFIG_IMX111
 	{
-		I2C_BOARD_INFO("imx111", I2C_SLAVE_ADDR_IMX111), /* 0x0D */
+		I2C_BOARD_INFO("imx111", I2C_SLAVE_ADDR_IMX111), /*      */
 		.platform_data = &msm_camera_sensor_imx111_data,
 	},
 #endif
 #ifdef CONFIG_IMX091
 	{
-		I2C_BOARD_INFO("imx091", I2C_SLAVE_ADDR_IMX091), /* 0x0D */
+		I2C_BOARD_INFO("imx091", I2C_SLAVE_ADDR_IMX091), /*      */
 		.platform_data = &msm_camera_sensor_imx091_data,
 	},
 #endif
 #ifdef CONFIG_IMX119
 	{
-		I2C_BOARD_INFO("imx119", I2C_SLAVE_ADDR_IMX119), /* 0x6E */
+		I2C_BOARD_INFO("imx119", I2C_SLAVE_ADDR_IMX119), /*      */
 		.platform_data = &msm_camera_sensor_imx119_data,
 	},
 #endif
 };
 
-/* Enabling flash LED for camera */
+/*                               */
 static struct i2c_board_info apq8064_lge_camera_i2c_boardinfo[] = {
 	{
 		I2C_BOARD_INFO("lm3559", I2C_SLAVE_ADDR_FLASH),
@@ -637,7 +654,7 @@ struct msm_camera_board_info apq8064_camera_board_info = {
 	.num_i2c_board_info = ARRAY_SIZE(apq8064_camera_i2c_boardinfo),
 };
 
-/* Enabling flash LED for camera */
+/*                               */
 struct msm_camera_board_info apq8064_lge_camera_board_info = {
 	.board_info = apq8064_lge_camera_i2c_boardinfo,
 	.num_i2c_board_info = ARRAY_SIZE(apq8064_lge_camera_i2c_boardinfo),

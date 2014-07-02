@@ -62,29 +62,29 @@
   Qualcomm Confidential and Proprietary
 ===========================================================================*/
 
-/*===========================================================================
+/*                                                                           
 
-                      EDIT HISTORY FOR FILE
-
-
-  This section contains comments describing changes made to the module.
-  Notice that changes are listed in reverse chronological order.
+                                           
 
 
-   $Header$$DateTime$$Author$
+                                                                       
+                                                                
 
 
-  when        who     what, where, why
-----------    ---    --------------------------------------------------------
-2010-10-xx    dli     Change ucCIndex to point to the slot the next frame to be expected to fwd
-2008-08-22    sch     Update based on unit test
-2008-07-31    lti     Created module
+                             
 
-===========================================================================*/
 
-/*----------------------------------------------------------------------------
- * Include Files
- * -------------------------------------------------------------------------*/
+                                      
+                                                                             
+                                                                                               
+                                               
+                                    
+
+                                                                           */
+
+/*                                                                            
+                
+                                                                            */
 #include "wlan_qct_tl.h" 
 #include "wlan_qct_wda.h" 
 #include "wlan_qct_tli.h" 
@@ -93,32 +93,32 @@
 #include "vos_list.h"
 #include "vos_lock.h"
 #include "tlDebug.h"
-/*----------------------------------------------------------------------------
- * Preprocessor Definitions and Constants
- * -------------------------------------------------------------------------*/
-//#define WLANTL_REORDER_DEBUG_MSG_ENABLE
-#define WLANTL_BA_REORDERING_AGING_TIMER   30   /* 30 millisec */
-#define WLANTL_BA_MIN_FREE_RX_VOS_BUFFER   0    /* RX VOS buffer low threshold */
+/*                                                                            
+                                         
+                                                                            */
+//                                       
+#define WLANTL_BA_REORDERING_AGING_TIMER   30   /*             */
+#define WLANTL_BA_MIN_FREE_RX_VOS_BUFFER   0    /*                             */
 
 
-/*==========================================================================
+/*                                                                          
 
-   FUNCTION    tlReorderingAgingTimerExpierCB
+                                             
 
-   DESCRIPTION 
-      After aging timer expiered, all Qed frames have to be routed to upper
-      layer. Otherwise, there is possibilitied that ahng some frames
+               
+                                                                           
+                                                                    
     
-   PARAMETERS 
-      v_PVOID_t  timerUdata    Timer callback user data
-                               Has information about where frames should be
-                               routed
+              
+                                                       
+                                                                           
+                                     
    
-   RETURN VALUE
-      VOS_STATUS_SUCCESS       General success
-      VOS_STATUS_E_INVAL       Invalid frame handle
+               
+                                              
+                                                   
   
-============================================================================*/
+                                                                            */
 v_VOID_t WLANTL_ReorderingAgingTimerExpierCB
 (
    v_PVOID_t  timerUdata
@@ -135,7 +135,7 @@ v_VOID_t WLANTL_ReorderingAgingTimerExpierCB
    v_U8_t                       opCode;
    WLANTL_RxMetaInfoType        wRxMetaInfo;
    v_U32_t                      fwIdx = 0;
-   /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+   /*                                                                      */
 
    if(NULL == timerUdata)
    {
@@ -218,8 +218,8 @@ v_VOID_t WLANTL_ReorderingAgingTimerExpierCB
       fwIdx = ReorderInfo->ucCIndex - 1;
    }
 
-   /* Do replay check before giving packets to upper layer 
-      replay check code : check whether replay check is needed or not */
+   /*                                                      
+                                                                      */
    if(VOS_TRUE == pClientSTA->ucIsReplayCheckValid)
    {
        v_U64_t    ullpreviousReplayCounter = 0;
@@ -227,27 +227,27 @@ v_VOID_t WLANTL_ReorderingAgingTimerExpierCB
        v_U8_t     ucloopCounter = 0;
        v_BOOL_t   status = 0;
 
-       /*Do replay check for all packets which are in Reorder buffer */
+       /*                                                            */
        for(ucloopCounter = 0; ucloopCounter < WLANTL_MAX_WINSIZE; ucloopCounter++)
        {
-         /*Get previous reply counter*/
+         /*                          */
          ullpreviousReplayCounter = pClientSTA->ullReplayCounter[ucTID];
 
-         /*Get current replay counter of packet in reorder buffer*/
+         /*                                                      */
          ullcurrentReplayCounter = ReorderInfo->reorderBuffer->ullReplayCounter[ucloopCounter];
 
-         /*Check for holes, if a hole is found in Reorder buffer then
-           no need to do replay check on it, skip the current
-           hole and do replay check on other packets*/
+         /*                                                          
+                                                             
+                                                    */
          if(NULL != (ReorderInfo->reorderBuffer->arrayBuffer[ucloopCounter]))
          {
            status = WLANTL_IsReplayPacket(ullcurrentReplayCounter, ullpreviousReplayCounter); 
            if(VOS_TRUE == status)
            {
-               /*Increment the debug counter*/
+               /*                           */
                pClientSTA->ulTotalReplayPacketsDetected++;
 
-               /*A replay packet found*/
+               /*                     */
                VOS_TRACE( VOS_MODULE_ID_TL, VOS_TRACE_LEVEL_ERROR,
                 "WLANTL_ReorderingAgingTimerExpierCB: total dropped replay packets on STA ID %X is [0x%lX]\n",
                 ucSTAID, pClientSTA->ulTotalReplayPacketsDetected);
@@ -265,14 +265,14 @@ v_VOID_t WLANTL_ReorderingAgingTimerExpierCB
            }
            else
            {
-              /*Not a replay packet update previous replay counter*/
+              /*                                                  */
               pClientSTA->ullReplayCounter[ucTID] = ullcurrentReplayCounter;
            }
          }
          else
          {
-              /* A hole detected in Reorder buffer*/
-              //BAMSGERROR("WLANTL_ReorderingAgingTimerExpierCB,hole detected\n",0,0,0);
+              /*                                  */
+              //                                                                        
                
          }
        } 
@@ -325,25 +325,25 @@ v_VOID_t WLANTL_ReorderingAgingTimerExpierCB
       TLLOGE(VOS_TRACE(VOS_MODULE_ID_TL, VOS_TRACE_LEVEL_ERROR,"WLANTL_ReorderingAgingTimerExpierCB, Release LOCK Fail"));
    }
    return;
-}/*WLANTL_ReorderingAgingTimerExpierCB*/
+}/*                                   */
 
-/*----------------------------------------------------------------------------
-    INTERACTION WITH TL Main
- ---------------------------------------------------------------------------*/
-/*==========================================================================
+/*                                                                            
+                            
+                                                                            */
+/*                                                                          
 
-   FUNCTION    WLANTL_InitBAReorderBuffer
+                                         
 
-   DESCRIPTION 
-      Init Reorder buffer array
+               
+                               
     
-   PARAMETERS 
-      v_PVOID_t   pvosGCtx Global context
+              
+                                         
 
-   RETURN VALUE
-      NONE
+               
+          
   
-============================================================================*/
+                                                                            */
 
 void WLANTL_InitBAReorderBuffer
 (
@@ -376,41 +376,41 @@ void WLANTL_InitBAReorderBuffer
    return;
 }
 
-/*==========================================================================
+/*                                                                          
 
-  FUNCTION    WLANTL_BaSessionAdd
+                                 
 
-  DESCRIPTION 
-    HAL notifies TL when a new Block Ack session is being added. 
+              
+                                                                 
     
-  DEPENDENCIES 
-    A BA session on Rx needs to be added in TL before the response is 
-    being sent out 
+               
+                                                                      
+                   
     
-  PARAMETERS 
+             
 
-    IN
-    pvosGCtx:       pointer to the global vos context; a handle to TL's 
-                    control block can be extracted from its context 
-    ucSTAId:        identifier of the station for which requested the BA 
-                    session
-    ucTid:          Tspec ID for the new BA session
-    uSize:          size of the reordering window
+      
+                                                                        
+                                                                    
+                                                                         
+                           
+                                                   
+                                                 
 
    
-  RETURN VALUE
-    The result code associated with performing the operation  
+              
+                                                              
 
-    VOS_STATUS_E_INVAL:      Input parameters are invalid 
-    VOS_STATUS_E_FAULT:      Station ID is outside array boundaries or pointer 
-                             to TL cb is NULL ; access would cause a page fault  
-    VOS_STATUS_E_EXISTS:     Station was not registered or BA session already
-                             exists
-    VOS_STATUS_E_NOSUPPORT:  Not yet supported
+                                                          
+                                                                               
+                                                                                 
+                                                                             
+                                   
+                                              
     
-  SIDE EFFECTS 
+               
   
-============================================================================*/
+                                                                            */
 VOS_STATUS
 WLANTL_BaSessionAdd 
 ( 
@@ -428,11 +428,11 @@ WLANTL_BaSessionAdd
   WLANTL_BAReorderType *reorderInfo;
   v_U32_t               idx;
   VOS_STATUS            status = VOS_STATUS_SUCCESS;
-  /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
+  /*                                                                       */
 
-  /*------------------------------------------------------------------------
-    Sanity check
-   ------------------------------------------------------------------------*/
+  /*                                                                        
+                
+                                                                           */
   if ( WLANTL_TID_INVALID(ucTid))
   {
     VOS_TRACE( VOS_MODULE_ID_TL, VOS_TRACE_LEVEL_ERROR,
@@ -447,9 +447,9 @@ WLANTL_BaSessionAdd
     return VOS_STATUS_E_FAULT;
   }
 
-  /*------------------------------------------------------------------------
-    Extract TL control block and check existance
-   ------------------------------------------------------------------------*/
+  /*                                                                        
+                                                
+                                                                           */
   pTLCb = VOS_GET_TL_CB(pvosGCtx);
   if ( NULL == pTLCb ) 
   {
@@ -474,9 +474,9 @@ WLANTL_BaSessionAdd
     return VOS_STATUS_E_EXISTS;
   }
 
-  /*------------------------------------------------------------------------
-    Verify that BA session was not already added
-   ------------------------------------------------------------------------*/
+  /*                                                                        
+                                                
+                                                                           */
   if ( 0 != pClientSTA->atlBAReorderInfo[ucTid].ucExists )
   {
     pClientSTA->atlBAReorderInfo[ucTid].ucExists++;
@@ -485,9 +485,9 @@ WLANTL_BaSessionAdd
     return VOS_STATUS_E_EXISTS;
   }
 
-  /*------------------------------------------------------------------------
-    Initialize new BA session 
-   ------------------------------------------------------------------------*/
+  /*                                                                        
+                              
+                                                                           */
   reorderInfo = &pClientSTA->atlBAReorderInfo[ucTid];
 
   for(idx = 0; idx < WLANTL_MAX_BA_SESSION; idx++)
@@ -520,7 +520,7 @@ WLANTL_BaSessionAdd
   reorderInfo->timerUdata.STAID        = ucSTAId;
   reorderInfo->timerUdata.TID          = ucTid;
 
-  /* BA aging timer */
+  /*                */
   status = vos_timer_init(&reorderInfo->agingTimer,
                           VOS_TIMER_TYPE_SW,
                           WLANTL_ReorderingAgingTimerExpierCB,
@@ -531,9 +531,9 @@ WLANTL_BaSessionAdd
      return status;
   }
 
-  /* Reorder LOCK
-   * During handle normal RX frame, if timer sxpier, abnormal race condition happen
-   * Frames should be protected from double handle */
+  /*             
+                                                                                   
+                                                   */
   status = vos_lock_init(&reorderInfo->reorderLock);
   if(!VOS_IS_STATUS_SUCCESS(status))
   {
@@ -560,39 +560,39 @@ WLANTL_BaSessionAdd
              ucSTAId, ucTid));
 
   return VOS_STATUS_SUCCESS;
-}/* WLANTL_BaSessionAdd */
+}/*                     */
 
-/*==========================================================================
+/*                                                                          
 
-  FUNCTION    WLANTL_BaSessionDel
+                                 
 
-  DESCRIPTION 
-    HAL notifies TL when a new Block Ack session is being deleted. 
+              
+                                                                   
     
-  DEPENDENCIES 
+               
     
-  PARAMETERS 
+             
 
-    IN
-    pvosGCtx:       pointer to the global vos context; a handle to TL's 
-                    control block can be extracted from its context 
-    ucSTAId:        identifier of the station for which requested the BA 
-                    session
-    ucTid:          Tspec ID for the new BA session
+      
+                                                                        
+                                                                    
+                                                                         
+                           
+                                                   
    
-  RETURN VALUE
-    The result code associated with performing the operation  
+              
+                                                              
 
-    VOS_STATUS_E_INVAL:      Input parameters are invalid 
-    VOS_STATUS_E_FAULT:      Station ID is outside array boundaries or pointer 
-                             to TL cb is NULL ; access would cause a page fault  
-    VOS_STATUS_E_EXISTS:     Station was not registered or BA session already
-                             exists
-    VOS_STATUS_E_NOSUPPORT:  Not yet supported
+                                                          
+                                                                               
+                                                                                 
+                                                                             
+                                   
+                                              
     
-  SIDE EFFECTS 
+               
   
-============================================================================*/
+                                                                            */
 VOS_STATUS
 WLANTL_BaSessionDel 
 ( 
@@ -610,11 +610,11 @@ WLANTL_BaSessionDel
   WLANTL_RxMetaInfoType   wRxMetaInfo;
   v_U32_t                 fwIdx = 0;
   tANI_U8                 lockRetryCnt = 0;
-  /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+  /*                                                                      */
 
-   /*------------------------------------------------------------------------
-    Sanity check
-   ------------------------------------------------------------------------*/
+   /*                                                                        
+                
+                                                                           */
   if ( WLANTL_TID_INVALID(ucTid))
   {
     VOS_TRACE( VOS_MODULE_ID_TL, VOS_TRACE_LEVEL_ERROR,
@@ -629,9 +629,9 @@ WLANTL_BaSessionDel
     return VOS_STATUS_E_FAULT;
   }
 
-  /*------------------------------------------------------------------------
-    Extract TL control block and check existance
-   ------------------------------------------------------------------------*/
+  /*                                                                        
+                                                
+                                                                           */
   pTLCb = VOS_GET_TL_CB(pvosGCtx);
   if ( NULL == pTLCb ) 
   {
@@ -673,9 +673,9 @@ WLANTL_BaSessionDel
     return VOS_STATUS_SUCCESS;
   }
 
-  /*------------------------------------------------------------------------
-    Verify that BA session was added
-   ------------------------------------------------------------------------*/
+  /*                                                                        
+                                    
+                                                                           */
   if ( 0 == pClientSTA->atlBAReorderInfo[ucTid].ucExists )
   {
     VOS_TRACE( VOS_MODULE_ID_TL, VOS_TRACE_LEVEL_INFO_HIGH,
@@ -684,14 +684,14 @@ WLANTL_BaSessionDel
   }
 
   
-  /*------------------------------------------------------------------------
-     Send all pending packets to HDD 
-   ------------------------------------------------------------------------*/
+  /*                                                                        
+                                     
+                                                                           */
   reOrderInfo = &pClientSTA->atlBAReorderInfo[ucTid];
 
-  /*------------------------------------------------------------------------
-     Invalidate reorder info here. This ensures that no packets are 
-     bufferd after  reorder buffer is cleaned.
+  /*                                                                        
+                                                                    
+                                              
    */
   lockStatus = vos_lock_acquire(&reOrderInfo->reorderLock);
   if(!VOS_IS_STATUS_SUCCESS(lockStatus))
@@ -741,15 +741,15 @@ WLANTL_BaSessionDel
 
   vos_lock_release(&reOrderInfo->reorderLock);
 
-  /*------------------------------------------------------------------------
-     Delete reordering timer
-   ------------------------------------------------------------------------*/
+  /*                                                                        
+                            
+                                                                           */
   if(VOS_TIMER_STATE_RUNNING == vos_timer_getCurrentState(&reOrderInfo->agingTimer))
   {
     vosStatus = vos_timer_stop(&reOrderInfo->agingTimer);
     if(!VOS_IS_STATUS_SUCCESS(vosStatus))
     { 
-       TLLOGE(VOS_TRACE(VOS_MODULE_ID_TL, VOS_TRACE_LEVEL_ERROR,"Timer stop fail", vosStatus));
+       TLLOGE(VOS_TRACE(VOS_MODULE_ID_TL, VOS_TRACE_LEVEL_ERROR,"Timer stop fail: %d", vosStatus));
        return vosStatus;
     }
   }
@@ -769,9 +769,9 @@ WLANTL_BaSessionDel
               "WLAN TL:Failed to destroy reorder timer on WLANTL_BaSessionAdd");
   }
 
-  /*------------------------------------------------------------------------
-    Delete session 
-   ------------------------------------------------------------------------*/
+  /*                                                                        
+                   
+                                                                           */
   pClientSTA->atlBAReorderInfo[ucTid].usCount  = 0;
   pClientSTA->atlBAReorderInfo[ucTid].ucCIndex = 0;
   reOrderInfo->winSize   = 0;
@@ -800,55 +800,55 @@ WLANTL_BaSessionDel
   reOrderInfo->reorderBuffer->isAvailable = VOS_TRUE;
 
   return VOS_STATUS_SUCCESS;
-}/* WLANTL_BaSessionDel */
+}/*                     */
 
 
-/*----------------------------------------------------------------------------
-    INTERACTION WITH TL main module
- ---------------------------------------------------------------------------*/
+/*                                                                            
+                                   
+                                                                            */
 
-/*==========================================================================
-      AMSDU sub-frame processing module
-  ==========================================================================*/
-/*==========================================================================
-  FUNCTION    WLANTL_AMSDUProcess
+/*                                                                          
+                                       
+                                                                            */
+/*                                                                          
+                                 
 
-  DESCRIPTION 
-    Process A-MSDU sub-frame. Start of chain if marked as first frame. 
-    Linked at the end of the existing AMSDU chain. 
+              
+                                                                       
+                                                   
 
-  DEPENDENCIES 
+               
          
-  PARAMETERS 
+             
 
-   IN/OUT:
-   vosDataBuff: vos packet for the received data
-                 outgoing contains the root of the chain for the rx 
-                 aggregated MSDU if the frame is marked as last; otherwise 
-                 NULL
+          
+                                                
+                                                                    
+                                                                           
+                     
    
-   IN
-   pvosGCtx:     pointer to the global vos context; a handle to TL's 
-                 control block can be extracted from its context 
-   pvBDHeader:   pointer to the BD header
-   ucSTAId:      Station ID 
-   ucMPDUHLen:   length of the MPDU header
-   usMPDULen:    length of the MPDU 
+     
+                                                                     
+                                                                 
+                                         
+                            
+                                          
+                                    
       
-  RETURN VALUE
-    The result code associated with performing the operation  
+              
+                                                              
 
-    VOS_STATUS_E_INVAL:   invalid input parameters
-    VOS_STATUS_E_FAULT:   pointer to TL cb is NULL ; access would cause a 
-                          page fault  
-    VOS_STATUS_SUCCESS:   Everything is good :)
+                                                  
+                                                                          
+                                      
+                                               
 
-  Other values can be returned as a result of a function call, please check 
-  corresponding API for more info. 
+                                                                            
+                                   
   
-  SIDE EFFECTS 
+               
   
-============================================================================*/
+                                                                            */
 VOS_STATUS
 WLANTL_AMSDUProcess
 ( 
@@ -860,8 +860,8 @@ WLANTL_AMSDUProcess
   v_U16_t     usMPDULen
 )
 {
-  v_U8_t          ucFsf; /* First AMSDU sub frame */
-  v_U8_t          ucAef; /* Error in AMSDU sub frame */
+  v_U8_t          ucFsf; /*                       */
+  v_U8_t          ucAef; /*                          */
   WLANTL_CbType*  pTLCb = NULL; 
   WLANTL_STAClientType *pClientSTA = NULL;
   v_U8_t          MPDUHeaderAMSDUHeader[WLANTL_MPDU_HEADER_LEN + TL_AMSDU_SUBFRM_HEADER_LEN];
@@ -872,10 +872,10 @@ WLANTL_AMSDUProcess
   v_U16_t         packetLength; 
   static v_U32_t  numAMSDUFrames;
   vos_pkt_t*      vosDataBuff;
-  /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
-  /*------------------------------------------------------------------------
-    Sanity check
-   ------------------------------------------------------------------------*/
+  /*                                                                       */
+  /*                                                                        
+                
+                                                                           */
   if (( NULL == ppVosDataBuff ) || (NULL == *ppVosDataBuff) || ( NULL == pvBDHeader ) || 
       ( WLANTL_STA_ID_INVALID(ucSTAId)) )
   {
@@ -885,9 +885,9 @@ WLANTL_AMSDUProcess
   }
 
   vosDataBuff = *ppVosDataBuff;
-  /*------------------------------------------------------------------------
-    Extract TL control block 
-   ------------------------------------------------------------------------*/
+  /*                                                                        
+                             
+                                                                           */
   pTLCb = VOS_GET_TL_CB(pvosGCtx);
   if ( NULL == pTLCb ) 
   {
@@ -905,12 +905,12 @@ WLANTL_AMSDUProcess
       return VOS_STATUS_E_FAILURE;
   }
 
-  /*------------------------------------------------------------------------
-    Check frame
-   ------------------------------------------------------------------------*/
+  /*                                                                        
+               
+                                                                           */
   ucAef =  (v_U8_t)WDA_GET_RX_AEF( pvBDHeader );
   ucFsf =  (v_U8_t)WDA_GET_RX_ESF( pvBDHeader );
-  /* On Prima, MPDU data offset not includes BD header size */
+  /*                                                        */
   MPDUDataOffset = (v_U16_t)WDA_GET_RX_MPDU_DATA_OFFSET(pvBDHeader);
 
   if ( WLANHAL_RX_BD_AEF_SET == ucAef ) 
@@ -920,23 +920,23 @@ WLANTL_AMSDUProcess
 
     vos_pkt_return_packet(vosDataBuff);
     *ppVosDataBuff = NULL;
-    return VOS_STATUS_SUCCESS; /*Not a transport error*/ 
+    return VOS_STATUS_SUCCESS; /*                     */ 
   }
 
   if((0 != ucMPDUHLen) && ucFsf)
   {
     /*
-     * This is first AMSDU sub frame
-     * AMSDU Header should be removed
-     * MPDU header should be stored into context to recover next frames
+                                    
+                                     
+                                                                       
      */
-    /* Assumed here Address4 is never part of AMSDU received at TL */
+    /*                                                             */
     if (ucMPDUHLen > WLANTL_MPDU_HEADER_LEN)
     {
       TLLOGE(VOS_TRACE(VOS_MODULE_ID_TL, VOS_TRACE_LEVEL_ERROR,"MPDU Header length (%d) is greater",ucMPDUHLen));
       vos_pkt_return_packet(vosDataBuff);
       *ppVosDataBuff = NULL;
-      return VOS_STATUS_SUCCESS; /*Not a transport error*/
+      return VOS_STATUS_SUCCESS; /*                     */
     }
 
     vStatus = vos_pkt_pop_head(vosDataBuff, MPDUHeaderAMSDUHeader, ucMPDUHLen + TL_AMSDU_SUBFRM_HEADER_LEN);
@@ -945,15 +945,15 @@ WLANTL_AMSDUProcess
       TLLOGE(VOS_TRACE(VOS_MODULE_ID_TL, VOS_TRACE_LEVEL_ERROR,"Pop MPDU AMSDU Header fail"));
       vos_pkt_return_packet(vosDataBuff);
       *ppVosDataBuff = NULL;
-      return VOS_STATUS_SUCCESS; /*Not a transport error*/ 
+      return VOS_STATUS_SUCCESS; /*                     */ 
     }
     pClientSTA->ucMPDUHeaderLen = ucMPDUHLen;
     memcpy(pClientSTA->aucMPDUHeader, MPDUHeaderAMSDUHeader, ucMPDUHLen);
-    /* AMSDU header stored to handle garbage data within next frame */
+    /*                                                              */
   }
   else
   {
-    /* Trim garbage, size is frameLoop */
+    /*                                 */
     if(MPDUDataOffset > 0)
     {
       vStatus = vos_pkt_trim_head(vosDataBuff, MPDUDataOffset);
@@ -963,31 +963,31 @@ WLANTL_AMSDUProcess
       TLLOGE(VOS_TRACE(VOS_MODULE_ID_TL, VOS_TRACE_LEVEL_ERROR,"Trim Garbage Data fail"));
       vos_pkt_return_packet(vosDataBuff);
       *ppVosDataBuff = NULL;
-      return VOS_STATUS_SUCCESS; /*Not a transport error*/ 
+      return VOS_STATUS_SUCCESS; /*                     */ 
     }
 
-    /* Remove MPDU header and AMSDU header from the packet */
+    /*                                                     */
     vStatus = vos_pkt_pop_head(vosDataBuff, MPDUHeaderAMSDUHeader, ucMPDUHLen + TL_AMSDU_SUBFRM_HEADER_LEN);
     if(!VOS_IS_STATUS_SUCCESS(vStatus))
     {
       TLLOGE(VOS_TRACE(VOS_MODULE_ID_TL, VOS_TRACE_LEVEL_ERROR,"AMSDU Header Pop fail"));
       vos_pkt_return_packet(vosDataBuff);
       *ppVosDataBuff = NULL;
-      return VOS_STATUS_SUCCESS; /*Not a transport error*/ 
+      return VOS_STATUS_SUCCESS; /*                     */ 
     }
-  } /* End of henalding not first sub frame specific */
+  } /*                                               */
 
-  /* Put in MPDU header into all the frame */
+  /*                                       */
   vStatus = vos_pkt_push_head(vosDataBuff, pClientSTA->aucMPDUHeader, pClientSTA->ucMPDUHeaderLen);
   if(!VOS_IS_STATUS_SUCCESS(vStatus))
   {
     TLLOGE(VOS_TRACE(VOS_MODULE_ID_TL, VOS_TRACE_LEVEL_ERROR,"MPDU Header Push back fail"));
     vos_pkt_return_packet(vosDataBuff);
     *ppVosDataBuff = NULL;
-    return VOS_STATUS_SUCCESS; /*Not a transport error*/ 
+    return VOS_STATUS_SUCCESS; /*                     */ 
   }
 
-  /* Find Padding and remove */
+  /*                         */
   memcpy(&subFrameLength, MPDUHeaderAMSDUHeader + ucMPDUHLen + WLANTL_AMSDU_SUBFRAME_LEN_OFFSET, sizeof(v_U16_t));
   subFrameLength = vos_be16_to_cpu(subFrameLength);
   paddingSize = usMPDULen - ucMPDUHLen - subFrameLength - TL_AMSDU_SUBFRM_HEADER_LEN;
@@ -995,22 +995,22 @@ WLANTL_AMSDUProcess
   vos_pkt_get_packet_length(vosDataBuff, &packetLength);
   if((paddingSize > 0) && (paddingSize < packetLength))
   {
-    /* There is padding bits, remove it */
+    /*                                  */
     vos_pkt_trim_tail(vosDataBuff, paddingSize);
   }
   else if(0 == paddingSize)
   {
-    /* No Padding bits */
-    /* Do Nothing */
+    /*                 */
+    /*            */
   }
   else
   {
-    /* Padding size is larger than Frame size, Actually negative */
-    /* Not a valid case, not a valid frame, drop it */
+    /*                                                           */
+    /*                                              */
     TLLOGE(VOS_TRACE(VOS_MODULE_ID_TL, VOS_TRACE_LEVEL_ERROR,"Padding Size is negative, no possible %d", paddingSize));
     vos_pkt_return_packet(vosDataBuff);
     *ppVosDataBuff = NULL;
-    return VOS_STATUS_SUCCESS; /*Not a transport error*/ 
+    return VOS_STATUS_SUCCESS; /*                     */ 
   }
 
   numAMSDUFrames++;
@@ -1019,36 +1019,36 @@ WLANTL_AMSDUProcess
     TLLOGE(VOS_TRACE(VOS_MODULE_ID_TL, VOS_TRACE_LEVEL_ERROR,"%lu AMSDU frames arrived", numAMSDUFrames));
   }
   return VOS_STATUS_SUCCESS;
-}/* WLANTL_AMSDUProcess */
+}/*                     */
 
-/*==========================================================================
-      Re-ordering module
-  ==========================================================================*/
+/*                                                                          
+                        
+                                                                            */
 
-/*==========================================================================
-  FUNCTION    WLANTL_MSDUReorder
+/*                                                                          
+                                
 
-  DESCRIPTION 
-    MSDU reordering 
+              
+                    
 
-  DEPENDENCIES 
+               
          
-  PARAMETERS 
+             
 
-   IN
+     
    
-   vosDataBuff: vos packet for the received data
-   pvBDHeader: pointer to the BD header
-   ucSTAId:    Station ID 
+                                                
+                                       
+                          
       
-  RETURN VALUE
-    The result code associated with performing the operation  
+              
+                                                              
 
-    VOS_STATUS_SUCCESS:   Everything is good :)
+                                               
 
-  SIDE EFFECTS 
+               
   
-============================================================================*/
+                                                                            */
 VOS_STATUS WLANTL_MSDUReorder
 ( 
    WLANTL_CbType    *pTLCb,
@@ -1071,7 +1071,7 @@ VOS_STATUS WLANTL_MSDUReorder
    VOS_STATUS           timerStatus = VOS_STATUS_SUCCESS; 
    VOS_TIMER_STATE      timerState;
    v_SIZE_t             rxFree;
-   v_U64_t              ullreplayCounter = 0; /* 48-bit replay counter */
+   v_U64_t              ullreplayCounter = 0; /*                       */
    if((NULL == pTLCb) || (*vosDataBuff == NULL))
    {
       TLLOGE(VOS_TRACE(VOS_MODULE_ID_TL, VOS_TRACE_LEVEL_ERROR,"Invalid ARG pTLCb 0x%p, vosDataBuff 0x%p",
@@ -1110,10 +1110,10 @@ VOS_STATUS WLANTL_MSDUReorder
 
 
 #ifdef WLANTL_HAL_VOLANS
-   /* Replay check code : check whether replay check is needed or not */
+   /*                                                                 */
    if(VOS_TRUE == pClientSTA->ucIsReplayCheckValid)
    {
-           /* Getting 48-bit replay counter from the RX BD */
+           /*                                              */
            ullreplayCounter = WDA_DS_GetReplayCounter(aucBDHeader);
    }
 #endif 
@@ -1124,19 +1124,19 @@ VOS_STATUS WLANTL_MSDUReorder
    TLLOG4(VOS_TRACE(VOS_MODULE_ID_TL, VOS_TRACE_LEVEL_INFO_LOW,"opCode %d SI %d, FI %d, CI %d seqNo %d", ucOpCode, ucSlotIdx, ucFwdIdx, currentReorderInfo->ucCIndex, CSN));
 #endif
 
-   // remember our current CI so that later we can tell if it advanced
+   //                                                                 
    ucCIndexOrig = currentReorderInfo->ucCIndex;
 
    switch(ucOpCode) 
    {
       case WLANTL_OPCODE_INVALID:
-         /* Do nothing just pass through current frame */
+         /*                                            */
          break;
 
       case WLANTL_OPCODE_QCUR_FWDBUF:
          if(0 == currentReorderInfo->pendingFramesCount)
          {
-            //This frame will be fwd'ed to the OS. The next slot is the one we expect next
+            //                                                                            
             currentReorderInfo->ucCIndex = (ucSlotIdx + 1) % currentReorderInfo->winSize;
             lockStatus = vos_lock_release(&currentReorderInfo->reorderLock);
             if(!VOS_IS_STATUS_SUCCESS(lockStatus))
@@ -1156,7 +1156,7 @@ VOS_STATUS WLANTL_MSDUReorder
          }
          if(VOS_STATUS_E_RESOURCES == status)
          {
-            /* This is the case slot index is already cycle one route, route all the frames Qed */
+            /*                                                                                  */
             vosPktIdx = NULL;
             status = WLANTL_ChainFrontPkts(ucFwdIdx,
                                            WLANTL_OPCODE_FWDALL_QCUR, 
@@ -1241,8 +1241,8 @@ VOS_STATUS WLANTL_MSDUReorder
             }
             *vosDataBuff = vosPktIdx;
          }
-         //ucFwdIdx is the slot this packet supposes to take but there is a hole there
-         //It looks that the chip will put the next packet into the slot ucFwdIdx.
+         //                                                                           
+         //                                                                       
          currentReorderInfo->ucCIndex = ucFwdIdx;
          break;
 
@@ -1257,7 +1257,7 @@ VOS_STATUS WLANTL_MSDUReorder
            }
          if(VOS_STATUS_E_RESOURCES == status)
          {
-            /* This is the case slot index is already cycle one route, route all the frames Qed */
+            /*                                                                                  */
             vosPktIdx = NULL;
             status = WLANTL_ChainFrontPkts(ucFwdIdx,
                                            WLANTL_OPCODE_FWDALL_QCUR, 
@@ -1281,7 +1281,7 @@ VOS_STATUS WLANTL_MSDUReorder
          }
          else
          {
-            /* Since current Frame is Qed, no frame will be routed */
+            /*                                                     */
             *vosDataBuff = NULL; 
          }
          break;
@@ -1305,7 +1305,7 @@ VOS_STATUS WLANTL_MSDUReorder
             }
             return status;
          }
-         //This opCode means the window shift. Enforce the current Index
+         //                                                             
          currentReorderInfo->ucCIndex = ucFwdIdx;
 
          status = WLANTL_QueueCurrent(currentReorderInfo,
@@ -1319,7 +1319,7 @@ VOS_STATUS WLANTL_MSDUReorder
          if(VOS_STATUS_E_RESOURCES == status)
          {
             vos_pkt_return_packet(vosPktIdx); 
-            /* This is the case slot index is already cycle one route, route all the frames Qed */
+            /*                                                                                  */
             vosPktIdx = NULL;
             status = WLANTL_ChainFrontPkts(ucFwdIdx,
                                            WLANTL_OPCODE_FWDALL_QCUR, 
@@ -1364,10 +1364,10 @@ VOS_STATUS WLANTL_MSDUReorder
             return status;
          }
 
-         //Since BAR frame received, set the index to the right location
+         //                                                             
          currentReorderInfo->ucCIndex = ucFwdIdx;
 
-         /* Current frame has to be dropped, BAR frame */
+         /*                                            */
          status = vos_pkt_return_packet(*vosDataBuff);
          if(!VOS_IS_STATUS_SUCCESS(status))
          {
@@ -1404,7 +1404,7 @@ VOS_STATUS WLANTL_MSDUReorder
             return status;
          }
 
-         //Since BAR frame received and beyond cur window, set the index to the right location
+         //                                                                                   
          currentReorderInfo->ucCIndex = 0;
 
          status = vos_pkt_return_packet(*vosDataBuff);
@@ -1468,9 +1468,9 @@ VOS_STATUS WLANTL_MSDUReorder
          break;
 
       case WLANTL_OPCODE_TEARDOWN:
-         // do we have a procedure in place to teardown BA?
+         //                                                
 
-         // fall through to drop the current packet
+         //                                        
       case WLANTL_OPCODE_DROPCUR:
          vos_pkt_return_packet(*vosDataBuff);
          *vosDataBuff = NULL;
@@ -1480,15 +1480,15 @@ VOS_STATUS WLANTL_MSDUReorder
          break;
    }
 
-   /* Check the available VOS RX buffer size
-    * If remaining VOS RX buffer is too few, have to make space
-    * Route all the Qed frames upper layer
-    * Otherwise, RX thread could be stall */
+   /*                                       
+                                                               
+                                          
+                                          */
    vos_pkt_get_available_buffer_pool(VOS_PKT_TYPE_RX_RAW, &rxFree);
-   if(WLANTL_BA_MIN_FREE_RX_VOS_BUFFER > rxFree)
+   if(WLANTL_BA_MIN_FREE_RX_VOS_BUFFER >= rxFree)
    {
-      TLLOGE(VOS_TRACE(VOS_MODULE_ID_TL, VOS_TRACE_LEVEL_ERROR,"RX Free", rxFree));
-      TLLOGE(VOS_TRACE(VOS_MODULE_ID_TL, VOS_TRACE_LEVEL_ERROR,"RX free buffer count is too low, Pending frame count is %d",
+      TLLOGE(VOS_TRACE(VOS_MODULE_ID_TL, VOS_TRACE_LEVEL_INFO, "RX Free: %d", rxFree));
+      TLLOGE(VOS_TRACE(VOS_MODULE_ID_TL, VOS_TRACE_LEVEL_INFO, "RX free buffer count is too low, Pending frame count is %d",
                   currentReorderInfo->pendingFramesCount));
       vosPktIdx = NULL;
       status = WLANTL_ChainFrontPkts(ucFwdIdx,
@@ -1520,11 +1520,11 @@ VOS_STATUS WLANTL_MSDUReorder
    }
 
    /*
-    * Current aging timer logic:
-    * 1) if we forwarded any packets and the timer is running:
-    *    stop the timer
-    * 2) if there are packets queued and the timer is not running:
-    *    start the timer
+                                
+                                                              
+                       
+                                                                  
+                        
     */
    timerState = vos_timer_getCurrentState(&currentReorderInfo->agingTimer);
    if ((VOS_TIMER_STATE_RUNNING == timerState) &&
@@ -1533,15 +1533,15 @@ VOS_STATUS WLANTL_MSDUReorder
       TLLOG4(VOS_TRACE(VOS_MODULE_ID_TL, VOS_TRACE_LEVEL_INFO_LOW,"HOLE filled, Pending Frames Count %d",
                  currentReorderInfo->pendingFramesCount));
 
-      // we forwarded some packets so stop aging the current hole
+      //                                                         
       timerStatus = vos_timer_stop(&currentReorderInfo->agingTimer);
       timerState = VOS_TIMER_STATE_STOPPED;
 
-      // ignore the returned status since there is a race condition
-      // whereby between the time we called getCurrentState() and the
-      // time we call stop() the timer could have fired.  In that case
-      // stop() will return an error, but we don't care since the
-      // timer has stopped
+      //                                                           
+      //                                                             
+      //                                                              
+      //                                                         
+      //                  
    }
 
    if (currentReorderInfo->pendingFramesCount > 0)
@@ -1554,7 +1554,7 @@ VOS_STATUS WLANTL_MSDUReorder
                                        WLANTL_BA_REORDERING_AGING_TIMER);
          if(!VOS_IS_STATUS_SUCCESS(timerStatus))
          {
-            TLLOGE(VOS_TRACE(VOS_MODULE_ID_TL, VOS_TRACE_LEVEL_ERROR,"Timer start fail", timerStatus));
+            TLLOGE(VOS_TRACE(VOS_MODULE_ID_TL, VOS_TRACE_LEVEL_ERROR,"Timer start fail: %d", timerStatus));
             lockStatus = vos_lock_release(&currentReorderInfo->reorderLock);
             if(!VOS_IS_STATUS_SUCCESS(lockStatus))
             {
@@ -1566,8 +1566,8 @@ VOS_STATUS WLANTL_MSDUReorder
       }
       else
       {
-         // we didn't forward any packets and the timer was already
-         // running so we're still aging the same hole
+         //                                                        
+         //                                           
          TLLOG4(VOS_TRACE(VOS_MODULE_ID_TL, VOS_TRACE_LEVEL_INFO_LOW,"Still HOLE, Pending Frames Count %d",
                     currentReorderInfo->pendingFramesCount));
       }
@@ -1580,38 +1580,38 @@ VOS_STATUS WLANTL_MSDUReorder
       return lockStatus;
    }
    return VOS_STATUS_SUCCESS;
-}/* WLANTL_MSDUReorder */
+}/*                    */
 
 
-/*==========================================================================
-     Utility functions 
-  ==========================================================================*/
+/*                                                                          
+                       
+                                                                            */
 
-/*==========================================================================
+/*                                                                          
 
-  FUNCTION    WLANTL_QueueCurrent
+                                 
 
-  DESCRIPTION 
-    It will queue a packet at a given slot index in the MSDU reordering list. 
+              
+                                                                              
     
-  DEPENDENCIES 
+               
     
-  PARAMETERS 
+             
 
-    IN
-    pwBaReorder:   pointer to the BA reordering session info 
-    vosDataBuff:   data buffer to be queued
-    ucSlotIndex:   slot index 
+      
+                                                             
+                                           
+                              
    
-  RETURN VALUE
-    The result code associated with performing the operation  
+              
+                                                              
 
-    VOS_STATUS_SUCCESS:     Everything is OK
+                                            
 
     
-  SIDE EFFECTS 
+               
   
-============================================================================*/
+                                                                            */
 VOS_STATUS WLANTL_QueueCurrent
 (
    WLANTL_BAReorderType*  pwBaReorder,
@@ -1639,36 +1639,36 @@ VOS_STATUS WLANTL_QueueCurrent
                pwBaReorder->reorderBuffer->arrayBuffer[ucSlotIndex]));
 
    return status;
-}/*WLANTL_QueueCurrent*/
+}/*                   */
 
-/*==========================================================================
+/*                                                                          
 
-  FUNCTION    WLANTL_ChainFrontPkts
+                                   
 
-  DESCRIPTION 
-    It will remove all the packets from the front of a vos list and chain 
-    them to a vos pkt . 
+              
+                                                                          
+                        
     
-  DEPENDENCIES 
+               
     
-  PARAMETERS 
+             
 
-    IN
-    ucCount:       number of packets to extract
-    pwBaReorder:   pointer to the BA reordering session info 
+      
+                                               
+                                                             
 
-    OUT
-    vosDataBuff:   data buffer containing the extracted chain of packets
+       
+                                                                        
    
-  RETURN VALUE
-    The result code associated with performing the operation  
+              
+                                                              
 
-    VOS_STATUS_SUCCESS:     Everything is OK
+                                            
 
     
-  SIDE EFFECTS 
+               
   
-============================================================================*/
+                                                                            */
 VOS_STATUS WLANTL_ChainFrontPkts
 ( 
    v_U32_t                fwdIndex,
@@ -1767,31 +1767,31 @@ VOS_STATUS WLANTL_ChainFrontPkts
 #endif
 
    return status; 
-}/*WLANTL_ChainFrontPkts*/
-/*==========================================================================
+}/*                     */
+/*                                                                          
  
-  FUNCTION    WLANTL_FillReplayCounter
- 
-  DESCRIPTION 
-    It will fill repaly counter at a given slot index in the MSDU reordering list. 
-            
-  DEPENDENCIES 
-                    
-  PARAMETERS 
-
-  IN
-      pwBaReorder  :   pointer to the BA reordering session info 
-      replayCounter:   replay counter to be filled
-      ucSlotIndex  :   slot index 
                                       
-  RETURN VALUE
-     NONE 
+ 
+              
+                                                                                   
+            
+               
+                    
+             
+
+    
+                                                                 
+                                                  
+                                  
+                                      
+              
+          
 
                                                  
-  SIDE EFFECTS 
-     NONE
+               
+         
         
- ============================================================================*/
+                                                                             */
 void WLANTL_FillReplayCounter
 (
    WLANTL_BAReorderType*  pwBaReorder,
@@ -1800,14 +1800,14 @@ void WLANTL_FillReplayCounter
 )
 {
 
-   //BAMSGDEBUG("replay counter to be filled in Qed frames %llu",
-               //replayCounter, 0, 0);
+   //                                                            
+               //                     
 
    pwBaReorder->reorderBuffer->ullReplayCounter[ucSlotIndex] = ullreplayCounter;
-   //BAMSGDEBUG("Assigned, replay counter Pending Frames %d at slot %d, replay counter[0x%llX]\n",
-               //pwBaReorder->pendingFramesCount,
-               //ucSlotIndex,
-               //pwBaReorder->reorderBuffer->ullReplayCounter);
+   //                                                                                             
+               //                                
+               //            
+               //                                              
    return;
-}/*WLANTL_FillReplayCounter*/
+}/*                        */
 

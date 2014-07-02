@@ -24,7 +24,7 @@
 #include <mach/debug_mm.h>
 #include <mach/qdsp5v2/snddev_mi2s.h>
 
-/* Global state for the driver */
+/*                             */
 struct snddev_mi2s_drv_state {
 	struct clk *mclk;
 	struct clk *sclk;
@@ -55,7 +55,7 @@ static int snddev_mi2s_open_tx(struct msm_snddev_info *dev_info)
 		return -EINVAL;
 	}
 
-	/* Set MI2S */
+	/*          */
 	mi2s_set_hdmi_input_path(channels, WT_16_BIT,
 				 snddev_mi2s_data->sd_lines);
 
@@ -70,7 +70,7 @@ static int snddev_mi2s_open_tx(struct msm_snddev_info *dev_info)
 		return -ENODEV;
 	}
 
-	/* Enable audio path */
+	/*                   */
 	if (snddev_mi2s_data->route)
 		snddev_mi2s_data->route();
 
@@ -100,11 +100,11 @@ static int snddev_mi2s_open_rx(struct msm_snddev_info *dev_info)
 	else
 		channels = MI2S_CHAN_MONO_RAW;
 
-	/* Set MI2S */
+	/*          */
 	mi2s_set_hdmi_output_path(channels, WT_16_BIT,
 				  snddev_mi2s_data->sd_lines);
 
-	/* Start AFE */
+	/*           */
 	afe_config.sample_rate = snddev_mi2s_data->default_sample_rate / 1000;
 	afe_config.channel_mode = snddev_mi2s_data->channel_mode;
 	afe_config.volume = AFE_VOLUME_UNITY;
@@ -115,7 +115,7 @@ static int snddev_mi2s_open_rx(struct msm_snddev_info *dev_info)
 		return -ENODEV;
 	}
 
-	/* Enable audio path */
+	/*                   */
 	if (snddev_mi2s_data->route)
 		snddev_mi2s_data->route();
 
@@ -219,7 +219,7 @@ static int snddev_mi2s_open(struct msm_snddev_info *dev_info)
 mi2s_cleanup_open:
 	mi2s_unconfig_data_gpio(dir, snddev_mi2s_data->sd_lines);
 
-	/* Disable audio path */
+	/*                    */
 	if (snddev_mi2s_data->deroute)
 		snddev_mi2s_data->deroute();
 
@@ -274,7 +274,7 @@ static int snddev_mi2s_close(struct msm_snddev_info *dev_info)
 		mi2s_unconfig_clk_gpio();
 	}
 
-	/* Disable audio path */
+	/*                    */
 	if (snddev_mi2s_data->deroute)
 		snddev_mi2s_data->deroute();
 

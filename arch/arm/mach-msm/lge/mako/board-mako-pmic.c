@@ -118,19 +118,19 @@ struct pm8xxx_mpp_init {
 			PM_GPIO_STRENGTH_HIGH, \
 			PM_GPIO_FUNC_NORMAL, 0, 0)
 
-/* Initial PM8921 GPIO configurations */
+/*                                    */
 static struct pm8xxx_gpio_init pm8921_gpios[] __initdata = {
-	PM8921_GPIO_INPUT(13, PM_GPIO_PULL_DN), /* EARJACK_DEBUGGER */
-	PM8921_GPIO_INPUT(14, PM_GPIO_PULL_DN), /* SLIMPORT_CBL_DET */
-	PM8921_GPIO_OUTPUT(15, 0, HIGH), /* ANX_P_DWN_CTL */
-	PM8921_GPIO_OUTPUT(16, 0, HIGH), /* ANX_AVDD33_EN */
-	PM8921_GPIO_OUTPUT(17, 0, HIGH), /* CAM_VCM_EN */
-	PM8921_GPIO_OUTPUT(19, 0, HIGH), /* AMP_EN_AMP */
-	PM8921_GPIO_OUTPUT(20, 0, HIGH), /* PMIC - FSA8008 EAR_MIC_BIAS_EN */
-	PM8921_GPIO_OUTPUT(31, 0, HIGH), /* PMIC - FSA8008_EAR_MIC_EN */
-	PM8921_GPIO_INPUT(32, PM_GPIO_PULL_UP_1P5), /* PMIC - FSA8008_EARPOL_DETECT */
-	PM8921_GPIO_OUTPUT(33, 0, HIGH), /* HAPTIC_EN */
-	PM8921_GPIO_OUTPUT(34, 0, HIGH), /* WCD_RESET_N */
+	PM8921_GPIO_INPUT(13, PM_GPIO_PULL_DN), /*                  */
+	PM8921_GPIO_INPUT(14, PM_GPIO_PULL_DN), /*                  */
+	PM8921_GPIO_OUTPUT(15, 0, HIGH), /*               */
+	PM8921_GPIO_OUTPUT(16, 0, HIGH), /*               */
+	PM8921_GPIO_OUTPUT(17, 0, HIGH), /*            */
+	PM8921_GPIO_OUTPUT(19, 0, HIGH), /*            */
+	PM8921_GPIO_OUTPUT(20, 0, HIGH), /*                                */
+	PM8921_GPIO_OUTPUT(31, 0, HIGH), /*                           */
+	PM8921_GPIO_INPUT(32, PM_GPIO_PULL_UP_1P5), /*                              */
+	PM8921_GPIO_OUTPUT(33, 0, HIGH), /*           */
+	PM8921_GPIO_OUTPUT(34, 0, HIGH), /*             */
 };
 
 #ifdef CONFIG_WIRELESS_CHARGER
@@ -138,11 +138,11 @@ static struct pm8xxx_gpio_init pm8921_gpios[] __initdata = {
 #define PM8921_GPIO_WLC_ACTIVE_11   17
 static struct pm8xxx_gpio_init pm8921_gpios_wlc[] __initdata = {
 	PM8921_GPIO_INPUT(PM8921_GPIO_WLC_ACTIVE,PM_GPIO_PULL_UP_1P5_30),
-	PM8921_GPIO_OUTPUT(26, 0, HIGH), /* WLC CHG_STAT */
+	PM8921_GPIO_OUTPUT(26, 0, HIGH), /*              */
 };
 static struct pm8xxx_gpio_init pm8921_gpios_wlc_rev11[] __initdata = {
 	PM8921_GPIO_INPUT(PM8921_GPIO_WLC_ACTIVE_11,PM_GPIO_PULL_UP_1P5_30),
-	PM8921_GPIO_OUTPUT(26, 0, HIGH), /* WLC CHG_STAT */
+	PM8921_GPIO_OUTPUT(26, 0, HIGH), /*              */
 };
 #endif
 
@@ -193,9 +193,9 @@ static struct pm8xxx_misc_platform_data apq8064_pm8921_misc_pdata = {
 	.priority = 0,
 };
 
-#define PM8921_LC_LED_MAX_CURRENT 4	/* I = 4mA */
-#define PM8921_LC_LED_LOW_CURRENT 1	/* I = 1mA */
-#define PM8XXX_LED_PWM_ADJUST_BRIGHTNESS_E 10	/* max duty percentage */
+#define PM8921_LC_LED_MAX_CURRENT 4	/*         */
+#define PM8921_LC_LED_LOW_CURRENT 1	/*         */
+#define PM8XXX_LED_PWM_ADJUST_BRIGHTNESS_E 10	/*                     */
 #define PM8XXX_LED_PWM_PERIOD     1000
 #define PM8XXX_LED_PWM_DUTY_MS    50
 #define PM8XXX_LED_PWM_DUTY_PCTS  16
@@ -203,9 +203,9 @@ static struct pm8xxx_misc_platform_data apq8064_pm8921_misc_pdata = {
 #define PM8XXX_LED_PWM_START_IDX1 32
 #define PM8XXX_LED_PWM_START_IDX2 48
 
-/**
- * PM8XXX_PWM_CHANNEL_NONE shall be used when LED shall not be
- * driven using PWM feature.
+/* 
+                                                              
+                            
  */
 #define PM8XXX_PWM_CHANNEL_NONE		-1
 
@@ -331,7 +331,7 @@ static struct pm8xxx_adc_amux apq8064_pm8921_adc_channels_data[] = {
 };
 
 static struct pm8xxx_adc_properties apq8064_pm8921_adc_data = {
-	.adc_vdd_reference	= 1800, /* milli-voltage for this adc */
+	.adc_vdd_reference	= 1800, /*                            */
 	.bitresolution		= 15,
 	.bipolar                = 0,
 };
@@ -442,9 +442,9 @@ static __init void mako_set_wlc_gpio(void) { }
 #endif
 
 /*
- * Battery characteristic
- * Typ.2100mAh capacity, Li-Ion Polymer 3.8V
- * Battery/VDD voltage programmable range, 20mV steps.
+                         
+                                            
+                                                      
  */
 #define MAX_VOLTAGE_MV		4360
 #define CHG_TERM_MA		100
@@ -488,7 +488,7 @@ apq8064_pm8xxx_ccadc_pdata = {
 
 static struct pm8921_bms_platform_data
 apq8064_pm8921_bms_pdata __devinitdata = {
-	.battery_type	= BATT_UNKNOWN, //FIXME Define correct type
+	.battery_type  = BATT_LGE,
 	.r_sense  = 10,
 	.v_cutoff  = 3500,
 	.max_voltage_uv  = MAX_VOLTAGE_MV * 1000,
@@ -504,7 +504,7 @@ apq8064_pm8921_bms_pdata __devinitdata = {
 	.first_fixed_iavg_ma  = 500,
 };
 
-/* battery data */
+/*              */
 static struct single_row_lut batt_2100_fcc_temp = {
 	.x = {-20, 0, 25, 40, 60 },
 	.y = {2068, 2064, 2103, 2072, 2084},
@@ -605,7 +605,7 @@ static struct sf_lut batt_2100_pc_sf = {
 	}
 };
 
-/* used in drivers/power/pm8921-bms.c */
+/*                                    */
 struct pm8921_bms_battery_data lge_2100_mako_data =  {
 	.fcc = 2100,
 	.fcc_temp_lut = &batt_2100_fcc_temp,
@@ -787,10 +787,10 @@ static struct batt_temp_pdata mako_batt_temp_pada = {
 	.enable_charging = batt_temp_charger_enable,
 	.disable_charging = batt_temp_charger_disable,
 	.is_ext_power = batt_temp_ext_power_plugged,
-	.update_time = 10000, // 10 sec
+	.update_time = 10000, //       
 	.temp_level = batt_temp_ctrl_level,
 	.temp_nums = ARRAY_SIZE(batt_temp_ctrl_level),
-	.thr_mvolt = 4000, //4.0V
+	.thr_mvolt = 4000, //    
 	.i_decrease = WARM_BATT_CHG_I_MA,
 	.i_restore = MAX_BATT_CHG_I_MA,
 };
@@ -810,9 +810,9 @@ void __init mako_set_adcmap(void)
 	pm8xxx_set_adcmap_pa_therm(adcmap_pa_therm,
 			ARRAY_SIZE(adcmap_pa_therm));
 	/*
-	pm8xxx_set_adcmap_ntcg_104ef_104fb(adcmap_ntcg_104ef_104fb,
-			ARRAY_SIZE(adcmap_ntcg_104ef_104fb));
-	*/
+                                                            
+                                        
+ */
 }
 
 void __init apq8064_init_pmic(void)

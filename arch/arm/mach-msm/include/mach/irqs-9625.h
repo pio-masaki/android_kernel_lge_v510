@@ -13,12 +13,12 @@
 #ifndef __ASM_ARCH_MSM_IRQS_9625_H
 #define __ASM_ARCH_MSM_IRQS_9625_H
 
-/* MSM ACPU Interrupt Numbers */
+/*                            */
 
 /*
- * 0-15:  STI/SGI (software triggered/generated interrupts)
- * 16-31: PPI (private peripheral interrupts)
- * 32+:   SPI (shared peripheral interrupts)
+                                                           
+                                             
+                                            
  */
 
 #define GIC_SPI_START 32
@@ -30,7 +30,7 @@
 #define NR_MSM_IRQS 288
 #define NR_GPIO_IRQS 88
 #define NR_BOARD_IRQS 0
-#define NR_TLMM_MSM_DIR_CONN_IRQ 8 /*Need to Verify this Count*/
+#define NR_TLMM_MSM_DIR_CONN_IRQ 8 /*                         */
 #define NR_MSM_GPIOS NR_GPIO_IRQS
 
 #endif

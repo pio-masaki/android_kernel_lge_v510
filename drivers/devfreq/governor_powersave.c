@@ -15,9 +15,9 @@ static int devfreq_powersave_func(struct devfreq *df,
 				  unsigned long *freq)
 {
 	/*
-	 * target callback should be able to get ceiling value as
-	 * said in devfreq.h
-	 */
+                                                          
+                     
+  */
 	*freq = df->min_freq;
 	return 0;
 }

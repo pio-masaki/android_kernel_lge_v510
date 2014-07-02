@@ -40,16 +40,14 @@
 #include <linux/switch.h>
 #include <linux/msm_mdp.h>
 
-#ifdef CONFIG_HAS_EARLYSUSPEND
-#include <linux/earlysuspend.h>
-#endif
-
 #include "msm_fb_panel.h"
 #include "mdp.h"
 
 #define MSM_FB_DEFAULT_PAGE_SIZE 2
 #define MFD_KEY  0x11161126
 #define MSM_FB_MAX_DEV_LIST 32
+/*                                     */
+#define DISABLE_EARLY_SUSPEND
 
 struct disp_info_type_suspend {
 	boolean op_enable;
@@ -82,7 +80,7 @@ struct msm_fb_data_type {
 	DISP_TARGET dest;
 	struct fb_info *fbi;
 
-	struct delayed_work backlight_worker;
+	struct device *dev;
 	boolean op_enable;
 	uint32 fb_imgType;
 	boolean sw_currently_refreshing;
@@ -100,7 +98,7 @@ struct msm_fb_data_type {
 	boolean pan_waiting;
 	struct completion pan_comp;
 
-	/* vsync */
+	/*       */
 	boolean use_mdp_vsync;
 	__u32 vsync_gpio;
 	__u32 total_lcd_lines;
@@ -163,11 +161,13 @@ struct msm_fb_data_type {
 	struct dentry *sub_dir;
 #endif
 
+#ifndef DISABLE_EARLY_SUSPEND
 #ifdef CONFIG_HAS_EARLYSUSPEND
 	struct early_suspend early_suspend;
 #ifdef CONFIG_FB_MSM_MDDI
 	struct early_suspend mddi_early_suspend;
 	struct early_suspend mddi_ext_early_suspend;
+#endif
 #endif
 #endif
 	u32 mdp_fb_page_protection;
@@ -207,10 +207,7 @@ struct msm_fb_data_type {
 	void *msm_fb_backup;
 	boolean panel_driver_on;
 	int vsync_sysfs_created;
-	void *copy_splash_buf;
-	unsigned char *copy_splash_phys;
 	uint32 sec_mapped;
-	uint32 sec_active;
 };
 struct msm_fb_backup_type {
 	struct fb_info info;
@@ -250,4 +247,4 @@ int msm_fb_check_frame_rate(struct msm_fb_data_type *mfd,
 int load_565rle_image(char *filename, bool bf_supported);
 #endif
 
-#endif /* MSM_FB_H */
+#endif /*          */

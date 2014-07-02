@@ -43,8 +43,8 @@ enum msm_cam_flash_stat{
 };
 
 
-/* [patch for Enabling flash LED for camera]
-  * 2012-03-14, jinsool.lee@lge.com
+/*                                          
+                                   
   */
 extern int lm3559_flash_set_led_state(int state);
 
@@ -179,7 +179,7 @@ int msm_camera_flash_current_driver(
 
 	CDBG("%s: led_state = %d\n", __func__, led_state);
 
-	/* Evenly distribute current across all channels */
+	/*                                               */
 	switch (led_state) {
 	case MSM_CAMERA_LED_OFF:
 		for (idx = 0; idx < num_leds; ++idx) {
@@ -230,7 +230,7 @@ int msm_camera_flash_current_driver(
 		break;
 	}
 	CDBG("msm_camera_flash_led_pmic8058: return %d\n", rc);
-#endif /* CONFIG_LEDS_PMIC8058 */
+#endif /*                      */
 	return rc;
 }
 
@@ -653,7 +653,7 @@ static int msm_strobe_flash_xenon_charge(int32_t flash_charge,
 	if (charge_enable) {
 		timer_flash.expires = jiffies +
 			msecs_to_jiffies(flash_recharge_duration);
-		/* add timer for the recharge */
+		/*                            */
 		if (!timer_pending(&timer_flash))
 			add_timer(&timer_flash);
 	} else
@@ -680,7 +680,7 @@ static irqreturn_t strobe_flash_charge_ready_irq(int irq_num, void *data)
 	struct msm_camera_sensor_strobe_flash_data *sfdata =
 		(struct msm_camera_sensor_strobe_flash_data *)data;
 
-	/* put the charge signal to low */
+	/*                              */
 	gpio_set_value_cansleep(sfdata->flash_charge, 0);
 
 	return IRQ_HANDLED;
@@ -708,7 +708,7 @@ static int msm_strobe_flash_xenon_init(
 		}
 
 		spin_lock_init(&sfdata->timer_lock);
-		/* setup timer */
+		/*             */
 		init_timer(&timer_flash);
 		timer_flash.function = strobe_flash_xenon_recharge_handler;
 		timer_flash.data = (unsigned long)sfdata;
@@ -805,22 +805,14 @@ int msm_flash_ctrl(struct msm_camera_sensor_info *sdata,
 	sensor_data = sdata;
 	switch (flash_info->flashtype) {
 	case LED_FLASH:
-	#if !defined(CONFIG_LGE_GK_CAMERA)
-		/* [patch for Enabling flash LED for camera]
-		* 2012-03-14, jinsool.lee@lge.com
-		*  This feature is for G... 
-		*/
 
+#ifdef CONFIG_MSM_CAMERA_FLASH_LM3559
 		rc = lm3559_flash_set_led_state(flash_info->ctrl_data.led_state);
-
-		pr_err(" mutul msm_flash_ctrl  lm3559_flash_set_led_state \n");
-	#else /* qualcomm original code */
-		// Here is for GK/GV
+#else
 		rc = msm_camera_flash_set_led_state(sdata->flash_data,
-			flash_info->ctrl_data.led_state);
-			pr_err("mutul msm_flash_ctrl  msm_camera_flash_set_led_state \n");
-	#endif		
-			break;
+		    flash_info->ctrl_data.led_state);
+#endif
+		break;
 	case STROBE_FLASH:
 		rc = msm_strobe_flash_ctrl(sdata->strobe_flash_data,
 			&(flash_info->ctrl_data.strobe_ctrl));

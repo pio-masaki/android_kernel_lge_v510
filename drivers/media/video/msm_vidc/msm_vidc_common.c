@@ -47,9 +47,9 @@
 	__mbs;\
 })
 
-/*While adding entries to this array make sure
- * they are in descending order.
- * Look @ msm_comm_get_load function*/
+/*                                            
+                                
+                                    */
 static const u32 clocks_table[][2] = {
 	{979200, 410000000},
 	{560145, 266670000},
@@ -578,17 +578,17 @@ static void handle_fbd(enum command_response cmd, void *data)
 		vb2_buffer_done(vb, VB2_BUF_STATE_DONE);
 	} else {
 		/*
-		 * FIXME:
-		 * Special handling for EOS case: if we sent a 0 length input
-		 * buf with EOS set, Venus doesn't return a valid output buffer.
-		 * So pick up a random buffer that's with us, and send it to
-		 * v4l2 client with EOS flag set.
-		 *
-		 * This would normally be OK unless client decides to send
-		 * frames even after EOS.
-		 *
-		 * This should be fixed in upcoming versions of firmware
-		 */
+           
+                                                               
+                                                                  
+                                                              
+                                   
+    
+                                                            
+                           
+    
+                                                          
+   */
 		if (fill_buf_done->flags1 & HAL_BUFFERFLAG_EOS
 			&& fill_buf_done->filled_len1 == 0) {
 			struct vb2_queue *q = &inst->vb2_bufq[CAPTURE_PORT];
@@ -782,8 +782,8 @@ static inline unsigned long get_ocmem_requirement(u32 height, u32 width)
 {
 	int num_mbs = 0;
 	num_mbs = GET_NUM_MBS(height, width);
-	/*TODO: This should be changes once the numbers are
-	 * available from firmware*/
+	/*                                                 
+                           */
 	return 512 * 1024;
 }
 
@@ -1073,10 +1073,10 @@ static enum hal_video_codec get_hal_codec_type(int fourcc)
 	case V4L2_PIX_FMT_DIVX:
 		codec = HAL_VIDEO_CODEC_DIVX;
 		break;
-		/*HAL_VIDEO_CODEC_MVC
-		  HAL_VIDEO_CODEC_SPARK
-		  HAL_VIDEO_CODEC_VP6
-		  HAL_VIDEO_CODEC_VP7*/
+		/*                   
+                         
+                       
+                       */
 	default:
 		pr_err("Wrong codec: %d\n", fourcc);
 		codec = HAL_UNUSED_CODEC;

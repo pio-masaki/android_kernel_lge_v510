@@ -32,11 +32,11 @@ struct isr_queue_cmd {
 };
 
 struct msm_vfe8x_ctrl {
-	/* bit 1:0 ENC_IRQ_MASK = 0x11:
-	 * generate IRQ when both y and cbcr frame is ready. */
+	/*                             
+                                                      */
 
-	/* bit 1:0 VIEW_IRQ_MASK= 0x11:
-	 * generate IRQ when both y and cbcr frame is ready. */
+	/*                             
+                                                      */
 	struct vfe_irq_composite_mask_config vfeIrqCompositeMaskLocal;
 	struct vfe_module_enable vfeModuleEnableLocal;
 	struct vfe_camif_cfg_data   vfeCamifConfigLocal;
@@ -102,19 +102,19 @@ static spinlock_t msm_vfe_ctrl_lock;
 
 static void vfe_prog_hw(uint8_t *hwreg, uint32_t *inptr, uint32_t regcnt)
 {
-	/* unsigned long flags; */
+	/*                      */
 	uint32_t i;
 	uint32_t *p;
 
-	/* @todo This is causing issues, need further investigate */
-	/* spin_lock_irqsave(&ctrl->io_lock, flags); */
+	/*                                                        */
+	/*                                           */
 
 	p = (uint32_t *)(hwreg);
 	for (i = 0; i < (regcnt >> 2); i++)
 		writel(*inptr++, p++);
-		/* *p++ = *inptr++; */
+		/*                  */
 
-	/* spin_unlock_irqrestore(&ctrl->io_lock, flags); */
+	/*                                                */
 }
 
 static void
@@ -150,73 +150,73 @@ static void vfe_axi_output(struct vfe_cmd_axi_output_config *in,
 	uint32_t burstLength;
 
 	memset(&cmd, 0, sizeof(cmd));
-	/* force it to burst length 4, hardware does not support it. */
+	/*                                                           */
 	burstLength = 1;
 
-	/* AXI Output 2 Y Configuration*/
-	/* VFE_BUS_ENC_Y_WR_PING_ADDR  */
+	/*                             */
+	/*                             */
 	cmd.out2YPingAddr = out2->yPath.addressBuffer[0];
 
-	/* VFE_BUS_ENC_Y_WR_PONG_ADDR  */
+	/*                             */
 	cmd.out2YPongAddr = out2->yPath.addressBuffer[1];
 
-	/* VFE_BUS_ENC_Y_WR_IMAGE_SIZE */
+	/*                             */
 	cmd.out2YImageHeight = in->output2.outputY.imageHeight;
-	/* convert the image width and row increment to be in
-	 * unit of 64bit (8 bytes) */
+	/*                                                   
+                            */
 	temp = (in->output2.outputY.imageWidth + (out - 1)) / out;
 	cmd.out2YImageWidthin64bit = temp;
 
-	/* VFE_BUS_ENC_Y_WR_BUFFER_CFG */
+	/*                             */
 	cmd.out2YBurstLength = burstLength;
 	cmd.out2YNumRows = in->output2.outputY.outRowCount;
 	temp = (in->output2.outputY.outRowIncrement + (out - 1)) / out;
 	cmd.out2YRowIncrementIn64bit = temp;
 
-	/* AXI Output 2 Cbcr Configuration*/
-	/* VFE_BUS_ENC_Cbcr_WR_PING_ADDR  */
+	/*                                */
+	/*                                */
 	cmd.out2CbcrPingAddr = out2->cbcrPath.addressBuffer[0];
 
-	/* VFE_BUS_ENC_Cbcr_WR_PONG_ADDR  */
+	/*                                */
 	cmd.out2CbcrPongAddr = out2->cbcrPath.addressBuffer[1];
 
-	/* VFE_BUS_ENC_Cbcr_WR_IMAGE_SIZE */
+	/*                                */
 	cmd.out2CbcrImageHeight = in->output2.outputCbcr.imageHeight;
 	temp = (in->output2.outputCbcr.imageWidth + (out - 1)) / out;
 	cmd.out2CbcrImageWidthIn64bit = temp;
 
-	/* VFE_BUS_ENC_Cbcr_WR_BUFFER_CFG */
+	/*                                */
 	cmd.out2CbcrBurstLength = burstLength;
 	cmd.out2CbcrNumRows = in->output2.outputCbcr.outRowCount;
 	temp = (in->output2.outputCbcr.outRowIncrement + (out - 1)) / out;
 	cmd.out2CbcrRowIncrementIn64bit = temp;
 
-	/* AXI Output 1 Y Configuration */
-	/* VFE_BUS_VIEW_Y_WR_PING_ADDR  */
+	/*                              */
+	/*                              */
 	cmd.out1YPingAddr = out1->yPath.addressBuffer[0];
 
-	/* VFE_BUS_VIEW_Y_WR_PONG_ADDR */
+	/*                             */
 	cmd.out1YPongAddr = out1->yPath.addressBuffer[1];
 
-	/* VFE_BUS_VIEW_Y_WR_IMAGE_SIZE */
+	/*                              */
 	cmd.out1YImageHeight = in->output1.outputY.imageHeight;
 	temp = (in->output1.outputY.imageWidth + (out - 1)) / out;
 	cmd.out1YImageWidthin64bit = temp;
 
-	/* VFE_BUS_VIEW_Y_WR_BUFFER_CFG     */
+	/*                                  */
 	cmd.out1YBurstLength = burstLength;
 	cmd.out1YNumRows = in->output1.outputY.outRowCount;
 
 	temp = (in->output1.outputY.outRowIncrement + (out - 1)) / out;
 	cmd.out1YRowIncrementIn64bit = temp;
 
-	/* AXI Output 1 Cbcr Configuration*/
+	/*                                */
 	cmd.out1CbcrPingAddr = out1->cbcrPath.addressBuffer[0];
 
-	/* VFE_BUS_VIEW_Cbcr_WR_PONG_ADDR  */
+	/*                                 */
 	cmd.out1CbcrPongAddr = out1->cbcrPath.addressBuffer[1];
 
-	/* VFE_BUS_VIEW_Cbcr_WR_IMAGE_SIZE */
+	/*                                 */
 	cmd.out1CbcrImageHeight = in->output1.outputCbcr.imageHeight;
 	temp = (in->output1.outputCbcr.imageWidth + (out - 1)) / out;
 	cmd.out1CbcrImageWidthIn64bit = temp;
@@ -244,7 +244,7 @@ static void vfe_reg_bus_cfg(struct vfe_bus_cfg_data *in)
 	cmd.rawPixelDataSize    = (uint32_t)in->rawPixelDataSize;
 	cmd.rawWritePathSelect  = (uint32_t)in->rawWritePathSelect;
 
-	/*  program vfe_bus_cfg */
+	/*                      */
 	writel(*((uint32_t *)&cmd), ctrl->vfebase + VFE_BUS_CFG);
 }
 
@@ -274,7 +274,7 @@ static void vfe_reg_camif_config(struct vfe_camif_cfg_data *in)
 
 	cfg.misrEnable = in->camifCfgFromCmd.misrEnable;
 
-	/*  program camif_config */
+	/*                       */
 	writel(*((uint32_t *)&cfg), ctrl->vfebase + CAMIF_CONFIG);
 }
 
@@ -291,8 +291,8 @@ static void vfe_reg_bus_cmd(struct vfe_bus_cmd_data *in)
 
 	CDBG("bus command = 0x%x\n", (*((uint32_t *)&cmd)));
 
-	/* this is needed, as the control bits are pulse based.
-	 * Don't want to reload bus pingpong again. */
+	/*                                                     
+                                             */
 	in->busPingpongReload = 0;
 	in->statsPingpongReload = 0;
 	in->stripeReload = 0;
@@ -330,11 +330,11 @@ static void vfe_reg_module_cfg(struct vfe_module_enable *in)
 
 static void vfe_program_dmi_cfg(enum VFE_DMI_RAM_SEL bankSel)
 {
-	/* set bit 8 for auto increment. */
+	/*                               */
 	uint32_t value = (uint32_t) ctrl->vfebase + VFE_DMI_CFG_DEFAULT;
 
 	value += (uint32_t)bankSel;
-	/* CDBG("dmi cfg input bank is  0x%x\n", bankSel); */
+	/*                                                 */
 
 	writel(value, ctrl->vfebase + VFE_DMI_CFG);
 	writel(0, ctrl->vfebase + VFE_DMI_ADDR);
@@ -357,7 +357,7 @@ static void vfe_write_lens_roll_off_table(struct vfe_cmd_roll_off_config *in)
 
 	vfe_program_dmi_cfg(ROLLOFF_RAM);
 
-	/* first pack and write init table */
+	/*                                 */
 	for (i = 0; i < VFE_ROLL_OFF_INIT_TABLE_SIZE; i++) {
 		data = (((uint32_t)(*initR)) & 0x0000FFFF) |
 			(((uint32_t)(*initGr)) << 16);
@@ -374,11 +374,11 @@ static void vfe_write_lens_roll_off_table(struct vfe_cmd_roll_off_config *in)
 		writel(data, ctrl->vfebase + VFE_DMI_DATA_LO);
 	}
 
-	/* there are gaps between the init table and delta table,
-	 * set the offset for delta table. */
+	/*                                                       
+                                    */
 	writel(LENS_ROLL_OFF_DELTA_TABLE_OFFSET, ctrl->vfebase + VFE_DMI_ADDR);
 
-	/* pack and write delta table */
+	/*                            */
 	for (i = 0; i < VFE_ROLL_OFF_DELTA_TABLE_SIZE; i++) {
 		data = (((int)(*pDeltaR)) & 0x0000FFFF) |
 			(((int)(*pDeltaGr))<<16);
@@ -395,10 +395,10 @@ static void vfe_write_lens_roll_off_table(struct vfe_cmd_roll_off_config *in)
 		writel(data, ctrl->vfebase + VFE_DMI_DATA_LO);
 	}
 
-	/* After DMI transfer, to make it safe, need to set the
-	 * DMI_CFG to unselect any SRAM
-	 */
-	/* unselect the SRAM Bank. */
+	/*                                                     
+                                
+  */
+	/*                         */
 	writel(VFE_DMI_CFG_DEFAULT, ctrl->vfebase + VFE_DMI_CFG);
 }
 
@@ -408,7 +408,7 @@ static void vfe_set_default_reg_values(void)
 	writel(0x800080, ctrl->vfebase + VFE_DEMUX_GAIN_1);
 	writel(0xFFFFF, ctrl->vfebase + VFE_CGC_OVERRIDE);
 
-	/* default frame drop period and pattern */
+	/*                                       */
 	writel(0x1f, ctrl->vfebase + VFE_FRAMEDROP_ENC_Y_CFG);
 	writel(0x1f, ctrl->vfebase + VFE_FRAMEDROP_ENC_CBCR_CFG);
 	writel(0xFFFFFFFF, ctrl->vfebase + VFE_FRAMEDROP_ENC_Y_PATTERN);
@@ -640,7 +640,7 @@ static void vfe_addr_convert(struct msm_vfe_phy_info *pinfo,
 
 	default:
 		break;
-	} /* switch */
+	} /*        */
 }
 
 static boolean vfe_send_preview_msg(struct msm_vfe_resp *rp,
@@ -665,14 +665,14 @@ static boolean vfe_send_sof_msg(struct msm_vfe_resp *rp,
 static boolean invalid(struct msm_vfe_resp *rp,
 		struct vfe_message *_m, void *_d)
 {
-	BUG_ON(1); /* this function should not be called. */
+	BUG_ON(1); /*                                     */
 	return FALSE;
 }
 
 static struct {
 	boolean (*fn)(struct msm_vfe_resp *rp, struct vfe_message *msg,
 		void *data);
-	enum vfe_resp_msg rt; /* reponse type */
+	enum vfe_resp_msg rt; /*              */
 } vfe_funcs[] = {
 	[VFE_MSG_ID_RESET_ACK] = { NULL, VFE_MSG_GENERAL },
 	[VFE_MSG_ID_START_ACK] = { NULL, VFE_MSG_GENERAL },
@@ -719,12 +719,12 @@ static void vfe_proc_ops(enum VFE_MESSAGE_ID id, void *data)
 		return;
 	}
 
-	/* In 8k, OUTPUT1 & OUTPUT2 messages arrive before SNAPSHOT_DONE.
-	 * We don't send such messages to the user.  Note that we can do
-	 * this in the vfe_func[] callback, but that would cause us to
-	 * allocate and then immediately free the msm_vfe_resp structure,
-	 * which is wasteful.
-	 */
+	/*                                                               
+                                                                 
+                                                               
+                                                                  
+                      
+  */
 	if ((ctrl->vfeOperationMode == VFE_START_OPERATION_MODE_SNAPSHOT) &&
 			(id == VFE_MSG_ID_OUTPUT_T ||
 			 id == VFE_MSG_ID_OUTPUT_S))
@@ -747,7 +747,7 @@ static void vfe_proc_ops(enum VFE_MESSAGE_ID id, void *data)
 		rp->evt_msg.len = 0;
 		rp->evt_msg.data = 0;
 	} else {
-		/* populate the message accordingly */
+		/*                                  */
 		if (vfe_funcs[id].fn)
 			rp->evt_msg.data = msg =
 				(struct vfe_message *)(rp + 1);
@@ -796,8 +796,8 @@ static boolean vfe_send_camif_error_msg(struct msm_vfe_resp *rp,
 
 static void vfe_process_error_irq(struct vfe_interrupt_status *irqstatus)
 {
-	/* all possible error irq.  Note error irqs are not enabled, it is
-	 * checked only when other interrupts are present. */
+	/*                                                                
+                                                    */
 	if (irqstatus->afOverflowIrq)
 		vfe_proc_ops(VFE_MSG_ID_AF_OVERFLOW, NULL);
 
@@ -824,29 +824,29 @@ static void vfe_process_error_irq(struct vfe_interrupt_status *irqstatus)
 
 static void vfe_process_camif_sof_irq(void)
 {
-	/* increment the frame id number. */
+	/*                                */
 	ctrl->vfeFrameId++;
 
 	CDBG("camif_sof_irq, frameId = %d\n", ctrl->vfeFrameId);
 
-	/* In snapshot mode, if frame skip is programmed,
-	* need to check it accordingly to stop camif at
-	* correct frame boundary. For the dropped frames,
-	* there won't be any output path irqs, but there is
-	* still SOF irq, which can help us determine when
-	* to stop the camif.
-	*/
+	/*                                               
+                                                
+                                                  
+                                                    
+                                                  
+                     
+ */
 	if (ctrl->vfeOperationMode) {
 		if ((1 << ctrl->vfeFrameSkipCount)&ctrl->vfeFrameSkipPattern) {
 
 			ctrl->vfeSnapShotCount--;
 			if (ctrl->vfeSnapShotCount == 0)
-				/* terminate vfe pipeline at frame boundary. */
+				/*                                           */
 				writel(CAMIF_COMMAND_STOP_AT_FRAME_BOUNDARY,
 					ctrl->vfebase + CAMIF_COMMAND);
 		}
 
-		/* update frame skip counter for bit checking. */
+		/*                                             */
 		ctrl->vfeFrameSkipCount++;
 		if (ctrl->vfeFrameSkipCount == (ctrl->vfeFrameSkipPeriod + 1))
 			ctrl->vfeFrameSkipCount = 0;
@@ -882,9 +882,9 @@ static boolean vfe_send_af_stats_msg(struct msm_vfe_resp *rp,
 {
 	uint32_t afBufAddress = (uint32_t)data;
 
-	/* fill message with right content. */
-	/* @todo This is causing issues, need further investigate */
-	/* spin_lock_irqsave(&ctrl->state_lock, flags); */
+	/*                                  */
+	/*                                                        */
+	/*                                              */
 	if (ctrl->vstate != VFE_STATE_ACTIVE)
 		return FALSE;
 
@@ -894,7 +894,7 @@ static boolean vfe_send_af_stats_msg(struct msm_vfe_resp *rp,
 	ctrl->afStatsControl.ackPending = TRUE;
 
 	vfe_addr_convert(&(rp->phy), rp->type, msg, NULL, NULL);
-	/* spin_unlock_irqrestore(&ctrl->state_lock, flags); */
+	/*                                                   */
 	return TRUE;
 }
 
@@ -904,7 +904,7 @@ static void vfe_process_stats_af_irq(void)
 
 	if (!(ctrl->afStatsControl.ackPending)) {
 
-		/* read hardware status. */
+		/*                       */
 		ctrl->afStatsControl.pingPongStatus =
 			vfe_get_af_pingpong_status();
 
@@ -913,7 +913,7 @@ static void vfe_process_stats_af_irq(void)
 		ctrl->afStatsControl.bufToRender =
 			vfe_read_af_buf_addr(bufferAvailable);
 
-		/* update the same buffer address (ping or pong) */
+		/*                                               */
 		vfe_update_af_buf_addr(bufferAvailable,
 			ctrl->afStatsControl.nextFrameAddrBuf);
 
@@ -954,9 +954,9 @@ static boolean vfe_send_awb_stats_msg(struct msm_vfe_resp *rp,
 {
 	uint32_t awbBufAddress = (uint32_t)data;
 
-	/* fill message with right content. */
-	/* @todo This is causing issues, need further investigate */
-	/* spin_lock_irqsave(&ctrl->state_lock, flags); */
+	/*                                  */
+	/*                                                        */
+	/*                                              */
 	if (ctrl->vstate != VFE_STATE_ACTIVE)
 		return FALSE;
 
@@ -1037,8 +1037,8 @@ static void vfe_write_gamma_table(uint8_t channel,
 		pTable++;
 	}
 
-	/* After DMI transfer, need to set the DMI_CFG to unselect any SRAM
-	unselect the SRAM Bank. */
+	/*                                                                 
+                         */
 	writel(VFE_DMI_CFG_DEFAULT, ctrl->vfebase + VFE_DMI_CFG);
 }
 
@@ -1059,19 +1059,19 @@ static inline void vfe_read_irq_status(struct vfe_irq_thread_msg *out)
 	temp = (uint32_t *)(ctrl->vfebase + CAMIF_STATUS);
 	out->camifStatus = readl(temp);
 
-/*	this for YUV performance tuning
-	writel(0x7, ctrl->vfebase + CAMIF_COMMAND);
-	writel(0x3, ctrl->vfebase + CAMIF_COMMAND);
-	CDBG("camifStatus  = 0x%x\n", out->camifStatus);
+/*                                
+                                            
+                                            
+                                                 
 */
 /*
-	temp = (uint32_t *)(ctrl->vfebase + VFE_DEMOSAIC_STATUS);
-	out->demosaicStatus = readl(temp);
+                                                          
+                                   
 
-	temp = (uint32_t *)(ctrl->vfebase + VFE_ASF_MAX_EDGE);
-	out->asfMaxEdge = readl(temp);
+                                                       
+                               
 
-	temp = (uint32_t *)(ctrl->vfebase + VFE_BUS_ENC_Y_WR_PM_STATS_0);
+                                                                  
 */
 
 #if 0
@@ -1083,7 +1083,7 @@ static inline void vfe_read_irq_status(struct vfe_irq_thread_msg *out)
 	out->pmInfo.viewPathPmInfo.yWrPmStats1     = readl(temp++);
 	out->pmInfo.viewPathPmInfo.cbcrWrPmStats0  = readl(temp++);
 	out->pmInfo.viewPathPmInfo.cbcrWrPmStats1  = readl(temp);
-#endif /* if 0 Jeff */
+#endif /*           */
 }
 
 static void
@@ -1131,10 +1131,10 @@ uint32_t irqStatusIn)
 	ret->axiErrorIrq = hwstat.axiErrorIrq;
 	ret->violationIrq = hwstat.violationIrq;
 
-	/* logic OR of any error bits
-	 * although each irq corresponds to a bit, the data type here is a
-	 * boolean already. hence use logic operation.
-	 */
+	/*                           
+                                                                   
+                                               
+  */
 	temp =
 	    ret->camifErrorIrq ||
 	    ret->camifOverflowIrq ||
@@ -1146,7 +1146,7 @@ uint32_t irqStatusIn)
 
 	ret->anyErrorIrqs = temp;
 
-	/* logic OR of any output path bits*/
+	/*                                 */
 	temp = ret->encYPingpongIrq || ret->encCbcrPingpongIrq || ret->encIrq;
 
 	ret->anyOutput2PathIrqs = temp;
@@ -1159,19 +1159,19 @@ uint32_t irqStatusIn)
 	ret->anyOutputPathIrqs =
 	    ret->anyOutput1PathIrqs || ret->anyOutput2PathIrqs;
 
-	/* logic OR of any sync timer bits*/
+	/*                                */
 	temp = ret->syncTimer0Irq || ret->syncTimer1Irq || ret->syncTimer2Irq;
 
 	ret->anySyncTimerIrqs = temp;
 
-	/* logic OR of any async timer bits*/
+	/*                                 */
 	temp =
 	    ret->asyncTimer0Irq ||
 	    ret->asyncTimer1Irq || ret->asyncTimer2Irq || ret->asyncTimer3Irq;
 
 	ret->anyAsyncTimerIrqs = temp;
 
-	/* bool for all interrupts that are not allowed in idle state */
+	/*                                                            */
 	temp =
 	    ret->anyErrorIrqs ||
 	    ret->anyOutputPathIrqs ||
@@ -1264,12 +1264,12 @@ static void vfe_process_reg_update_irq(void)
 
 static void vfe_process_reset_irq(void)
 {
-	/* unsigned long flags; */
+	/*                      */
 
-	/* @todo This is causing issues, need further investigate */
-	/* spin_lock_irqsave(&ctrl->state_lock, flags); */
+	/*                                                        */
+	/*                                              */
 	ctrl->vstate = VFE_STATE_IDLE;
-	/* spin_unlock_irqrestore(&ctrl->state_lock, flags); */
+	/*                                                   */
 
 	if (ctrl->vfeStopAckPending == TRUE) {
 		ctrl->vfeStopAckPending = FALSE;
@@ -1286,13 +1286,13 @@ static void vfe_process_pingpong_irq(struct vfe_output_path *in,
 	uint16_t circularIndex;
 	uint32_t nextFragmentAddr;
 
-	/* get next fragment address from circular buffer */
+	/*                                                */
 	circularIndex    = (in->fragIndex) % (2 * fragmentCount);
 	nextFragmentAddr = in->addressBuffer[circularIndex];
 
 	in->fragIndex = circularIndex + 1;
 
-	/* use next fragment to program hardware ping/pong address. */
+	/*                                                          */
 	if (in->hwCurrentFlag == ping) {
 		writel(nextFragmentAddr, in->hwRegPingAddress);
 		in->hwCurrentFlag = pong;
@@ -1397,32 +1397,32 @@ static void vfe_send_output_msg(boolean whichOutputPath,
 	msgPayload.yBuffer = yPathAddr;
 	msgPayload.cbcrBuffer = cbcrPathAddr;
 
-	/* asf info is common for both output1 and output2 */
+	/*                                                 */
 #if 0
 	msgPayload.asfInfo.asfHbiCount = ctrl->vfeAsfFrameInfo.asfHbiCount;
 	msgPayload.asfInfo.asfMaxEdge = ctrl->vfeAsfFrameInfo.asfMaxEdge;
 
-	/* demosaic info is common for both output1 and output2 */
+	/*                                                      */
 	msgPayload.bpcInfo.greenDefectPixelCount =
 		ctrl->vfeBpcFrameInfo.greenDefectPixelCount;
 	msgPayload.bpcInfo.redBlueDefectPixelCount =
 		ctrl->vfeBpcFrameInfo.redBlueDefectPixelCount;
-#endif /* if 0 */
+#endif /*      */
 
-	/* frame ID is common for both paths. */
+	/*                                    */
 	msgPayload.frameCounter = ctrl->vfeFrameId;
 
 	if (whichOutputPath) {
-		/* msgPayload.pmData = ctrl->vfePmData.encPathPmInfo; */
+		/*                                                    */
 		ctrl->encPath.ackPending = TRUE;
 
 		if (ctrl->vfeOperationMode == 0) {
 			if (ctrl->axiOutputMode ==
 				VFE_AXI_OUTPUT_MODE_Output1AndOutput2) {
-				/* video mode */
+				/*            */
 				vfe_proc_ops(VFE_MSG_ID_OUTPUT_V, &msgPayload);
 			} else{
-				/* preview mode */
+				/*              */
 				vfe_proc_ops(VFE_MSG_ID_OUTPUT_P, &msgPayload);
 			}
 		} else {
@@ -1430,7 +1430,7 @@ static void vfe_send_output_msg(boolean whichOutputPath,
 		}
 
 	} else {
-		/* physical output1 path from vfe */
+		/*                                */
 		ctrl->viewPath.ackPending = TRUE;
 
 		if (ctrl->vfeOperationMode == 0) {
@@ -1458,20 +1458,20 @@ static void vfe_process_frame_done_irq_multi_frag(struct vfe_output_path_combo
 
 		idx = (in->currentFrame) * (in->fragCount);
 
-		/* Send output message. */
+		/*                      */
 		yAddress = in->yPath.addressBuffer[idx];
 		cbcrAddress = in->cbcrPath.addressBuffer[idx];
 
-		/* copy next frame to current frame. */
+		/*                                   */
 		ptrSrc  = in->nextFrameAddrBuf;
 		ptrY = (uint32_t *)&in->yPath.addressBuffer[idx];
 		ptrCbcr = (uint32_t *)&in->cbcrPath.addressBuffer[idx];
 
-		/* Copy Y address */
+		/*                */
 		for (i = 0; i < in->fragCount; i++)
 			*ptrY++ = *ptrSrc++;
 
-		/* Copy Cbcr address */
+		/*                   */
 		for (i = 0; i < in->fragCount; i++)
 			*ptrCbcr++ = *ptrSrc++;
 
@@ -1485,7 +1485,7 @@ static void vfe_process_frame_done_irq_multi_frag(struct vfe_output_path_combo
 			ctrl->vfeDroppedFrameCounts.output2Count++;
 	}
 
-	/* toggle current frame. */
+	/*                       */
 	in->currentFrame = in->currentFrame^1;
 
 	if (ctrl->vfeOperationMode)
@@ -1500,37 +1500,37 @@ static void vfe_process_frame_done_irq_no_frag_io(
 	uint32_t busPingPongStatus;
 	uint32_t tempAddress;
 
-	/* 1. read hw status register. */
+	/*                             */
 	busPingPongStatus = readl(ctrl->vfebase + VFE_BUS_PINGPONG_STATUS);
 
 	CDBG("hardware status is 0x%x\n", busPingPongStatus);
 
-	/* 2. determine ping or pong */
-	/* use cbcr status */
+	/*                           */
+	/*                 */
 	busPingPongStatus = busPingPongStatus & (1<<(in->cbcrStatusBit));
 
-	/* 3. read out address and update address */
+	/*                                        */
 	if (busPingPongStatus == 0) {
-		/* hw is working on ping, render pong buffer */
-		/* a. read out pong address */
-		/* read out y address. */
+		/*                                           */
+		/*                          */
+		/*                     */
 		tempAddress = readl(in->yPath.hwRegPongAddress);
 
 		CDBG("pong 1 addr = 0x%x\n", tempAddress);
 		*pdestRenderAddr++ = tempAddress;
-		/* read out cbcr address. */
+		/*                        */
 		tempAddress = readl(in->cbcrPath.hwRegPongAddress);
 
 		CDBG("pong 2 addr = 0x%x\n", tempAddress);
 		*pdestRenderAddr = tempAddress;
 
-		/* b. update pong address */
+		/*                        */
 		writel(*pNextAddr++, in->yPath.hwRegPongAddress);
 		writel(*pNextAddr, in->cbcrPath.hwRegPongAddress);
 	} else {
-		/* hw is working on pong, render ping buffer */
+		/*                                           */
 
-		/* a. read out ping address */
+		/*                          */
 		tempAddress = readl(in->yPath.hwRegPingAddress);
 		CDBG("ping 1 addr = 0x%x\n", tempAddress);
 		*pdestRenderAddr++ = tempAddress;
@@ -1539,7 +1539,7 @@ static void vfe_process_frame_done_irq_no_frag_io(
 		CDBG("ping 2 addr = 0x%x\n", tempAddress);
 		*pdestRenderAddr = tempAddress;
 
-		/* b. update ping address */
+		/*                        */
 		writel(*pNextAddr++, in->yPath.hwRegPingAddress);
 		CDBG("NextAddress = 0x%x\n", *pNextAddr);
 		writel(*pNextAddr, in->cbcrPath.hwRegPingAddress);
@@ -1555,13 +1555,13 @@ static void vfe_process_frame_done_irq_no_frag(struct vfe_output_path_combo *in)
 						      in->nextFrameAddrBuf,
 						      addressToRender);
 
-		/* use addressToRender to send out message. */
+		/*                                          */
 		vfe_send_output_msg(in->whichOutputPath,
 				addressToRender[0], addressToRender[1]);
 
 	} else {
-		/* ackPending is still there, accumulate dropped frame count.
-		 * These count can be read through ioctrl command. */
+		/*                                                           
+                                                     */
 		CDBG("waiting frame ACK\n");
 
 		if (in->whichOutputPath == 0)
@@ -1571,21 +1571,21 @@ static void vfe_process_frame_done_irq_no_frag(struct vfe_output_path_combo *in)
 			ctrl->vfeDroppedFrameCounts.output2Count++;
 	}
 
-	/* in case of multishot when upper layer did not ack, there will still
-	 * be a snapshot done msg sent out, even though the number of frames
-	 * sent out may be less than the desired number of frames.  snapshot
-	 * done msg would be helpful to indicate that vfe pipeline has stop,
-	 * and in good known state.
-	 */
+	/*                                                                    
+                                                                     
+                                                                     
+                                                                     
+                            
+  */
 	if (ctrl->vfeOperationMode)
 		in->snapshotPendingCount--;
 }
 
 static void vfe_process_output_path_irq(struct vfe_interrupt_status *irqstatus)
 {
-	/* unsigned long flags; */
+	/*                      */
 
-	/* process the view path interrupts */
+	/*                                  */
 	if (irqstatus->anyOutput1PathIrqs) {
 		if (ctrl->viewPath.multiFrag) {
 
@@ -1607,15 +1607,15 @@ static void vfe_process_output_path_irq(struct vfe_interrupt_status *irqstatus)
 								      viewPath);
 
 		} else {
-			/* typical case for no fragment,
-			 only frame done irq is enabled. */
+			/*                              
+                                    */
 			if (irqstatus->viewIrq)
 				vfe_process_frame_done_irq_no_frag(&ctrl->
 								   viewPath);
 		}
 	}
 
-	/* process the encoder path interrupts */
+	/*                                     */
 	if (irqstatus->anyOutput2PathIrqs) {
 		if (ctrl->encPath.multiFrag) {
 			if (irqstatus->encCbcrPingpongIrq)
@@ -1645,10 +1645,10 @@ static void vfe_process_output_path_irq(struct vfe_interrupt_status *irqstatus)
 		if ((ctrl->encPath.snapshotPendingCount == 0) &&
 				(ctrl->viewPath.snapshotPendingCount == 0)) {
 
-			/* @todo This is causing issues, further investigate */
-			/* spin_lock_irqsave(&ctrl->state_lock, flags); */
+			/*                                                   */
+			/*                                              */
 			ctrl->vstate = VFE_STATE_IDLE;
-			/* spin_unlock_irqrestore(&ctrl->state_lock, flags); */
+			/*                                                   */
 
 			vfe_proc_ops(VFE_MSG_ID_SNAPSHOT_DONE, NULL);
 			vfe_camif_stop_immediately();
@@ -1679,9 +1679,9 @@ static void __vfe_do_tasklet(struct isr_queue_cmd *qcmd)
 
 	if (qcmd->vfeInterruptStatus.camifEpoch2Irq)
 		vfe_proc_ops(VFE_MSG_ID_EPOCH2);
-#endif /* Jeff */
+#endif /*      */
 
-	/* next, check output path related interrupts. */
+	/*                                             */
 	if (qcmd->vfeInterruptStatus.anyOutputPathIrqs) {
 		CDBG("irq: anyOutputPathIrqs\n");
 		vfe_process_output_path_irq(&qcmd->vfeInterruptStatus);
@@ -1693,7 +1693,7 @@ static void __vfe_do_tasklet(struct isr_queue_cmd *qcmd)
 	if (qcmd->vfeInterruptStatus.awbPingpongIrq)
 		vfe_process_stats_awb_irq();
 
-	/* any error irqs*/
+	/*               */
 	if (qcmd->vfeInterruptStatus.anyErrorIrqs)
 		vfe_process_error_irq(&qcmd->vfeInterruptStatus);
 
@@ -1703,7 +1703,7 @@ static void __vfe_do_tasklet(struct isr_queue_cmd *qcmd)
 
 	if (qcmd->vfeInterruptStatus.anyAsyncTimerIrqs)
 		vfe_process_async_timer_irq();
-#endif /* Jeff */
+#endif /*      */
 
 	if (qcmd->vfeInterruptStatus.camifSofIrq) {
 		CDBG("irq: camifSofIrq\n");
@@ -1731,7 +1731,7 @@ static struct isr_queue_cmd *next_irq_cmd(void)
 	spin_lock_irqsave(&ctrl->irqs_lock, flags);
 	if (ctrl->irq_get == ctrl->irq_put) {
 		spin_unlock_irqrestore(&ctrl->irqs_lock, flags);
-		return NULL; /* already empty */
+		return NULL; /*               */
 	}
 	cmd = ctrl->irqs + ctrl->irq_put;
 	spin_unlock_irqrestore(&ctrl->irqs_lock, flags);
@@ -1744,7 +1744,7 @@ static void put_irq_cmd(void)
 	spin_lock_irqsave(&ctrl->irqs_lock, flags);
 	if (ctrl->irq_get == ctrl->irq_put) {
 		spin_unlock_irqrestore(&ctrl->irqs_lock, flags);
-		return; /* already empty */
+		return; /*               */
 	}
 	ctrl->irq_put++;
 	ctrl->irq_put %= ARRAY_SIZE(ctrl->irqs);
@@ -1811,7 +1811,7 @@ static irqreturn_t vfe_parse_irq(int irq_num, void *data)
 		spin_unlock_irqrestore(&ctrl->irqs_lock, flags);
 		goto done;
 	}
-	/* first parse the interrupt status to local data structures. */
+	/*                                                            */
 	vfe_parse_interrupt_status(&qcmd->vfeInterruptStatus, irqStatusLocal);
 	vfe_get_asf_frame_info(&qcmd->vfeAsfFrameInfo, &irq);
 	vfe_get_demosaic_frame_info(&qcmd->vfeBpcFrameInfo, &irq);
@@ -1821,7 +1821,7 @@ static irqreturn_t vfe_parse_irq(int irq_num, void *data)
 	tasklet_schedule(&vfe_tasklet);
 
 done:
-	/* clear the pending interrupt of the same kind.*/
+	/*                                              */
 	writel(irq.vfeIrqStatus, ctrl->vfebase + VFE_IRQ_CLEAR);
 
 	return IRQ_HANDLED;
@@ -1933,18 +1933,18 @@ void vfe_stop(void)
 	int spin_cnt = 0;
 	uint32_t vfeAxiStauts;
 
-	/* for reset hw modules, and send msg when reset_irq comes.*/
+	/*                                                         */
 	ctrl->vfeStopAckPending = TRUE;
 
 	ctrl->vfeStatsPingPongReloadFlag = FALSE;
 	vfe_pm_stop();
 
-	/* disable all interrupts.  */
+	/*                          */
 	vfe_program_irq_mask(VFE_DISABLE_ALL_IRQS);
 
-	/* in either continuous or snapshot mode, stop command can be issued
-	 * at any time.
-	 */
+	/*                                                                  
+                
+  */
 	vfe_camif_stop_immediately();
 	vfe_program_axi_cmd(AXI_HALT);
 	vfe_prog_hw_testgen_cmd(VFE_TEST_GEN_STOP);
@@ -1958,12 +1958,12 @@ void vfe_stop(void)
 
 	vfe_program_axi_cmd(AXI_HALT_CLEAR);
 
-	/* clear all pending interrupts */
+	/*                              */
 	writel(VFE_CLEAR_ALL_IRQS, ctrl->vfebase + VFE_IRQ_CLEAR);
 
-	/* enable reset_ack and async timer interrupt only while stopping
-	 * the pipeline.
-	 */
+	/*                                                               
+                 
+  */
 	vfe_program_irq_mask(VFE_IMASK_WHILE_STOPPING);
 
 	vfe_program_global_reset_cmd(VFE_RESET_UPON_STOP_CMD);
@@ -2064,9 +2064,9 @@ int vfe_rgb_gamma_update(struct vfe_cmd_rgb_gamma_config *in)
 		pr_err("%s: invalid gamma channel %d\n", __func__,
 			in->channelSelect);
 		return -EINVAL;
-	} /* switch */
+	} /*        */
 
-	/* update the gammaLutSel register. */
+	/*                                  */
 	vfe_program_lut_bank_sel(&ctrl->vfeGammaLutSel);
 
 	return rc;
@@ -2117,7 +2117,7 @@ break;
 			in->channelSelect);
 		rc = -EINVAL;
 		break;
-	} /* switch */
+	} /*        */
 
 	return rc;
 }
@@ -2163,7 +2163,7 @@ void vfe_output_p_ack(struct vfe_cmd_output_ack *in)
 	uint8_t i;
 
 	if (ctrl->axiOutputMode == VFE_AXI_OUTPUT_MODE_Output1AndOutput2) {
-		/* video mode, preview comes from output1 path */
+		/*                                             */
 
 	pdest = ctrl->viewPath.nextFrameAddrBuf;
 
@@ -2177,7 +2177,7 @@ void vfe_output_p_ack(struct vfe_cmd_output_ack *in)
 
 	ctrl->viewPath.ackPending = FALSE;
 
-	} else { /* preview mode, preview comes from output2 path. */
+	} else { /*                                                */
 		pdest = ctrl->encPath.nextFrameAddrBuf;
 
 		psrc = in->ybufaddr;
@@ -2201,9 +2201,9 @@ void vfe_start(struct vfe_cmd_start *in)
 	uint32_t  demeven = 0;
 	uint32_t  demodd = 0;
 
-	/* derived from other commands.  (camif config, axi output config,
-	 * etc)
-	*/
+	/*                                                                
+        
+ */
 	struct vfe_cfg hwcfg;
 	struct vfe_upsample_cfg chromupcfg;
 
@@ -2269,22 +2269,22 @@ void vfe_start(struct vfe_cmd_start *in)
 
 	vfe_program_lut_bank_sel(&ctrl->vfeGammaLutSel);
 
-	/* save variables to local. */
+	/*                          */
 	ctrl->vfeOperationMode = in->operationMode;
 	if (ctrl->vfeOperationMode == VFE_START_OPERATION_MODE_SNAPSHOT) {
 
 		update_axi_qos(MSM_AXI_QOS_SNAPSHOT);
-		/* in snapshot mode, initialize snapshot count*/
+		/*                                            */
 		ctrl->vfeSnapShotCount = in->snapshotCount;
 
-		/* save the requested count, this is temporarily done, to
-		help with HJR / multishot. */
+		/*                                                       
+                             */
 		ctrl->vfeRequestedSnapShotCount = ctrl->vfeSnapShotCount;
 
 		CDBG("requested snapshot count = %d\n", ctrl->vfeSnapShotCount);
 
-		/* Assumption is to have the same pattern and period for both
-		paths, if both paths are used. */
+		/*                                                           
+                                 */
 		if (ctrl->viewPath.pathEnabled) {
 			ctrl->viewPath.snapshotPendingCount = in->snapshotCount;
 
@@ -2305,8 +2305,8 @@ void vfe_start(struct vfe_cmd_start *in)
 	} else
 		update_axi_qos(MSM_AXI_QOS_PREVIEW);
 
-	/* enable color conversion for bayer sensor
-	if stats enabled, need to do color conversion. */
+	/*                                         
+                                                */
 	if (in->pixel <= VFE_BAYER_GBGBGB)
 		ctrl->vfeStatsCmdLocal.colorConversionEnable = TRUE;
 
@@ -2317,21 +2317,21 @@ void vfe_start(struct vfe_cmd_start *in)
 
 	ctrl->vfeModuleEnableLocal.demuxEnable = TRUE;
 
-	/* if any stats module is enabled, the main bit is enabled. */
+	/*                                                          */
 	ctrl->vfeModuleEnableLocal.statsEnable =
 		ctrl->vfeStatsCmdLocal.autoFocusEnable |
 		ctrl->vfeStatsCmdLocal.axwEnable;
 
 	vfe_reg_module_cfg(&ctrl->vfeModuleEnableLocal);
 
-	/* in case of offline processing, do not need to config camif. Having
-	 * bus output enabled in camif_config register might confuse the
-	 * hardware?
-	 */
+	/*                                                                   
+                                                                 
+             
+  */
 	if (in->inputSource != VFE_START_INPUT_SOURCE_AXI) {
 		vfe_reg_camif_config(&ctrl->vfeCamifConfigLocal);
 	} else {
-		/* offline processing, enable axi read */
+		/*                                     */
 		ctrl->vfeBusConfigLocal.stripeRdPathEn = TRUE;
 		ctrl->vfeBusCmdLocal.stripeReload = TRUE;
 		ctrl->vfeBusConfigLocal.rawPixelDataSize =
@@ -2340,31 +2340,31 @@ void vfe_start(struct vfe_cmd_start *in)
 
 	vfe_reg_bus_cfg(&ctrl->vfeBusConfigLocal);
 
-	/* directly from start command */
+	/*                             */
 	hwcfg.pixelPattern = in->pixel;
 	hwcfg.inputSource = in->inputSource;
 	writel(*(uint32_t *)&hwcfg, ctrl->vfebase + VFE_CFG);
 
-	/* regardless module enabled or not, it does not hurt
-	 * to program the cositing mode. */
+	/*                                                   
+                                  */
 	chromupcfg.chromaCositingForYCbCrInputs = in->yuvInputCositingMode;
 
 	writel(*(uint32_t *)&chromupcfg,
 		ctrl->vfebase + VFE_CHROMA_UPSAMPLE_CFG);
 
-	/* MISR to monitor the axi read. */
+	/*                               */
 	writel(0xd8, ctrl->vfebase + VFE_BUS_MISR_MAST_CFG_0);
 
-	/* clear all pending interrupts. */
+	/*                               */
 	writel(VFE_CLEAR_ALL_IRQS, ctrl->vfebase + VFE_IRQ_CLEAR);
 
-	/*  define how composite interrupt work.  */
+	/*                                        */
 	ctrl->vfeImaskCompositePacked =
 		vfe_irq_composite_pack(ctrl->vfeIrqCompositeMaskLocal);
 
 	vfe_program_irq_composite_mask(ctrl->vfeImaskCompositePacked);
 
-	/*  enable all necessary interrupts.      */
+	/*                                        */
 	ctrl->vfeImaskLocal.camifSofIrq  = TRUE;
 	ctrl->vfeImaskLocal.regUpdateIrq = TRUE;
 	ctrl->vfeImaskLocal.resetAckIrq  = TRUE;
@@ -2372,13 +2372,13 @@ void vfe_start(struct vfe_cmd_start *in)
 	ctrl->vfeImaskPacked = vfe_irq_pack(ctrl->vfeImaskLocal);
 	vfe_program_irq_mask(ctrl->vfeImaskPacked);
 
-	/* enable bus performance monitor */
+	/*                                */
 	vfe_8k_pm_start(&ctrl->vfeBusPmConfigLocal);
 
-	/* trigger vfe reg update */
+	/*                        */
 	ctrl->vfeStartAckPendingFlag = TRUE;
 
-	/* write bus command to trigger reload of ping pong buffer. */
+	/*                                                          */
 	ctrl->vfeBusCmdLocal.busPingpongReload = TRUE;
 
 	if (ctrl->vfeModuleEnableLocal.statsEnable == TRUE) {
@@ -2388,7 +2388,7 @@ void vfe_start(struct vfe_cmd_start *in)
 
 	writel(VFE_REG_UPDATE_TRIGGER, ctrl->vfebase + VFE_REG_UPDATE_CMD);
 
-	/* program later than the reg update. */
+	/*                                    */
 	vfe_reg_bus_cmd(&ctrl->vfeBusCmdLocal);
 
 	if ((in->inputSource ==
@@ -2396,7 +2396,7 @@ void vfe_start(struct vfe_cmd_start *in)
 	    (in->inputSource == VFE_START_INPUT_SOURCE_TESTGEN))
 		writel(CAMIF_COMMAND_START, ctrl->vfebase + CAMIF_COMMAND);
 
-	/* start test gen if it is enabled */
+	/*                                 */
 	if (ctrl->vfeTestGenStartFlag == TRUE) {
 		ctrl->vfeTestGenStartFlag = FALSE;
 		vfe_prog_hw_testgen_cmd(VFE_TEST_GEN_GO);
@@ -2404,7 +2404,7 @@ void vfe_start(struct vfe_cmd_start *in)
 
 	CDBG("ctrl->axiOutputMode = %d\n", ctrl->axiOutputMode);
 	if (ctrl->axiOutputMode == VFE_AXI_OUTPUT_MODE_CAMIFToAXIViaOutput2) {
-		/* raw dump mode */
+		/*               */
 		rawmode = TRUE;
 
 		while (rawmode) {
@@ -2432,7 +2432,7 @@ void vfe_la_update(struct vfe_cmd_la_config *in)
 	pTable = in->table;
 	ctrl->vfeModuleEnableLocal.lumaAdaptationEnable = in->enable;
 
-	/* toggle the bank to be used. */
+	/*                             */
 	ctrl->vfeLaBankSel ^= 1;
 
 	if (ctrl->vfeLaBankSel == 0)
@@ -2440,7 +2440,7 @@ void vfe_la_update(struct vfe_cmd_la_config *in)
 	else
 		dmiRamSel = LUMA_ADAPT_LUT_RAM_BANK1;
 
-	/* configure the DMI_CFG to select right sram */
+	/*                                            */
 	vfe_program_dmi_cfg(dmiRamSel);
 
 	for (i = 0; i < VFE_LA_TABLE_LENGTH; i++) {
@@ -2448,8 +2448,8 @@ void vfe_la_update(struct vfe_cmd_la_config *in)
 		pTable++;
 	}
 
-	/* After DMI transfer, to make it safe, need to set
-	 * the DMI_CFG to unselect any SRAM */
+	/*                                                 
+                                     */
 	writel(VFE_DMI_CFG_DEFAULT, ctrl->vfebase + VFE_DMI_CFG);
 	writel(ctrl->vfeLaBankSel, ctrl->vfebase + VFE_LA_CFG);
 }
@@ -2468,7 +2468,7 @@ void vfe_la_config(struct vfe_cmd_la_config *in)
 	else
 		dmiRamSel = LUMA_ADAPT_LUT_RAM_BANK1;
 
-	/* configure the DMI_CFG to select right sram */
+	/*                                            */
 	vfe_program_dmi_cfg(dmiRamSel);
 
 	for (i = 0; i < VFE_LA_TABLE_LENGTH; i++) {
@@ -2476,11 +2476,11 @@ void vfe_la_config(struct vfe_cmd_la_config *in)
 		pTable++;
 	}
 
-	/* After DMI transfer, to make it safe, need to set the
-	 * DMI_CFG to unselect any SRAM */
+	/*                                                     
+                                 */
 	writel(VFE_DMI_CFG_DEFAULT, ctrl->vfebase + VFE_DMI_CFG);
 
-	/* can only be bank 0 or bank 1 for now. */
+	/*                                       */
 	writel(ctrl->vfeLaBankSel, ctrl->vfebase + VFE_LA_CFG);
 	CDBG("VFE Luma adaptation bank selection is 0x%x\n",
 			 *(uint32_t *)&ctrl->vfeLaBankSel);
@@ -3210,7 +3210,7 @@ void vfe_stats_setting(struct vfe_cmd_stats_setting *in)
 	vfe_prog_hw(ctrl->vfebase + VFE_BUS_STATS_WR_PRIORITY,
 		(uint32_t *)&cmd2, sizeof(cmd2));
 
-	/* Program the bus ping pong address for statistics modules. */
+	/*                                                           */
 	writel(in->afBuffer[0], ctrl->vfebase + VFE_BUS_STATS_AF_WR_PING_ADDR);
 	writel(in->afBuffer[1], ctrl->vfebase + VFE_BUS_STATS_AF_WR_PONG_ADDR);
 	writel(in->awbBuffer[0],
@@ -3309,11 +3309,11 @@ void vfe_axi_input_config(struct vfe_cmd_axi_input_config *in)
 	cmd.topUnapckPattern     = in->padTopLineCount;
 	cmd.bottomUnapckPattern  = in->padBottomLineCount;
 
-	/*  program vfe_bus_cfg */
+	/*                      */
 	vfe_prog_hw(ctrl->vfebase + VFE_BUS_STRIPE_RD_ADDR_0,
 		(uint32_t *)&cmd, sizeof(cmd));
 
-	/* hacking code, put it to default value */
+	/*                                       */
 	busPingpongRdIrqEnable = 0xf;
 
 	writel(busPingpongRdIrqEnable, ctrl->vfebase + VFE_BUS_PINGPONG_IRQ_EN);
@@ -3321,7 +3321,7 @@ void vfe_axi_input_config(struct vfe_cmd_axi_input_config *in)
 
 void vfe_axi_output_config(struct vfe_cmd_axi_output_config *in)
 {
-	/* local variable  */
+	/*                 */
 	uint32_t *pcircle;
 	uint32_t *pdest;
 	uint32_t *psrc;
@@ -3329,7 +3329,7 @@ void vfe_axi_output_config(struct vfe_cmd_axi_output_config *in)
 	uint8_t  fcnt;
 	uint16_t axioutpw = 8;
 
-	/* parameters check, condition and usage mode check */
+	/*                                                  */
 	ctrl->encPath.fragCount = in->output2.fragmentCount;
 	if (ctrl->encPath.fragCount > 1)
 		ctrl->encPath.multiFrag = TRUE;
@@ -3338,7 +3338,7 @@ void vfe_axi_output_config(struct vfe_cmd_axi_output_config *in)
 	if (ctrl->viewPath.fragCount > 1)
 		ctrl->viewPath.multiFrag = TRUE;
 
-	/* VFE_BUS_CFG.  raw data size */
+	/*                             */
 	ctrl->vfeBusConfigLocal.rawPixelDataSize = in->outputDataSize;
 
 	switch (in->outputDataSize) {
@@ -3396,7 +3396,7 @@ void vfe_axi_output_config(struct vfe_cmd_axi_output_config *in)
 		if (ctrl->vfeBusConfigLocal.viewCbcrWrPathEn &&
 				ctrl->viewPath.multiFrag)
 			ctrl->vfeImaskLocal.viewCbcrPingpongIrq = TRUE;
-	} /* VFE_AXI_OUTPUT_MODE_Output1 */
+	} /*                             */
 		break;
 
 	case VFE_AXI_OUTPUT_MODE_Output2: {
@@ -3436,7 +3436,7 @@ void vfe_axi_output_config(struct vfe_cmd_axi_output_config *in)
 		if (ctrl->vfeBusConfigLocal.viewCbcrWrPathEn &&
 				ctrl->viewPath.multiFrag)
 			ctrl->vfeImaskLocal.viewCbcrPingpongIrq = TRUE;
-	} /* VFE_AXI_OUTPUT_MODE_Output2 */
+	} /*                             */
 			break;
 
 	case VFE_AXI_OUTPUT_MODE_Output1AndOutput2: {
@@ -3475,15 +3475,15 @@ void vfe_axi_output_config(struct vfe_cmd_axi_output_config *in)
 		if (ctrl->vfeBusConfigLocal.viewCbcrWrPathEn &&
 				ctrl->viewPath.multiFrag)
 			ctrl->vfeImaskLocal.viewCbcrPingpongIrq = TRUE;
-	} /* VFE_AXI_OUTPUT_MODE_Output1AndOutput2 */
+	} /*                                       */
 		break;
 
 	case VFE_AXI_OUTPUT_MODE_CAMIFToAXIViaOutput2: {
-		/* For raw snapshot, we need both ping and pong buffer
-		 * initialized to the same address. Otherwise, if we
-		 * leave the pong buffer to NULL, there will be axi_error.
-		 * Note that ideally we should deal with this at upper layer,
-		 * which is in msm_vfe8x.c */
+		/*                                                    
+                                                      
+                                                            
+                                                               
+                             */
 		if (!in->output2.outputCbcr.outFragments[1][0]) {
 			in->output2.outputCbcr.outFragments[1][0] =
 				in->output2.outputCbcr.outFragments[0][0];
@@ -3525,7 +3525,7 @@ void vfe_axi_output_config(struct vfe_cmd_axi_output_config *in)
 		if (ctrl->vfeBusConfigLocal.viewCbcrWrPathEn &&
 				ctrl->viewPath.multiFrag)
 			ctrl->vfeImaskLocal.viewCbcrPingpongIrq = TRUE;
-	} /* VFE_AXI_OUTPUT_MODE_CAMIFToAXIViaOutput2 */
+	} /*                                          */
 		break;
 
 	case VFE_AXI_OUTPUT_MODE_Output2AndCAMIFToAXIViaOutput1: {
@@ -3565,7 +3565,7 @@ void vfe_axi_output_config(struct vfe_cmd_axi_output_config *in)
 		if (ctrl->vfeBusConfigLocal.viewCbcrWrPathEn &&
 				ctrl->viewPath.multiFrag)
 			ctrl->vfeImaskLocal.viewCbcrPingpongIrq = TRUE;
-	} /* VFE_AXI_OUTPUT_MODE_Output2AndCAMIFToAXIViaOutput1 */
+	} /*                                                    */
 		break;
 
 	case VFE_AXI_OUTPUT_MODE_Output1AndCAMIFToAXIViaOutput2: {
@@ -3606,15 +3606,15 @@ void vfe_axi_output_config(struct vfe_cmd_axi_output_config *in)
 		if (ctrl->vfeBusConfigLocal.viewCbcrWrPathEn &&
 				ctrl->viewPath.multiFrag)
 			ctrl->vfeImaskLocal.viewCbcrPingpongIrq   = TRUE;
-	} /* VFE_AXI_OUTPUT_MODE_Output1AndCAMIFToAXIViaOutput2 */
+	} /*                                                    */
 		break;
 
 	case VFE_AXI_LAST_OUTPUT_MODE_ENUM:
 		break;
-	} /* switch */
+	} /*        */
 
-	/* Save the addresses for each path. */
-	/* output2 path */
+	/*                                   */
+	/*              */
 	fcnt = ctrl->encPath.fragCount;
 
 	pcircle = ctrl->encPath.yPath.addressBuffer;
@@ -3656,7 +3656,7 @@ void vfe_axi_output_config(struct vfe_cmd_axi_output_config *in)
 	ctrl->encPath.yPath.hwCurrentFlag = ping;
 	ctrl->encPath.cbcrPath.hwCurrentFlag = ping;
 
-	/* output1 path */
+	/*              */
 	pcircle = ctrl->viewPath.yPath.addressBuffer;
 	pdest = ctrl->viewPath.nextFrameAddrBuf;
 	fcnt = ctrl->viewPath.fragCount;
@@ -3695,7 +3695,7 @@ void vfe_axi_output_config(struct vfe_cmd_axi_output_config *in)
 	ctrl->viewPath.yPath.hwCurrentFlag = ping;
 	ctrl->viewPath.cbcrPath.hwCurrentFlag = ping;
 
-	/* call to program the registers. */
+	/*                                */
 	vfe_axi_output(in, &ctrl->viewPath, &ctrl->encPath, axioutpw);
 }
 
@@ -3711,7 +3711,7 @@ void vfe_camif_config(struct vfe_cmd_camif_config *in)
 	CDBG("camif.window firstline = %d\n",  in->window.firstline);
 	CDBG("camif.window lastline = %d\n",   in->window.lastline);
 
-	/* determine if epoch interrupt needs to be enabled.  */
+	/*                                                    */
 	if ((in->epoch1.enable == TRUE) &&
 	    (in->epoch1.lineindex <= in->frame.linesPerFrame))
 		ctrl->vfeImaskLocal.camifEpoch1Irq = 1;
@@ -3721,37 +3721,37 @@ void vfe_camif_config(struct vfe_cmd_camif_config *in)
 		ctrl->vfeImaskLocal.camifEpoch2Irq = 1;
 	}
 
-	/*  save the content to program CAMIF_CONFIG seperately. */
+	/*                                                       */
 	ctrl->vfeCamifConfigLocal.camifCfgFromCmd = in->camifConfig;
 
-	/* EFS_Config */
+	/*            */
 	cmd.efsEndOfLine     = in->EFS.efsendofline;
 	cmd.efsStartOfLine   = in->EFS.efsstartofline;
 	cmd.efsEndOfFrame    = in->EFS.efsendofframe;
 	cmd.efsStartOfFrame  = in->EFS.efsstartofframe;
 
-	/* Frame Config */
+	/*              */
 	cmd.frameConfigPixelsPerLine = in->frame.pixelsPerLine;
 	cmd.frameConfigLinesPerFrame = in->frame.linesPerFrame;
 
-	/* Window Width Config */
+	/*                     */
 	cmd.windowWidthCfgLastPixel  = in->window.lastpixel;
 	cmd.windowWidthCfgFirstPixel = in->window.firstpixel;
 
-	/* Window Height Config */
+	/*                      */
 	cmd.windowHeightCfglastLine   = in->window.lastline;
 	cmd.windowHeightCfgfirstLine  = in->window.firstline;
 
-	/* Subsample 1 Config */
+	/*                    */
 	cmd.subsample1CfgPixelSkip = in->subsample.pixelskipmask;
 	cmd.subsample1CfgLineSkip  = in->subsample.lineskipmask;
 
-	/* Subsample 2 Config */
+	/*                    */
 	cmd.subsample2CfgFrameSkip      = in->subsample.frameskip;
 	cmd.subsample2CfgFrameSkipMode  = in->subsample.frameskipmode;
 	cmd.subsample2CfgPixelSkipWrap  = in->subsample.pixelskipwrap;
 
-	/* Epoch Interrupt */
+	/*                 */
 	cmd.epoch1Line = in->epoch1.lineindex;
 	cmd.epoch2Line = in->epoch2.lineindex;
 
@@ -3766,11 +3766,11 @@ void vfe_fov_crop_config(struct vfe_cmd_fov_crop_config *in)
 
 	ctrl->vfeModuleEnableLocal.cropEnable = in->enable;
 
-	/* FOV Corp, Part 1 */
+	/*                  */
 	cmd.lastPixel  = in->lastPixel;
 	cmd.firstPixel = in->firstPixel;
 
-	/* FOV Corp, Part 2 */
+	/*                  */
 	cmd.lastLine   = in->lastLine;
 	cmd.firstLine  = in->firstLine;
 
@@ -3794,18 +3794,18 @@ void vfe_get_hw_version(struct vfe_cmd_hw_version *out)
 
 static void vfe_reset_internal_variables(void)
 {
-	/* local variables to program the hardware. */
+	/*                                          */
 	ctrl->vfeImaskPacked = 0;
 	ctrl->vfeImaskCompositePacked = 0;
 
-	/* FALSE = disable,  1 = enable. */
+	/*                               */
 	memset(&ctrl->vfeModuleEnableLocal, 0,
 		sizeof(ctrl->vfeModuleEnableLocal));
 
-	/* 0 = disable, 1 = enable */
+	/*                         */
 	memset(&ctrl->vfeCamifConfigLocal, 0,
 		sizeof(ctrl->vfeCamifConfigLocal));
-	/* 0 = disable, 1 = enable */
+	/*                         */
 	memset(&ctrl->vfeImaskLocal, 0, sizeof(ctrl->vfeImaskLocal));
 	memset(&ctrl->vfeStatsCmdLocal, 0, sizeof(ctrl->vfeStatsCmdLocal));
 	memset(&ctrl->vfeBusConfigLocal, 0, sizeof(ctrl->vfeBusConfigLocal));
@@ -3819,7 +3819,7 @@ static void vfe_reset_internal_variables(void)
 	memset(&ctrl->vfeIrqThreadMsgLocal, 0,
 		sizeof(ctrl->vfeIrqThreadMsgLocal));
 
-	/* state control variables */
+	/*                         */
 	ctrl->vfeStartAckPendingFlag = FALSE;
 	ctrl->vfeStopAckPending = FALSE;
 	ctrl->vfeIrqCompositeMaskLocal.ceDoneSel = 0;
@@ -3830,11 +3830,11 @@ static void vfe_reset_internal_variables(void)
 	ctrl->vstate = VFE_STATE_IDLE;
 
 	ctrl->axiOutputMode = VFE_AXI_LAST_OUTPUT_MODE_ENUM;
-	/* 0 for continuous mode, 1 for snapshot mode */
+	/*                                            */
 	ctrl->vfeOperationMode = VFE_START_OPERATION_MODE_CONTINUOUS;
 	ctrl->vfeSnapShotCount = 0;
 	ctrl->vfeStatsPingPongReloadFlag = FALSE;
-	/* this is unsigned 32 bit integer. */
+	/*                                  */
 	ctrl->vfeFrameId = 0;
 	ctrl->vfeFrameSkip.output1Pattern = 0xffffffff;
 	ctrl->vfeFrameSkip.output1Period  = 31;
@@ -3854,13 +3854,13 @@ static void vfe_reset_internal_variables(void)
 
 	ctrl->vfeTestGenStartFlag = FALSE;
 
-	/* default to bank 0. */
+	/*                    */
 	ctrl->vfeLaBankSel = 0;
 
-	/* default to bank 0 for all channels. */
+	/*                                     */
 	memset(&ctrl->vfeGammaLutSel, 0, sizeof(ctrl->vfeGammaLutSel));
 
-	/* Stats control variables. */
+	/*                          */
 	memset(&ctrl->afStatsControl, 0, sizeof(ctrl->afStatsControl));
 	memset(&ctrl->awbStatsControl, 0, sizeof(ctrl->awbStatsControl));
 	vfe_set_stats_pingpong_address(&ctrl->afStatsControl,
@@ -3876,13 +3876,13 @@ void vfe_reset(void)
 	ctrl->vfeImaskLocal.resetAckIrq = TRUE;
 	ctrl->vfeImaskPacked = vfe_irq_pack(ctrl->vfeImaskLocal);
 
-	/* disable all interrupts. */
+	/*                         */
 	writel(VFE_DISABLE_ALL_IRQS, ctrl->vfebase + VFE_IRQ_COMPOSITE_MASK);
 
-	/* clear all pending interrupts*/
+	/*                             */
 	writel(VFE_CLEAR_ALL_IRQS, ctrl->vfebase + VFE_IRQ_CLEAR);
 
-	/* enable reset_ack interrupt.  */
+	/*                              */
 	writel(ctrl->vfeImaskPacked, ctrl->vfebase + VFE_IRQ_MASK);
 
 	writel(VFE_RESET_UPON_RESET_CMD, ctrl->vfebase + VFE_GLOBAL_RESET_CMD);

@@ -36,13 +36,13 @@ struct audio {
 
 static struct audio fm_audio;
 
-/* must be called with audio->lock held */
+/*                                      */
 static int audio_enable(struct audio *audio)
 {
 	struct audmgr_config cfg;
 	int rc = 0;
 
-	MM_DBG("\n"); /* Macro prints the file name and function */
+	MM_DBG("\n"); /*                                         */
 
 	if (audio->enabled)
 		return 0;
@@ -61,10 +61,10 @@ static int audio_enable(struct audio *audio)
 	return rc;
 }
 
-/* must be called with audio->lock held */
+/*                                      */
 static int audio_disable(struct audio *audio)
 {
-	MM_DBG("\n"); /* Macro prints the file name and function */
+	MM_DBG("\n"); /*                                         */
 	if (audio->enabled) {
 		audio->enabled = 0;
 		audmgr_disable(&audio->audmgr);
@@ -118,7 +118,7 @@ static int audio_open(struct inode *inode, struct file *file)
 	struct audio *audio = &fm_audio;
 	int rc = 0;
 
-	MM_DBG("\n"); /* Macro prints the file name and function */
+	MM_DBG("\n"); /*                                         */
 	mutex_lock(&audio->lock);
 
 	if (audio->opened) {

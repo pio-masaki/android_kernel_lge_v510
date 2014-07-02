@@ -23,59 +23,59 @@
 #include "xhci.h"
 
 
-/**
- * dwc3_otg_set_host_regs - reset dwc3 otg registers to host operation.
- *
- * This function sets the OTG registers to work in A-Device host mode.
- * This function should be called just before entering to A-Device mode.
- *
- * @w: Pointer to the dwc3 otg workqueue.
+/* 
+                                                                       
+  
+                                                                      
+                                                                        
+  
+                                         
  */
 static void dwc3_otg_set_host_regs(struct dwc3_otg *dotg)
 {
 	u32 octl;
 
-	/* Set OCTL[6](PeriMode) to 0 (host) */
+	/*                                   */
 	octl = dwc3_readl(dotg->regs, DWC3_OCTL);
 	octl &= ~DWC3_OTG_OCTL_PERIMODE;
 	dwc3_writel(dotg->regs, DWC3_OCTL, octl);
 
 	/*
-	 * TODO: add more OTG registers writes for HOST mode here,
-	 * see figure 12-10 A-device flow in dwc3 Synopsis spec
-	 */
+                                                           
+                                                        
+  */
 }
 
-/**
- * dwc3_otg_set_peripheral_regs - reset dwc3 otg registers to peripheral operation.
- *
- * This function sets the OTG registers to work in B-Device peripheral mode.
- * This function should be called just before entering to B-Device mode.
- *
- * @w: Pointer to the dwc3 otg workqueue.
+/* 
+                                                                                   
+  
+                                                                            
+                                                                        
+  
+                                         
  */
 static void dwc3_otg_set_peripheral_regs(struct dwc3_otg *dotg)
 {
 	u32 octl;
 
-	/* Set OCTL[6](PeriMode) to 1 (peripheral) */
+	/*                                         */
 	octl = dwc3_readl(dotg->regs, DWC3_OCTL);
 	octl |= DWC3_OTG_OCTL_PERIMODE;
 	dwc3_writel(dotg->regs, DWC3_OCTL, octl);
 
 	/*
-	 * TODO: add more OTG registers writes for PERIPHERAL mode here,
-	 * see figure 12-19 B-device flow in dwc3 Synopsis spec
-	 */
+                                                                 
+                                                        
+  */
 }
 
-/**
- * dwc3_otg_start_host -  helper function for starting/stoping the host controller driver.
- *
- * @otg: Pointer to the otg_transceiver structure.
- * @on: start / stop the host controller driver.
- *
- * Returns 0 on success otherwise negative errno.
+/* 
+                                                                                          
+  
+                                                  
+                                                
+  
+                                                 
  */
 static int dwc3_otg_start_host(struct usb_otg *otg, int on)
 {
@@ -95,15 +95,15 @@ static int dwc3_otg_start_host(struct usb_otg *otg, int on)
 		dwc3_otg_set_host_regs(dotg);
 
 		/*
-		 * This should be revisited for more testing post-silicon.
-		 * In worst case we may need to disconnect the root hub
-		 * before stopping the controller so that it does not
-		 * interfere with runtime pm/system pm.
-		 * We can also consider registering and unregistering xhci
-		 * platform device. It is almost similar to add_hcd and
-		 * remove_hcd, But we may not use standard set_host method
-		 * anymore.
-		 */
+                                                            
+                                                         
+                                                       
+                                         
+                                                            
+                                                         
+                                                            
+             
+   */
 		ret = hcd->driver->start(hcd);
 		if (ret) {
 			dev_err(otg->phy->dev,
@@ -128,13 +128,13 @@ static int dwc3_otg_start_host(struct usb_otg *otg, int on)
 	return 0;
 }
 
-/**
- * dwc3_otg_set_host -  bind/unbind the host controller driver.
- *
- * @otg: Pointer to the otg_transceiver structure.
- * @host: Pointer to the usb_bus structure.
- *
- * Returns 0 on success otherwise negative errno.
+/* 
+                                                               
+  
+                                                  
+                                           
+  
+                                                 
  */
 static int dwc3_otg_set_host(struct usb_otg *otg, struct usb_bus *host)
 {
@@ -146,10 +146,10 @@ static int dwc3_otg_set_host(struct usb_otg *otg, struct usb_bus *host)
 		otg->host = host;
 
 		/*
-		 * Only after both peripheral and host are set then check
-		 * OTG sm. This prevents unnecessary activation of the sm
-		 * in case the ID is high.
-		 */
+                                                           
+                                                           
+                            
+   */
 		if (otg->gadget)
 			schedule_work(&dotg->sm_work);
 	} else {
@@ -166,13 +166,13 @@ static int dwc3_otg_set_host(struct usb_otg *otg, struct usb_bus *host)
 	return 0;
 }
 
-/**
- * dwc3_otg_start_peripheral -  bind/unbind the peripheral controller.
- *
- * @otg: Pointer to the otg_transceiver structure.
- * @gadget: pointer to the usb_gadget structure.
- *
- * Returns 0 on success otherwise negative errno.
+/* 
+                                                                      
+  
+                                                  
+                                                
+  
+                                                 
  */
 static int dwc3_otg_start_peripheral(struct usb_otg *otg, int on)
 {
@@ -195,13 +195,13 @@ static int dwc3_otg_start_peripheral(struct usb_otg *otg, int on)
 	return 0;
 }
 
-/**
- * dwc3_otg_set_peripheral -  bind/unbind the peripheral controller driver.
- *
- * @otg: Pointer to the otg_transceiver structure.
- * @gadget: pointer to the usb_gadget structure.
- *
- * Returns 0 on success otherwise negative errno.
+/* 
+                                                                           
+  
+                                                  
+                                                
+  
+                                                 
  */
 static int dwc3_otg_set_peripheral(struct usb_otg *otg,
 				struct usb_gadget *gadget)
@@ -214,10 +214,10 @@ static int dwc3_otg_set_peripheral(struct usb_otg *otg,
 		otg->gadget = gadget;
 
 		/*
-		 * Only after both peripheral and host are set then check
-		 * OTG sm. This prevents unnecessary activation of the sm
-		 * in case the ID is grounded.
-		 */
+                                                           
+                                                           
+                                
+   */
 		if (otg->host)
 			schedule_work(&dotg->sm_work);
 	} else {
@@ -234,31 +234,31 @@ static int dwc3_otg_set_peripheral(struct usb_otg *otg,
 	return 0;
 }
 
-/**
- * dwc3_ext_chg_det_done - callback to handle charger detection completion
- * @otg: Pointer to the otg transceiver structure
- * @charger: Pointer to the external charger structure
- *
- * Returns 0 on success
+/* 
+                                                                          
+                                                 
+                                                      
+  
+                       
  */
 static void dwc3_ext_chg_det_done(struct usb_otg *otg, struct dwc3_charger *chg)
 {
 	struct dwc3_otg *dotg = container_of(otg, struct dwc3_otg, otg);
 
 	/*
-	 * Ignore chg_detection notification if BSV has gone off by this time.
-	 * STOP chg_det as part of !BSV handling would reset the chg_det flags
-	 */
+                                                                       
+                                                                       
+  */
 	if (test_bit(B_SESS_VLD, &dotg->inputs))
 		schedule_work(&dotg->sm_work);
 }
 
-/**
- * dwc3_set_charger - bind/unbind external charger driver
- * @otg: Pointer to the otg transceiver structure
- * @charger: Pointer to the external charger structure
- *
- * Returns 0 on success
+/* 
+                                                         
+                                                 
+                                                      
+  
+                       
  */
 int dwc3_set_charger(struct usb_otg *otg, struct dwc3_charger *charger)
 {
@@ -271,12 +271,12 @@ int dwc3_set_charger(struct usb_otg *otg, struct dwc3_charger *charger)
 	return 0;
 }
 
-/**
- * dwc3_ext_event_notify - callback to handle events from external transceiver
- * @otg: Pointer to the otg transceiver structure
- * @event: Event reported by transceiver
- *
- * Returns 0 on success
+/* 
+                                                                              
+                                                 
+                                        
+  
+                       
  */
 static void dwc3_ext_event_notify(struct usb_otg *otg,
 					enum dwc3_ext_events event)
@@ -290,7 +290,7 @@ static void dwc3_ext_event_notify(struct usb_otg *otg,
 			dev_warn(phy->dev, "PHY_RESUME event out of LPM!!!!\n");
 		} else {
 			dev_dbg(phy->dev, "ext PHY_RESUME event received\n");
-			/* ext_xceiver would have taken h/w out of LPM by now */
+			/*                                                    */
 			pm_runtime_get(phy->dev);
 		}
 	}
@@ -308,12 +308,12 @@ static void dwc3_ext_event_notify(struct usb_otg *otg,
 	schedule_work(&dotg->sm_work);
 }
 
-/**
- * dwc3_set_ext_xceiv - bind/unbind external transceiver driver
- * @otg: Pointer to the otg transceiver structure
- * @ext_xceiv: Pointer to the external transceiver struccture
- *
- * Returns 0 on success
+/* 
+                                                               
+                                                 
+                                                             
+  
+                       
  */
 int dwc3_set_ext_xceiv(struct usb_otg *otg, struct dwc3_ext_xceiv *ext_xceiv)
 {
@@ -326,15 +326,15 @@ int dwc3_set_ext_xceiv(struct usb_otg *otg, struct dwc3_ext_xceiv *ext_xceiv)
 	return 0;
 }
 
-/* IRQs which OTG driver is interested in handling */
+/*                                                 */
 #define DWC3_OEVT_MASK		(DWC3_OEVTEN_OTGCONIDSTSCHNGEVNT | \
 				 DWC3_OEVTEN_OTGBDEVVBUSCHNGEVNT)
 
-/**
- * dwc3_otg_interrupt - interrupt handler for dwc3 otg events.
- * @_dotg: Pointer to out controller context structure
- *
- * Returns IRQ_HANDLED on success otherwise IRQ_NONE.
+/* 
+                                                              
+                                                      
+  
+                                                     
  */
 static irqreturn_t dwc3_otg_interrupt(int irq, void *_dotg)
 {
@@ -345,12 +345,12 @@ static irqreturn_t dwc3_otg_interrupt(int irq, void *_dotg)
 	int handled_irqs = 0;
 
 	/*
-	 * If PHY is in retention mode then this interrupt would not be fired.
-	 * ext_xcvr (parent) is responsible for bringing h/w out of LPM.
-	 * OTG driver just need to increment power count and can safely
-	 * assume that h/w is out of low power state now.
-	 * TODO: explicitly disable OEVTEN interrupts if ext_xceiv is present
-	 */
+                                                                       
+                                                                 
+                                                                
+                                                  
+                                                                      
+  */
 	if (pm_runtime_status_suspended(phy->dev))
 		pm_runtime_get(phy->dev);
 
@@ -364,9 +364,9 @@ static irqreturn_t dwc3_otg_interrupt(int irq, void *_dotg)
 	if ((oevt_reg & DWC3_OEVTEN_OTGCONIDSTSCHNGEVNT) ||
 	    (oevt_reg & DWC3_OEVTEN_OTGBDEVVBUSCHNGEVNT)) {
 		/*
-		 * ID sts has changed, set inputs later, in the workqueue
-		 * function, switch from A to B or from B to A.
-		 */
+                                                           
+                                                 
+   */
 
 		if (osts & DWC3_OTG_OSTS_CONIDSTS)
 			set_bit(ID, &dotg->inputs);
@@ -387,17 +387,17 @@ static irqreturn_t dwc3_otg_interrupt(int irq, void *_dotg)
 
 		ret = IRQ_HANDLED;
 
-		/* Clear the interrupts we handled */
+		/*                                 */
 		dwc3_writel(dotg->regs, DWC3_OEVT, handled_irqs);
 	}
 
 	return ret;
 }
 
-/**
- * dwc3_otg_init_sm - initialize OTG statemachine input
- * @dotg: Pointer to the dwc3_otg structure
- *
+/* 
+                                                       
+                                           
+  
  */
 void dwc3_otg_init_sm(struct dwc3_otg *dotg)
 {
@@ -405,9 +405,9 @@ void dwc3_otg_init_sm(struct dwc3_otg *dotg)
 	struct usb_phy *phy = dotg->otg.phy;
 
 	/*
-	 * TODO: If using external notifications then wait here till initial
-	 * state is reported
-	 */
+                                                                     
+                     
+  */
 
 	dev_dbg(phy->dev, "Initialize OTG inputs, osts: 0x%x\n", osts);
 
@@ -422,13 +422,13 @@ void dwc3_otg_init_sm(struct dwc3_otg *dotg)
 		clear_bit(B_SESS_VLD, &dotg->inputs);
 }
 
-/**
- * dwc3_otg_sm_work - workqueue function.
- *
- * @w: Pointer to the dwc3 otg workqueue
- *
- * NOTE: After any change in phy->state,
- * we must reschdule the state machine.
+/* 
+                                         
+  
+                                        
+  
+                                        
+                                       
  */
 static void dwc3_otg_sm_work(struct work_struct *w)
 {
@@ -440,11 +440,11 @@ static void dwc3_otg_sm_work(struct work_struct *w)
 	pm_runtime_resume(phy->dev);
 	dev_dbg(phy->dev, "%s state\n", otg_state_string(phy->state));
 
-	/* Check OTG state */
+	/*                 */
 	switch (phy->state) {
 	case OTG_STATE_UNDEFINED:
 		dwc3_otg_init_sm(dotg);
-		/* Switch to A or B-Device according to ID / BSV */
+		/*                                               */
 		if (!test_bit(ID, &dotg->inputs) && phy->otg->host) {
 			dev_dbg(phy->dev, "!id\n");
 			phy->state = OTG_STATE_A_IDLE;
@@ -476,7 +476,7 @@ static void dwc3_otg_sm_work(struct work_struct *w)
 		} else if (test_bit(B_SESS_VLD, &dotg->inputs)) {
 			dev_dbg(phy->dev, "b_sess_vld\n");
 			if (charger) {
-				/* Has charger been detected? If no detect it */
+				/*                                            */
 				switch (charger->chg_type) {
 				case DWC3_DCP_CHARGER:
 					dev_dbg(phy->dev, "lpm, DCP charger\n");
@@ -500,13 +500,13 @@ static void dwc3_otg_sm_work(struct work_struct *w)
 					break;
 				}
 			} else {
-				/* no charger registered, start peripheral */
+				/*                                         */
 				if (dwc3_otg_start_peripheral(&dotg->otg, 1)) {
 					/*
-					 * Probably set_peripheral not called
-					 * yet. We will re-try as soon as it
-					 * will be called
-					 */
+                                          
+                                         
+                      
+      */
 					dev_err(phy->dev, "enter lpm as\n"
 						"unable to start B-device\n");
 					phy->state = OTG_STATE_UNDEFINED;
@@ -541,7 +541,7 @@ static void dwc3_otg_sm_work(struct work_struct *w)
 		break;
 
 	case OTG_STATE_A_IDLE:
-		/* Switch to A-Device*/
+		/*                   */
 		if (test_bit(ID, &dotg->inputs)) {
 			dev_dbg(phy->dev, "id\n");
 			phy->state = OTG_STATE_B_IDLE;
@@ -549,9 +549,9 @@ static void dwc3_otg_sm_work(struct work_struct *w)
 		} else {
 			 if (dwc3_otg_start_host(&dotg->otg, 1)) {
 				/*
-				 * Probably set_host was not called yet.
-				 * We will re-try as soon as it will be called
-				 */
+                                            
+                                                  
+     */
 				dev_dbg(phy->dev, "enter lpm as\n"
 					"unable to start A-device\n");
 				phy->state = OTG_STATE_UNDEFINED;
@@ -581,45 +581,45 @@ static void dwc3_otg_sm_work(struct work_struct *w)
 }
 
 
-/**
- * dwc3_otg_reset - reset dwc3 otg registers.
- *
- * @w: Pointer to the dwc3 otg workqueue
+/* 
+                                             
+  
+                                        
  */
 static void dwc3_otg_reset(struct dwc3_otg *dotg)
 {
 	/*
-	 * OCFG[2] - OTG-Version = 1
-	 * OCFG[1] - HNPCap = 0
-	 * OCFG[0] - SRPCap = 0
-	 */
+                             
+                        
+                        
+  */
 	dwc3_writel(dotg->regs, DWC3_OCFG, 0x4);
 
 	/*
-	 * OCTL[6] - PeriMode = 1
-	 * OCTL[5] - PrtPwrCtl = 0
-	 * OCTL[4] - HNPReq = 0
-	 * OCTL[3] - SesReq = 0
-	 * OCTL[2] - TermSelDLPulse = 0
-	 * OCTL[1] - DevSetHNPEn = 0
-	 * OCTL[0] - HstSetHNPEn = 0
-	 */
+                          
+                           
+                        
+                        
+                                
+                             
+                             
+  */
 	dwc3_writel(dotg->regs, DWC3_OCTL, 0x40);
 
-	/* Clear all otg events (interrupts) indications  */
+	/*                                                */
 	dwc3_writel(dotg->regs, DWC3_OEVT, 0xFFFF);
 
-	/* Enable ID/BSV StsChngEn event*/
+	/*                              */
 	dwc3_writel(dotg->regs, DWC3_OEVTEN,
 			DWC3_OEVTEN_OTGCONIDSTSCHNGEVNT |
 			DWC3_OEVTEN_OTGBDEVVBUSCHNGEVNT);
 }
 
-/**
- * dwc3_otg_init - Initializes otg related registers
- * @dwc: Pointer to out controller context structure
- *
- * Returns 0 on success otherwise negative errno.
+/* 
+                                                    
+                                                    
+  
+                                                 
  */
 int dwc3_otg_init(struct dwc3 *dwc)
 {
@@ -630,28 +630,28 @@ int dwc3_otg_init(struct dwc3 *dwc)
 	dev_dbg(dwc->dev, "dwc3_otg_init\n");
 
 	/*
-	 * GHWPARAMS6[10] bit is SRPSupport.
-	 * This bit also reflects DWC_USB3_EN_OTG
-	 */
+                                     
+                                          
+  */
 	reg = dwc3_readl(dwc->regs, DWC3_GHWPARAMS6);
 	if (!(reg & DWC3_GHWPARAMS6_SRP_SUPPORT)) {
 		/*
-		 * No OTG support in the HW core.
-		 * We return 0 to indicate no error, since this is acceptable
-		 * situation, just continue probe the dwc3 driver without otg.
-		 */
+                                   
+                                                               
+                                                                
+   */
 		dev_dbg(dwc->dev, "dwc3_otg address space is not supported\n");
 		return 0;
 	}
 
-	/* Allocate and init otg instance */
+	/*                                */
 	dotg = kzalloc(sizeof(struct dwc3_otg), GFP_KERNEL);
 	if (!dotg) {
 		dev_err(dwc->dev, "unable to allocate dwc3_otg\n");
 		return -ENOMEM;
 	}
 
-	/* DWC3 has separate IRQ line for OTG events (ID/BSV etc.) */
+	/*                                                         */
 	dotg->irq = platform_get_irq_byname(to_platform_device(dwc->dev),
 								"otg_irq");
 	if (dotg->irq < 0) {
@@ -665,7 +665,7 @@ int dwc3_otg_init(struct dwc3 *dwc)
 	dotg->otg.set_peripheral = dwc3_otg_set_peripheral;
 	dotg->otg.set_host = dwc3_otg_set_host;
 
-	/* This reference is used by dwc3 modules for checking otg existance */
+	/*                                                                   */
 	dwc->dotg = dotg;
 
 	dotg->otg.phy = kzalloc(sizeof(struct usb_phy), GFP_KERNEL);
@@ -716,17 +716,17 @@ err1:
 	return ret;
 }
 
-/**
- * dwc3_otg_exit
- * @dwc: Pointer to out controller context structure
- *
- * Returns 0 on success otherwise negative errno.
+/* 
+                
+                                                    
+  
+                                                 
  */
 void dwc3_otg_exit(struct dwc3 *dwc)
 {
 	struct dwc3_otg *dotg = dwc->dotg;
 
-	/* dotg is null when GHWPARAMS6[10]=SRPSupport=0, see dwc3_otg_init */
+	/*                                                                  */
 	if (dotg) {
 		if (dotg->charger)
 			dotg->charger->start_detection(dotg->charger, false);

@@ -221,7 +221,7 @@ int mdss_mdp_get_plane_sizes(u32 format, u32 w, u32 h,
 			ps->num_planes = 2;
 			ps->plane_size[1] *= 2;
 			ps->ystride[1] *= 2;
-		} else { /* planar */
+		} else { /*        */
 			ps->num_planes = 3;
 			ps->plane_size[2] = ps->plane_size[1];
 			ps->ystride[2] = ps->ystride[1];
@@ -244,7 +244,7 @@ int mdss_mdp_data_check(struct mdss_mdp_data *data,
 		return -ENOMEM;
 
 	if (data->bwc_enabled) {
-		return -EPERM; /* not supported */
+		return -EPERM; /*               */
 	} else {
 		struct mdss_mdp_img_data *prev, *curr;
 		int i;
@@ -279,7 +279,7 @@ int mdss_mdp_data_check(struct mdss_mdp_data *data,
 
 int mdss_mdp_put_img(struct mdss_mdp_img_data *data)
 {
-	/* only source may use frame buffer */
+	/*                                  */
 	if (data->flags & MDP_MEMORY_ID_TYPE_FB) {
 		fput_light(data->srcp_file, data->p_need);
 		return 0;

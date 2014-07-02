@@ -197,12 +197,12 @@ void msm_mercury_hw_reset(void)
 	struct msm_mercury_hw_cmd hw_cmd;
 
 	wmb();
-	/* disable all interrupts*/
+	/*                       */
 	mercury_kwrite(RTDMA_JPEG_RD_INT_EN, 0);
 
 	mercury_kwrite(RTDMA_JPEG_WR_INT_EN, 0);
 
-	/* clear pending interrupts*/
+	/*                         */
 	val = 0;
 	MEM_OUTF2(&val, RTDMA_JPEG_WR_STA_ACK,
 		SW_RESET_ABORT_RDY_ACK,
@@ -214,18 +214,18 @@ void msm_mercury_hw_reset(void)
 	MEM_OUTF2(&val, RTDMA_JPEG_RD_STA_ACK, EOF_ACK, SOF_ACK, 1, 1);
 	mercury_kwrite(RTDMA_JPEG_RD_STA_ACK, val);
 
-	/* enable SWResetAbortRdyInt for core reset*/
+	/*                                         */
 	val = 0;
 	MEM_OUTF(&val, RTDMA_JPEG_WR_INT_EN, SW_RESET_ABORT_RDY_EN, 1);
 	mercury_kwrite(RTDMA_JPEG_WR_INT_EN, val);
 
-	/* Reset Core from MMSS Fabric*/
+	/*                            */
 	mercury_core_reset();
 
-	/* disable all interrupts*/
+	/*                       */
 	mercury_kwrite(RTDMA_JPEG_WR_INT_EN, 0);
 
-	/* clear pending interrupts*/
+	/*                         */
 	val = 0;
 	MEM_OUTF2(&val, RTDMA_JPEG_WR_STA_ACK,
 		SW_RESET_ABORT_RDY_ACK,
@@ -237,7 +237,7 @@ void msm_mercury_hw_reset(void)
 	MEM_OUTF2(&val, RTDMA_JPEG_RD_STA_ACK, EOF_ACK, SOF_ACK, 1, 1);
 	mercury_kwrite(RTDMA_JPEG_RD_STA_ACK, val);
 
-	/* enable neccessary interrupt source*/
+	/*                                   */
 	val = 0;
 	MEM_OUTF2(&val, RTDMA_JPEG_WR_INT_EN, EOF_EN, ERR_EN, 1, 1);
 	MEM_OUTF(&val, RTDMA_JPEG_WR_INT_EN, SW_RESET_ABORT_RDY_EN, 1);
@@ -263,7 +263,7 @@ void msm_mercury_hw_delay(struct msm_mercury_hw_cmd *hw_cmd_p, int m_us)
 	}
 }
 
-int msm_mercury_hw_exec_cmds(struct msm_mercury_hw_cmd *hw_cmd_p, int m_cmds)
+int msm_mercury_hw_exec_cmds(struct msm_mercury_hw_cmd *hw_cmd_p, uint32_t m_cmds)
 {
 	int is_copy_to_user = -1;
 	uint32_t data;

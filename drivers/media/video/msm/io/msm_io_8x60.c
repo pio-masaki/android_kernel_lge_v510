@@ -25,7 +25,7 @@
 #include <mach/msm_bus_board.h>
 
 
-/* MIPI	CSI	controller registers */
+/*                               */
 #define	MIPI_PHY_CONTROL			0x00000000
 #define	MIPI_PROTOCOL_CONTROL		0x00000004
 #define	MIPI_INTERRUPT_STATUS		0x00000008
@@ -595,14 +595,14 @@ int msm_camio_csi_config(struct msm_camera_csi_params *csi_params)
 
 	CDBG("msm_camio_csi_config\n");
 	if (csibase != NULL) {
-		/* SOT_ECC_EN enable error correction for SYNC (data-lane) */
+		/*                                                         */
 		msm_camera_io_w(0x4, csibase + MIPI_PHY_CONTROL);
 
-		/* SW_RST to the CSI core */
+		/*                        */
 		msm_camera_io_w(MIPI_PROTOCOL_CONTROL_SW_RST_BMSK,
 		csibase + MIPI_PROTOCOL_CONTROL);
 
-		/* PROTOCOL CONTROL */
+		/*                  */
 		val = MIPI_PROTOCOL_CONTROL_LONG_PACKET_HEADER_CAPTURE_BMSK |
 			MIPI_PROTOCOL_CONTROL_DECODE_ID_BMSK |
 			MIPI_PROTOCOL_CONTROL_ECC_EN_BMSK;
@@ -613,8 +613,8 @@ int msm_camio_csi_config(struct msm_camera_csi_params *csi_params)
 		CDBG("%s MIPI_PROTOCOL_CONTROL val=0x%x\n", __func__, val);
 		msm_camera_io_w(val, csibase + MIPI_PROTOCOL_CONTROL);
 
-		/* settle_cnt is very sensitive to speed!
-		increase this value to run at higher speeds */
+		/*                                       
+                                              */
 		val = (csi_params->settle_cnt <<
 			MIPI_PHY_D0_CONTROL2_SETTLE_COUNT_SHFT) |
 			(0x0F << MIPI_PHY_D0_CONTROL2_HS_TERM_IMP_SHFT) |
@@ -642,7 +642,7 @@ int msm_camio_csi_config(struct msm_camera_csi_params *csi_params)
 		msm_camera_io_w(0x00000000, csibase + MIPI_PHY_D2_CONTROL);
 		msm_camera_io_w(0x00000000, csibase + MIPI_PHY_D3_CONTROL);
 
-		/* halcyon only supports 1 or 2 lane */
+		/*                                   */
 		switch (csi_params->lane_cnt) {
 		case 1:
 			msm_camera_io_w(csi_params->lane_assign << 8 | 0x4,
@@ -662,10 +662,10 @@ int msm_camio_csi_config(struct msm_camera_csi_params *csi_params)
 			break;
 		}
 
-		/* mask out ID_ERROR[19], DATA_CMM_ERR[11]
-		and CLK_CMM_ERR[10] - de-featured */
+		/*                                        
+                                    */
 		msm_camera_io_w(0xF017F3C0, csibase + MIPI_INTERRUPT_MASK);
-		/*clear IRQ bits*/
+		/*              */
 		msm_camera_io_w(0xF017F3C0, csibase + MIPI_INTERRUPT_STATUS);
 	} else {
 		pr_info("CSIBASE is NULL");

@@ -38,10 +38,10 @@ struct rpm_clk {
 	const int rpm_status_id;
 	const bool active_only;
 	unsigned last_set_khz;
-	/* 0 if active_only. Otherwise, same as last_set_khz. */
+	/*                                                    */
 	unsigned last_set_sleep_khz;
 	bool enabled;
-	bool branch; /* true: RPM only accepts 1 for ON and 0 for OFF */
+	bool branch; /*                                               */
 	unsigned factor;
 	struct clk_rpmrs_data *rpmrs_data;
 
@@ -189,10 +189,10 @@ extern struct clk_rpmrs_data clk_rpmrs_data_smd;
 	__DEFINE_CLK_RPM_QDSS(name, active, type, r_id, \
 		0, RPM_SMD_KEY_STATE, &clk_rpmrs_data_smd)
 /*
- * The RPM XO buffer clock management code aggregates votes for pin-control mode
- * and software mode separately. Software-enable has higher priority over pin-
- * control, and if the software-mode aggregation results in a 'disable', the
- * buffer will be left in pin-control mode if a pin-control vote is in place.
+                                                                                
+                                                                              
+                                                                            
+                                                                             
  */
 #define DEFINE_CLK_RPM_SMD_XO_BUFFER(name, active, r_id) \
 	__DEFINE_CLK_RPM_BRANCH(name, active, RPM_CLK_BUFFER_A_REQ, r_id, 0, \

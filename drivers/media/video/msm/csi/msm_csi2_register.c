@@ -20,19 +20,19 @@ int msm_csi_register_subdevs(struct msm_cam_media_controller *p_mctl,
 {
 	int rc = -ENODEV;
 
-	/* register csiphy subdev */
+	/*                        */
 	p_mctl->csiphy_sdev = server_dev->csiphy_device[core_index];
 	if (!p_mctl->csiphy_sdev)
 		goto out;
 	v4l2_set_subdev_hostdata(p_mctl->csiphy_sdev, p_mctl);
 
-	/* register csid subdev */
+	/*                      */
 	p_mctl->csid_sdev = server_dev->csid_device[core_index];
 	if (!p_mctl->csid_sdev)
 		goto out;
 	v4l2_set_subdev_hostdata(p_mctl->csid_sdev, p_mctl);
 
-	/* register ispif subdev */
+	/*                       */
 	p_mctl->ispif_sdev = server_dev->ispif_device[0];
 	if (!p_mctl->ispif_sdev)
 		goto out;

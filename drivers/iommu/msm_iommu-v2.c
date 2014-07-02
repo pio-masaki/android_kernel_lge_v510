@@ -33,7 +33,7 @@
 
 #include "msm_iommu_pagetable.h"
 
-/* bitmap of the page sizes currently supported */
+/*                                              */
 #define MSM_IOMMU_PGSIZES	(SZ_4K | SZ_64K | SZ_1M | SZ_16M)
 
 static DEFINE_MUTEX(msm_iommu_lock);
@@ -78,11 +78,11 @@ static void __sync_tlb(void __iomem *base, int ctx)
 {
 	SET_TLBSYNC(base, ctx, 0);
 
-	/* No barrier needed due to register proximity */
+	/*                                             */
 	while (GET_CB_TLBSTATUS_SACTIVE(base, ctx))
 		cpu_relax();
 
-	/* No barrier needed due to read dependency */
+	/*                                          */
 }
 
 static int __flush_iotlb_va(struct iommu_domain *domain, unsigned int va)
@@ -181,7 +181,7 @@ static void __program_iommu(void __iomem *base, int smt_size)
 	SET_CR0_GFIE(base, 1);
 	SET_CR0_GFRE(base, 1);
 	SET_CR0_CLIENTPD(base, 0);
-	mb();	/* Make sure writes complete before returning */
+	mb();	/*                                            */
 }
 
 static void __reset_context(void __iomem *base, int ctx)
@@ -214,38 +214,38 @@ static void __program_context(void __iomem *base, int ctx, int ncb,
 	SET_TTBCR(base, ctx, 0);
 	SET_CB_TTBR0_ADDR(base, ctx, pn);
 
-	/* Enable context fault interrupt */
+	/*                                */
 	SET_CB_SCTLR_CFIE(base, ctx, 1);
 
-	/* Redirect all cacheable requests to L2 slave port. */
+	/*                                                   */
 	SET_CB_ACTLR_BPRCISH(base, ctx, 1);
 	SET_CB_ACTLR_BPRCOSH(base, ctx, 1);
 	SET_CB_ACTLR_BPRCNSH(base, ctx, 1);
 
-	/* Turn on TEX Remap */
+	/*                   */
 	SET_CB_SCTLR_TRE(base, ctx, 1);
 
-	/* Enable private ASID namespace */
+	/*                               */
 	SET_CB_SCTLR_ASIDPNE(base, ctx, 1);
 
-	/* Set TEX remap attributes */
+	/*                          */
 	RCP15_PRRR(prrr);
 	RCP15_NMRR(nmrr);
 	SET_PRRR(base, ctx, prrr);
 	SET_NMRR(base, ctx, nmrr);
 
-	/* Configure page tables as inner-cacheable and shareable to reduce
-	 * the TLB miss penalty.
-	 */
+	/*                                                                 
+                         
+  */
 	if (redirect) {
 		SET_CB_TTBR0_S(base, ctx, 1);
 		SET_CB_TTBR0_NOS(base, ctx, 1);
-		SET_CB_TTBR0_IRGN1(base, ctx, 0); /* WB, WA */
+		SET_CB_TTBR0_IRGN1(base, ctx, 0); /*        */
 		SET_CB_TTBR0_IRGN0(base, ctx, 1);
-		SET_CB_TTBR0_RGN(base, ctx, 1);   /* WB, WA */
+		SET_CB_TTBR0_RGN(base, ctx, 1);   /*        */
 	}
 
-	/* Program the M2V tables for this context */
+	/*                                         */
 	for (i = 0; i < len / sizeof(*sids); i++) {
 		for (; num < smt_size; num++)
 			if (GET_SMR_VALID(base, num) == 0)
@@ -256,20 +256,20 @@ static void __program_context(void __iomem *base, int ctx, int ncb,
 		SET_SMR_MASK(base, num, 0);
 		SET_SMR_ID(base, num, sids[i]);
 
-		/* Set VMID = 0 */
+		/*              */
 		SET_S2CR_N(base, num, 0);
 		SET_S2CR_CBNDX(base, num, ctx);
-		/* Set security bit override to be Non-secure */
+		/*                                            */
 		SET_S2CR_NSCFG(base, num, 3);
 	}
 
 	SET_CBAR_N(base, ctx, 0);
-	/* Stage 1 Context with Stage 2 bypass */
+	/*                                     */
 	SET_CBAR_TYPE(base, ctx, 1);
-	/* Route page faults to the non-secure interrupt */
+	/*                                               */
 	SET_CBAR_IRPTNDX(base, ctx, 1);
 
-       /* Find if this page table is used elsewhere, and re-use ASID */
+       /*                                                            */
 	found = 0;
 	for (i = 0; i < ncb; i++)
 		if ((GET_CB_TTBR0_ADDR(base, i) == pn) && (i != ctx)) {
@@ -279,7 +279,7 @@ static void __program_context(void __iomem *base, int ctx, int ncb,
 			break;
 		}
 
-	/* If page table is new, find an unused ASID */
+	/*                                           */
 	if (!found) {
 		for (i = 0; i < ncb; i++) {
 			found = 0;
@@ -297,7 +297,7 @@ static void __program_context(void __iomem *base, int ctx, int ncb,
 		BUG_ON(found);
 	}
 
-	/* Enable the MMU */
+	/*                */
 	SET_CB_SCTLR_M(base, ctx, 1);
 	mb();
 }
@@ -502,7 +502,7 @@ static size_t msm_iommu_unmap(struct iommu_domain *domain, unsigned long va,
 fail:
 	mutex_unlock(&msm_iommu_lock);
 
-	/* the IOMMU API requires us to return how many bytes were unmapped */
+	/*                                                                  */
 	len = ret ? 0 : len;
 	return len;
 }
@@ -574,7 +574,7 @@ static phys_addr_t msm_iommu_iova_to_phys(struct iommu_domain *domain,
 
 	ret = __enable_clocks(iommu_drvdata);
 	if (ret) {
-		ret = 0;	/* 0 indicates translation failed */
+		ret = 0;	/*                                */
 		goto fail;
 	}
 
@@ -589,10 +589,10 @@ static phys_addr_t msm_iommu_iova_to_phys(struct iommu_domain *domain,
 	if (par & CB_PAR_F) {
 		ret = 0;
 	} else {
-		/* We are dealing with a supersection */
+		/*                                    */
 		if (ret & CB_PAR_SS)
 			ret = (par & 0xFF000000) | (va & 0x00FFFFFF);
-		else /* Upper 20 bits from PAR, lower 12 from VA */
+		else /*                                          */
 			ret = (par & 0xFFFFF000) | (va & 0x00000FFF);
 	}
 

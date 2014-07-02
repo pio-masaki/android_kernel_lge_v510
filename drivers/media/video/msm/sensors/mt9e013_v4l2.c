@@ -1,4 +1,4 @@
-/* Copyright (c) 2012-2013, The Linux Foundation. All rights reserved.
+/* Copyright (c) 2012, The Linux Foundation. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -28,139 +28,139 @@ static struct msm_camera_i2c_reg_conf mt9e013_groupoff_settings[] = {
 };
 
 static struct msm_camera_i2c_reg_conf mt9e013_prev_settings[] = {
-	/*Output Size (1632x1224)*/
-	{0x0344, 0x0008},/*X_ADDR_START*/
-	{0x0348, 0x0CC9},/*X_ADDR_END*/
-	{0x0346, 0x0008},/*Y_ADDR_START*/
-	{0x034A, 0x0999},/*Y_ADDR_END*/
-	{0x034C, 0x0660},/*X_OUTPUT_SIZE*/
-	{0x034E, 0x04C8},/*Y_OUTPUT_SIZE*/
-	{0x306E, 0xFCB0},/*DATAPATH_SELECT*/
-	{0x3040, 0x04C3},/*READ_MODE*/
-	{0x3178, 0x0000},/*ANALOG_CONTROL5*/
-	{0x3ED0, 0x1E24},/*DAC_LD_4_5*/
-	{0x0400, 0x0002},/*SCALING_MODE*/
-	{0x0404, 0x0010},/*SCALE_M*/
-	/*Timing configuration*/
-	{0x0342, 0x1018},/*LINE_LENGTH_PCK*/
-	{0x0340, 0x055B},/*FRAME_LENGTH_LINES*/
-	{0x0202, 0x0557},/*COARSE_INTEGRATION_TIME*/
-	{0x3014, 0x0846},/*FINE_INTEGRATION_TIME_*/
-	{0x3010, 0x0130},/*FINE_CORRECTION*/
+	/*                       */
+	{0x0344, 0x0008},/*            */
+	{0x0348, 0x0CC9},/*          */
+	{0x0346, 0x0008},/*            */
+	{0x034A, 0x0999},/*          */
+	{0x034C, 0x0660},/*             */
+	{0x034E, 0x04C8},/*             */
+	{0x306E, 0xFCB0},/*               */
+	{0x3040, 0x04C3},/*         */
+	{0x3178, 0x0000},/*               */
+	{0x3ED0, 0x1E24},/*          */
+	{0x0400, 0x0002},/*            */
+	{0x0404, 0x0010},/*       */
+	/*                    */
+	{0x0342, 0x1018},/*               */
+	{0x0340, 0x055B},/*                  */
+	{0x0202, 0x0557},/*                       */
+	{0x3014, 0x0846},/*                      */
+	{0x3010, 0x0130},/*               */
 };
 
 static struct msm_camera_i2c_reg_conf mt9e013_snap_settings[] = {
-	/*Output Size (3264x2448)*/
-	{0x0344, 0x0000},/*X_ADDR_START */
-	{0x0348, 0x0CCF},/*X_ADDR_END*/
-	{0x0346, 0x0000},/*Y_ADDR_START */
-	{0x034A, 0x099F},/*Y_ADDR_END*/
-	{0x034C, 0x0CD0},/*X_OUTPUT_SIZE*/
-	{0x034E, 0x09A0},/*Y_OUTPUT_SIZE*/
-	{0x306E, 0xFC80},/*DATAPATH_SELECT*/
-	{0x3040, 0x0041},/*READ_MODE*/
-	{0x3178, 0x0000},/*ANALOG_CONTROL5*/
-	{0x3ED0, 0x1E24},/*DAC_LD_4_5*/
-	{0x0400, 0x0000},/*SCALING_MODE*/
-	{0x0404, 0x0010},/*SCALE_M*/
-	/*Timing configuration*/
-	{0x0342, 0x13F8},/*LINE_LENGTH_PCK*/
-	{0x0340, 0x0A2F},/*FRAME_LENGTH_LINES*/
-	{0x0202, 0x0A1F},/*COARSE_INTEGRATION_TIME*/
-	{0x3014, 0x03F6},/*FINE_INTEGRATION_TIME_ */
-	{0x3010, 0x0078},/*FINE_CORRECTION*/
+	/*                       */
+	{0x0344, 0x0000},/*             */
+	{0x0348, 0x0CCF},/*          */
+	{0x0346, 0x0000},/*             */
+	{0x034A, 0x099F},/*          */
+	{0x034C, 0x0CD0},/*             */
+	{0x034E, 0x09A0},/*             */
+	{0x306E, 0xFC80},/*               */
+	{0x3040, 0x0041},/*         */
+	{0x3178, 0x0000},/*               */
+	{0x3ED0, 0x1E24},/*          */
+	{0x0400, 0x0000},/*            */
+	{0x0404, 0x0010},/*       */
+	/*                    */
+	{0x0342, 0x13F8},/*               */
+	{0x0340, 0x0A2F},/*                  */
+	{0x0202, 0x0A1F},/*                       */
+	{0x3014, 0x03F6},/*                       */
+	{0x3010, 0x0078},/*               */
 };
 
 static struct msm_camera_i2c_reg_conf mt9e013_hfr60_settings[] = {
-	{0x0300, 0x0005},/*VT_PIX_CLK_DIV*/
-	{0x0302, 0x0001},/*VT_SYS_CLK_DIV*/
-	{0x0304, 0x0002},/*PRE_PLL_CLK_DIV*/
-	{0x0306, 0x0029},/*PLL_MULTIPLIER*/
-	{0x0308, 0x000A},/*OP_PIX_CLK_DIV*/
-	{0x030A, 0x0001},/*OP_SYS_CLK_DIV*/
-	{0x0344, 0x0008},/*X_ADDR_START*/
-	{0x0348, 0x0685},/*X_ADDR_END*/
-	{0x0346, 0x013a},/*Y_ADDR_START*/
-	{0x034A, 0x055B},/*Y_ADDR_END*/
-	{0x034C, 0x0340},/*X_OUTPUT_SIZE*/
-	{0x034E, 0x0212},/*Y_OUTPUT_SIZE*/
-	{0x306E, 0xFC80},/*DATAPATH_SELECT*/
-	{0x3040, 0x00C3},/*READ_MODE*/
-	{0x3178, 0x0000},/*ANALOG_CONTROL5*/
-	{0x3ED0, 0x1E24},/*DAC_LD_4_5*/
-	{0x0400, 0x0000},/*SCALING_MODE*/
-	{0x0404, 0x0010},/*SCALE_M*/
-	/*Timing configuration*/
-	{0x0342, 0x0970},/*LINE_LENGTH_PCK*/
-	{0x0340, 0x02A1},/*FRAME_LENGTH_LINES*/
-	{0x0202, 0x02A1},/*COARSE_INTEGRATION_TIME*/
-	{0x3014, 0x03F6},/*FINE_INTEGRATION_TIME_*/
-	{0x3010, 0x0078},/*FINE_CORRECTION*/
+	{0x0300, 0x0005},/*              */
+	{0x0302, 0x0001},/*              */
+	{0x0304, 0x0002},/*               */
+	{0x0306, 0x0029},/*              */
+	{0x0308, 0x000A},/*              */
+	{0x030A, 0x0001},/*              */
+	{0x0344, 0x0008},/*            */
+	{0x0348, 0x0685},/*          */
+	{0x0346, 0x013a},/*            */
+	{0x034A, 0x055B},/*          */
+	{0x034C, 0x0340},/*             */
+	{0x034E, 0x0212},/*             */
+	{0x306E, 0xFC80},/*               */
+	{0x3040, 0x00C3},/*         */
+	{0x3178, 0x0000},/*               */
+	{0x3ED0, 0x1E24},/*          */
+	{0x0400, 0x0000},/*            */
+	{0x0404, 0x0010},/*       */
+	/*                    */
+	{0x0342, 0x0970},/*               */
+	{0x0340, 0x02A1},/*                  */
+	{0x0202, 0x02A1},/*                       */
+	{0x3014, 0x03F6},/*                      */
+	{0x3010, 0x0078},/*               */
 };
 
 static struct msm_camera_i2c_reg_conf mt9e013_hfr90_settings[] = {
-	{0x0300, 0x0005},/*VT_PIX_CLK_DIV*/
-	{0x0302, 0x0001},/*VT_SYS_CLK_DIV*/
-	{0x0304, 0x0002},/*PRE_PLL_CLK_DIV*/
-	{0x0306, 0x003D},/*PLL_MULTIPLIER*/
-	{0x0308, 0x000A},/*OP_PIX_CLK_DIV*/
-	{0x030A, 0x0001},/*OP_SYS_CLK_DIV*/
-	{0x0344, 0x0008},/*X_ADDR_START*/
-	{0x0348, 0x0685},/*X_ADDR_END*/
-	{0x0346, 0x013a},/*Y_ADDR_START*/
-	{0x034A, 0x055B},/*Y_ADDR_END*/
-	{0x034C, 0x0340},/*X_OUTPUT_SIZE*/
-	{0x034E, 0x0212},/*Y_OUTPUT_SIZE*/
-	{0x306E, 0xFC80},/*DATAPATH_SELECT*/
-	{0x3040, 0x00C3},/*READ_MODE*/
-	{0x3178, 0x0000},/*ANALOG_CONTROL5*/
-	{0x3ED0, 0x1E24},/*DAC_LD_4_5*/
-	{0x0400, 0x0000},/*SCALING_MODE*/
-	{0x0404, 0x0010},/*SCALE_M*/
-	/*Timing configuration*/
-	{0x0342, 0x0970},/*LINE_LENGTH_PCK*/
-	{0x0340, 0x02A1},/*FRAME_LENGTH_LINES*/
-	{0x0202, 0x02A1},/*COARSE_INTEGRATION_TIME*/
-	{0x3014, 0x03F6},/*FINE_INTEGRATION_TIME_*/
-	{0x3010, 0x0078},/*FINE_CORRECTION*/
+	{0x0300, 0x0005},/*              */
+	{0x0302, 0x0001},/*              */
+	{0x0304, 0x0002},/*               */
+	{0x0306, 0x003D},/*              */
+	{0x0308, 0x000A},/*              */
+	{0x030A, 0x0001},/*              */
+	{0x0344, 0x0008},/*            */
+	{0x0348, 0x0685},/*          */
+	{0x0346, 0x013a},/*            */
+	{0x034A, 0x055B},/*          */
+	{0x034C, 0x0340},/*             */
+	{0x034E, 0x0212},/*             */
+	{0x306E, 0xFC80},/*               */
+	{0x3040, 0x00C3},/*         */
+	{0x3178, 0x0000},/*               */
+	{0x3ED0, 0x1E24},/*          */
+	{0x0400, 0x0000},/*            */
+	{0x0404, 0x0010},/*       */
+	/*                    */
+	{0x0342, 0x0970},/*               */
+	{0x0340, 0x02A1},/*                  */
+	{0x0202, 0x02A1},/*                       */
+	{0x3014, 0x03F6},/*                      */
+	{0x3010, 0x0078},/*               */
 };
 
 static struct msm_camera_i2c_reg_conf mt9e013_hfr120_settings[] = {
-	{0x0300, 0x0005},/*VT_PIX_CLK_DIV*/
-	{0x0302, 0x0001},/*VT_SYS_CLK_DIV*/
-	{0x0304, 0x0002},/*PRE_PLL_CLK_DIV*/
-	{0x0306, 0x0052},/*PLL_MULTIPLIER*/
-	{0x0308, 0x000A},/*OP_PIX_CLK_DIV*/
-	{0x030A, 0x0001},/*OP_SYS_CLK_DIV*/
-	{0x0344, 0x0008},/*X_ADDR_START*/
-	{0x0348, 0x0685},/*X_ADDR_END*/
-	{0x0346, 0x013a},/*Y_ADDR_START*/
-	{0x034A, 0x055B},/*Y_ADDR_END*/
-	{0x034C, 0x0340},/*X_OUTPUT_SIZE*/
-	{0x034E, 0x0212},/*Y_OUTPUT_SIZE*/
-	{0x306E, 0xFC80},/*DATAPATH_SELECT*/
-	{0x3040, 0x00C3},/*READ_MODE*/
-	{0x3178, 0x0000},/*ANALOG_CONTROL5*/
-	{0x3ED0, 0x1E24},/*DAC_LD_4_5*/
-	{0x0400, 0x0000},/*SCALING_MODE*/
-	{0x0404, 0x0010},/*SCALE_M*/
-	/*Timing configuration*/
-	{0x0342, 0x0970},/*LINE_LENGTH_PCK*/
-	{0x0340, 0x02A1},/*FRAME_LENGTH_LINES*/
-	{0x0202, 0x02A1},/*COARSE_INTEGRATION_TIME*/
-	{0x3014, 0x03F6},/*FINE_INTEGRATION_TIME_*/
-	{0x3010, 0x0078},/*FINE_CORRECTION*/
+	{0x0300, 0x0005},/*              */
+	{0x0302, 0x0001},/*              */
+	{0x0304, 0x0002},/*               */
+	{0x0306, 0x0052},/*              */
+	{0x0308, 0x000A},/*              */
+	{0x030A, 0x0001},/*              */
+	{0x0344, 0x0008},/*            */
+	{0x0348, 0x0685},/*          */
+	{0x0346, 0x013a},/*            */
+	{0x034A, 0x055B},/*          */
+	{0x034C, 0x0340},/*             */
+	{0x034E, 0x0212},/*             */
+	{0x306E, 0xFC80},/*               */
+	{0x3040, 0x00C3},/*         */
+	{0x3178, 0x0000},/*               */
+	{0x3ED0, 0x1E24},/*          */
+	{0x0400, 0x0000},/*            */
+	{0x0404, 0x0010},/*       */
+	/*                    */
+	{0x0342, 0x0970},/*               */
+	{0x0340, 0x02A1},/*                  */
+	{0x0202, 0x02A1},/*                       */
+	{0x3014, 0x03F6},/*                      */
+	{0x3010, 0x0078},/*               */
 };
 
 static struct msm_camera_i2c_reg_conf mt9e013_recommend_settings[] = {
-	/*Disable embedded data*/
-	{0x3064, 0x7800},/*SMIA_TEST*/
-	/*configure 2-lane MIPI*/
-	{0x31AE, 0x0202},/*SERIAL_FORMAT*/
-	{0x31B8, 0x0E3F},/*MIPI_TIMING_2*/
-	/*set data to RAW10 format*/
-	{0x0112, 0x0A0A},/*CCP_DATA_FORMAT*/
-	{0x30F0, 0x800D},/*VCM CONTROL*/
+	/*                     */
+	{0x3064, 0x7800},/*         */
+	/*                     */
+	{0x31AE, 0x0202},/*             */
+	{0x31B8, 0x0E3F},/*             */
+	/*                        */
+	{0x0112, 0x0A0A},/*               */
+	{0x30F0, 0x800D},/*           */
 
 	{0x3044, 0x0590},
 	{0x306E, 0xFC80},
@@ -240,13 +240,13 @@ static struct msm_camera_i2c_reg_conf mt9e013_recommend_settings[] = {
 	{0x3EE4, 0xC100},
 	{0x3EE6, 0x0540},
 	{0x3174, 0x8000},
-	/* PLL settings */
-	{0x0300, 0x0004},/*VT_PIX_CLK_DIV*/
-	{0x0302, 0x0001},/*VT_SYS_CLK_DIV*/
-	{0x0304, 0x0002},/*PRE_PLL_CLK_DIV*/
-	{0x0306, 0x003A},/*PLL_MULTIPLIER*/
-	{0x0308, 0x000A},/*OP_PIX_CLK_DIV*/
-	{0x030A, 0x0001},/*OP_SYS_CLK_DIV*/
+	/*              */
+	{0x0300, 0x0004},/*              */
+	{0x0302, 0x0001},/*              */
+	{0x0304, 0x0002},/*               */
+	{0x0306, 0x003A},/*              */
+	{0x0308, 0x000A},/*              */
+	{0x030A, 0x0001},/*              */
 };
 
 static struct v4l2_subdev_info mt9e013_subdev_info[] = {
@@ -256,7 +256,7 @@ static struct v4l2_subdev_info mt9e013_subdev_info[] = {
 	.fmt    = 1,
 	.order    = 0,
 	},
-	/* more can be supported, to be added later */
+	/*                                          */
 };
 
 static struct msm_camera_i2c_conf_array mt9e013_init_conf[] = {
@@ -325,6 +325,22 @@ static struct msm_sensor_output_info_t mt9e013_dimensions[] = {
 	},
 };
 
+static struct msm_camera_csi_params mt9e013_csi_params = {
+	.data_format = CSI_10BIT,
+	.lane_cnt    = 2,
+	.lane_assign = 0xe4,
+	.dpcm_scheme = 0,
+	.settle_cnt  = 0x18,
+};
+
+static struct msm_camera_csi_params *mt9e013_csi_params_array[] = {
+	&mt9e013_csi_params,
+	&mt9e013_csi_params,
+	&mt9e013_csi_params,
+	&mt9e013_csi_params,
+	&mt9e013_csi_params,
+};
+
 static struct msm_sensor_output_reg_addr_t mt9e013_reg_addr = {
 	.x_output = 0x34C,
 	.y_output = 0x34E,
@@ -344,7 +360,7 @@ static struct msm_sensor_exp_gain_info_t mt9e013_exp_gain_info = {
 };
 
 static int32_t mt9e013_write_exp_gain(struct msm_sensor_ctrl_t *s_ctrl,
-		uint16_t gain, uint32_t line, int32_t luma_avg, uint16_t fgain)
+		uint16_t gain, uint32_t line)
 {
 	uint32_t fl_lines;
 	fl_lines =
@@ -362,7 +378,7 @@ static int32_t mt9e013_write_exp_gain(struct msm_sensor_ctrl_t *s_ctrl,
 }
 
 static int32_t mt9e013_write_exp_snapshot_gain(struct msm_sensor_ctrl_t *s_ctrl,
-		uint16_t gain, uint32_t line, int32_t luma_avg, uint16_t fgain)
+		uint16_t gain, uint32_t line)
 {
 	uint32_t fl_lines;
 	fl_lines =
@@ -456,6 +472,7 @@ static struct msm_sensor_fn_t mt9e013_func_tbl = {
 	.sensor_config = msm_sensor_config,
 	.sensor_power_up = msm_sensor_power_up,
 	.sensor_power_down = msm_sensor_power_down,
+	.sensor_get_csi_params = msm_sensor_get_csi_params,
 };
 
 static struct msm_sensor_reg_t mt9e013_regs = {
@@ -480,6 +497,7 @@ static struct msm_sensor_ctrl_t mt9e013_s_ctrl = {
 	.sensor_id_info = &mt9e013_id_info,
 	.sensor_exp_gain_info = &mt9e013_exp_gain_info,
 	.cam_mode = MSM_SENSOR_MODE_INVALID,
+	.csic_params = &mt9e013_csi_params_array[0],
 	.msm_sensor_mutex = &mt9e013_mut,
 	.sensor_i2c_driver = &mt9e013_i2c_driver,
 	.sensor_v4l2_subdev_info = mt9e013_subdev_info,

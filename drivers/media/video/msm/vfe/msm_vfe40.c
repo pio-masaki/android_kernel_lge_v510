@@ -271,134 +271,134 @@ static const char * const vfe40_general_cmd[] = {
 	[2] = "RESET",
 	[3] = "START",
 	[4] = "TEST_GEN_START",
-	[5] = "OPERATION_CFG",  /* 5 */
+	[5] = "OPERATION_CFG",  /*   */
 	[6] = "AXI_OUT_CFG",
 	[7] = "CAMIF_CFG",
 	[8] = "AXI_INPUT_CFG",
 	[9] = "BLACK_LEVEL_CFG",
-	[10] = "ROLL_OFF_CFG",  /* 10 */
+	[10] = "ROLL_OFF_CFG",  /*    */
 	[11] = "DEMUX_CFG",
 	[12] = "FOV_CFG",
 	[13] = "MAIN_SCALER_CFG",
 	[14] = "WB_CFG",
-	[15] = "COLOR_COR_CFG", /* 15 */
+	[15] = "COLOR_COR_CFG", /*    */
 	[16] = "RGB_G_CFG",
 	[17] = "LA_CFG",
 	[18] = "CHROMA_EN_CFG",
 	[19] = "CHROMA_SUP_CFG",
-	[20] = "MCE_CFG", /* 20 */
+	[20] = "MCE_CFG", /*    */
 	[21] = "SK_ENHAN_CFG",
 	[22] = "ASF_CFG",
 	[23] = "S2Y_CFG",
 	[24] = "S2CbCr_CFG",
-	[25] = "CHROMA_SUBS_CFG",  /* 25 */
+	[25] = "CHROMA_SUBS_CFG",  /*    */
 	[26] = "OUT_CLAMP_CFG",
 	[27] = "FRAME_SKIP_CFG",
 	[31] = "UPDATE",
 	[32] = "BL_LVL_UPDATE",
 	[33] = "DEMUX_UPDATE",
 	[34] = "FOV_UPDATE",
-	[35] = "MAIN_SCALER_UPDATE",  /* 35 */
+	[35] = "MAIN_SCALER_UPDATE",  /*    */
 	[36] = "WB_UPDATE",
 	[37] = "COLOR_COR_UPDATE",
 	[38] = "RGB_G_UPDATE",
 	[39] = "LA_UPDATE",
-	[40] = "CHROMA_EN_UPDATE",  /* 40 */
+	[40] = "CHROMA_EN_UPDATE",  /*    */
 	[41] = "CHROMA_SUP_UPDATE",
 	[42] = "MCE_UPDATE",
 	[43] = "SK_ENHAN_UPDATE",
 	[44] = "S2CbCr_UPDATE",
-	[45] = "S2Y_UPDATE",  /* 45 */
+	[45] = "S2Y_UPDATE",  /*    */
 	[46] = "ASF_UPDATE",
 	[47] = "FRAME_SKIP_UPDATE",
 	[48] = "CAMIF_FRAME_UPDATE",
 	[49] = "STATS_AF_UPDATE",
-	[50] = "STATS_AE_UPDATE",  /* 50 */
+	[50] = "STATS_AE_UPDATE",  /*    */
 	[51] = "STATS_AWB_UPDATE",
 	[52] = "STATS_RS_UPDATE",
 	[53] = "STATS_CS_UPDATE",
 	[54] = "STATS_SKIN_UPDATE",
-	[55] = "STATS_IHIST_UPDATE",  /* 55 */
+	[55] = "STATS_IHIST_UPDATE",  /*    */
 	[57] = "EPOCH1_ACK",
 	[58] = "EPOCH2_ACK",
 	[59] = "START_RECORDING",
-	[60] = "STOP_RECORDING",  /* 60 */
+	[60] = "STOP_RECORDING",  /*    */
 	[63] = "CAPTURE",
-	[65] = "STOP",  /* 65 */
+	[65] = "STOP",  /*    */
 	[66] = "GET_HW_VERSION",
 	[67] = "GET_FRAME_SKIP_COUNTS",
 	[68] = "OUTPUT1_BUFFER_ENQ",
 	[69] = "OUTPUT2_BUFFER_ENQ",
-	[70] = "OUTPUT3_BUFFER_ENQ",  /* 70 */
+	[70] = "OUTPUT3_BUFFER_ENQ",  /*    */
 	[71] = "JPEG_OUT_BUF_ENQ",
 	[72] = "RAW_OUT_BUF_ENQ",
 	[73] = "RAW_IN_BUF_ENQ",
 	[74] = "STATS_AF_ENQ",
-	[75] = "STATS_AE_ENQ",  /* 75 */
+	[75] = "STATS_AE_ENQ",  /*    */
 	[76] = "STATS_AWB_ENQ",
 	[77] = "STATS_RS_ENQ",
 	[78] = "STATS_CS_ENQ",
 	[79] = "STATS_SKIN_ENQ",
-	[80] = "STATS_IHIST_ENQ",  /* 80 */
+	[80] = "STATS_IHIST_ENQ",  /*    */
 	[82] = "JPEG_ENC_CFG",
 	[84] = "STATS_AF_START",
-	[85] = "STATS_AF_STOP",  /* 85 */
+	[85] = "STATS_AF_STOP",  /*    */
 	[86] = "STATS_AE_START",
 	[87] = "STATS_AE_STOP",
 	[88] = "STATS_AWB_START",
 	[89] = "STATS_AWB_STOP",
-	[90] = "STATS_RS_START",  /* 90 */
+	[90] = "STATS_RS_START",  /*    */
 	[91] = "STATS_RS_STOP",
 	[92] = "STATS_CS_START",
 	[93] = "STATS_CS_STOP",
 	[94] = "STATS_SKIN_START",
-	[95] = "STATS_SKIN_STOP",  /* 95 */
+	[95] = "STATS_SKIN_STOP",  /*    */
 	[96] = "STATS_IHIST_START",
 	[97] = "STATS_IHIST_STOP",
 	[99] = "SYNC_TIMER_SETTING",
-	[100] = "ASYNC_TIMER_SETTING",  /* 100 */
+	[100] = "ASYNC_TIMER_SETTING",  /*     */
 	[101] = "LIVESHOT",
 	[102] = "LA_SETUP",
 	[103] = "LINEARIZATION_CFG",
 	[104] = "DEMOSAICV3",
-	[105] = "DEMOSAICV3_ABCC_CFG", /* 105 */
+	[105] = "DEMOSAICV3_ABCC_CFG", /*     */
 	[106] = "DEMOSAICV3_DBCC_CFG",
 	[107] = "DEMOSAICV3_DBPC_CFG",
 	[108] = "DEMOSAICV3_ABF_CFG",
 	[109] = "DEMOSAICV3_ABCC_UPDATE",
-	[110] = "DEMOSAICV3_DBCC_UPDATE", /* 110 */
+	[110] = "DEMOSAICV3_DBCC_UPDATE", /*     */
 	[111] = "DEMOSAICV3_DBPC_UPDATE",
 	[112] = "XBAR_CFG",
 	[113] = "EZTUNE_CFG",
 	[114] = "V40_ZSL",
-	[115] = "LINEARIZATION_UPDATE", /*115*/
+	[115] = "LINEARIZATION_UPDATE", /*   */
 	[116] = "DEMOSAICV3_ABF_UPDATE",
 	[117] = "CLF_CFG",
 	[118] = "CLF_LUMA_UPDATE",
 	[119] = "CLF_CHROMA_UPDATE",
-	[120] = "PCA_ROLL_OFF_CFG", /*120*/
+	[120] = "PCA_ROLL_OFF_CFG", /*   */
 	[121] = "PCA_ROLL_OFF_UPDATE",
 	[122] = "GET_REG_DUMP",
 	[123] = "GET_LINEARIZATON_TABLE",
 	[124] = "GET_MESH_ROLLOFF_TABLE",
-	[125] = "GET_PCA_ROLLOFF_TABLE", /*125*/
+	[125] = "GET_PCA_ROLLOFF_TABLE", /*   */
 	[126] = "GET_RGB_G_TABLE",
 	[127] = "GET_LA_TABLE",
 	[128] = "DEMOSAICV3_UPDATE",
 	[139] = "STATS_REQBUF",
-	[140] = "STATS_ENQUEUEBUF", /*140*/
+	[140] = "STATS_ENQUEUEBUF", /*   */
 	[141] = "STATS_FLUSH_BUFQ",
 	[142] = "STATS_UNREGBUF",
 	[143] = "STATS_BG_START",
 	[144] = "STATS_BG_STOP",
-	[145] = "STATS_BF_START", /*145*/
+	[145] = "STATS_BF_START", /*   */
 	[146] = "STATS_BF_STOP",
 	[147] = "STATS_BHIST_START",
 	[148] = "STATS_BHIST_STOP",
 	[149] = "RESET_2",
 };
 
-/*Temporary use fixed bus vectors in VFE */
+/*                                       */
 static struct msm_bus_vectors vfe_init_vectors[] = {
 	{
 		.src = MSM_BUS_MASTER_VFE,
@@ -476,7 +476,7 @@ static struct msm_bus_scale_pdata vfe_bus_client_pdata = {
 uint8_t vfe40_use_bayer_stats(struct vfe40_ctrl_type *vfe40_ctrl)
 {
 	if (vfe40_ctrl->ver_num.main >= 4) {
-		/* VFE 4 or above uses bayer stats */
+		/*                                 */
 		return TRUE;
 	} else {
 		return FALSE;
@@ -523,7 +523,7 @@ static void axi_enable_irq(struct vfe_share_ctrl_t *share_ctrl)
 static void axi_disable_irq(struct vfe_share_ctrl_t *share_ctrl)
 {
 
-	/* disable all interrupts.  */
+	/*                          */
 
 	uint32_t irq_mask = 0;
 	uint16_t vfe_operation_mode =
@@ -571,13 +571,13 @@ static void axi_disable_irq(struct vfe_share_ctrl_t *share_ctrl)
 	msm_camera_io_w(VFE_DISABLE_ALL_IRQS,
 		share_ctrl->vfebase + VFE_IRQ_MASK_1);
 
-	/* clear all pending interrupts*/
+	/*                             */
 	msm_camera_io_w(0xFFFFFFFF,
 		share_ctrl->vfebase + VFE_IRQ_CLEAR_0);
 	msm_camera_io_w(0xFFFFFFFF,
 		share_ctrl->vfebase + VFE_IRQ_CLEAR_1);
-	/* Ensure the write order while writing
-	to the command register using the barrier */
+	/*                                     
+                                           */
 	msm_camera_io_w_mb(1,
 		share_ctrl->vfebase + VFE_IRQ_CMD);
 	}
@@ -586,8 +586,8 @@ static void axi_disable_irq(struct vfe_share_ctrl_t *share_ctrl)
 static void vfe40_stop(struct vfe40_ctrl_type *vfe40_ctrl)
 {
 
-	/* in either continuous or snapshot mode, stop command can be issued
-	 * at any time. stop camif immediately. */
+	/*                                                                  
+                                         */
 	msm_camera_io_w(CAMIF_COMMAND_STOP_IMMEDIATELY,
 		vfe40_ctrl->share_ctrl->vfebase + VFE_CAMIF_COMMAND);
 	vfe40_ctrl->share_ctrl->operation_mode &=
@@ -620,7 +620,7 @@ static int vfe40_config_axi(
 	uint32_t *axi_cfg = ao;
 	int vfe_mode = (mode & ~(OUTPUT_TERT1|OUTPUT_TERT2));
 
-	/* Update the corresponding write masters for each output*/
+	/*                                                       */
 	ch_info = axi_cfg + V40_AXI_CFG_LEN;
 	axi_ctrl->share_ctrl->outpath.out0.ch0 = 0x0000FFFF & *ch_info;
 	axi_ctrl->share_ctrl->outpath.out0.ch1 =
@@ -707,7 +707,7 @@ static void axi_reset_internal_variables(
 	struct axi_ctrl_t *axi_ctrl)
 {
 	unsigned long flags;
-	/* state control variables */
+	/*                         */
 	axi_ctrl->share_ctrl->start_ack_pending = FALSE;
 	atomic_set(&irq_cnt, 0);
 
@@ -729,14 +729,14 @@ static void axi_reset_internal_variables(
 	atomic_set(&axi_ctrl->share_ctrl->rdi1_update_ack_pending, 0);
 	atomic_set(&axi_ctrl->share_ctrl->rdi2_update_ack_pending, 0);
 
-	/* 0 for continuous mode, 1 for snapshot mode */
+	/*                                            */
 	axi_ctrl->share_ctrl->operation_mode = 0;
 	axi_ctrl->share_ctrl->current_mode = 0;
 	axi_ctrl->share_ctrl->outpath.output_mode = 0;
 	axi_ctrl->share_ctrl->comp_output_mode = 0;
 	axi_ctrl->share_ctrl->vfe_capture_count = 0;
 
-	/* this is unsigned 32 bit integer. */
+	/*                                  */
 	axi_ctrl->share_ctrl->vfeFrameId = 0;
 	axi_ctrl->share_ctrl->rdi0FrameId = 0;
 	axi_ctrl->share_ctrl->rdi1FrameId = 0;
@@ -747,14 +747,14 @@ static void vfe40_program_dmi_cfg(
 	enum VFE40_DMI_RAM_SEL bankSel,
 	struct vfe40_ctrl_type *vfe40_ctrl)
 {
-	/* set bit 8 for auto increment. */
+	/*                               */
 	uint32_t value = VFE_DMI_CFG_DEFAULT;
 	value += (uint32_t)bankSel;
 	CDBG("%s: banksel = %d\n", __func__, bankSel);
 
 	msm_camera_io_w(value, vfe40_ctrl->share_ctrl->vfebase +
 		VFE_DMI_CFG);
-	/* by default, always starts with offset 0.*/
+	/*                                         */
 	msm_camera_io_w(0, vfe40_ctrl->share_ctrl->vfebase +
 		VFE_DMI_ADDR);
 }
@@ -764,10 +764,10 @@ static void vfe40_reset_dmi_tables(
 {
 	int i = 0;
 
-	/* Reset Histogram LUTs */
+	/*                      */
 	CDBG("Reset Bayer histogram LUT : 0\n");
 	vfe40_program_dmi_cfg(STATS_BHIST_RAM0, vfe40_ctrl);
-	/* Loop for configuring LUT */
+	/*                          */
 	for (i = 0; i < 256; i++) {
 		msm_camera_io_w(0, vfe40_ctrl->share_ctrl->vfebase +
 			VFE_DMI_DATA_HI);
@@ -778,7 +778,7 @@ static void vfe40_reset_dmi_tables(
 
 	CDBG("Reset Bayer Histogram LUT: 1\n");
 	vfe40_program_dmi_cfg(STATS_BHIST_RAM1, vfe40_ctrl);
-	/* Loop for configuring LUT */
+	/*                          */
 	for (i = 0; i < 256; i++) {
 		msm_camera_io_w(0, vfe40_ctrl->share_ctrl->vfebase +
 			VFE_DMI_DATA_HI);
@@ -789,7 +789,7 @@ static void vfe40_reset_dmi_tables(
 
 	CDBG("Reset IHistogram LUT\n");
 	vfe40_program_dmi_cfg(STATS_IHIST_RAM, vfe40_ctrl);
-	/* Loop for configuring LUT */
+	/*                          */
 	for (i = 0; i < 256; i++) {
 		msm_camera_io_w(0, vfe40_ctrl->share_ctrl->vfebase +
 			VFE_DMI_DATA_HI);
@@ -818,7 +818,7 @@ static void vfe40_set_default_reg_values(
 	msm_camera_io_w(0xFFFFFF,
 		vfe40_ctrl->share_ctrl->vfebase + VFE_CLAMP_VIEW_MAX);
 
-	/* stats UB config */
+	/*                 */
 	CDBG("%s: Use bayer stats = %d\n", __func__,
 		 vfe40_use_bayer_stats(vfe40_ctrl));
 	msm_camera_io_w(0x350001F,
@@ -845,7 +845,7 @@ static void vfe40_set_default_reg_values(
 static void vfe40_reset_internal_variables(
 	struct vfe40_ctrl_type *vfe40_ctrl)
 {
-	/* Stats control variables. */
+	/*                          */
 	memset(&(vfe40_ctrl->afbfStatsControl), 0,
 		sizeof(struct vfe_stats_control));
 
@@ -887,7 +887,7 @@ static int vfe40_reset(struct vfe40_ctrl_type *vfe40_ctrl)
 			VFE_IRQ_MASK_0);
 	irq_mask &= ~(0x00FF0011|VFE_IRQ_STATUS0_STATS_COMPOSIT_MASK_0);
 
-	/* enable reset_ack interrupt.  */
+	/*                              */
 	irq_mask |= VFE_IMASK_WHILE_STOPPING_0;
 	msm_camera_io_w(irq_mask, vfe40_ctrl->share_ctrl->vfebase +
 		VFE_IRQ_MASK_0);
@@ -902,35 +902,35 @@ static int vfe40_reset(struct vfe40_ctrl_type *vfe40_ctrl)
 static int axi_reset(struct axi_ctrl_t *axi_ctrl)
 {
 	axi_reset_internal_variables(axi_ctrl);
-	/* disable all interrupts.  vfeImaskLocal is also reset to 0
-	* to begin with. */
+	/*                                                          
+                  */
 	msm_camera_io_w(VFE_DISABLE_ALL_IRQS,
 		axi_ctrl->share_ctrl->vfebase + VFE_IRQ_MASK_0);
 
 	msm_camera_io_w(VFE_DISABLE_ALL_IRQS,
 		axi_ctrl->share_ctrl->vfebase + VFE_IRQ_MASK_1);
 
-	/* clear all pending interrupts*/
+	/*                             */
 	msm_camera_io_w(VFE_CLEAR_ALL_IRQ0,
 		axi_ctrl->share_ctrl->vfebase + VFE_IRQ_CLEAR_0);
 	msm_camera_io_w(VFE_CLEAR_ALL_IRQ1,
 		axi_ctrl->share_ctrl->vfebase + VFE_IRQ_CLEAR_1);
 
-	/* Ensure the write order while writing
-	to the command register using the barrier */
+	/*                                     
+                                           */
 	msm_camera_io_w_mb(1, axi_ctrl->share_ctrl->vfebase + VFE_IRQ_CMD);
 
-	/* enable reset_ack interrupt.  */
+	/*                              */
 	msm_camera_io_w(VFE_IMASK_WHILE_STOPPING_0,
 		axi_ctrl->share_ctrl->vfebase + VFE_IRQ_MASK_0);
 
-	/* Write to VFE_GLOBAL_RESET_CMD to reset the vfe hardware. Once reset
-	 * is done, hardware interrupt will be generated.  VFE ist processes
-	 * the interrupt to complete the function call.  Note that the reset
-	 * function is synchronous. */
+	/*                                                                    
+                                                                     
+                                                                     
+                             */
 
-	/* Ensure the write order while writing
-	to the command register using the barrier */
+	/*                                     
+                                           */
 	msm_camera_io_w_mb(VFE_RESET_UPON_RESET_CMD,
 		axi_ctrl->share_ctrl->vfebase + VFE_GLOBAL_RESET);
 
@@ -984,10 +984,10 @@ static unsigned long vfe40_stats_flush_enqueue(
 	int i;
 
 	/*
-	 * Passing NULL for ion client as the buffers are already
-	 * mapped at this stage, client is not required, flush all
-	 * the buffers, and buffers move to PREPARE state
-	 */
+                                                          
+                                                           
+                                                  
+  */
 
 	rc = vfe40_ctrl->stats_ops.bufq_flush(
 			vfe40_ctrl->stats_ops.stats_ctrl, stats_type, NULL);
@@ -996,7 +996,7 @@ static unsigned long vfe40_stats_flush_enqueue(
 			__func__, stats_type, rc);
 		return 0L;
 	}
-	/* Queue all the buffers back to QUEUED state */
+	/*                                            */
 	bufq = vfe40_ctrl->stats_ctrl.bufq[stats_type];
 	for (i = 0; i < bufq->num_bufs; i++) {
 		stats_buf = &bufq->bufs[i];
@@ -1325,7 +1325,7 @@ static void vfe40_start_liveshot(
 	struct msm_cam_media_controller *pmctl,
 	struct vfe40_ctrl_type *vfe40_ctrl)
 {
-	/* Hardcode 1 live snapshot for now. */
+	/*                                   */
 	vfe40_ctrl->share_ctrl->outpath.out0.capture_cnt = 1;
 	vfe40_ctrl->share_ctrl->vfe_capture_count =
 		vfe40_ctrl->share_ctrl->outpath.out0.capture_cnt;
@@ -1369,7 +1369,7 @@ static int vfe40_capture(
 	uint32_t num_frames_capture,
 	struct vfe40_ctrl_type *vfe40_ctrl)
 {
-	/* capture command is valid for both idle and active state. */
+	/*                                                          */
 	vfe40_ctrl->share_ctrl->outpath.out1.capture_cnt = num_frames_capture;
 	if (vfe40_ctrl->share_ctrl->current_mode ==
 			VFE_OUTPUTS_MAIN_AND_THUMB ||
@@ -1387,7 +1387,7 @@ static int vfe40_capture(
 
 
 	vfe40_start_common(vfe40_ctrl);
-	/* for debug */
+	/*           */
 	return 0;
 }
 
@@ -1440,8 +1440,8 @@ static void vfe40_update(struct vfe40_ctrl_type *vfe40_ctrl)
 	spin_lock_irqsave(&vfe40_ctrl->share_ctrl->update_ack_lock, flags);
 	vfe40_ctrl->share_ctrl->update_ack_pending = TRUE;
 	spin_unlock_irqrestore(&vfe40_ctrl->share_ctrl->update_ack_lock, flags);
-	/* Ensure the write order while writing
-	to the command register using the barrier */
+	/*                                     
+                                           */
 	msm_camera_io_w_mb(1,
 		vfe40_ctrl->share_ctrl->vfebase + VFE_REG_UPDATE_CMD);
 	return;
@@ -1458,7 +1458,7 @@ static void vfe40_sync_timer_stop(struct vfe40_ctrl_type *vfe40_ctrl)
 	else if (vfe40_ctrl->sync_timer_number == 2)
 		value = 0x40000;
 
-	/* Timer Stop */
+	/*            */
 	msm_camera_io_w(value,
 		vfe40_ctrl->share_ctrl->vfebase + V40_SYNC_TIMER_OFF);
 }
@@ -1467,7 +1467,7 @@ static void vfe40_sync_timer_start(
 	const uint32_t *tbl,
 	struct vfe40_ctrl_type *vfe40_ctrl)
 {
-	/* set bit 8 for auto increment. */
+	/*                               */
 	uint32_t value = 1;
 	uint32_t val;
 
@@ -1479,27 +1479,27 @@ static void vfe40_sync_timer_start(
 		 vfe40_ctrl->sync_timer_repeat_count,
 		 vfe40_ctrl->sync_timer_number);
 
-	if (vfe40_ctrl->sync_timer_state) { /* Start Timer */
+	if (vfe40_ctrl->sync_timer_state) { /*             */
 		value = value << vfe40_ctrl->sync_timer_number;
-	} else { /* Stop Timer */
+	} else { /*            */
 		CDBG("Failed to Start timer\n");
 		return;
 	}
 
-	/* Timer Start */
+	/*             */
 	msm_camera_io_w(value,
 		vfe40_ctrl->share_ctrl->vfebase + V40_SYNC_TIMER_OFF);
-	/* Sync Timer Line Start */
+	/*                       */
 	value = *tbl++;
 	msm_camera_io_w(value,
 		vfe40_ctrl->share_ctrl->vfebase + V40_SYNC_TIMER_OFF +
 		4 + ((vfe40_ctrl->sync_timer_number) * 12));
-	/* Sync Timer Pixel Start */
+	/*                        */
 	value = *tbl++;
 	msm_camera_io_w(value,
 			vfe40_ctrl->share_ctrl->vfebase + V40_SYNC_TIMER_OFF +
 			 8 + ((vfe40_ctrl->sync_timer_number) * 12));
-	/* Sync Timer Pixel Duration */
+	/*                           */
 	value = *tbl++;
 	val = vfe_clk_rate / 10000;
 	val = 10000000 / val;
@@ -1508,11 +1508,11 @@ static void vfe40_sync_timer_start(
 	msm_camera_io_w(val,
 		vfe40_ctrl->share_ctrl->vfebase + V40_SYNC_TIMER_OFF +
 		12 + ((vfe40_ctrl->sync_timer_number) * 12));
-	/* Timer0 Active High/LOW */
+	/*                        */
 	value = *tbl++;
 	msm_camera_io_w(value,
 		vfe40_ctrl->share_ctrl->vfebase + V40_SYNC_TIMER_POLARITY_OFF);
-	/* Selects sync timer 0 output to drive onto timer1 port */
+	/*                                                       */
 	value = 0;
 	msm_camera_io_w(value,
 		vfe40_ctrl->share_ctrl->vfebase + V40_TIMER_SELECT_OFF);
@@ -1639,7 +1639,7 @@ static int configure_pingpong_buffers(
 		&axi_ctrl->subdev, axi_ctrl->share_ctrl);
 	outch = vfe40_get_ch(path, axi_ctrl->share_ctrl);
 	if (outch->ping.ch_paddr[0] && outch->pong.ch_paddr[0]) {
-		/* Configure Preview Ping Pong */
+		/*                             */
 		pr_info("%s Configure ping/pong address for %d\n",
 						__func__, path);
 		vfe40_put_ch_ping_addr(
@@ -1669,7 +1669,7 @@ static int configure_pingpong_buffers(
 				axi_ctrl->share_ctrl->vfebase, outch->ch2,
 				outch->pong.ch_paddr[2]);
 
-		/* avoid stale info */
+		/*                  */
 		memset(&outch->ping, 0, sizeof(struct msm_free_buf));
 		memset(&outch->pong, 0, sizeof(struct msm_free_buf));
 	} else {
@@ -1686,7 +1686,7 @@ static void vfe40_write_linear_cfg(
 	uint32_t i;
 
 	vfe40_program_dmi_cfg(channel_sel, vfe40_ctrl);
-	/* for loop for configuring LUT. */
+	/*                               */
 	for (i = 0 ; i < VFE40_LINEARIZATON_TABLE_LENGTH ; i++) {
 		msm_camera_io_w(*tbl,
 			vfe40_ctrl->share_ctrl->vfebase + VFE_DMI_DATA_LO);
@@ -1807,7 +1807,7 @@ static int vfe40_proc_general(
 
 	case VFE_CMD_STATS_AE_START: {
 		if (vfe40_use_bayer_stats(vfe40_ctrl)) {
-			/* Error */
+			/*       */
 			rc = -EFAULT;
 			goto proc_general_done;
 		}
@@ -1841,7 +1841,7 @@ static int vfe40_proc_general(
 		break;
 	case VFE_CMD_STATS_AF_START: {
 		if (vfe40_use_bayer_stats(vfe40_ctrl)) {
-			/* Error */
+			/*       */
 			rc = -EFAULT;
 			goto proc_general_done;
 		}
@@ -1875,7 +1875,7 @@ static int vfe40_proc_general(
 		break;
 	case VFE_CMD_STATS_AWB_START: {
 		if (vfe40_use_bayer_stats(vfe40_ctrl)) {
-			/* Error */
+			/*       */
 			rc = -EFAULT;
 			goto proc_general_done;
 		}
@@ -1993,7 +1993,7 @@ static int vfe40_proc_general(
 	case VFE_CMD_STATS_BF_START:
 	case VFE_CMD_STATS_BHIST_START: {
 		if (!vfe40_use_bayer_stats(vfe40_ctrl)) {
-			/* Error */
+			/*       */
 			rc = -EFAULT;
 			goto proc_general_done;
 		}
@@ -2051,8 +2051,8 @@ static int vfe40_proc_general(
 	case VFE_CMD_MCE_UPDATE:
 	case VFE_CMD_MCE_CFG:{
 		cmdp = kmalloc(cmd->length, GFP_ATOMIC);
-		/* Incrementing with 4 so as to point to the 2nd Register as
-		the 2nd register has the mce_enable bit */
+		/*                                                          
+                                          */
 		old_val = msm_camera_io_r(vfe40_ctrl->share_ctrl->vfebase +
 			V40_CHROMA_SUP_OFF + 4);
 		if (!cmdp) {
@@ -2108,9 +2108,9 @@ static int vfe40_proc_general(
 
 		cmdp_local += 1;
 		new_val = *cmdp_local;
-		/* Incrementing with 4 so as to point to the 2nd Register as
-		 * the 2nd register has the mce_enable bit
-		 */
+		/*                                                          
+                                            
+   */
 		old_val = msm_camera_io_r(vfe40_ctrl->share_ctrl->vfebase +
 			V40_CHROMA_SUP_OFF + 4);
 		old_val &= ~MCE_EN_MASK;
@@ -2152,7 +2152,7 @@ static int vfe40_proc_general(
 			cmdp_local, V40_MESH_ROLL_OFF_CFG_LEN);
 		cmdp_local += 9;
 		vfe40_program_dmi_cfg(ROLLOFF_RAM0_BANK0, vfe40_ctrl);
-		/* for loop for extrcting table. */
+		/*                               */
 		for (i = 0; i < (V40_MESH_ROLL_OFF_TABLE_SIZE * 2); i++) {
 			msm_camera_io_w(*cmdp_local,
 				vfe40_ctrl->share_ctrl->vfebase +
@@ -2273,7 +2273,7 @@ static int vfe40_proc_general(
 		break;
 
 	case VFE_CMD_LIVESHOT:
-		/* Configure primary channel */
+		/*                           */
 		vfe40_start_liveshot(pmctl, vfe40_ctrl);
 		break;
 
@@ -2316,7 +2316,7 @@ static int vfe40_proc_general(
 			V40_LINEARIZATION_OFF1 + 4,
 			cmdp_local, (V40_LINEARIZATION_LEN1 - 4));
 		cmdp_local = cmdp + 17;
-		/*extracting the bank select*/
+		/*                          */
 		old_val = msm_camera_io_r(
 				vfe40_ctrl->share_ctrl->vfebase +
 				V40_LINEARIZATION_OFF1);
@@ -2427,14 +2427,14 @@ static int vfe40_proc_general(
 		msm_camera_io_memcpy(
 			vfe40_ctrl->share_ctrl->vfebase + V40_DEMOSAICV3_0_OFF,
 			cmdp_local, V40_DEMOSAICV3_0_LEN);
-		/* As the address space is not contiguous increment by 2
-		 * before copying to next address space */
+		/*                                                      
+                                          */
 		cmdp_local += 1;
 		msm_camera_io_memcpy(
 			vfe40_ctrl->share_ctrl->vfebase + V40_DEMOSAICV3_1_OFF,
 			cmdp_local, 2 * V40_DEMOSAICV3_0_LEN);
-		/* As the address space is not contiguous increment by 2
-		 * before copying to next address space */
+		/*                                                      
+                                          */
 		cmdp_local += 2;
 		msm_camera_io_memcpy(
 			vfe40_ctrl->share_ctrl->vfebase + V40_DEMOSAICV3_2_OFF,
@@ -2445,8 +2445,8 @@ static int vfe40_proc_general(
 		rc = -EFAULT;
 		break;
 
-	case VFE_CMD_DEMOSAICV3_ABF_UPDATE:/* 116 ABF update  */
-	case VFE_CMD_DEMOSAICV3_ABF_CFG: { /* 108 ABF config  */
+	case VFE_CMD_DEMOSAICV3_ABF_UPDATE:/*                 */
+	case VFE_CMD_DEMOSAICV3_ABF_CFG: { /*                 */
 		cmdp = kmalloc(cmd->length, GFP_ATOMIC);
 		if (!cmdp) {
 			rc = -ENOMEM;
@@ -2645,7 +2645,7 @@ static int vfe40_proc_general(
 
 	case VFE_CMD_STATS_AWB_STOP: {
 		if (vfe40_use_bayer_stats(vfe40_ctrl)) {
-			/* Error */
+			/*       */
 			rc = -EFAULT;
 			goto proc_general_done;
 		}
@@ -2658,7 +2658,7 @@ static int vfe40_proc_general(
 		break;
 	case VFE_CMD_STATS_AE_STOP: {
 		if (vfe40_use_bayer_stats(vfe40_ctrl)) {
-			/* Error */
+			/*       */
 			rc = -EFAULT;
 			goto proc_general_done;
 		}
@@ -2671,7 +2671,7 @@ static int vfe40_proc_general(
 		break;
 	case VFE_CMD_STATS_AF_STOP: {
 		if (vfe40_use_bayer_stats(vfe40_ctrl)) {
-			/* Error */
+			/*       */
 			rc = -EFAULT;
 			goto proc_general_done;
 		}
@@ -2714,7 +2714,7 @@ static int vfe40_proc_general(
 	case VFE_CMD_STATS_BF_STOP:
 	case VFE_CMD_STATS_BHIST_STOP: {
 		if (!vfe40_use_bayer_stats(vfe40_ctrl)) {
-			/* Error */
+			/*       */
 			rc = -EFAULT;
 			goto proc_general_done;
 		}
@@ -2946,14 +2946,14 @@ static inline void vfe40_read_irq_status(
 	out->camifStatus = msm_camera_io_r(temp);
 	CDBG("camifStatus  = 0x%x\n", out->camifStatus);
 
-	/* clear the pending interrupt of the same kind.*/
+	/*                                              */
 	msm_camera_io_w(out->vfeIrqStatus0,
 		axi_ctrl->share_ctrl->vfebase + VFE_IRQ_CLEAR_0);
 	msm_camera_io_w(out->vfeIrqStatus1,
 		axi_ctrl->share_ctrl->vfebase + VFE_IRQ_CLEAR_1);
 
-	/* Ensure the write order while writing
-	to the command register using the barrier */
+	/*                                     
+                                           */
 	msm_camera_io_w_mb(1, axi_ctrl->share_ctrl->vfebase + VFE_IRQ_CMD);
 
 }
@@ -3260,9 +3260,9 @@ static void vfe40_process_reg_update_irq(
 		if (share_ctrl->recording_state ==
 			VFE_STATE_STOP_REQUESTED) {
 				share_ctrl->recording_state = VFE_STATE_STOPPED;
-			/* request a reg update and send STOP_REC_ACK
-			 * when we process the next reg update irq.
-			 */
+			/*                                           
+                                              
+    */
 			msm_camera_io_w_mb(1, share_ctrl->vfebase +
 						VFE_REG_UPDATE_CMD);
 		} else if (share_ctrl->recording_state ==
@@ -3317,9 +3317,9 @@ static void vfe40_process_reg_update_irq(
 	case VFE_STATE_STOP_REQUESTED:
 		if (share_ctrl->comp_output_mode &
 			VFE40_OUTPUT_MODE_PRIMARY) {
-			/* Stop requested, stop write masters, and
-			 * trigger REG_UPDATE. Send STOP_LS_ACK in
-			 * next reg update. */
+			/*                                        
+                                             
+                       */
 				msm_camera_io_w(0, share_ctrl->vfebase +
 					vfe40_AXI_WM_CFG[
 				share_ctrl->outpath.out0.ch0]);
@@ -3348,15 +3348,15 @@ static void vfe40_process_reg_update_irq(
 		VFE_OUTPUTS_THUMB_AND_JPEG) ||
 		(share_ctrl->operation_mode &
 		VFE_OUTPUTS_JPEG_AND_THUMB)) {
-		/* in snapshot mode */
-		/* later we need to add check for live snapshot mode. */
+		/*                  */
+		/*                                                    */
 		if (vfe40_ctrl->frame_skip_pattern & (0x1 <<
 			(vfe40_ctrl->snapshot_frame_cnt %
 				vfe40_ctrl->frame_skip_cnt))) {
 				share_ctrl->vfe_capture_count--;
-			/* if last frame to be captured: */
+			/*                               */
 				if (share_ctrl->vfe_capture_count == 0) {
-					/* stop the bus output: */
+					/*                      */
 					if (share_ctrl->comp_output_mode
 					& VFE40_OUTPUT_MODE_PRIMARY) {
 						msm_camera_io_w(0,
@@ -3390,13 +3390,13 @@ static void vfe40_process_reg_update_irq(
 				vfe40_ctrl->snapshot_frame_cnt = -1;
 				vfe40_ctrl->frame_skip_cnt = 31;
 				vfe40_ctrl->frame_skip_pattern = 0xffffffff;
-			} /*if snapshot count is 0*/
-		} /*if frame is not being dropped*/
+			} /*                      */
+		} /*                             */
 		vfe40_ctrl->snapshot_frame_cnt++;
-		/* then do reg_update. */
+		/*                     */
 		msm_camera_io_w(1,
 				share_ctrl->vfebase + VFE_REG_UPDATE_CMD);
-	} /* if snapshot mode. */
+	} /*                   */
 }
 }
 
@@ -3478,14 +3478,14 @@ static void vfe40_process_reset_irq(
 	} else {
 		spin_unlock_irqrestore(
 			&vfe40_ctrl->share_ctrl->stop_flag_lock, flags);
-		/* this is from reset command. */
+		/*                             */
 		vfe40_reset_internal_variables(vfe40_ctrl);
 		if (vfe40_ctrl->share_ctrl->vfe_reset_flag) {
 			vfe40_ctrl->share_ctrl->vfe_reset_flag = false;
 			msm_camera_io_w(0xFF00,
 				vfe40_ctrl->share_ctrl->vfebase + VFE_BUS_CMD);
 		} else {
-		/* reload all write masters. (frame & line)*/
+		/*                                         */
 		msm_camera_io_w(0xFF7F,
 			vfe40_ctrl->share_ctrl->vfebase + VFE_BUS_CMD);
 		}
@@ -3502,14 +3502,14 @@ static void vfe40_process_camif_sof_irq(
 			vfe40_ctrl->share_ctrl->start_ack_pending = FALSE;
 
 		vfe40_ctrl->share_ctrl->vfe_capture_count--;
-		/* if last frame to be captured: */
+		/*                               */
 		if (vfe40_ctrl->share_ctrl->vfe_capture_count == 0) {
-			/* Ensure the write order while writing
-			 to the command register using the barrier */
+			/*                                     
+                                              */
 			msm_camera_io_w_mb(CAMIF_COMMAND_STOP_AT_FRAME_BOUNDARY,
 			vfe40_ctrl->share_ctrl->vfebase + VFE_CAMIF_COMMAND);
 		}
-	} /* if raw snapshot mode. */
+	} /*                       */
 	if ((vfe40_ctrl->hfr_mode != HFR_MODE_OFF) &&
 		(vfe40_ctrl->share_ctrl->operation_mode ==
 			VFE_MODE_OF_OPERATION_VIDEO) &&
@@ -3672,12 +3672,12 @@ static void vfe40_process_output_path_irq_0(
 	free_buf = vfe40_check_free_buffer(VFE_MSG_OUTPUT_IRQ,
 		VFE_MSG_OUTPUT_PRIMARY, axi_ctrl);
 
-	/* we render frames in the following conditions:
-	1. Continuous mode and the free buffer is avaialable.
-	2. In snapshot shot mode, free buffer is not always available.
-	when pending snapshot count is <=1,  then no need to use
-	free buffer.
-	*/
+	/*                                              
+                                                      
+                                                               
+                                                         
+             
+ */
 	out_bool = (
 		(axi_ctrl->share_ctrl->operation_mode &
 			VFE_OUTPUTS_THUMB_AND_MAIN ||
@@ -3702,15 +3702,15 @@ static void vfe40_process_output_path_irq_0(
 		ping_pong = msm_camera_io_r(axi_ctrl->share_ctrl->vfebase +
 			VFE_BUS_PING_PONG_STATUS);
 
-		/* Channel 0*/
+		/*          */
 		ch0_paddr = vfe40_get_ch_addr(
 			ping_pong, axi_ctrl->share_ctrl->vfebase,
 			axi_ctrl->share_ctrl->outpath.out0.ch0);
-		/* Channel 1*/
+		/*          */
 		ch1_paddr = vfe40_get_ch_addr(
 			ping_pong, axi_ctrl->share_ctrl->vfebase,
 			axi_ctrl->share_ctrl->outpath.out0.ch1);
-		/* Channel 2*/
+		/*          */
 		ch2_paddr = vfe40_get_ch_addr(
 			ping_pong, axi_ctrl->share_ctrl->vfebase,
 			axi_ctrl->share_ctrl->outpath.out0.ch2);
@@ -3718,12 +3718,12 @@ static void vfe40_process_output_path_irq_0(
 		CDBG("output path 0, ch0 = 0x%x, ch1 = 0x%x, ch2 = 0x%x\n",
 			ch0_paddr, ch1_paddr, ch2_paddr);
 		if (free_buf) {
-			/* Y channel */
+			/*           */
 			vfe40_put_ch_addr(ping_pong,
 			axi_ctrl->share_ctrl->vfebase,
 			axi_ctrl->share_ctrl->outpath.out0.ch0,
 			free_buf->ch_paddr[0]);
-			/* Chroma channel */
+			/*                */
 			vfe40_put_ch_addr(ping_pong,
 			axi_ctrl->share_ctrl->vfebase,
 			axi_ctrl->share_ctrl->outpath.out0.ch1,
@@ -3764,7 +3764,7 @@ static void vfe40_process_output_path_irq_1(
 {
 	uint32_t ping_pong;
 	uint32_t ch0_paddr, ch1_paddr, ch2_paddr;
-	/* this must be snapshot main image output. */
+	/*                                          */
 	uint8_t out_bool = 0;
 	struct msm_free_buf *free_buf = NULL;
 
@@ -3785,11 +3785,11 @@ static void vfe40_process_output_path_irq_1(
 		ping_pong = msm_camera_io_r(axi_ctrl->share_ctrl->vfebase +
 			VFE_BUS_PING_PONG_STATUS);
 
-		/* Y channel */
+		/*           */
 		ch0_paddr = vfe40_get_ch_addr(ping_pong,
 			axi_ctrl->share_ctrl->vfebase,
 			axi_ctrl->share_ctrl->outpath.out1.ch0);
-		/* Chroma channel */
+		/*                */
 		ch1_paddr = vfe40_get_ch_addr(ping_pong,
 			axi_ctrl->share_ctrl->vfebase,
 			axi_ctrl->share_ctrl->outpath.out1.ch1);
@@ -3800,12 +3800,12 @@ static void vfe40_process_output_path_irq_1(
 		CDBG("%s ch0 = 0x%x, ch1 = 0x%x, ch2 = 0x%x\n",
 			__func__, ch0_paddr, ch1_paddr, ch2_paddr);
 		if (free_buf) {
-			/* Y channel */
+			/*           */
 			vfe40_put_ch_addr(ping_pong,
 			axi_ctrl->share_ctrl->vfebase,
 			axi_ctrl->share_ctrl->outpath.out1.ch0,
 			free_buf->ch_paddr[0]);
-			/* Chroma channel */
+			/*                */
 			vfe40_put_ch_addr(ping_pong,
 			axi_ctrl->share_ctrl->vfebase,
 			axi_ctrl->share_ctrl->outpath.out1.ch1,
@@ -3842,9 +3842,9 @@ static void vfe40_process_output_path_irq_rdi0(
 {
 	uint32_t ping_pong;
 	uint32_t ch0_paddr = 0;
-	/* this must be rdi image output. */
+	/*                                */
 	struct msm_free_buf *free_buf = NULL;
-	/*RDI0*/
+	/*    */
 	if (axi_ctrl->share_ctrl->operation_mode & VFE_OUTPUTS_RDI0) {
 		free_buf = vfe40_check_free_buffer(VFE_MSG_OUTPUT_IRQ,
 			VFE_MSG_OUTPUT_TERTIARY1, axi_ctrl);
@@ -3853,7 +3853,7 @@ static void vfe40_process_output_path_irq_rdi0(
 				share_ctrl->vfebase +
 				VFE_BUS_PING_PONG_STATUS);
 
-			/* Y only channel */
+			/*                */
 			ch0_paddr = vfe40_get_ch_addr(ping_pong,
 				axi_ctrl->share_ctrl->vfebase,
 				axi_ctrl->share_ctrl->outpath.out2.ch0);
@@ -3861,7 +3861,7 @@ static void vfe40_process_output_path_irq_rdi0(
 			pr_debug("%s ch0 = 0x%x\n",
 				__func__, ch0_paddr);
 
-			/* Y channel */
+			/*           */
 			vfe40_put_ch_addr(ping_pong,
 				axi_ctrl->share_ctrl->vfebase,
 				axi_ctrl->share_ctrl->outpath.out2.ch0,
@@ -3884,9 +3884,9 @@ static void vfe40_process_output_path_irq_rdi1(
 {
 	uint32_t ping_pong;
 	uint32_t ch0_paddr = 0;
-	/* this must be rdi image output. */
+	/*                                */
 	struct msm_free_buf *free_buf = NULL;
-	/*RDI1*/
+	/*    */
 	if (axi_ctrl->share_ctrl->operation_mode & VFE_OUTPUTS_RDI1) {
 		free_buf = vfe40_check_free_buffer(VFE_MSG_OUTPUT_IRQ,
 			VFE_MSG_OUTPUT_TERTIARY2, axi_ctrl);
@@ -3895,14 +3895,14 @@ static void vfe40_process_output_path_irq_rdi1(
 				share_ctrl->vfebase +
 				VFE_BUS_PING_PONG_STATUS);
 
-			/* Y channel */
+			/*           */
 			ch0_paddr = vfe40_get_ch_addr(ping_pong,
 				axi_ctrl->share_ctrl->vfebase,
 				axi_ctrl->share_ctrl->outpath.out3.ch0);
 			pr_debug("%s ch0 = 0x%x\n",
 				__func__, ch0_paddr);
 
-			/* Y channel */
+			/*           */
 			vfe40_put_ch_addr(ping_pong,
 				axi_ctrl->share_ctrl->vfebase,
 				axi_ctrl->share_ctrl->outpath.out3.ch0,
@@ -3927,12 +3927,12 @@ static uint32_t  vfe40_process_stats_irq_common(
 	uint32_t returnAddr;
 	uint32_t pingpongAddr;
 
-	/* must be 0=ping, 1=pong */
+	/*                        */
 	pingpongStatus =
 		((msm_camera_io_r(vfe40_ctrl->share_ctrl->vfebase +
 		VFE_BUS_PING_PONG_STATUS))
 	& ((uint32_t)(1<<(statsNum + 7)))) >> (statsNum + 7);
-	/* stats bits starts at 7 */
+	/*                        */
 	CDBG("statsNum %d, pingpongStatus %d\n", statsNum, pingpongStatus);
 	pingpongAddr =
 		((uint32_t)(vfe40_ctrl->share_ctrl->vfebase +
@@ -3949,9 +3949,9 @@ static void vfe_send_stats_msg(
 {
 	int rc = 0;
 	void *vaddr = NULL;
-	/* fill message with right content. */
-	/* @todo This is causing issues, need further investigate */
-	/* spin_lock_irqsave(&ctrl->state_lock, flags); */
+	/*                                  */
+	/*                                                        */
+	/*                                              */
 	struct isp_msg_stats msgStats;
 	uint32_t stats_type;
 	msgStats.frameCounter = vfe40_ctrl->share_ctrl->vfeFrameId;
@@ -4047,7 +4047,7 @@ static void vfe_send_stats_msg(
 			 __func__, msgStats.id, msgStats.buffer);
 	}
 stats_done:
-	/* spin_unlock_irqrestore(&ctrl->state_lock, flags); */
+	/*                                                   */
 	return;
 }
 
@@ -4511,7 +4511,7 @@ static void axi40_do_tasklet(unsigned long data)
 				(void *)VFE_IRQ_STATUS0_CAMIF_SOF_MASK);
 		}
 
-		/* interrupt to be processed,  *qcmd has the payload.  */
+		/*                                                     */
 		if (qcmd->vfeInterruptStatus0 &
 				VFE_IRQ_STATUS0_REG_UPDATE_MASK)
 			v4l2_subdev_notify(&vfe40_ctrl->subdev,
@@ -4561,9 +4561,9 @@ static void axi40_do_tasklet(unsigned long data)
 					VFE40_IMASK_VFE_ERROR_ONLY_1);
 			}
 
-			/* then process stats irq. */
+			/*                         */
 			if (axi_ctrl->share_ctrl->stats_comp) {
-				/* process stats comb interrupt. */
+				/*                               */
 				if (qcmd->vfeInterruptStatus0 &
 					VFE_IRQ_STATUS0_STATS_COMPOSIT_MASK_0) {
 					CDBG("Stats composite irq occured.\n");
@@ -4572,7 +4572,7 @@ static void axi40_do_tasklet(unsigned long data)
 					(void *)qcmd->vfeInterruptStatus0);
 				}
 			} else {
-				/* process individual stats interrupt. */
+				/*                                     */
 				if (qcmd->vfeInterruptStatus0 &
 						VFE_IRQ_STATUS0_STATS_BG)
 					v4l2_subdev_notify(&vfe40_ctrl->subdev,
@@ -4704,7 +4704,7 @@ static long vfe_stats_bufq_sub_ioctl(
 	switch (cmd->cmd_type) {
 	case VFE_CMD_STATS_REQBUF:
 	if (!vfe_ctrl->stats_ops.stats_ctrl) {
-		/* stats_ctrl has not been init yet */
+		/*                                  */
 		rc = msm_stats_buf_ops_init(&vfe_ctrl->stats_ctrl,
 				(struct ion_client *)ion_client,
 				&vfe_ctrl->stats_ops);
@@ -4720,7 +4720,7 @@ static long vfe_stats_bufq_sub_ioctl(
 			goto end;
 		}
 		if (sizeof(struct msm_stats_reqbuf) != cmd->length) {
-			/* error. the length not match */
+			/*                             */
 			pr_err("%s: stats reqbuf input size = %d,\n"
 				"struct size = %d, mitch match\n",
 				 __func__, cmd->length,
@@ -4736,7 +4736,7 @@ static long vfe_stats_bufq_sub_ioctl(
 	break;
 	case VFE_CMD_STATS_ENQUEUEBUF:
 	if (sizeof(struct msm_stats_buf_info) != cmd->length) {
-		/* error. the length not match */
+		/*                             */
 		pr_err("%s: stats enqueuebuf input size = %d,\n"
 			"struct size = %d, mitch match\n",
 			 __func__, cmd->length,
@@ -4754,7 +4754,7 @@ static long vfe_stats_bufq_sub_ioctl(
 		struct msm_stats_flush_bufq *flush_req = NULL;
 		flush_req = (struct msm_stats_flush_bufq *)cmd->value;
 		if (sizeof(struct msm_stats_flush_bufq) != cmd->length) {
-			/* error. the length not match */
+			/*                             */
 			pr_err("%s: stats flush queue input size = %d,\n"
 				"struct size = %d, mitch match\n",
 				__func__, cmd->length,
@@ -4773,7 +4773,7 @@ static long vfe_stats_bufq_sub_ioctl(
 		struct msm_stats_reqbuf *req_buf = NULL;
 		req_buf = (struct msm_stats_reqbuf *)cmd->value;
 		if (sizeof(struct msm_stats_reqbuf) != cmd->length) {
-			/* error. the length not match */
+			/*                             */
 			pr_err("%s: stats reqbuf input size = %d,\n"
 				"struct size = %d, mitch match\n",
 				 __func__, cmd->length,
@@ -4834,7 +4834,7 @@ static long msm_vfe_subdev_ioctl(struct v4l2_subdev *sd,
 	case VFE_CMD_STATS_ENQUEUEBUF:
 	case VFE_CMD_STATS_FLUSH_BUFQ:
 	case VFE_CMD_STATS_UNREGBUF:
-		/* for easy porting put in one envelope */
+		/*                                      */
 		rc = vfe_stats_bufq_sub_ioctl(vfe40_ctrl,
 				cmd, vfe_params->data, pmctl->domain_num);
 		return rc;
@@ -4861,11 +4861,11 @@ static long msm_vfe_subdev_ioctl(struct v4l2_subdev *sd,
 				return -EFAULT;
 			}
 		} else {
-			/* here eith stats release or frame release. */
+			/*                                           */
 			if (cmd->cmd_type != CMD_CONFIG_PING_ADDR &&
 				cmd->cmd_type != CMD_CONFIG_PONG_ADDR &&
 				cmd->cmd_type != CMD_CONFIG_FREE_BUF_ADDR) {
-				/* then must be stats release. */
+				/*                             */
 				if (!data) {
 					pr_err("%s: data = NULL, cmd->cmd_type = %d",
 						__func__, cmd->cmd_type);
@@ -4909,7 +4909,7 @@ static long msm_vfe_subdev_ioctl(struct v4l2_subdev *sd,
 			(cmd->cmd_type == CMD_STATS_CS_ENABLE)    ||
 			(cmd->cmd_type == CMD_STATS_AEC_ENABLE)) {
 				scfg = NULL;
-				/* individual */
+				/*            */
 				goto vfe40_config_done;
 		}
 		switch (cmd->cmd_type) {
@@ -5233,7 +5233,7 @@ void axi_abort(struct axi_ctrl_t *axi_ctrl)
 {
 	uint8_t  axi_busy_flag = true;
 	unsigned long flags;
-	/* axi halt command. */
+	/*                   */
 
 	spin_lock_irqsave(&axi_ctrl->share_ctrl->stop_flag_lock, flags);
 	axi_ctrl->share_ctrl->stop_ack_pending  = TRUE;
@@ -5246,21 +5246,21 @@ void axi_abort(struct axi_ctrl_t *axi_ctrl)
 			axi_ctrl->share_ctrl->vfebase + VFE_AXI_STATUS) & 0x1)
 			axi_busy_flag = false;
 	}
-	/* Ensure the write order while writing
-	* to the command register using the barrier */
+	/*                                     
+                                             */
 	msm_camera_io_w_mb(AXI_HALT_CLEAR,
 		axi_ctrl->share_ctrl->vfebase + VFE_AXI_CMD);
 
-	/* after axi halt, then ok to apply global reset.
-	* enable reset_ack and async timer interrupt only while
-	* stopping the pipeline.*/
+	/*                                               
+                                                        
+                         */
 	msm_camera_io_w(0x80000000,
 		axi_ctrl->share_ctrl->vfebase + VFE_IRQ_MASK_0);
 	msm_camera_io_w(0xF0000000,
 		axi_ctrl->share_ctrl->vfebase + VFE_IRQ_MASK_1);
 
-	/* Ensure the write order while writing
-	* to the command register using the barrier */
+	/*                                     
+                                             */
 	msm_camera_io_w_mb(VFE_RESET_UPON_STOP_CMD,
 		axi_ctrl->share_ctrl->vfebase + VFE_GLOBAL_RESET);
 	if (axi_ctrl->share_ctrl->sync_abort)
@@ -5281,13 +5281,13 @@ int axi_config_buffers(struct axi_ctrl_t *axi_ctrl,
 				VFE_OUTPUTS_PREVIEW_AND_VIDEO) ||
 				(axi_ctrl->share_ctrl->current_mode &
 				VFE_OUTPUTS_PREVIEW))
-				/* Configure primary channel */
+				/*                           */
 				rc = configure_pingpong_buffers(
 					VFE_MSG_START,
 					VFE_MSG_OUTPUT_PRIMARY,
 					axi_ctrl);
 			else
-			/* Configure secondary channel */
+			/*                             */
 				rc = configure_pingpong_buffers(
 					VFE_MSG_START,
 					VFE_MSG_OUTPUT_SECONDARY,
@@ -5375,13 +5375,13 @@ int axi_config_buffers(struct axi_ctrl_t *axi_ctrl,
 		axi_ctrl->share_ctrl->current_mode ==
 			VFE_OUTPUTS_THUMB_AND_JPEG) {
 
-			/* Configure primary channel for JPEG */
+			/*                                    */
 			rc = configure_pingpong_buffers(
 				VFE_MSG_JPEG_CAPTURE,
 				VFE_MSG_OUTPUT_PRIMARY,
 				axi_ctrl);
 		} else {
-			/* Configure primary channel */
+			/*                           */
 			rc = configure_pingpong_buffers(
 				VFE_MSG_CAPTURE,
 				VFE_MSG_OUTPUT_PRIMARY,
@@ -5393,7 +5393,7 @@ int axi_config_buffers(struct axi_ctrl_t *axi_ctrl,
 			rc = -EINVAL;
 			goto config_done;
 		}
-		/* Configure secondary channel */
+		/*                             */
 		rc = configure_pingpong_buffers(
 				VFE_MSG_CAPTURE, VFE_MSG_OUTPUT_SECONDARY,
 				axi_ctrl);
@@ -5944,7 +5944,7 @@ static void msm_axi_process_irq(struct v4l2_subdev *sd, void *arg)
 		return;
 	}
 
-	/* next, check output path related interrupts. */
+	/*                                             */
 	if (irqstatus &
 		VFE_IRQ_STATUS0_IMAGE_COMPOSIT_DONE0_MASK) {
 		CDBG("Image composite done 0 irq occured.\n");
@@ -5967,8 +5967,8 @@ static void msm_axi_process_irq(struct v4l2_subdev *sd, void *arg)
 			+ VFE_WM_OFFSET)))
 			vfe40_process_output_path_irq_rdi1(axi_ctrl);
 
-	/* in snapshot mode if done then send
-	snapshot done message */
+	/*                                   
+                       */
 	if (
 		axi_ctrl->share_ctrl->operation_mode &
 			VFE_OUTPUTS_THUMB_AND_MAIN ||
@@ -6221,8 +6221,8 @@ static int __devinit vfe40_probe(struct platform_device *pdev)
 		axi_ctrl->fs_vfe = NULL;
 	}
 
-	/* Register subdev node before requesting irq since
-	 * irq_num is needed by msm_cam_server */
+	/*                                                 
+                                        */
 	sd_info.sdev_type = VFE_DEV;
 	sd_info.sd_index = pdev->id;
 	sd_info.irq_num = axi_ctrl->vfeirq->start;
@@ -6234,13 +6234,13 @@ static int __devinit vfe40_probe(struct platform_device *pdev)
 	vfe40_ctrl->subdev.entity.name = pdev->name;
 	vfe40_ctrl->subdev.entity.revision = vfe40_ctrl->subdev.devnode->num;
 
-	/* Request for this device irq from the camera server. If the
-	 * IRQ Router is present on this target, the interrupt will be
-	 * handled by the camera server and the interrupt service
-	 * routine called. If the request_irq call returns ENXIO, then
-	 * the IRQ Router hardware is not present on this target. We
-	 * have to request for the irq ourselves and register the
-	 * appropriate interrupt handler. */
+	/*                                                           
+                                                               
+                                                          
+                                                               
+                                                             
+                                                          
+                                   */
 	axi_ctrl->use_irq_router = true;
 	irq_req.cam_hw_idx       = MSM_CAM_HW_VFE0 + pdev->id;
 	irq_req.dev_name         = "vfe";
@@ -6253,8 +6253,8 @@ static int __devinit vfe40_probe(struct platform_device *pdev)
 	irq_req.data             = (void *)axi_ctrl;
 	rc = msm_cam_server_request_irq(&irq_req);
 	if (rc == -ENXIO) {
-		/* IRQ Router hardware is not present on this hardware.
-		 * Request for the IRQ and register the interrupt handler. */
+		/*                                                     
+                                                             */
 		axi_ctrl->use_irq_router = false;
 		rc = request_irq(axi_ctrl->vfeirq->start, vfe40_parse_irq,
 			IRQF_TRIGGER_RISING, "vfe", axi_ctrl);
@@ -6271,7 +6271,7 @@ static int __devinit vfe40_probe(struct platform_device *pdev)
 		goto vfe40_no_resource;
 	}
 
-	/*get device context for IOMMU*/
+	/*                            */
 	if (pdev->id == 0)
 		axi_ctrl->iommu_ctx = msm_iommu_get_ctx("vfe0");
 	else if (pdev->id == 1)
@@ -6288,7 +6288,7 @@ static int __devinit vfe40_probe(struct platform_device *pdev)
 		axi40_do_tasklet, (unsigned long)axi_ctrl);
 
 	vfe40_ctrl->pdev = pdev;
-	/*disable bayer stats by default*/
+	/*                              */
 	vfe40_ctrl->ver_num.main = 0;
 
 	return 0;

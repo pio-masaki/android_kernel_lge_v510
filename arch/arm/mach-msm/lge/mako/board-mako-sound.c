@@ -112,7 +112,7 @@ static struct i2c_board_info msm_i2c_audiosubsystem_info[] = {
 };
 
 static struct i2c_registry msm_i2c_audiosubsystem __initdata = {
-	/* Add the I2C driver for Audio Amp */
+	/*                                  */
 	I2C_FFA,
 	APQ_8064_GSBI1_QUP_I2C_BUS_ID,
 	msm_i2c_audiosubsystem_info,
@@ -121,7 +121,7 @@ static struct i2c_registry msm_i2c_audiosubsystem __initdata = {
 
 static void __init lge_add_i2c_tpa2028d_devices(void)
 {
-	/* Run the array and install devices as appropriate */
+	/*                                                  */
 	i2c_register_board_info(msm_i2c_audiosubsystem.bus,
 				msm_i2c_audiosubsystem.info,
 				msm_i2c_audiosubsystem.len);

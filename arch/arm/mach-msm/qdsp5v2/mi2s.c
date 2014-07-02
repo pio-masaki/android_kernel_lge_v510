@@ -28,17 +28,17 @@ printk(KERN_DEBUG format, ## arg)
 #define dprintk(format, arg...) do {} while (0)
 #endif
 
-/*----------------------------------------------------------------------------
- * Preprocessor Definitions and Constants
- * -------------------------------------------------------------------------*/
+/*                                                                            
+                                         
+                                                                            */
 
-/* Device Types */
+/*              */
 #define HDMI 0
 #define CODEC_RX 1
 #define CODEC_TX 2
 
-/* Static offset for now. If different target have different
- * offset, update to platform data model
+/*                                                          
+                                        
  */
 #define MI2S_RESET_OFFSET   0x0
 #define MI2S_MODE_OFFSET    0x4
@@ -96,11 +96,11 @@ printk(KERN_DEBUG format, ## arg)
 #define HWIO_AUDIO1_MI2S_RX_MODE_MI2S_RX_CH_TYPE_SHFT			0x3
 #define HWIO_AUDIO1_MI2S_RX_MODE_MI2S_RX_DMA_ACK_SYNCH_EN_BMSK		0x1
 
-/* Max number of channels */
+/*                        */
 #define MAX_NUM_CHANNELS_OUT 8
 #define MAX_NUM_CHANNELS_IN  2
 
-/* Num of SD Lines */
+/*                 */
 #define MAX_SD_LINES 4
 
 #define MI2S_SD_0_EN_MAP  0x10
@@ -459,25 +459,25 @@ bool mi2s_set_hdmi_output_path(uint8_t channels, uint8_t size,
 	}
 
 	mutex_lock(&mi2s->mutex_lock);
-	/* Put device in reset */
+	/*                     */
 	mi2s_reset(mi2s, HDMI);
 
 	mi2s_master(mi2s, HDMI, 1);
 
-	/* Set word type */
+	/*               */
 	if (size <= WT_MAX)
 		mi2s_set_word_type(mi2s, HDMI, size);
 	else
 		ret_val = MI2S_FALSE;
 
-	/* Enable clock crossing synchronization of RD DMA ACK */
+	/*                                                     */
 	mi2s_set_output_clk_synch(mi2s, HDMI);
 
 	mi2s_set_output_num_channels(mi2s, HDMI, channels);
 
 	num_of_sd_lines = num_of_bits_set(sd_line_mask);
-	/*Second argument to find_first_bit should be maximum number of
-	bit*/
+	/*                                                             
+    */
 
 	sd_line = find_first_bit((unsigned long *)&sd_line_mask,
 			sizeof(sd_line_mask) * 8);
@@ -502,9 +502,9 @@ bool mi2s_set_hdmi_output_path(uint8_t channels, uint8_t size,
 			goto error;
 		}
 
-		/* Enable SD line 0 for Tx (only option for
-			 * mono audio)
-		 */
+		/*                                         
+                 
+   */
 		mi2s_set_sd(mi2s, HDMI, MI2S_SD_0_EN_MAP | MI2S_SD_0_TX_MAP);
 
 	} else if (channels == 2) {
@@ -517,11 +517,11 @@ bool mi2s_set_hdmi_output_path(uint8_t channels, uint8_t size,
 			goto error;
 		}
 
-		/* Enable single SD line for Tx */
+		/*                              */
 		mi2s_set_sd(mi2s, HDMI, (MI2S_SD_0_EN_MAP << sd_line) |
 				(MI2S_SD_0_TX_MAP << sd_line));
 
-		/* Set 2-channel mapping */
+		/*                       */
 		mi2s_set_output_2ch_map(mi2s, HDMI, sd_line);
 
 	} else if (channels == 4) {
@@ -626,7 +626,7 @@ bool mi2s_set_hdmi_output_path(uint8_t channels, uint8_t size,
 
 
 error:
-	/* Release device from reset */
+	/*                           */
 	mi2s_release(mi2s, HDMI);
 
 	mutex_unlock(&mi2s->mutex_lock);
@@ -678,13 +678,13 @@ bool mi2s_set_hdmi_input_path(uint8_t channels, uint8_t size,
 		return MI2S_FALSE;
 	}
 
-	/*Second argument to find_first_bit should be maximum number of
-	bits interested*/
+	/*                                                             
+                */
 	sd_line = find_first_bit((unsigned long *)&sd_line_mask,
 			sizeof(sd_line_mask) * 8);
 	pr_debug("sd_line = %d\n", sd_line);
 
-	/* Ensure sd_line parameter is valid (0-max) */
+	/*                                           */
 	if (sd_line > MAX_SD_LINES) {
 		pr_err("%s: Line number can not be greater than = %u\n",
 			__func__, MAX_SD_LINES);
@@ -692,20 +692,20 @@ bool mi2s_set_hdmi_input_path(uint8_t channels, uint8_t size,
 	}
 
 	mutex_lock(&mi2s->mutex_lock);
-	/* Put device in reset */
+	/*                     */
 	mi2s_reset(mi2s, HDMI);
 
 	mi2s_master(mi2s, HDMI, 1);
 
-	/* Set word type */
+	/*               */
 	mi2s_set_word_type(mi2s, HDMI, size);
 
-	/* Enable clock crossing synchronization of WR DMA ACK */
+	/*                                                     */
 	mi2s_set_input_clk_synch(mi2s, HDMI);
 
-	/* Ensure channels parameter is valid (non-zero, less than max,
-	 * and even or mono)
-	 */
+	/*                                                             
+                     
+  */
 	mi2s_set_input_num_channels(mi2s, HDMI, channels);
 
 	mi2s_set_input_sd_line(mi2s, HDMI, sd_line);
@@ -720,7 +720,7 @@ bool mi2s_set_hdmi_input_path(uint8_t channels, uint8_t size,
 	val = readl(baddr + MI2S_RX_MODE_OFFSET);
 	pr_debug("%s(): MI2S_RX_MODE = 0x%x\n", __func__, val);
 
-	/* Release device from reset */
+	/*                           */
 	mi2s_release(mi2s, HDMI);
 
 	mutex_unlock(&mi2s->mutex_lock);
@@ -735,15 +735,15 @@ bool mi2s_set_codec_output_path(uint8_t channels, uint8_t size)
 	struct mi2s_state *mi2s = &the_mi2s_state;
 
 	mutex_lock(&mi2s->mutex_lock);
-	/* Put device in reset */
+	/*                     */
 	mi2s_reset(mi2s, CODEC_TX);
 
 	mi2s_master(mi2s, CODEC_TX, 1);
 
-	/* Enable clock crossing synchronization of RD DMA ACK */
+	/*                                                     */
 	mi2s_set_output_clk_synch(mi2s, CODEC_TX);
 
-	/* Set word type */
+	/*               */
 	if (size <= WT_MAX)
 		mi2s_set_word_type(mi2s, CODEC_TX, size);
 	else
@@ -751,10 +751,10 @@ bool mi2s_set_codec_output_path(uint8_t channels, uint8_t size)
 
 	mi2s_set_output_num_channels(mi2s, CODEC_TX, channels);
 
-	/* Enable SD line */
+	/*                */
 	mi2s_set_sd(mi2s, CODEC_TX, MI2S_SD_0_EN_MAP | MI2S_SD_0_TX_MAP);
 
-	/* Release device from reset */
+	/*                           */
 	mi2s_release(mi2s, CODEC_TX);
 
 	mutex_unlock(&mi2s->mutex_lock);
@@ -769,15 +769,15 @@ bool mi2s_set_codec_input_path(uint8_t channels, uint8_t size)
 	struct mi2s_state *mi2s = &the_mi2s_state;
 
 	mutex_lock(&the_mi2s_state.mutex_lock);
-	/* Put device in reset */
+	/*                     */
 	mi2s_reset(mi2s, CODEC_RX);
 
 	mi2s_master(mi2s, CODEC_RX, 1);
 
-	/* Enable clock crossing synchronization of WR DMA ACK */
+	/*                                                     */
 	mi2s_set_input_clk_synch(mi2s, CODEC_RX);
 
-	/* Set word type */
+	/*               */
 	if (size <= WT_MAX)
 		mi2s_set_word_type(mi2s, CODEC_RX, size);
 	else
@@ -785,10 +785,10 @@ bool mi2s_set_codec_input_path(uint8_t channels, uint8_t size)
 
 	mi2s_set_input_num_channels(mi2s, CODEC_RX, channels);
 
-	/* Enable SD line */
+	/*                */
 	mi2s_set_sd(mi2s, CODEC_RX, MI2S_SD_0_EN_MAP);
 
-	/* Release device from reset */
+	/*                           */
 	mi2s_release(mi2s, CODEC_RX);
 
 	mutex_unlock(&mi2s->mutex_lock);

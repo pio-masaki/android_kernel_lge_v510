@@ -38,8 +38,8 @@
 #endif
 
 /*
- * Reserve enough v4l2 space for a double buffered full screen
- * res image (864x480x1.5x2)
+                                                              
+                            
  */
 #define MSM_V4L2_VIDEO_OVERLAY_BUF_SIZE 1244160
 
@@ -61,9 +61,9 @@ static struct regulator_bulk_data regs_truly_lcdc[] = {
 #define SKU3_LCDC_GPIO_SPI_MOSI		19
 #define SKU3_LCDC_GPIO_SPI_CLK		20
 #define SKU3_LCDC_GPIO_SPI_CS0_N	21
-#define SKU3_LCDC_LCD_CAMERA_LDO_2V8	35  /*LCD_CAMERA_LDO_2V8*/
-#define SKU3_LCDC_LCD_CAMERA_LDO_1V8	34  /*LCD_CAMERA_LDO_1V8*/
-#define SKU3_1_LCDC_LCD_CAMERA_LDO_1V8	58  /*LCD_CAMERA_LDO_1V8*/
+#define SKU3_LCDC_LCD_CAMERA_LDO_2V8	35  /*                  */
+#define SKU3_LCDC_LCD_CAMERA_LDO_1V8	34  /*                  */
+#define SKU3_1_LCDC_LCD_CAMERA_LDO_1V8	58  /*                  */
 
 static uint32_t lcdc_truly_gpio_table[] = {
 	19,
@@ -138,7 +138,7 @@ void sku3_lcdc_lcd_camera_power_init(void)
 	int rc = 0;
 	u32 socinfo = socinfo_get_platform_type();
 
-	  /* LDO_EXT2V8 */
+	  /*            */
 	if (gpio_request(SKU3_LCDC_LCD_CAMERA_LDO_2V8, "lcd_camera_ldo_2v8")) {
 		pr_err("failed to request gpio lcd_camera_ldo_2v8\n");
 		return;
@@ -153,7 +153,7 @@ void sku3_lcdc_lcd_camera_power_init(void)
 		goto fail_gpio2;
 	}
 
-	/* LDO_EVT1V8 */
+	/*            */
 	if (socinfo == 0x0B) {
 		if (gpio_request(SKU3_LCDC_LCD_CAMERA_LDO_1V8,
 				"lcd_camera_ldo_1v8")) {
@@ -270,7 +270,7 @@ static int sku3_lcdc_power_save(int on)
 		}
 
 		if (lcdc_truly_gpio_initialized) {
-			/*LCD reset*/
+			/*         */
 			gpio_set_value(SKU3_LCDC_GPIO_DISPLAY_RESET, 1);
 			msleep(20);
 			gpio_set_value(SKU3_LCDC_GPIO_DISPLAY_RESET, 0);
@@ -279,7 +279,7 @@ static int sku3_lcdc_power_save(int on)
 			msleep(20);
 		}
 	} else {
-		/* pull down LCD IO to avoid current leakage */
+		/*                                           */
 		gpio_set_value(SKU3_LCDC_GPIO_SPI_MOSI, 0);
 		gpio_set_value(SKU3_LCDC_GPIO_SPI_CLK, 0);
 		gpio_set_value(SKU3_LCDC_GPIO_SPI_CS0_N, 0);
@@ -388,7 +388,7 @@ static void config_lcdc_gpio_table(uint32_t *table, int len, unsigned enable)
 	int n;
 
 	if (lcdc_gpio_initialized) {
-		/* All are IO Expander GPIOs */
+		/*                           */
 		for (n = 0; n < (len - 1); n++)
 			gpio_direction_output(table[n], 1);
 	}
@@ -403,8 +403,8 @@ static void lcdc_toshiba_config_gpios(int enable)
 static int msm_fb_lcdc_power_save(int on)
 {
 	int rc = 0;
-	/* Doing the init of the LCDC GPIOs very late as they are from
-		an I2C-controlled IO Expander */
+	/*                                                            
+                                */
 	lcdc_toshiba_gpio_init();
 
 	if (lcdc_gpio_initialized) {
@@ -453,10 +453,10 @@ static struct lcdc_platform_data lcdc_pdata = {
 };
 
 static int lcd_panel_spi_gpio_num[] = {
-		GPIO_SPI_MOSI,  /* spi_sdi */
-		GPIO_SPI_MISO,  /* spi_sdoi */
-		GPIO_SPI_CLK,   /* spi_clk */
-		GPIO_SPI_CS0_N, /* spi_cs  */
+		GPIO_SPI_MOSI,  /*         */
+		GPIO_SPI_MISO,  /*          */
+		GPIO_SPI_CLK,   /*         */
+		GPIO_SPI_CS0_N, /*         */
 };
 
 static struct msm_panel_common_pdata lcdc_toshiba_panel_data = {
@@ -595,7 +595,7 @@ static int evb_backlight_control(int level, int mode)
 	int i = 0;
 	int remainder, ret = 0;
 
-	/* device address byte = 0x72 */
+	/*                            */
 	if (!mode) {
 		gpio_set_value(96, 0);
 		udelay(67);
@@ -630,20 +630,20 @@ static int evb_backlight_control(int level, int mode)
 		gpio_set_value(96, 1);
 		udelay(33);
 
-		/* t-EOS and t-start */
+		/*                   */
 		gpio_set_value(96, 0);
 		ndelay(4200);
 		gpio_set_value(96, 1);
 		ndelay(9000);
 
-		/* data byte */
-		/* RFA = 0 */
+		/*           */
+		/*         */
 		gpio_set_value(96, 0);
 		udelay(67);
 		gpio_set_value(96, 1);
 		udelay(33);
 
-		/* Address bits */
+		/*              */
 		gpio_set_value(96, 0);
 		udelay(67);
 		gpio_set_value(96, 1);
@@ -653,7 +653,7 @@ static int evb_backlight_control(int level, int mode)
 		gpio_set_value(96, 1);
 		udelay(33);
 
-		/* Data bits */
+		/*           */
 		for (i = 0; i < 5; i++) {
 			remainder = (level) & (16);
 			if (remainder) {
@@ -670,7 +670,7 @@ static int evb_backlight_control(int level, int mode)
 			level = level << 1;
 		}
 
-		/* t-EOS */
+		/*       */
 		gpio_set_value(96, 0);
 		ndelay(12000);
 		gpio_set_value(96, 1);
@@ -807,9 +807,9 @@ static  void __iomem *lcdc_reset_ptr;
 
 static unsigned mipi_dsi_gpio[] = {
 		GPIO_CFG(GPIO_LCDC_BRDG_RESET_N, 0, GPIO_CFG_OUTPUT,
-		GPIO_CFG_NO_PULL, GPIO_CFG_2MA), /* LCDC_BRDG_RESET_N */
+		GPIO_CFG_NO_PULL, GPIO_CFG_2MA), /*                   */
 		GPIO_CFG(GPIO_LCDC_BRDG_PD, 0, GPIO_CFG_OUTPUT,
-		GPIO_CFG_NO_PULL, GPIO_CFG_2MA), /* LCDC_BRDG_PD */
+		GPIO_CFG_NO_PULL, GPIO_CFG_2MA), /*              */
 };
 
 static unsigned lcd_dsi_sel_gpio[] = {
@@ -824,7 +824,7 @@ enum {
 
 static int msm_fb_get_lane_config(void)
 {
-	/* For MSM7627A SURF/FFA and QRD */
+	/*                               */
 	int rc = DSI_TWO_LANES;
 	if (machine_is_msm7625a_surf() || machine_is_msm7625a_ffa()) {
 		rc = DSI_SINGLE_LANE;
@@ -953,16 +953,16 @@ static int msm_fb_dsi_client_qrd1_reset(void)
 static unsigned qrd3_mipi_dsi_gpio[] = {
 	GPIO_CFG(GPIO_QRD3_LCD_BRDG_RESET_N, 0, GPIO_CFG_OUTPUT,
 			GPIO_CFG_NO_PULL,
-			GPIO_CFG_2MA), /* GPIO_QRD3_LCD_BRDG_RESET_N */
+			GPIO_CFG_2MA), /*                            */
 	GPIO_CFG(GPIO_QRD3_LCD_BACKLIGHT_EN, 0, GPIO_CFG_OUTPUT,
 			GPIO_CFG_NO_PULL,
-			GPIO_CFG_2MA), /* GPIO_QRD3_LCD_BACKLIGHT_EN */
+			GPIO_CFG_2MA), /*                            */
 	GPIO_CFG(GPIO_QRD3_LCD_EXT_2V85_EN, 0, GPIO_CFG_OUTPUT,
 			GPIO_CFG_NO_PULL,
-			GPIO_CFG_2MA), /* GPIO_QRD3_LCD_EXT_2V85_EN */
+			GPIO_CFG_2MA), /*                           */
 	GPIO_CFG(GPIO_QRD3_LCD_EXT_1V8_EN, 0, GPIO_CFG_OUTPUT,
 			GPIO_CFG_NO_PULL,
-			GPIO_CFG_2MA), /* GPIO_QRD3_LCD_EXT_1V8_EN */
+			GPIO_CFG_2MA), /*                          */
 };
 
 static int msm_fb_dsi_client_qrd3_reset(void)
@@ -1006,7 +1006,7 @@ static int mipi_dsi_panel_msm_power(int on)
 	int rc = 0;
 	uint32_t lcdc_reset_cfg;
 
-	/* I2C-controlled GPIO Expander -init of the GPIOs very late */
+	/*                                                           */
 	if (unlikely(!dsi_gpio_initialized)) {
 		pmapp_disp_backlight_init();
 
@@ -1063,7 +1063,7 @@ static int mipi_dsi_panel_msm_power(int on)
 	} else if (machine_is_msm7x27a_ffa() || machine_is_msm7625a_ffa()
 					|| machine_is_msm8625_ffa()) {
 		if (on) {
-			/* This line drives an active low pin on FFA */
+			/*                                           */
 			rc = gpio_direction_output(GPIO_DISPLAY_PWR_EN, !on);
 			if (rc < 0)
 				pr_err("failed to set direction for "
@@ -1191,7 +1191,7 @@ static int mipi_dsi_panel_qrd3_power(int on)
 				return rc;
 			}
 
-			/*Configure LCD Bridge reset*/
+			/*                          */
 			rc = gpio_tlmm_config(qrd3_mipi_dsi_gpio[0],
 			     GPIO_CFG_ENABLE);
 			if (rc < 0) {
@@ -1225,16 +1225,16 @@ static int mipi_dsi_panel_qrd3_power(int on)
 			gpio_free(GPIO_QRD3_LCD_BACKLIGHT_EN);
 			return rc;
 		}
-		/*Toggle Backlight GPIO*/
+		/*                     */
 		gpio_set_value_cansleep(GPIO_QRD3_LCD_BACKLIGHT_EN, 1);
 		udelay(100);
 		gpio_set_value_cansleep(GPIO_QRD3_LCD_BACKLIGHT_EN, 0);
 		udelay(430);
 		gpio_set_value_cansleep(GPIO_QRD3_LCD_BACKLIGHT_EN, 1);
-		/* 1 wire mode starts from this low to high transition */
+		/*                                                     */
 		udelay(50);
 
-		/*Enable EXT_2.85 and 1.8 regulators*/
+		/*                                  */
 		rc = regulator_enable(gpio_reg_2p85v);
 		if (rc < 0)
 			pr_err("%s: reg enable failed\n", __func__);
@@ -1242,7 +1242,7 @@ static int mipi_dsi_panel_qrd3_power(int on)
 		if (rc < 0)
 			pr_err("%s: reg enable failed\n", __func__);
 
-		/*Configure LCD Bridge reset*/
+		/*                          */
 		rc = gpio_tlmm_config(qrd3_mipi_dsi_gpio[0], GPIO_CFG_ENABLE);
 		if (rc < 0) {
 			pr_err("Failed to enable LCD Bridge reset enable\n");
@@ -1257,7 +1257,7 @@ static int mipi_dsi_panel_qrd3_power(int on)
 			return rc;
 		}
 
-		/*Toggle Bridge Reset GPIO*/
+		/*                        */
 		msleep(20);
 		gpio_set_value_cansleep(GPIO_QRD3_LCD_BRDG_RESET_N, 0);
 		msleep(20);
@@ -1398,7 +1398,7 @@ void __init msm_fb_add_devices(void)
 			pr_err("%s:ext_1p8v regulator get failed", __func__);
 
 		if (mdp_pdata.cont_splash_enabled) {
-			/*Enable EXT_2.85 and 1.8 regulators*/
+			/*                                  */
 			rc = regulator_enable(gpio_reg_2p85v);
 			if (rc < 0)
 				pr_err("%s: reg enable failed\n", __func__);

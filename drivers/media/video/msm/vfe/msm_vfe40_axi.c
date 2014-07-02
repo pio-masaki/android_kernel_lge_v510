@@ -104,7 +104,7 @@ void axi_start(struct axi_ctrl_t *axi_ctrl)
 void axi_stop(struct axi_ctrl_t *axi_ctrl)
 {
 	uint8_t  axiBusyFlag = true;
-	/* axi halt command. */
+	/*                   */
 	msm_camera_io_w(AXI_HALT,
 		axi_ctrl->share_ctrl->vfebase + VFE_AXI_CMD);
 	wmb();
@@ -113,21 +113,21 @@ void axi_stop(struct axi_ctrl_t *axi_ctrl)
 			axi_ctrl->share_ctrl->vfebase + VFE_AXI_STATUS) & 0x1)
 			axiBusyFlag = false;
 	}
-	/* Ensure the write order while writing
-	to the command register using the barrier */
+	/*                                     
+                                           */
 	msm_camera_io_w_mb(AXI_HALT_CLEAR,
 		axi_ctrl->share_ctrl->vfebase + VFE_AXI_CMD);
 
-	/* after axi halt, then ok to apply global reset. */
-	/* enable reset_ack and async timer interrupt only while
-	stopping the pipeline.*/
+	/*                                                */
+	/*                                                      
+                       */
 	msm_camera_io_w(0xf0000000,
 		axi_ctrl->share_ctrl->vfebase + VFE_IRQ_MASK_0);
 	msm_camera_io_w(VFE_IMASK_WHILE_STOPPING_1,
 		axi_ctrl->share_ctrl->vfebase + VFE_IRQ_MASK_1);
 
-	/* Ensure the write order while writing
-	to the command register using the barrier */
+	/*                                     
+                                           */
 	msm_camera_io_w_mb(VFE_RESET_UPON_STOP_CMD,
 		axi_ctrl->share_ctrl->vfebase + VFE_GLOBAL_RESET);
 }
@@ -138,7 +138,7 @@ static int vfe40_config_axi(
 	uint32_t *ch_info;
 	uint32_t *axi_cfg = ao;
 
-	/* Update the corresponding write masters for each output*/
+	/*                                                       */
 	ch_info = axi_cfg + V40_AXI_CFG_LEN;
 	axi_ctrl->share_ctrl->outpath.out0.ch0 = 0x0000FFFF & *ch_info;
 	axi_ctrl->share_ctrl->outpath.out0.ch1 =
@@ -402,12 +402,12 @@ static void vfe40_process_output_path_irq_0(
 	free_buf = vfe40_check_free_buffer(VFE_MSG_OUTPUT_IRQ,
 		VFE_MSG_OUTPUT_PRIMARY, axi_ctrl);
 
-	/* we render frames in the following conditions:
-	1. Continuous mode and the free buffer is avaialable.
-	2. In snapshot shot mode, free buffer is not always available.
-	when pending snapshot count is <=1,  then no need to use
-	free buffer.
-	*/
+	/*                                              
+                                                      
+                                                               
+                                                         
+             
+ */
 	out_bool = (
 		(axi_ctrl->share_ctrl->operation_mode ==
 			VFE_OUTPUTS_THUMB_AND_MAIN ||
@@ -432,15 +432,15 @@ static void vfe40_process_output_path_irq_0(
 		ping_pong = msm_camera_io_r(axi_ctrl->share_ctrl->vfebase +
 			VFE_BUS_PING_PONG_STATUS);
 
-		/* Channel 0*/
+		/*          */
 		ch0_paddr = vfe40_get_ch_addr(
 			ping_pong, axi_ctrl->share_ctrl->vfebase,
 			axi_ctrl->share_ctrl->outpath.out0.ch0);
-		/* Channel 1*/
+		/*          */
 		ch1_paddr = vfe40_get_ch_addr(
 			ping_pong, axi_ctrl->share_ctrl->vfebase,
 			axi_ctrl->share_ctrl->outpath.out0.ch1);
-		/* Channel 2*/
+		/*          */
 		ch2_paddr = vfe40_get_ch_addr(
 			ping_pong, axi_ctrl->share_ctrl->vfebase,
 			axi_ctrl->share_ctrl->outpath.out0.ch2);
@@ -448,12 +448,12 @@ static void vfe40_process_output_path_irq_0(
 		CDBG("output path 0, ch0 = 0x%x, ch1 = 0x%x, ch2 = 0x%x\n",
 			ch0_paddr, ch1_paddr, ch2_paddr);
 		if (free_buf) {
-			/* Y channel */
+			/*           */
 			vfe40_put_ch_addr(ping_pong,
 			axi_ctrl->share_ctrl->vfebase,
 			axi_ctrl->share_ctrl->outpath.out0.ch0,
 			free_buf->ch_paddr[0]);
-			/* Chroma channel */
+			/*                */
 			vfe40_put_ch_addr(ping_pong,
 			axi_ctrl->share_ctrl->vfebase,
 			axi_ctrl->share_ctrl->outpath.out0.ch1,
@@ -497,7 +497,7 @@ static void vfe40_process_output_path_irq_1(
 {
 	uint32_t ping_pong;
 	uint32_t ch0_paddr, ch1_paddr, ch2_paddr;
-	/* this must be snapshot main image output. */
+	/*                                          */
 	uint8_t out_bool = 0;
 	struct msm_free_buf *free_buf = NULL;
 
@@ -518,11 +518,11 @@ static void vfe40_process_output_path_irq_1(
 		ping_pong = msm_camera_io_r(axi_ctrl->share_ctrl->vfebase +
 			VFE_BUS_PING_PONG_STATUS);
 
-		/* Y channel */
+		/*           */
 		ch0_paddr = vfe40_get_ch_addr(ping_pong,
 			axi_ctrl->share_ctrl->vfebase,
 			axi_ctrl->share_ctrl->outpath.out1.ch0);
-		/* Chroma channel */
+		/*                */
 		ch1_paddr = vfe40_get_ch_addr(ping_pong,
 			axi_ctrl->share_ctrl->vfebase,
 			axi_ctrl->share_ctrl->outpath.out1.ch1);
@@ -533,12 +533,12 @@ static void vfe40_process_output_path_irq_1(
 		CDBG("%s ch0 = 0x%x, ch1 = 0x%x, ch2 = 0x%x\n",
 			__func__, ch0_paddr, ch1_paddr, ch2_paddr);
 		if (free_buf) {
-			/* Y channel */
+			/*           */
 			vfe40_put_ch_addr(ping_pong,
 			axi_ctrl->share_ctrl->vfebase,
 			axi_ctrl->share_ctrl->outpath.out1.ch0,
 			free_buf->ch_paddr[0]);
-			/* Chroma channel */
+			/*                */
 			vfe40_put_ch_addr(ping_pong,
 			axi_ctrl->share_ctrl->vfebase,
 			axi_ctrl->share_ctrl->outpath.out1.ch1,
@@ -579,7 +579,7 @@ static void msm_axi_process_irq(struct v4l2_subdev *sd, void *arg)
 		pr_err("%s: base address unmapped\n", __func__);
 		return;
 	}
-	/* next, check output path related interrupts. */
+	/*                                             */
 	if (irqstatus &
 		VFE_IRQ_STATUS0_IMAGE_COMPOSIT_DONE0_MASK) {
 		CDBG("Image composite done 0 irq occured.\n");
@@ -590,8 +590,8 @@ static void msm_axi_process_irq(struct v4l2_subdev *sd, void *arg)
 		CDBG("Image composite done 1 irq occured.\n");
 		vfe40_process_output_path_irq_1(axi_ctrl);
 	}
-	/* in snapshot mode if done then send
-	snapshot done message */
+	/*                                   
+                       */
 	if (axi_ctrl->share_ctrl->operation_mode ==
 			VFE_OUTPUTS_THUMB_AND_MAIN ||
 		axi_ctrl->share_ctrl->operation_mode ==

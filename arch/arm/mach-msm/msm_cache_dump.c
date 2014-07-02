@@ -31,9 +31,9 @@
 static unsigned long msm_cache_dump_addr;
 
 /*
- * These should not actually be dereferenced. There's no
- * need for a virtual mapping, but the physical address is
- * necessary.
+                                                        
+                                                          
+             
  */
 static struct l1_cache_dump *l1_dump;
 static struct l2_cache_dump *l2_dump;
@@ -43,8 +43,8 @@ static int msm_cache_dump_panic(struct notifier_block *this,
 {
 #ifdef CONFIG_MSM_CACHE_DUMP_ON_PANIC
 	/*
-	 * Clear the bootloader magic so the dumps aren't overwritten
-	 */
+                                                              
+  */
 	__raw_writel(0, MSM_IMEM_BASE + L2_DUMP_OFFSET);
 
 	scm_call_atomic1(L1C_SERVICE_ID, CACHE_BUFFER_DUMP_COMMAND_ID, 2);
@@ -56,9 +56,9 @@ static int msm_cache_dump_panic(struct notifier_block *this,
 static struct notifier_block msm_cache_dump_blk = {
 	.notifier_call  = msm_cache_dump_panic,
 	/*
-	 * higher priority to ensure this runs before another panic handler
-	 * flushes the caches.
-	 */
+                                                                    
+                       
+  */
 	.priority = 1,
 };
 

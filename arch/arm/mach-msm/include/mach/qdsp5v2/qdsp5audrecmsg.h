@@ -15,15 +15,15 @@
 #define QDSP5AUDRECMSG_H
 
 /*
- * AUDRECTASK MESSAGES
- * AUDRECTASK uses audRec[i]UpRlist, where i=0,1,2 to communicate with ARM
- * Location : MEMC
- * Buffer size : 5
- * No of buffers in a queue : 10
+                      
+                                                                          
+                  
+                  
+                                
  */
 
 /*
- * Message to notify 2 error conditions
+                                       
  */
 
 #define AUDREC_FATAL_ERR_MSG 0x0001
@@ -37,7 +37,7 @@ struct audrec_fatal_err_msg {
 } __attribute__((packed));
 
 /*
- * Message to indicate encoded packet is delivered to external buffer
+                                                                     
  */
 
 #define AUDREC_UP_PACKET_READY_MSG 0x0002
@@ -52,14 +52,14 @@ struct  audrec_up_pkt_ready_msg {
 } __attribute__((packed));
 
 /*
- * Message indicates arecmem cfg done
+                                     
  */
 #define AUDREC_CMD_MEM_CFG_DONE_MSG 0x0003
 
-/* buffer conntents are nill only message id is required */
+/*                                                       */
 
 /*
- * Message to indicate pcm buffer configured
+                                            
  */
 
 #define AUDREC_CMD_PCM_CFG_ARM_TO_ENC_DONE_MSG 0x0004
@@ -71,7 +71,7 @@ struct  audrec_cmd_pcm_cfg_arm_to_enc_msg {
 } __attribute__((packed));
 
 /*
- * Message to indicate encoded packet is delivered to external buffer in FTRT
+                                                                             
  */
 
 #define AUDREC_UP_NT_PACKET_READY_MSG 0x0005
@@ -86,7 +86,7 @@ struct  audrec_up_nt_packet_ready_msg {
 } __attribute__((packed));
 
 /*
- * Message to indicate pcm buffer is consumed
+                                             
  */
 
 #define AUDREC_CMD_PCM_BUFFER_PTR_UPDATE_ARM_TO_ENC_MSG 0x0006
@@ -101,15 +101,15 @@ struct  audrec_cmd_pcm_buffer_ptr_update_arm_to_enc_msg {
 } __attribute__((packed));
 
 /*
- * Message to indicate flush acknowledgement
+                                            
  */
 
 #define AUDREC_CMD_FLUSH_DONE_MSG 0x0007
 
 /*
- * Message to indicate End of Stream acknowledgement
+                                                    
  */
 
 #define AUDREC_CMD_EOS_ACK_MSG 0x0008
 
-#endif /* QDSP5AUDRECMSG_H */
+#endif /*                  */

@@ -3,8 +3,6 @@
  *
  * Copyright (C) 2009-2012 LGE, Inc.
  *
- * Author: Jinkyu Choi <jinkyu@lge.com>
- *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -44,10 +42,10 @@ struct timed_vibrator_data {
 	struct hrtimer timer;
 	spinlock_t lock;
 	int max_timeout;
-	atomic_t vib_status; /* 1:on,0:off */
-	atomic_t gain;    /* default max gain */
+	atomic_t vib_status; /*            */
+	atomic_t gain;    /*                  */
 	atomic_t pwm;
-	atomic_t ms_time; /* vibrator duration */
+	atomic_t ms_time; /*                   */
 	struct android_vibrator_platform_data *pdata;
 	struct work_struct work_vibrator_off;
 	struct work_struct work_vibrator_on;
@@ -90,11 +88,11 @@ static int android_vibrator_force_set(struct timed_vibrator_data *vib,
 			msleep(pdata->vibe_warmup_delay);
 	}
 
-	/* TODO: control the gain of vibrator */
+	/*                                    */
 	if (intensity == 0) {
 		pdata->ic_enable_set(0);
 		pdata->pwm_set(0, 0, pwm);
-		/* should be checked for vibrator response time */
+		/*                                              */
 		pdata->power_set(0);
 		atomic_set(&vib->vib_status, 0);
 	} else {
@@ -103,7 +101,7 @@ static int android_vibrator_force_set(struct timed_vibrator_data *vib,
 		hrtimer_cancel(&vib->timer);
 
 		vib_duration_ms = atomic_read(&vib->ms_time);
-		/* should be checked for vibrator response time */
+		/*                                              */
 		pdata->power_set(1);
 		pdata->pwm_set(1, intensity, pwm);
 		pdata->ic_enable_set(1);
@@ -124,7 +122,7 @@ static void android_vibrator_on(struct work_struct *work)
 				work_vibrator_on);
 	int gain = atomic_read(&vib->gain);
 	int pwm = atomic_read(&vib->pwm);
-	/* suspend /resume logging test */
+	/*                              */
 	pr_debug("%s: gain = %d pwm = %d\n", __func__,
 			gain, pwm);
 
@@ -257,7 +255,7 @@ struct timed_vibrator_data android_vibrator_data = {
 	.dev.name = "vibrator",
 	.dev.enable = vibrator_enable,
 	.dev.get_time = vibrator_get_time,
-	.max_timeout = 30000, /* max time for vibrator enable 30 sec. */
+	.max_timeout = 30000, /*                                      */
 };
 
 static int android_vibrator_probe(struct platform_device *pdev)
@@ -286,7 +284,7 @@ static int android_vibrator_probe(struct platform_device *pdev)
 		vib->pdata->amp = 100;
 	else if (vib->pdata->amp < -100)
 		vib->pdata->amp = -100;
-	atomic_set(&vib->gain, vib->pdata->amp); /* max value is 100 */
+	atomic_set(&vib->gain, vib->pdata->amp); /*                  */
 	atomic_set(&vib->pwm, vib->pdata->vibe_n_value);
 	atomic_set(&vib->vib_status, 0);
 	pr_info("android_vibrator: default amplitude %d \n",
@@ -375,7 +373,7 @@ static void __exit android_vibrator_exit(void)
 	platform_driver_unregister(&android_vibrator_driver);
 }
 
-late_initcall_sync(android_vibrator_init); /* to let init lately */
+late_initcall_sync(android_vibrator_init); /*                    */
 module_exit(android_vibrator_exit);
 
 MODULE_AUTHOR("LG Electronics Inc.");

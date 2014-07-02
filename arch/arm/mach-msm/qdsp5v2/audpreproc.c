@@ -36,9 +36,9 @@ static struct pm_qos_request audpre_pm_qos_req;
 struct msm_adspenc_info {
 	const char *module_name;
 	unsigned module_queueids;
-	int module_encid; /* streamid */
-	int enc_formats; /* supported formats */
-	int nr_codec_support; /* number of codec suported */
+	int module_encid; /*          */
+	int enc_formats; /*                   */
+	int nr_codec_support; /*                          */
 };
 
 #define ENC_MODULE_INFO(name, queueids, encid, formats, nr_codec) \
@@ -118,7 +118,7 @@ static inline void allow_suspend(void)
 	wake_unlock(&audpre_wake_lock);
 }
 
-/* DSP preproc event handler */
+/*                           */
 static void audpreproc_dsp_event(void *data, unsigned id, size_t len,
 			    void (*getevent)(void *ptr, size_t len))
 {
@@ -240,7 +240,7 @@ static struct msm_adsp_ops adsp_ops = {
 	.event = audpreproc_dsp_event,
 };
 
-/* EXPORTED API's */
+/*                */
 int audpreproc_enable(int enc_id, audpreproc_event_func func, void *private)
 {
 	struct audpreproc_state *audpreproc = &the_audpreproc_state;
@@ -258,7 +258,7 @@ int audpreproc_enable(int enc_id, audpreproc_event_func func, void *private)
 	audpreproc->func[enc_id] = func;
 	audpreproc->private[enc_id] = private;
 
-	/* First client to enable preproc task */
+	/*                                     */
 	if (audpreproc->open_count++ == 0) {
 		MM_DBG("Get AUDPREPROCTASK\n");
 		res = msm_adsp_get("AUDPREPROCTASK", &audpreproc->mod,
@@ -323,7 +323,7 @@ void audpreproc_disable(int enc_id, void *private)
 	audpreproc->func[enc_id] = NULL;
 	audpreproc->private[enc_id] = NULL;
 
-	/* Last client then disable preproc task */
+	/*                                       */
 	if (--audpreproc->open_count == 0) {
 		msm_adsp_disable(audpreproc->mod);
 		MM_DBG("Put AUDPREPROCTASK\n");
@@ -369,8 +369,8 @@ int audpreproc_unregister_event_callback(struct audpreproc_event_callback *ecb)
 EXPORT_SYMBOL(audpreproc_unregister_event_callback);
 
 
-/* enc_type = supported encode format *
- * like pcm, aac, sbc, evrc, qcelp, amrnb etc ... *
+/*                                     
+                                                   
  */
 int audpreproc_aenc_alloc(unsigned enc_type, const char **module_name,
 		     unsigned *queue_ids)
@@ -381,7 +381,7 @@ int audpreproc_aenc_alloc(unsigned enc_type, const char **module_name,
 	static int wakelock_init;
 
 	mutex_lock(audpreproc->lock);
-	/* Represents in bit mask */
+	/*                        */
 	mode = ((enc_type & AUDPREPROC_MODE_MASK) << 16);
 	codec = (1 << (enc_type & AUDPREPROC_CODEC_MASK));
 
@@ -390,13 +390,13 @@ int audpreproc_aenc_alloc(unsigned enc_type, const char **module_name,
 	MM_DBG("mode = 0x%08x codec = 0x%08x\n", mode, codec);
 
 	for (idx = lidx-1; idx >= 0; idx--) {
-		/* encoder free and supports the format */
+		/*                                      */
 		if (!(audpreproc->enc_inuse & (1 << (idx))) &&
 		((mode & msm_enc_database.enc_info_list[idx].enc_formats)
 		== mode) && ((codec &
 		msm_enc_database.enc_info_list[idx].enc_formats)
 		== codec)){
-			/* Check supports minimum number codecs */
+			/*                                      */
 			codecs_supported =
 			msm_enc_database.enc_info_list[idx].nr_codec_support;
 			if (codecs_supported < min_codecs_supported) {

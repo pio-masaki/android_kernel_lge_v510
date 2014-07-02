@@ -14,12 +14,12 @@
 #define __ADRENO_IB_PARSER__
 
 /*
- * struct adreno_ib_object - Structure containing information about an
- * address range found in an IB
- * @gpuaddr: The starting gpuaddress of the range
- * @size: Size of the range
- * @snapshot_obj_type - Type of range used in snapshot
- * @entry: The memory entry in which this range is found
+                                                                      
+                               
+                                                 
+                           
+                                                      
+                                                        
  */
 struct adreno_ib_object {
 	unsigned int gpuaddr;
@@ -29,9 +29,9 @@ struct adreno_ib_object {
 };
 
 /*
- * struct adreno_ib_object_list - List of address ranges found in IB
- * @obj_list: The address range list
- * @num_objs: Number of objects in list
+                                                                    
+                                    
+                                       
  */
 struct adreno_ib_object_list {
 	struct adreno_ib_object *obj_list;
@@ -39,13 +39,13 @@ struct adreno_ib_object_list {
 };
 
 /*
- * adreno_ib_init_ib_obj() - Create an ib object structure and initialize it
- * with gpuaddress and size
- * @gpuaddr: gpuaddr with which to initialize the object with
- * @size: Size in bytes with which the object is initialized
- * @ib_type: The IB type used by snapshot
- *
- * Returns the object pointer on success else error code in the pointer
+                                                                            
+                           
+                                                             
+                                                            
+                                         
+  
+                                                                       
  */
 static inline void adreno_ib_init_ib_obj(unsigned int gpuaddr,
 			unsigned int size, int obj_type,

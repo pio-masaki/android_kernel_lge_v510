@@ -101,7 +101,7 @@ static int q6_aac_flowcontrol(void *data)
 			fc->fc_buff[buff_index].actual_size = xfer;
 		}
 		mutex_unlock(&(fc->fc_buff[buff_index].lock));
-		/*wake up client, if any*/
+		/*                      */
 		wake_up(&fc->fc_wq);
 
 		buff_index++;
@@ -173,7 +173,7 @@ static long q6_aac_in_ioctl(struct file *file,
 			}
 		}
 
-		/*allocate flow control buffers*/
+		/*                             */
 		fc = aac->aac_fc;
 		size = ((aac->str_cfg.buffer_size < 1543) ? 1543 :
 				aac->str_cfg.buffer_size);
@@ -191,7 +191,7 @@ static long q6_aac_in_ioctl(struct file *file,
 			fc->fc_buff[i].actual_size = 0;
 		}
 
-		/*create flow control thread*/
+		/*                          */
 		fc->task = kthread_run(q6_aac_flowcontrol,
 				aac, "aac_flowcontrol");
 		if (IS_ERR(fc->task)) {
@@ -202,7 +202,7 @@ static long q6_aac_in_ioctl(struct file *file,
 		}
 		break;
 fc_fail:
-		/*free flow control buffers*/
+		/*                         */
 		--i;
 		for (; i >=  0; i--) {
 			kfree(fc->fc_buff[i].data);
@@ -342,7 +342,7 @@ static int q6_aac_in_open(struct inode *inode, struct file *file)
 		fc->fc_buff[i].size = 0;
 		fc->fc_buff[i].actual_size = 0;
 	}
-	/*initialize wait queue head*/
+	/*                          */
 	init_waitqueue_head(&fc->fc_wq);
 	return 0;
 }
@@ -367,7 +367,7 @@ static ssize_t q6_aac_in_read(struct file *file, char __user *buf,
 	}
 	fc = aac->aac_fc;
 
-	/*wait for buffer to full*/
+	/*                       */
 	if (fc->fc_buff[fc->buff_index].empty != 0) {
 		res = wait_event_interruptible_timeout(fc->fc_wq,
 			(fc->fc_buff[fc->buff_index].empty == 0),
@@ -385,7 +385,7 @@ static ssize_t q6_aac_in_read(struct file *file, char __user *buf,
 			goto fail;
 		}
 	}
-	/*lock the buffer*/
+	/*               */
 	mutex_lock(&(fc->fc_buff[fc->buff_index].lock));
 	xfer = fc->fc_buff[fc->buff_index].actual_size;
 
@@ -434,7 +434,7 @@ static int q6_aac_in_release(struct inode *inode, struct file *file)
 	kthread_stop(fc->task);
 	fc->task = NULL;
 
-	/*free flow control buffers*/
+	/*                         */
 	for (i = 0; i < AAC_FC_BUFF_CNT; ++i) {
 		kfree(fc->fc_buff[i].data);
 		fc->fc_buff[i].data = NULL;

@@ -17,13 +17,13 @@
 
 #define STUB_REGULATOR_DRIVER_NAME "stub-regulator"
 
-/**
- * struct stub_regulator_pdata - stub regulator device data
- * @init_data:		regulator constraints
- * @hpm_min_load:	minimum load in uA that will result in the regulator
- *			being set to high power mode
- * @system_uA:		current drawn from regulator not accounted for by any
- *			regulator framework consumer
+/* 
+                                                           
+                                     
+                                                                      
+                                 
+                                                                     
+                                 
  */
 struct stub_regulator_pdata {
 	struct regulator_init_data	init_data;

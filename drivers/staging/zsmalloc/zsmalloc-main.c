@@ -32,15 +32,15 @@
 #include "zsmalloc_int.h"
 
 /*
- * A zspage's class index and fullness group
- * are encoded in its (first)page->mapping
+                                            
+                                          
  */
 #define CLASS_IDX_BITS	28
 #define FULLNESS_BITS	4
 #define CLASS_IDX_MASK	((1 << CLASS_IDX_BITS) - 1)
 #define FULLNESS_MASK	((1 << FULLNESS_BITS) - 1)
 
-/* per-cpu VM mapping areas for zspage accesses that cross page boundaries */
+/*                                                                         */
 static DEFINE_PER_CPU(struct mapping_area, zs_map_area);
 
 static int is_first_page(struct page *page)
@@ -169,21 +169,21 @@ out:
 }
 
 /*
- * We have to decide on how many pages to link together
- * to form a zspage for each size class. This is important
- * to reduce wastage due to unusable space left at end of
- * each zspage which is given as:
- *	wastage = Zp - Zp % size_class
- * where Zp = zspage size = k * PAGE_SIZE where k = 1, 2, ...
- *
- * For example, for size class of 3/8 * PAGE_SIZE, we should
- * link together 3 PAGE_SIZE sized pages to form a zspage
- * since then we can perfectly fit in 8 such objects.
+                                                       
+                                                          
+                                                         
+                                 
+                                 
+                                                             
+  
+                                                            
+                                                         
+                                                     
  */
 static int get_zspage_order(int class_size)
 {
 	int i, max_usedpc = 0;
-	/* zspage order which gives maximum used size per KB */
+	/*                                                   */
 	int max_usedpc_order = 1;
 
 	for (i = 1; i <= ZS_MAX_PAGES_PER_ZSPAGE; i++) {
@@ -204,9 +204,9 @@ static int get_zspage_order(int class_size)
 }
 
 /*
- * A single 'zspage' is composed of many system pages which are
- * linked together using fields in struct page. This function finds
- * the first/head page, given any component page of a zspage.
+                                                               
+                                                                   
+                                                             
  */
 static struct page *get_first_page(struct page *page)
 {
@@ -230,7 +230,7 @@ static struct page *get_next_page(struct page *page)
 	return next;
 }
 
-/* Encode <page, obj_idx> as a single handle value */
+/*                                                 */
 static void *obj_location_to_handle(struct page *page, unsigned long obj_idx)
 {
 	unsigned long handle;
@@ -246,7 +246,7 @@ static void *obj_location_to_handle(struct page *page, unsigned long obj_idx)
 	return (void *)handle;
 }
 
-/* Decode <page, obj_idx> pair from the given object handle */
+/*                                                          */
 static void obj_handle_to_location(void *handle, struct page **page,
 				unsigned long *obj_idx)
 {
@@ -289,7 +289,7 @@ static void free_zspage(struct page *first_page)
 	reset_page(first_page);
 	__free_page(first_page);
 
-	/* zspage with only 1 system page */
+	/*                                */
 	if (!head_extra)
 		return;
 
@@ -302,7 +302,7 @@ static void free_zspage(struct page *first_page)
 	__free_page(head_extra);
 }
 
-/* Initialize a newly allocated zspage */
+/*                                     */
 static void init_zspage(struct page *first_page, struct size_class *class)
 {
 	unsigned long off = 0;
@@ -315,11 +315,11 @@ static void init_zspage(struct page *first_page, struct size_class *class)
 		unsigned int i, objs_on_page;
 
 		/*
-		 * page->index stores offset of first object starting
-		 * in the page. For the first page, this is always 0,
-		 * so we use first_page->index (aka ->freelist) to store
-		 * head of corresponding zspage's freelist.
-		 */
+                                                       
+                                                       
+                                                          
+                                             
+   */
 		if (page != first_page)
 			page->index = off;
 
@@ -336,10 +336,10 @@ static void init_zspage(struct page *first_page, struct size_class *class)
 		}
 
 		/*
-		 * We now come to the last (full or partial) object on this
-		 * page, which must point to the first object on the next
-		 * page (if present)
-		 */
+                                                             
+                                                           
+                      
+   */
 		next_page = get_next_page(page);
 		link->next = obj_location_to_handle(next_page, 0);
 		kunmap_atomic(link);
@@ -349,7 +349,7 @@ static void init_zspage(struct page *first_page, struct size_class *class)
 }
 
 /*
- * Allocate a zspage for the given size class
+                                             
  */
 static struct page *alloc_zspage(struct size_class *class, gfp_t flags)
 {
@@ -357,16 +357,16 @@ static struct page *alloc_zspage(struct size_class *class, gfp_t flags)
 	struct page *first_page = NULL;
 
 	/*
-	 * Allocate individual pages and link them together as:
-	 * 1. first page->private = first sub-page
-	 * 2. all sub-pages are linked together using page->lru
-	 * 3. each sub-page is linked to the first page using page->first_page
-	 *
-	 * For each size class, First/Head pages are linked together using
-	 * page->lru. Also, we set PG_private to identify the first page
-	 * (i.e. no other sub-page has this flag set) and PG_private_2 to
-	 * identify the last page.
-	 */
+                                                        
+                                           
+                                                        
+                                                                       
+   
+                                                                   
+                                                                 
+                                                                  
+                           
+  */
 	error = -ENOMEM;
 	for (i = 0; i < class->zspage_order; i++) {
 		struct page *page, *prev_page;
@@ -376,7 +376,7 @@ static struct page *alloc_zspage(struct size_class *class, gfp_t flags)
 			goto cleanup;
 
 		INIT_LIST_HEAD(&page->lru);
-		if (i == 0) {	/* first page */
+		if (i == 0) {	/*            */
 			set_bit(PG_private, &page->flags);
 			set_page_private(page, 0);
 			first_page = page;
@@ -388,7 +388,7 @@ static struct page *alloc_zspage(struct size_class *class, gfp_t flags)
 			page->first_page = first_page;
 		if (i >= 2)
 			list_add(&page->lru, &prev_page->lru);
-		if (i == class->zspage_order - 1)	/* last page */
+		if (i == class->zspage_order - 1)	/*           */
 			set_bit(PG_private_2, &page->flags);
 
 		prev_page = page;
@@ -397,10 +397,10 @@ static struct page *alloc_zspage(struct size_class *class, gfp_t flags)
 	init_zspage(first_page, class);
 
 	first_page->freelist = obj_location_to_handle(first_page, 0);
-	/* Maximum number of objects we can store in this zspage */
+	/*                                                       */
 	first_page->objects = class->zspage_order * PAGE_SIZE / class->size;
 
-	error = 0; /* Success */
+	error = 0; /*         */
 
 cleanup:
 	if (unlikely(error) && first_page) {
@@ -427,8 +427,8 @@ static struct page *find_get_zspage(struct size_class *class)
 
 
 /*
- * If this becomes a separate module, register zs_init() with
- * module_init(), zs_exit with module_exit(), and remove zs_initialized
+                                                             
+                                                                       
 */
 static int zs_initialized;
 
@@ -518,9 +518,9 @@ struct zs_pool *zs_create_pool(const char *name, gfp_t flags)
 	}
 
 	/*
-	 * If this becomes a separate module, register zs_init with
-	 * module_init, and remove this block
-	*/
+                                                            
+                                      
+ */
 	if (!zs_initialized) {
 		error = zs_init();
 		if (error)
@@ -531,7 +531,7 @@ struct zs_pool *zs_create_pool(const char *name, gfp_t flags)
 	pool->flags = flags;
 	pool->name = name;
 
-	error = 0; /* Success */
+	error = 0; /*         */
 
 cleanup:
 	if (error) {
@@ -563,18 +563,18 @@ void zs_destroy_pool(struct zs_pool *pool)
 }
 EXPORT_SYMBOL_GPL(zs_destroy_pool);
 
-/**
- * zs_malloc - Allocate block of given size from pool.
- * @pool: pool to allocate from
- * @size: size of block to allocate
- * @page: page no. that holds the object
- * @offset: location of object within page
- *
- * On success, <page, offset> identifies block allocated
- * and 0 is returned. On failure, <page, offset> is set to
- * 0 and -ENOMEM is returned.
- *
- * Allocation requests with size > ZS_MAX_ALLOC_SIZE will fail.
+/* 
+                                                      
+                               
+                                   
+                                        
+                                          
+  
+                                                        
+                                                          
+                             
+  
+                                                               
  */
 void *zs_malloc(struct zs_pool *pool, size_t size)
 {
@@ -618,7 +618,7 @@ void *zs_malloc(struct zs_pool *pool, size_t size)
 	kunmap_atomic(link);
 
 	first_page->inuse++;
-	/* Now move the zspage to another fullness group, if required */
+	/*                                                            */
 	fix_fullness_group(pool, first_page);
 	spin_unlock(&class->lock);
 
@@ -648,7 +648,7 @@ void zs_free(struct zs_pool *pool, void *obj)
 
 	spin_lock(&class->lock);
 
-	/* Insert this object in containing zspage's freelist */
+	/*                                                    */
 	link = (struct link_free *)((unsigned char *)kmap_atomic(f_page)
 							+ f_offset);
 	link->next = first_page->freelist;
@@ -687,10 +687,10 @@ void *zs_map_object(struct zs_pool *pool, void *handle)
 
 	area = &get_cpu_var(zs_map_area);
 	if (off + class->size <= PAGE_SIZE) {
-		/* this object is contained entirely within a page */
+		/*                                                 */
 		area->vm_addr = kmap_atomic(page);
 	} else {
-		/* this object spans two pages */
+		/*                             */
 		struct page *nextp;
 
 		nextp = get_next_page(page);
@@ -700,7 +700,7 @@ void *zs_map_object(struct zs_pool *pool, void *handle)
 		set_pte(area->vm_ptes[0], mk_pte(page, PAGE_KERNEL));
 		set_pte(area->vm_ptes[1], mk_pte(nextp, PAGE_KERNEL));
 
-		/* We pre-allocated VM area so mapping can never fail */
+		/*                                                    */
 		area->vm_addr = area->vm->addr;
 	}
 

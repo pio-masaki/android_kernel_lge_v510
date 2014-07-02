@@ -70,6 +70,6 @@ struct subsys_device *subsys_register(struct subsys_desc *desc)
 
 static inline void subsys_unregister(struct subsys_device *dev) { }
 
-#endif /* CONFIG_MSM_SUBSYSTEM_RESTART */
+#endif /*                              */
 
 #endif

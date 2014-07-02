@@ -209,7 +209,7 @@ int usb_bam_connect(u8 idx, u32 *src_pipe_idx, u32 *dst_pipe_idx)
 	connection->idx = idx;
 
 	if (src_pipe_idx) {
-		/* open USB -> Peripheral pipe */
+		/*                             */
 		ret = connect_pipe(connection->idx, USB_TO_PEER_PERIPHERAL,
 			connection->src_pipe);
 		if (ret) {
@@ -218,7 +218,7 @@ int usb_bam_connect(u8 idx, u32 *src_pipe_idx, u32 *dst_pipe_idx)
 		}
 	}
 	if (dst_pipe_idx) {
-		/* open Peripheral -> USB pipe */
+		/*                             */
 		ret = connect_pipe(connection->idx, PEER_PERIPHERAL_TO_USB,
 			connection->dst_pipe);
 		if (ret) {
@@ -301,7 +301,7 @@ int usb_bam_disconnect_pipe(u8 idx)
 	}
 
 	if (connection->src_pipe) {
-		/* close USB -> Peripheral pipe */
+		/*                              */
 		ret = disconnect_pipe(connection->idx, USB_TO_PEER_PERIPHERAL,
 						   connection->src_pipe);
 		if (ret) {
@@ -311,7 +311,7 @@ int usb_bam_disconnect_pipe(u8 idx)
 
 	}
 	if (connection->dst_pipe) {
-		/* close Peripheral -> USB pipe */
+		/*                              */
 		ret = disconnect_pipe(connection->idx, PEER_PERIPHERAL_TO_USB,
 			connection->dst_pipe);
 		if (ret) {
@@ -445,14 +445,14 @@ static struct msm_usb_bam_platform_data *usb_bam_dt_to_pdata(
 		pipe_entry++;
 
 	/*
-	 * we need to know the number of connection, so we will know
-	 * how much memory to allocate
-	 */
+                                                             
+                               
+  */
 	conn_num = pipe_entry / 2;
 	bam_amount = pdata->total_bam_num;
 
 	if (conn_num > 0 && conn_num < pdata->usb_bam_num_pipes) {
-		/* alloc msm_usb_bam_connections_info */
+		/*                                    */
 		bam_connection_arr = devm_kzalloc(&pdev->dev, bam_amount *
 			conn_num * ncolumns *
 			sizeof(struct usb_bam_pipe_connect), GFP_KERNEL);
@@ -479,7 +479,7 @@ static struct msm_usb_bam_platform_data *usb_bam_dt_to_pdata(
 					(i * ncolumns);
 		}
 
-		/* retrieve device tree parameters */
+		/*                                 */
 		for_each_child_of_node(pdev->dev.of_node, node) {
 			const char *str;
 

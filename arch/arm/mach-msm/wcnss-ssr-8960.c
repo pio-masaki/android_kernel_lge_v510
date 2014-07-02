@@ -105,12 +105,12 @@ static irqreturn_t riva_wdog_bite_irq_hdlr(int irq, void *dev_id)
 	return IRQ_HANDLED;
 }
 
-/* SMSM reset Riva */
+/*                 */
 static void smsm_riva_reset(void)
 {
-	/* per SS reset request bit is not available now,
-	 * all SS host modules are setting this bit
-	 * This is still under discussion*/
+	/*                                               
+                                            
+                                  */
 	smsm_change_state(SMSM_APPS_STATE, SMSM_RESET, SMSM_RESET);
 }
 
@@ -125,7 +125,7 @@ static void riva_post_bootup(struct work_struct *work)
 		WCNSS_WLAN_SWITCH_OFF);
 }
 
-/* Subsystem handlers */
+/*                    */
 static int riva_shutdown(const struct subsys_desc *subsys)
 {
 	pil_force_shutdown("wcnss");
@@ -147,9 +147,9 @@ static int riva_powerup(const struct subsys_desc *subsys)
 	if (pdev && pwlanconfig)
 		ret = wcnss_wlan_power(&pdev->dev, pwlanconfig,
 					WCNSS_WLAN_SWITCH_ON);
-	/* delay PIL operation, this SSR may be happening soon after kernel
-	 * resumes because of a SMSM RESET by Riva when APPS was suspended.
-	 * PIL fails to locate the images without this delay */
+	/*                                                                 
+                                                                    
+                                                      */
 	if (!ret) {
 		msleep(1000);
 		pil_force_boot("wcnss");
@@ -161,9 +161,9 @@ static int riva_powerup(const struct subsys_desc *subsys)
 	return ret;
 }
 
-/* 7MB RAM segments for Riva SS;
- * Riva 1.1 0x8f000000 - 0x8f700000
- * Riva 1.0 0x8f200000 - 0x8f700000
+/*                              
+                                   
+                                   
  */
 static struct ramdump_segment riva_segments[] = {{0x8f000000,
 						0x8f700000 - 0x8f000000} };
@@ -179,14 +179,14 @@ static int riva_ramdump(int enable, const struct subsys_desc *subsys)
 		return 0;
 }
 
-/* Riva crash handler */
+/*                    */
 static void riva_crash_shutdown(const struct subsys_desc *subsys)
 {
 	pr_err("%s: crash shutdown : %d\n", MODULE_NAME, riva_crash);
 	if (riva_crash != true) {
 		smsm_riva_reset();
-		/* give sufficient time for wcnss to finish it's error
-		 * fatal routine */
+		/*                                                    
+                   */
 		mdelay(3000);
 	}
 
@@ -237,7 +237,7 @@ static int __init riva_ssr_module_init(void)
 		goto out;
 	}
 	ret = request_irq(RIVA_APSS_WDOG_BITE_RESET_RDY_IRQ,
-			riva_wdog_bite_irq_hdlr, IRQF_TRIGGER_RISING,
+			riva_wdog_bite_irq_hdlr, IRQF_TRIGGER_HIGH,
 				"riva_wdog", NULL);
 
 	if (ret < 0) {

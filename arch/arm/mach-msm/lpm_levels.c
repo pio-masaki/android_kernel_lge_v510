@@ -64,7 +64,7 @@ static void msm_lpm_exit_sleep(void *limits, bool from_idle,
 
 void msm_lpm_show_resources(void)
 {
-	/* TODO */
+	/*      */
 	return;
 }
 
@@ -81,10 +81,10 @@ s32 msm_cpuidle_get_deep_idle_latency(void)
 			continue;
 		if (level->sleep_mode != MSM_PM_SLEEP_MODE_POWER_COLLAPSE)
 			continue;
-		/* Pick the first power collapse mode by default */
+		/*                                               */
 		if (best->sleep_mode != MSM_PM_SLEEP_MODE_POWER_COLLAPSE)
 			best = level;
-		/* Find the lowest latency for power collapse */
+		/*                                            */
 		if (level->latency_us < best->latency_us)
 			best = level;
 	}

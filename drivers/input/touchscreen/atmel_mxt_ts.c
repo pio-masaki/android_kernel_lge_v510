@@ -29,23 +29,23 @@
 #include <linux/of_gpio.h>
 #if defined(CONFIG_HAS_EARLYSUSPEND)
 #include <linux/earlysuspend.h>
-/* Early-suspend level */
+/*                     */
 #define MXT_SUSPEND_LEVEL 1
 #endif
 
-/* Family ID */
+/*           */
 #define MXT224_ID	0x80
 #define MXT224E_ID	0x81
 #define MXT336S_ID	0x82
 #define MXT1386_ID	0xA0
 #define MXT1664S_ID	0xA2
 
-/* Version */
+/*         */
 #define MXT_VER_20		20
 #define MXT_VER_21		21
 #define MXT_VER_22		22
 
-/* I2C slave address pairs */
+/*                         */
 struct mxt_address_pair {
 	int bootloader;
 	int application;
@@ -64,14 +64,14 @@ static const struct mxt_address_pair mxt_slave_addresses[] = {
 
 enum mxt_device_state { INIT, APPMODE, BOOTLOADER };
 
-/* Firmware */
+/*          */
 #define MXT_FW_NAME		"maxtouch.fw"
 
-/* Firmware frame size including frame data and CRC */
+/*                                                  */
 #define MXT_SINGLE_FW_MAX_FRAME_SIZE	278
 #define MXT_CHIPSET_FW_MAX_FRAME_SIZE	534
 
-/* Registers */
+/*           */
 #define MXT_FAMILY_ID		0x00
 #define MXT_VARIANT_ID		0x01
 #define MXT_VERSION		0x02
@@ -83,7 +83,7 @@ enum mxt_device_state { INIT, APPMODE, BOOTLOADER };
 
 #define MXT_OBJECT_SIZE		6
 
-/* Object types */
+/*              */
 #define MXT_DEBUG_DIAGNOSTIC_T37	37
 #define MXT_GEN_MESSAGE_T5		5
 #define MXT_GEN_COMMAND_T6		6
@@ -117,19 +117,19 @@ enum mxt_device_state { INIT, APPMODE, BOOTLOADER };
 #define MXT_SPT_CTECONFIG_T46		46
 #define MXT_SPT_TIMER_T61		61
 
-/* MXT_GEN_COMMAND_T6 field */
+/*                          */
 #define MXT_COMMAND_RESET	0
 #define MXT_COMMAND_BACKUPNV	1
 #define MXT_COMMAND_CALIBRATE	2
 #define MXT_COMMAND_REPORTALL	3
 #define MXT_COMMAND_DIAGNOSTIC	5
 
-/* MXT_GEN_POWER_T7 field */
+/*                        */
 #define MXT_POWER_IDLEACQINT	0
 #define MXT_POWER_ACTVACQINT	1
 #define MXT_POWER_ACTV2IDLETO	2
 
-/* MXT_GEN_ACQUIRE_T8 field */
+/*                          */
 #define MXT_ACQUIRE_CHRGTIME	0
 #define MXT_ACQUIRE_TCHDRIFT	2
 #define MXT_ACQUIRE_DRIFTST	3
@@ -138,7 +138,7 @@ enum mxt_device_state { INIT, APPMODE, BOOTLOADER };
 #define MXT_ACQUIRE_ATCHCALST	6
 #define MXT_ACQUIRE_ATCHCALSTHR	7
 
-/* MXT_TOUCH_MULT_T9 field */
+/*                         */
 #define MXT_TOUCH_CTRL		0
 #define MXT_TOUCH_XORIGIN	1
 #define MXT_TOUCH_YORIGIN	2
@@ -168,7 +168,7 @@ enum mxt_device_state { INIT, APPMODE, BOOTLOADER };
 #define MXT_TOUCH_YEDGEDIST	29
 #define MXT_TOUCH_JUMPLIMIT	30
 
-/* MXT_PROCI_GRIPFACE_T20 field */
+/*                              */
 #define MXT_GRIPFACE_CTRL	0
 #define MXT_GRIPFACE_XLOGRIP	1
 #define MXT_GRIPFACE_XHIGRIP	2
@@ -181,7 +181,7 @@ enum mxt_device_state { INIT, APPMODE, BOOTLOADER };
 #define MXT_GRIPFACE_SHPTHR2	10
 #define MXT_GRIPFACE_SUPEXTTO	11
 
-/* MXT_PROCI_NOISE field */
+/*                       */
 #define MXT_NOISE_CTRL		0
 #define MXT_NOISE_OUTFLEN	1
 #define MXT_NOISE_GCAFUL_LSB	3
@@ -198,11 +198,11 @@ enum mxt_device_state { INIT, APPMODE, BOOTLOADER };
 #define MXT_NOISE_FREQ4		15
 #define MXT_NOISE_IDLEGCAFVALID	16
 
-/* MXT_SPT_COMMSCONFIG_T18 */
+/*                         */
 #define MXT_COMMS_CTRL		0
 #define MXT_COMMS_CMD		1
 
-/* MXT_SPT_CTECONFIG_T28 field */
+/*                             */
 #define MXT_CTE_CTRL		0
 #define MXT_CTE_CMD		1
 #define MXT_CTE_MODE		2
@@ -213,12 +213,12 @@ enum mxt_device_state { INIT, APPMODE, BOOTLOADER };
 #define MXT_VOLTAGE_DEFAULT	2700000
 #define MXT_VOLTAGE_STEP	10000
 
-/* Analog voltage @2.7 V */
+/*                       */
 #define MXT_VTG_MIN_UV		2700000
 #define MXT_VTG_MAX_UV		3300000
 #define MXT_ACTIVE_LOAD_UA	15000
 #define MXT_LPM_LOAD_UA		10
-/* Digital voltage @1.8 V */
+/*                        */
 #define MXT_VTG_DIG_MIN_UV	1800000
 #define MXT_VTG_DIG_MAX_UV	1800000
 #define MXT_ACTIVE_LOAD_DIG_UA	10000
@@ -229,38 +229,38 @@ enum mxt_device_state { INIT, APPMODE, BOOTLOADER };
 #define MXT_I2C_LOAD_UA		10000
 #define MXT_I2C_LPM_LOAD_UA	10
 
-/* Define for MXT_GEN_COMMAND_T6 */
+/*                               */
 #define MXT_BOOT_VALUE		0xa5
 #define MXT_BACKUP_VALUE	0x55
-#define MXT_BACKUP_TIME		25	/* msec */
-#define MXT224_RESET_TIME	65	/* msec */
-#define MXT224E_RESET_TIME	150	/* msec */
-#define MXT1386_RESET_TIME	250	/* msec */
-#define MXT336S_RESET_TIME	25	/* msec */
-#define MXT1664S_RESET_TIME	65	/* msec */
-#define MXT_RESET_TIME		250	/* msec */
-#define MXT_RESET_NOCHGREAD	400	/* msec */
+#define MXT_BACKUP_TIME		25	/*      */
+#define MXT224_RESET_TIME	65	/*      */
+#define MXT224E_RESET_TIME	150	/*      */
+#define MXT1386_RESET_TIME	250	/*      */
+#define MXT336S_RESET_TIME	25	/*      */
+#define MXT1664S_RESET_TIME	65	/*      */
+#define MXT_RESET_TIME		250	/*      */
+#define MXT_RESET_NOCHGREAD	400	/*      */
 
-#define MXT_FWRESET_TIME	1000	/* msec */
+#define MXT_FWRESET_TIME	1000	/*      */
 
 #define MXT_WAKE_TIME		25
 
-/* Command to unlock bootloader */
+/*                              */
 #define MXT_UNLOCK_CMD_MSB	0xaa
 #define MXT_UNLOCK_CMD_LSB	0xdc
 
-/* Bootloader mode status */
-#define MXT_WAITING_BOOTLOAD_CMD	0xc0	/* valid 7 6 bit only */
-#define MXT_WAITING_FRAME_DATA	0x80	/* valid 7 6 bit only */
+/*                        */
+#define MXT_WAITING_BOOTLOAD_CMD	0xc0	/*                    */
+#define MXT_WAITING_FRAME_DATA	0x80	/*                    */
 #define MXT_FRAME_CRC_CHECK	0x02
 #define MXT_FRAME_CRC_FAIL	0x03
 #define MXT_FRAME_CRC_PASS	0x04
-#define MXT_APP_CRC_FAIL	0x40	/* valid 7 8 bit only */
+#define MXT_APP_CRC_FAIL	0x40	/*                    */
 #define MXT_BOOT_STATUS_MASK	0x3f
 #define MXT_BOOT_EXTENDED_ID	(1 << 5)
 #define MXT_BOOT_ID_MASK	0x1f
 
-/* Touch status */
+/*              */
 #define MXT_SUPPRESS		(1 << 1)
 #define MXT_AMP			(1 << 2)
 #define MXT_VECTOR		(1 << 3)
@@ -269,15 +269,15 @@ enum mxt_device_state { INIT, APPMODE, BOOTLOADER };
 #define MXT_PRESS		(1 << 6)
 #define MXT_DETECT		(1 << 7)
 
-/* Touch orient bits */
+/*                   */
 #define MXT_XY_SWITCH		(1 << 0)
 #define MXT_X_INVERT		(1 << 1)
 #define MXT_Y_INVERT		(1 << 2)
 
-/* Touch suppression */
+/*                   */
 #define MXT_TCHSUP_ACTIVE      (1 << 0)
 
-/* Touchscreen absolute values */
+/*                             */
 #define MXT_MAX_AREA		0xff
 
 #define MXT_MAX_FINGER		10
@@ -312,7 +312,7 @@ struct mxt_object {
 	u8 instances;
 	u8 num_report_ids;
 
-	/* to map object and message */
+	/*                           */
 	u8 max_reportid;
 };
 
@@ -330,7 +330,7 @@ struct mxt_finger {
 	int pressure;
 };
 
-/* Each client has this additional data */
+/*                                      */
 struct mxt_data {
 	struct i2c_client *client;
 	struct input_dev *input_dev;
@@ -642,13 +642,13 @@ static int __mxt_read_reg(struct i2c_client *client,
 	buf[0] = reg & 0xff;
 	buf[1] = (reg >> 8) & 0xff;
 
-	/* Write register */
+	/*                */
 	xfer[0].addr = client->addr;
 	xfer[0].flags = 0;
 	xfer[0].len = 2;
 	xfer[0].buf = buf;
 
-	/* Read data */
+	/*           */
 	xfer[1].addr = client->addr;
 	xfer[1].flags = I2C_M_RD;
 	xfer[1].len = len;
@@ -774,7 +774,7 @@ static int mxt_get_object_address(struct device *dev, u8 type)
 		if (obj_buf[0] == type)
 			return obj_buf[2] << 8 | obj_buf[1];
 	}
-	/* If control reaches here, i = obj_num and object not found */
+	/*                                                           */
 	dev_err(dev, "Requested object %d not found.\n", type);
 	return -EINVAL;
 
@@ -807,10 +807,10 @@ static void mxt_input_report(struct mxt_data *data, int single_id)
 			continue;
 
 		input_mt_slot(input_dev, id);
-		/* Firmware reports min/max values when the touch is
-		 * outside screen area. Send a release event in
-		 * such cases to avoid unwanted touches.
-		 */
+		/*                                                  
+                                                 
+                                          
+   */
 		if (finger[id].x <= data->pdata->panel_minx ||
 				finger[id].x >= data->pdata->panel_maxx ||
 				finger[id].y <= data->pdata->panel_miny ||
@@ -866,7 +866,7 @@ static void mxt_input_touchevent(struct mxt_data *data,
 	int area;
 	int pressure;
 
-	/* Check the touch is present on the screen */
+	/*                                          */
 	if (!(status & MXT_DETECT)) {
 		if (status & MXT_RELEASE) {
 			dev_dbg(dev, "[%d] released\n", id);
@@ -877,7 +877,7 @@ static void mxt_input_touchevent(struct mxt_data *data,
 		return;
 	}
 
-	/* Check only AMP detection */
+	/*                          */
 	if (!(status & (MXT_PRESS | MXT_MOVE)))
 		return;
 
@@ -954,7 +954,7 @@ static void mxt_release_all(struct mxt_data *data)
 static void mxt_handle_touch_supression(struct mxt_data *data, u8 status)
 {
 	dev_dbg(&data->client->dev, "touch suppression\n");
-	/* release all touches */
+	/*                     */
 	if (status & MXT_TCHSUP_ACTIVE)
 		mxt_release_all(data);
 }
@@ -984,7 +984,7 @@ static irqreturn_t mxt_interrupt(int irq, void *dev_id)
 			continue;
 		}
 
-		/* check whether report id is part of T9 or T15 */
+		/*                                              */
 		id = reportid - data->t9_min_reportid;
 
 		if (reportid >= data->t9_min_reportid &&
@@ -1023,7 +1023,9 @@ static int mxt_check_reg_init(struct mxt_data *data)
 		if (!mxt_object_writable(object->type))
 			continue;
 
-		for (j = 0; j < object->size + 1; j++) {
+		for (j = 0;
+		     j < (object->size + 1) * (object->instances + 1);
+		     j++) {
 			config_offset = index + j;
 			if (config_offset > config_info->config_length) {
 				dev_err(dev, "Not enough config data!\n");
@@ -1032,7 +1034,7 @@ static int mxt_check_reg_init(struct mxt_data *data)
 			mxt_write_object(data, object->type, j,
 					 config_info->config[config_offset]);
 		}
-		index += object->size + 1;
+		index += (object->size + 1) * (object->instances + 1);
 	}
 
 	return 0;
@@ -1045,7 +1047,7 @@ static int mxt_make_highchg(struct mxt_data *data)
 	int count = 10;
 	int error;
 
-	/* Read dummy message to make high CHG pin */
+	/*                                         */
 	do {
 		error = mxt_read_message(data, &message);
 		if (error)
@@ -1124,9 +1126,9 @@ static int mxt_get_object_table(struct mxt_data *data)
 			object->max_reportid = reportid;
 		}
 
-		/* Calculate index for config major version in config array.
-		 * Major version is the first byte in object T38.
-		 */
+		/*                                                          
+                                                   
+   */
 		if (object->type == MXT_SPT_USERDATA_T38) {
 			data->t38_start_addr = object->start_address;
 			found_t38 = true;
@@ -1145,22 +1147,22 @@ static int compare_versions(const u8 *v1, const u8 *v2)
 	if (!v1 || !v2)
 		return -EINVAL;
 
-	/* The major version number stays the same across different versions for
-	 * a particular controller on a target. The minor and sub-minor version
-	 * numbers indicate which version is newer.
-	 */
+	/*                                                                      
+                                                                        
+                                            
+  */
 	if (v1[0] != v2[0])
 		return -EINVAL;
 
 	for (i = 1; i < MXT_CFG_VERSION_LEN; i++) {
 		if (v1[i] > v2[i])
-			return MXT_CFG_VERSION_LESS;	/* v2 is older */
+			return MXT_CFG_VERSION_LESS;	/*             */
 
 		if (v1[i] < v2[i])
-			return MXT_CFG_VERSION_GREATER;	/* v2 is newer */
+			return MXT_CFG_VERSION_GREATER;	/*             */
 	}
 
-	return MXT_CFG_VERSION_EQUAL;	/* v1 and v2 are equal */
+	return MXT_CFG_VERSION_EQUAL;	/*                     */
 }
 
 static void mxt_check_config_version(struct mxt_data *data,
@@ -1198,13 +1200,13 @@ static void mxt_check_config_version(struct mxt_data *data,
 	}
 }
 
-/* If the controller's config version has a non-zero major number, call this
- * function with match_major = true to look for the latest config present in
- * the pdata based on matching family id, variant id, f/w version, build, and
- * config major number. If the controller is programmed with wrong config data
- * previously, call this function with match_major = false to look for latest
- * config based on based on matching family id, variant id, f/w version and
- * build only.
+/*                                                                          
+                                                                            
+                                                                             
+                                                                              
+                                                                             
+                                                                           
+              
  */
 static int mxt_search_config_array(struct mxt_data *data, bool match_major)
 {
@@ -1256,7 +1258,7 @@ static int mxt_get_config(struct mxt_data *data)
 		return 0;
 	}
 
-	/* Get current config version */
+	/*                            */
 	object = mxt_get_object(data, MXT_SPT_USERDATA_T38);
 	if (!object) {
 		dev_err(dev, "Unable to obtain USERDATA object\n");
@@ -1273,18 +1275,18 @@ static int mxt_get_config(struct mxt_data *data)
 			data->cfg_version[0], data->cfg_version[1],
 			data->cfg_version[2]);
 
-	/* It is possible that the config data on the controller is not
-	 * versioned and the version number returns 0. In this case,
-	 * find a match without the config version checking.
-	 */
+	/*                                                             
+                                                             
+                                                     
+  */
 	error = mxt_search_config_array(data,
 				data->cfg_version[0] != 0 ? true : false);
 	if (error) {
-		/* If a match wasn't found for a non-zero config version,
-		 * it means the controller has the wrong config data. Search
-		 * for a best match based on controller and firmware version,
-		 * but not config version.
-		 */
+		/*                                                       
+                                                              
+                                                               
+                            
+   */
 		if (data->cfg_version[0])
 			error = mxt_search_config_array(data, false);
 		if (error) {
@@ -1326,7 +1328,7 @@ static int mxt_backup_nv(struct mxt_data *data)
 	u8 command_register;
 	int timeout_counter = 0;
 
-	/* Backup to memory */
+	/*                  */
 	mxt_write_object(data, MXT_GEN_COMMAND_T6,
 			MXT_COMMAND_BACKUPNV,
 			MXT_BACKUP_VALUE);
@@ -1348,7 +1350,7 @@ static int mxt_backup_nv(struct mxt_data *data)
 		return -EIO;
 	}
 
-	/* Soft reset */
+	/*            */
 	mxt_write_object(data, MXT_GEN_COMMAND_T6, MXT_COMMAND_RESET, 1);
 
 	mxt_reset_delay(data);
@@ -1365,7 +1367,7 @@ static int mxt_save_objects(struct mxt_data *data)
 	struct mxt_object *t42_object;
 	int error;
 
-	/* Store T7 and T9 locally, used in suspend/resume operations */
+	/*                                                            */
 	t7_object = mxt_get_object(data, MXT_GEN_POWER_T7);
 	if (!t7_object) {
 		dev_err(&client->dev, "Failed to get T7 object\n");
@@ -1381,7 +1383,7 @@ static int mxt_save_objects(struct mxt_data *data)
 		return error;
 	}
 
-	/* Store T9, T15's min and max report ids */
+	/*                                        */
 	t9_object = mxt_get_object(data, MXT_TOUCH_MULTI_T9);
 	if (!t9_object) {
 		dev_err(&client->dev, "Failed to get T9 object\n");
@@ -1402,7 +1404,7 @@ static int mxt_save_objects(struct mxt_data *data)
 		}
 	}
 
-	/* Store T42 min and max report ids */
+	/*                                  */
 	t42_object = mxt_get_object(data, MXT_PROCI_TOUCHSUPPRESSION_T42);
 	if (!t42_object)
 		dev_dbg(&client->dev, "T42 object is not available\n");
@@ -1425,7 +1427,7 @@ static int mxt_initialize(struct mxt_data *data)
 
 	error = mxt_get_info(data);
 	if (error) {
-		/* Try bootloader mode */
+		/*                     */
 		error = mxt_switch_to_bootloader_address(data);
 		if (error)
 			return error;
@@ -1457,17 +1459,17 @@ static int mxt_initialize(struct mxt_data *data)
 		return -ENOMEM;
 	}
 
-	/* Get object table information */
+	/*                              */
 	error = mxt_get_object_table(data);
 	if (error)
 		goto free_object_table;
 
-	/* Get config data from platform data */
+	/*                                    */
 	error = mxt_get_config(data);
 	if (error)
 		dev_dbg(&client->dev, "Config info not found.\n");
 
-	/* Check register init values */
+	/*                            */
 	if (data->config_info && data->config_info->config) {
 		if (data->update_cfg) {
 			error = mxt_check_reg_init(data);
@@ -1502,7 +1504,7 @@ static int mxt_initialize(struct mxt_data *data)
 	if (error)
 		goto free_object_table;
 
-	/* Update matrix size at info struct */
+	/*                                   */
 	error = mxt_read_reg(client, MXT_MATRIX_X_SIZE, &val);
 	if (error)
 		goto free_object_table;
@@ -1618,7 +1620,7 @@ static int mxt_load_fw(struct device *dev, const char *fn)
 	}
 
 	if (data->state != BOOTLOADER) {
-		/* Change to the bootloader mode */
+		/*                               */
 		mxt_write_object(data, MXT_GEN_COMMAND_T6,
 				MXT_COMMAND_RESET, MXT_BOOT_VALUE);
 		mxt_reset_delay(data);
@@ -1630,8 +1632,8 @@ static int mxt_load_fw(struct device *dev, const char *fn)
 
 	ret = mxt_check_bootloader(client, MXT_WAITING_BOOTLOAD_CMD);
 	if (ret) {
-		/* Bootloader may still be unlocked from previous update
-		 * attempt */
+		/*                                                      
+             */
 		ret = mxt_check_bootloader(client,
 			MXT_WAITING_FRAME_DATA);
 
@@ -1639,7 +1641,7 @@ static int mxt_load_fw(struct device *dev, const char *fn)
 			goto return_to_app_mode;
 	} else {
 		dev_info(dev, "Unlocking bootloader\n");
-		/* Unlock bootloader */
+		/*                   */
 		mxt_unlock_bootloader(client);
 	}
 
@@ -1649,21 +1651,21 @@ static int mxt_load_fw(struct device *dev, const char *fn)
 		if (ret)
 			goto release_firmware;
 
-		/* Get frame length MSB */
+		/*                      */
 		ret = strtobyte(fw->data + pos, frame);
 		if (ret)
 			goto release_firmware;
 
-		/* Get frame length LSB */
+		/*                      */
 		ret = strtobyte(fw->data + pos + 2, frame + 1);
 		if (ret)
 			goto release_firmware;
 
 		frame_size = ((*frame << 8) | *(frame + 1));
 
-		/* We should add 2 at frame size as the the firmware data is not
-		 * included the CRC bytes.
-		 */
+		/*                                                              
+                            
+   */
 		frame_size += 2;
 
 		if (frame_size > max_frame_size) {
@@ -1672,14 +1674,14 @@ static int mxt_load_fw(struct device *dev, const char *fn)
 			goto release_firmware;
 		}
 
-		/* Convert frame data and CRC from hex to binary */
+		/*                                               */
 		for (i = 2; i < frame_size; i++) {
 			ret = strtobyte(fw->data + pos + i * 2, frame + i);
 			if (ret)
 				goto release_firmware;
 		}
 
-		/* Write one frame to device */
+		/*                           */
 		mxt_fw_write(client, frame, frame_size);
 
 		ret = mxt_check_bootloader(client,
@@ -1687,7 +1689,7 @@ static int mxt_load_fw(struct device *dev, const char *fn)
 		if (ret) {
 			retry++;
 
-			/* Back off by 20ms per retry */
+			/*                            */
 			msleep(retry * 20);
 
 			if (retry > 20)
@@ -1740,12 +1742,12 @@ static ssize_t mxt_update_fw_store(struct device *dev,
 	u8 cfg_version[MXT_CFG_VERSION_LEN] = {0};
 
 
-	/* If fw_name is set, then the existing firmware has an upgrade */
+	/*                                                              */
 	if (!data->fw_name) {
 		/*
-		 * If the device boots up in the bootloader mode, check if
-		 * there is a firmware to upgrade.
-		 */
+                                                            
+                                    
+   */
 		if (data->state == BOOTLOADER) {
 			bootldr_id = mxt_get_bootloader_id(data->client);
 			if (bootldr_id <= 0) {
@@ -1760,7 +1762,7 @@ static ssize_t mxt_update_fw_store(struct device *dev,
 				return -EINVAL;
 			}
 		} else {
-			/* In APPMODE, if the f/w name does not exist, quit */
+			/*                                                  */
 			dev_err(dev,
 			"Firmware name not specified in platform data\n");
 			return -EINVAL;
@@ -1780,7 +1782,7 @@ static ssize_t mxt_update_fw_store(struct device *dev,
 	} else {
 		dev_info(dev, "The firmware update succeeded\n");
 
-		/* Wait for reset */
+		/*                */
 		msleep(MXT_FWRESET_TIME);
 
 		data->state = INIT;
@@ -1789,8 +1791,8 @@ static ssize_t mxt_update_fw_store(struct device *dev,
 		data->cfg_version_idx = 0;
 		data->update_cfg = false;
 
-		/* T38 object address might have changed, read it from
-		   touch controller */
+		/*                                                    
+                      */
 		address = mxt_get_object_address(dev, MXT_SPT_USERDATA_T38);
 		if (address < 0) {
 			dev_err(dev, "T38 required for touch operation\n");
@@ -1836,7 +1838,7 @@ static int mxt_start(struct mxt_data *data)
 {
 	int error;
 
-	/* restore the old power state values and reenable touch */
+	/*                                                       */
 	error = __mxt_write_reg(data->client, data->t7_start_addr,
 				T7_DATA_SIZE, data->t7_data);
 	if (error < 0) {
@@ -2196,7 +2198,7 @@ static int mxt_suspend(struct device *dev)
 
 	mutex_unlock(&input_dev->mutex);
 
-	/* put regulators in low power mode */
+	/*                                  */
 	error = mxt_regulator_lpm(data, true);
 	if (error < 0) {
 		dev_err(dev, "failed to enter low power mode\n");
@@ -2213,7 +2215,7 @@ static int mxt_resume(struct device *dev)
 	struct input_dev *input_dev = data->input_dev;
 	int error;
 
-	/* put regulators in high power mode */
+	/*                                   */
 	error = mxt_regulator_lpm(data, false);
 	if (error < 0) {
 		dev_err(dev, "failed to enter high power mode\n");
@@ -2418,17 +2420,17 @@ static int mxt_parse_dt(struct device *dev, struct mxt_platform_data *pdata)
 	if (rc)
 		return rc;
 
-	/* regulator info */
+	/*                */
 	pdata->i2c_pull_up = of_property_read_bool(np, "atmel,i2c-pull-up");
 	pdata->digital_pwr_regulator = of_property_read_bool(np,
 						"atmel,dig-reg-support");
-	/* reset, irq gpio info */
+	/*                      */
 	pdata->reset_gpio = of_get_named_gpio_flags(np, "atmel,reset-gpio",
 				0, &pdata->reset_gpio_flags);
 	pdata->irq_gpio = of_get_named_gpio_flags(np, "atmel,irq-gpio",
 				0, &pdata->irq_gpio_flags);
 
-	/* keycodes for keyarray object*/
+	/*                             */
 	prop = of_find_property(np, "atmel,key-codes", NULL);
 	if (prop) {
 		pdata->key_codes = devm_kzalloc(dev,
@@ -2447,7 +2449,7 @@ static int mxt_parse_dt(struct device *dev, struct mxt_platform_data *pdata)
 			return -EINVAL;
 	}
 
-	/* config array size */
+	/*                   */
 	pdata->config_array_size = 0;
 	temp = NULL;
 	while ((temp = of_get_next_child(np, temp)))
@@ -2575,7 +2577,7 @@ static int __devinit mxt_probe(struct i2c_client *client,
 	__set_bit(BTN_TOUCH, input_dev->keybit);
 	__set_bit(INPUT_PROP_DIRECT, input_dev->propbit);
 
-	/* For single touch */
+	/*                  */
 	input_set_abs_params(input_dev, ABS_X,
 			pdata->disp_minx, pdata->disp_maxx, 0, 0);
 	input_set_abs_params(input_dev, ABS_Y,
@@ -2583,7 +2585,7 @@ static int __devinit mxt_probe(struct i2c_client *client,
 	input_set_abs_params(input_dev, ABS_PRESSURE,
 			     0, 255, 0, 0);
 
-	/* For multi touch */
+	/*                 */
 	input_mt_init_slots(input_dev, MXT_MAX_FINGER);
 	input_set_abs_params(input_dev, ABS_MT_TOUCH_MAJOR,
 			     0, MXT_MAX_AREA, 0, 0);
@@ -2594,7 +2596,7 @@ static int __devinit mxt_probe(struct i2c_client *client,
 	input_set_abs_params(input_dev, ABS_MT_PRESSURE,
 			     0, 255, 0, 0);
 
-	/* set key array supported keys */
+	/*                              */
 	if (pdata->key_codes) {
 		for (i = 0; i < MXT_KEYARRAY_MAX_KEYS; i++) {
 			if (pdata->key_codes[i])
@@ -2625,7 +2627,7 @@ static int __devinit mxt_probe(struct i2c_client *client,
 	}
 
 	if (gpio_is_valid(pdata->irq_gpio)) {
-		/* configure touchscreen irq gpio */
+		/*                                */
 		error = gpio_request(pdata->irq_gpio, "mxt_irq_gpio");
 		if (error) {
 			dev_err(&client->dev, "unable to request gpio [%d]\n",
@@ -2646,7 +2648,7 @@ static int __devinit mxt_probe(struct i2c_client *client,
 	}
 
 	if (gpio_is_valid(pdata->reset_gpio)) {
-		/* configure touchscreen reset out gpio */
+		/*                                      */
 		error = gpio_request(pdata->reset_gpio, "mxt_reset_gpio");
 		if (error) {
 			dev_err(&client->dev, "unable to request gpio [%d]\n",
@@ -2773,7 +2775,7 @@ static const struct i2c_device_id mxt_id[] = {
 	{ }
 };
 MODULE_DEVICE_TABLE(i2c, mxt_id);
-#ifdef CONFIG_OF
+#ifdef OF_CONFIG
 static struct of_device_id mxt_match_table[] = {
 	{ .compatible = "atmel,mxt-ts",},
 	{ },
@@ -2798,7 +2800,7 @@ static struct i2c_driver mxt_driver = {
 
 module_i2c_driver(mxt_driver);
 
-/* Module information */
+/*                    */
 MODULE_AUTHOR("Joonyoung Shim <jy0922.shim@samsung.com>");
 MODULE_DESCRIPTION("Atmel maXTouch Touchscreen driver");
 MODULE_LICENSE("GPL");

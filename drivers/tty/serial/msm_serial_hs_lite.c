@@ -2,7 +2,7 @@
  * drivers/serial/msm_serial.c - driver for msm7k serial device and console
  *
  * Copyright (C) 2007 Google, Inc.
- * Copyright (c) 2010-2013, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2010-2012, The Linux Foundation. All rights reserved.
  *
  * This software is licensed under the terms of the GNU General Public
  * License version 2, as published by the Free Software Foundation, and
@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  */
 
-/* Acknowledgements:
- * This file is based on msm_serial.c, originally
- * Written by Robert Love <rlove@google.com>  */
+/*                  
+                                                 
+                                              */
 
 #if defined(CONFIG_SERIAL_MSM_HSL_CONSOLE) && defined(CONFIG_MAGIC_SYSRQ)
 #define SUPPORT_SYSRQ
@@ -49,7 +49,7 @@
 #include "msm_serial_hs_hwreg.h"
 
 #ifdef CONFIG_MACH_APQ8064_MAKO
-/* HACK: earjack noise due to HW flaw. disable console to avoid this issue */
+/*                                                                         */
 extern int mako_console_stopped(void);
 #else
 static inline int mako_console_stopped(void) { return 0; }
@@ -69,7 +69,6 @@ struct msm_hsl_port {
 	unsigned int            old_snap_state;
 	unsigned int		ver_id;
 	int			tx_timeout;
-	uint8_t			isShutdown;
 	short			cons_flags;
 };
 
@@ -252,10 +251,10 @@ static int msm_hsl_loopback_enable_get(void *data, u64 *val)
 DEFINE_SIMPLE_ATTRIBUTE(loopback_enable_fops, msm_hsl_loopback_enable_get,
 			msm_hsl_loopback_enable_set, "%llu\n");
 /*
- * msm_serial_hsl debugfs node: <debugfs_root>/msm_serial_hsl/loopback.<id>
- * writing 1 turns on internal loopback mode in HW. Useful for automation
- * test scripts.
- * writing 0 disables the internal loopback mode. Default is disabled.
+                                                                           
+                                                                         
+                
+                                                                      
  */
 static void msm_hsl_debugfs_init(struct msm_hsl_port *msm_uport,
 								int id)
@@ -320,9 +319,9 @@ static void handle_rx(struct uart_port *port, unsigned int misr)
 
 	vid = msm_hsl_port->ver_id;
 	/*
-	 * Handle overrun. My understanding of the hardware is that overrun
-	 * is not tied to the RX buffer, so we handle the case out of band.
-	 */
+                                                                    
+                                                                    
+  */
 	if ((msm_hsl_read(port, regmap[vid][UARTDM_SR]) &
 				UARTDM_SR_OVERRUN_BMSK)) {
 		port->icount.overrun++;
@@ -341,24 +340,13 @@ static void handle_rx(struct uart_port *port, unsigned int misr)
 		msm_hsl_port->old_snap_state += count;
 	}
 
-	/* and now the main RX loop */
+	/*                          */
 	while (count > 0) {
 		unsigned int c;
 		char flag = TTY_NORMAL;
 
 		sr = msm_hsl_read(port, regmap[vid][UARTDM_SR]);
 		if ((sr & UARTDM_SR_RXRDY_BMSK) == 0) {
-/* LGE_CHANGE
- * In order to avoid old_snap_state be negative,
- * workaround need to be made.
- * This seems like a bug by QCT occuring in higher bit-rate (460800 bps)
- * 2012-03-05, chaeuk.lee@lge.com
- */
-#if defined(CONFIG_LGE_FELICA) || defined(CONFIG_LGE_NFC_SONY_CXD2235AGG)
-			if (msm_hsl_port->old_snap_state < count)
-				msm_hsl_port->old_snap_state = 0;
-			else
-#endif /* CONFIG_LGE_FELICA */
 			msm_hsl_port->old_snap_state -= count;
 			break;
 		}
@@ -373,15 +361,15 @@ static void handle_rx(struct uart_port *port, unsigned int misr)
 			port->icount.rx++;
 		}
 
-		/* Mask conditions we're ignorning. */
+		/*                                  */
 		sr &= port->read_status_mask;
 		if (sr & UARTDM_SR_RX_BREAK_BMSK)
 			flag = TTY_BREAK;
 		else if (sr & UARTDM_SR_PAR_FRAME_BMSK)
 			flag = TTY_FRAME;
 
-		/* TODO: handle sysrq */
-		/* if (!uart_handle_sysrq_char(port, c)) */
+		/*                    */
+		/*                                       */
 		tty_insert_flip_string(tty, (char *) &c,
 				       (count > 4) ? 4 : count);
 		count -= 4;
@@ -407,7 +395,7 @@ static void handle_tx(struct uart_port *port)
 	if (tx_count >= port->fifosize)
 		tx_count = port->fifosize;
 
-	/* Handle x_char */
+	/*               */
 	if (port->x_char) {
 		wait_for_xmitr(port);
 		msm_hsl_write(port, tx_count + 1, regmap[vid][UARTDM_NCF_TX]);
@@ -490,7 +478,7 @@ static irqreturn_t msm_hsl_irq(int irq, void *dev_id)
 	spin_lock_irqsave(&port->lock, flags);
 	vid = msm_hsl_port->ver_id;
 	misr = msm_hsl_read(port, regmap[vid][UARTDM_MISR]);
-	/* disable interrupt */
+	/*                   */
 	msm_hsl_write(port, 0, regmap[vid][UARTDM_IMR]);
 
 	if (misr & (UARTDM_ISR_RXSTALE_BMSK | UARTDM_ISR_RXLEV_BMSK)) {
@@ -507,7 +495,7 @@ static irqreturn_t msm_hsl_irq(int irq, void *dev_id)
 	if (misr & UARTDM_ISR_DELTA_CTS_BMSK)
 		handle_delta_cts(port);
 
-	/* restore interrupt */
+	/*                   */
 	msm_hsl_write(port, msm_hsl_port->imr, regmap[vid][UARTDM_IMR]);
 	spin_unlock_irqrestore(&port->lock, flags);
 
@@ -528,10 +516,7 @@ static void msm_hsl_reset(struct uart_port *port)
 {
 	unsigned int vid = UART_TO_MSM(port)->ver_id;
 
-	if( !(UART_TO_MSM(port)->isShutdown) ) // gate a unclocked register
-	    return ;
-
-	/* reset everything */
+	/*                  */
 	msm_hsl_write(port, RESET_RX, regmap[vid][UARTDM_CR]);
 	msm_hsl_write(port, RESET_TX, regmap[vid][UARTDM_CR]);
 	msm_hsl_write(port, RESET_ERROR_STATUS, regmap[vid][UARTDM_CR]);
@@ -568,10 +553,10 @@ static void msm_hsl_set_mctrl(struct uart_port *port, unsigned int mctrl)
 		mr |= UARTDM_MR2_LOOP_MODE_BMSK;
 		msm_hsl_write(port, mr, regmap[vid][UARTDM_MR2]);
 
-		/* Reset TX */
+		/*          */
 		msm_hsl_reset(port);
 
-		/* Turn on Uart Receiver & Transmitter*/
+		/*                                    */
 		msm_hsl_write(port, UARTDM_CR_RX_EN_BMSK
 		      | UARTDM_CR_TX_EN_BMSK, regmap[vid][UARTDM_CR]);
 	}
@@ -593,9 +578,6 @@ static void msm_hsl_set_baud_rate(struct uart_port *port, unsigned int baud)
 	unsigned int data;
 	unsigned int vid;
 	struct msm_hsl_port *msm_hsl_port = UART_TO_MSM(port);
-
-	if( !(UART_TO_MSM(port)->isShutdown) ) // gate a unclocked register
-	    return ;
 
 	switch (baud) {
 	case 300:
@@ -654,33 +636,33 @@ static void msm_hsl_set_baud_rate(struct uart_port *port, unsigned int baud)
 		baud_code = UARTDM_CSR_115200;
 		rxstale = 31;
 		break;
-	default: /* 115200 baud rate */
+	default: /*                  */
 		baud_code = UARTDM_CSR_28800;
 		rxstale = 31;
 		break;
 	}
 
-	/* Set timeout to be ~600x the character transmit time */
+	/*                                                     */
 	msm_hsl_port->tx_timeout = (1000000000 / baud) * 6;
 
 	vid = msm_hsl_port->ver_id;
 	msm_hsl_write(port, baud_code, regmap[vid][UARTDM_CSR]);
 
-	/* RX stale watermark */
+	/*                    */
 	watermark = UARTDM_IPR_STALE_LSB_BMSK & rxstale;
 	watermark |= UARTDM_IPR_STALE_TIMEOUT_MSB_BMSK & (rxstale << 2);
 	msm_hsl_write(port, watermark, regmap[vid][UARTDM_IPR]);
 
-	/* Set RX watermark
-	 * Configure Rx Watermark as 3/4 size of Rx FIFO.
-	 * RFWR register takes value in Words for UARTDM Core
-	 * whereas it is consider to be in Bytes for UART Core.
-	 * Hence configuring Rx Watermark as 12 Words.
-	 */
+	/*                 
+                                                  
+                                                      
+                                                        
+                                               
+  */
 	watermark = (port->fifosize * 3) / (4*4);
 	msm_hsl_write(port, watermark, regmap[vid][UARTDM_RFWR]);
 
-	/* set TX watermark */
+	/*                  */
 	msm_hsl_write(port, 0, regmap[vid][UARTDM_TFWR]);
 
 	msm_hsl_write(port, CR_PROTECTION_EN, regmap[vid][UARTDM_CR]);
@@ -688,11 +670,11 @@ static void msm_hsl_set_baud_rate(struct uart_port *port, unsigned int baud)
 
 	data = UARTDM_CR_TX_EN_BMSK;
 	data |= UARTDM_CR_RX_EN_BMSK;
-	/* enable TX & RX */
+	/*                */
 	msm_hsl_write(port, data, regmap[vid][UARTDM_CR]);
 
 	msm_hsl_write(port, RESET_STALE_INT, regmap[vid][UARTDM_CR]);
-	/* turn on RX and CTS interrupts */
+	/*                               */
 	msm_hsl_port->imr = UARTDM_ISR_RXSTALE_BMSK
 		| UARTDM_ISR_DELTA_CTS_BMSK | UARTDM_ISR_RXLEV_BMSK;
 	msm_hsl_write(port, msm_hsl_port->imr, regmap[vid][UARTDM_IMR]);
@@ -720,8 +702,6 @@ static int msm_hsl_startup(struct uart_port *port)
 	unsigned int vid;
 	int ret;
 	unsigned long flags;
-
-	UART_TO_MSM(port)->isShutdown = 1 ; // use for shudown flag
 
 	snprintf(msm_hsl_port->name, sizeof(msm_hsl_port->name),
 		 "msm_serial_hsl%d", port->line);
@@ -760,22 +740,22 @@ static int msm_hsl_startup(struct uart_port *port)
 #endif
 	pm_runtime_get_sync(port->dev);
 
-	/* Set RFR Level as 3/4 of UARTDM FIFO Size */
+	/*                                          */
 	if (likely(port->fifosize > 48))
 		rfr_level = port->fifosize - 16;
 	else
 		rfr_level = port->fifosize;
 
 	/*
-	 * Use rfr_level value in Words to program
-	 * MR1 register for UARTDM Core.
-	 */
+                                           
+                                 
+  */
 	rfr_level = (rfr_level / 4);
 
 	spin_lock_irqsave(&port->lock, flags);
 
 	vid = msm_hsl_port->ver_id;
-	/* set automatic RFR level */
+	/*                         */
 	data = msm_hsl_read(port, regmap[vid][UARTDM_MR1]);
 	data &= ~UARTDM_MR1_AUTO_RFR_LEVEL1_BMSK;
 	data &= ~UARTDM_MR1_AUTO_RFR_LEVEL0_BMSK;
@@ -800,10 +780,8 @@ static void msm_hsl_shutdown(struct uart_port *port)
 	const struct msm_serial_hslite_platform_data *pdata =
 					pdev->dev.platform_data;
 
-	UART_TO_MSM(port)->isShutdown = 0 ; // use for shudown flag
-
 	msm_hsl_port->imr = 0;
-	/* disable interrupts */
+	/*                    */
 	msm_hsl_write(port, 0, regmap[msm_hsl_port->ver_id][UARTDM_IMR]);
 
 	free_irq(port->irq, port);
@@ -834,30 +812,13 @@ static void msm_hsl_set_termios(struct uart_port *port,
 
 	spin_lock_irqsave(&port->lock, flags);
 
-	/* calculate and set baud rate */
+	/*                             */
 	baud = uart_get_baud_rate(port, termios, old, 300, 460800);
 
-/* 20111205, chaeuk.lee@lge.com, Add IrDA UART [START]
- * Set UART for IrDA
- * 0x03 : UART_IRDA | RX_INVERT
- * [CAUTION] UARTDM register must be set AFTER UARTDM clock has been set
- */
-#ifdef CONFIG_LGE_IRDA
-	if(port->line == 3){
-		msm_hsl_write(port, 0x03, UARTDM_IRDA_ADDR);
-	}
-
-#endif
-/* 20111205, chaeuk.lee@lge.com, Add IrDA UART [END] */
-#if defined(CONFIG_LGE_IRRC) && (defined(CONFIG_MACH_APQ8064_GVAR_CMCC)||defined(CONFIG_MACH_APQ8064_AWIFI070U))
-	if(port->line ==1){
-		termios->c_cflag |= B19200;
-	}
-#endif
 	msm_hsl_set_baud_rate(port, baud);
 
 	vid = UART_TO_MSM(port)->ver_id;
-	/* calculate parity */
+	/*                  */
 	mr = msm_hsl_read(port, regmap[vid][UARTDM_MR2]);
 	mr &= ~UARTDM_MR2_PARITY_MODE_BMSK;
 	if (termios->c_cflag & PARENB) {
@@ -869,7 +830,7 @@ static void msm_hsl_set_termios(struct uart_port *port,
 			mr |= EVEN_PARITY;
 	}
 
-	/* calculate bits per char */
+	/*                         */
 	mr &= ~UARTDM_MR2_BITS_PER_CHAR_BMSK;
 	switch (termios->c_cflag & CSIZE) {
 	case CS5:
@@ -887,17 +848,17 @@ static void msm_hsl_set_termios(struct uart_port *port,
 		break;
 	}
 
-	/* calculate stop bits */
+	/*                     */
 	mr &= ~(STOP_BIT_ONE | STOP_BIT_TWO);
 	if (termios->c_cflag & CSTOPB)
 		mr |= STOP_BIT_TWO;
 	else
 		mr |= STOP_BIT_ONE;
 
-	/* set parity, bits per char, and stop bit */
+	/*                                         */
 	msm_hsl_write(port, mr, regmap[vid][UARTDM_MR2]);
 
-	/* calculate and set hardware flow control */
+	/*                                         */
 	mr = msm_hsl_read(port, regmap[vid][UARTDM_MR1]);
 	mr &= ~(UARTDM_MR1_CTS_CTL_BMSK | UARTDM_MR1_RX_RDY_CTL_BMSK);
 	if (termios->c_cflag & CRTSCTS) {
@@ -906,7 +867,7 @@ static void msm_hsl_set_termios(struct uart_port *port,
 	}
 	msm_hsl_write(port, mr, regmap[vid][UARTDM_MR1]);
 
-	/* Configure status bits to ignore based on termio flags. */
+	/*                                                        */
 	port->read_status_mask = 0;
 	if (termios->c_iflag & INPCK)
 		port->read_status_mask |= UARTDM_SR_PAR_FRAME_BMSK;
@@ -1038,11 +999,6 @@ static void msm_hsl_power(struct uart_port *port, unsigned int state,
 {
 	int ret;
 	struct msm_hsl_port *msm_hsl_port = UART_TO_MSM(port);
-#if !defined(CONFIG_MACH_APQ8064_GVAR_CMCC)
-	struct platform_device *pdev = to_platform_device(port->dev);
-	const struct msm_serial_hslite_platform_data *pdata =
-					pdev->dev.platform_data;
-#endif
 
 	switch (state) {
 	case 0:
@@ -1054,17 +1010,10 @@ static void msm_hsl_power(struct uart_port *port, unsigned int state,
 		break;
 	case 3:
 		clk_en(port, 0);
-#ifdef CONFIG_MACH_APQ8064_GVAR_CMCC
 		ret = clk_set_rate(msm_hsl_port->clk, 0);
 		if (ret)
-			pr_err("Error setting UART clock rate to zero.\n");
-#else
-		if (pdata && pdata->set_uart_clk_zero) {
-			ret = clk_set_rate(msm_hsl_port->clk, 0);
-			if (ret)
-				pr_err("Error setting UART clock rate to zero.\n");
-		}
-#endif
+			pr_err("%s(): Error setting UART clock rate to zero.\n",
+								__func__);
 		break;
 	default:
 		pr_err("%s(): msm_serial_hsl: Unknown PM state %d\n",
@@ -1120,15 +1069,6 @@ static struct msm_hsl_port msm_hsl_uart_ports[] = {
 			.line = 2,
 		},
 	},
-	{
-		.uart = {
-			.iotype = UPIO_MEM,
-			.ops = &msm_hsl_uart_pops,
-			.flags = UPF_BOOT_AUTOCONF,
-			.fifosize = 64,
-			.line = 3,
-		},
-	},
 };
 
 #define UART_NR	ARRAY_SIZE(msm_hsl_uart_ports)
@@ -1176,8 +1116,8 @@ static void dump_hsl_regs(struct uart_port *port)
 }
 
 /*
- *  Wait for transmitter & holding register to empty
- *  Derived from wait_for_xmitr in 8250 serial driver by Russell King  */
+                                                    
+                                                                       */
 static void wait_for_xmitr(struct uart_port *port)
 {
 	struct msm_hsl_port *msm_hsl_port = UART_TO_MSM(port);
@@ -1210,10 +1150,10 @@ static void msm_hsl_console_putchar(struct uart_port *port, int ch)
 	wait_for_xmitr(port);
 	msm_hsl_write(port, 1, regmap[vid][UARTDM_NCF_TX]);
 	/*
-	 * Dummy read to add 1 AHB clock delay to fix UART hardware bug.
-	 * Bug: Delay required on TX-transfer-init. after writing to
-	 * NO_CHARS_FOR_TX register.
-	 */
+                                                                 
+                                                             
+                             
+  */
 	msm_hsl_read(port, regmap[vid][UARTDM_SR]);
 	msm_hsl_write(port, ch, regmap[vid][UARTDM_TF]);
 }
@@ -1237,7 +1177,7 @@ static void msm_hsl_console_write(struct console *co, const char *s,
 	msm_hsl_port = UART_TO_MSM(port);
 	vid = msm_hsl_port->ver_id;
 
-	/* not pretty, but we can end up here via various convoluted paths */
+	/*                                                                 */
 	if (port->sysrq || oops_in_progress)
 		locked = spin_trylock(&port->lock);
 	else {
@@ -1283,7 +1223,7 @@ static int msm_hsl_console_setup(struct console *co, char *options)
 	parity = 'n';
 	flow = 'n';
 	msm_hsl_write(port, UARTDM_MR2_BITS_PER_CHAR_8 | STOP_BIT_ONE,
-		      regmap[vid][UARTDM_MR2]);	/* 8N1 */
+		      regmap[vid][UARTDM_MR2]);	/*     */
 
 	if (baud < 300 || baud > 115200)
 		baud = 115200;
@@ -1297,7 +1237,7 @@ static int msm_hsl_console_setup(struct console *co, char *options)
 	msm_hsl_write(port, mr2, regmap[vid][UARTDM_MR2]);
 
 	msm_hsl_reset(port);
-	/* Enable transmitter */
+	/*                    */
 	msm_hsl_write(port, CR_PROTECTION_EN, regmap[vid][UARTDM_CR]);
 	msm_hsl_write(port, UARTDM_CR_TX_EN_BMSK, regmap[vid][UARTDM_CR]);
 
@@ -1324,12 +1264,12 @@ static struct console msm_hsl_console = {
 
 #define MSM_HSL_CONSOLE	(&msm_hsl_console)
 /*
- * get_console_state - check the per-port serial console state.
- * @port: uart_port structure describing the port
- *
- * Return the state of serial console availability on port.
- * return 1: If serial console is enabled on particular UART port.
- * return 0: If serial console is disabled on particular UART port.
+                                                               
+                                                 
+  
+                                                           
+                                                                  
+                                                                   
  */
 static int get_console_state(struct uart_port *port)
 {
@@ -1339,7 +1279,7 @@ static int get_console_state(struct uart_port *port)
 		return 0;
 }
 
-/* show_msm_console - provide per-port serial console state. */
+/*                                                           */
 static ssize_t show_msm_console(struct device *dev,
 				struct device_attribute *attr, char *buf)
 {
@@ -1355,10 +1295,10 @@ static ssize_t show_msm_console(struct device *dev,
 }
 
 /*
- * set_msm_console - allow to enable/disable serial console on port.
- *
- * writing 1 enables serial console on UART port.
- * writing 0 disables serial console on UART port.
+                                                                    
+  
+                                                 
+                                                  
  */
 static ssize_t set_msm_console(struct device *dev,
 				struct device_attribute *attr,
@@ -1385,19 +1325,19 @@ static ssize_t set_msm_console(struct device *dev,
 		pm_runtime_put_sync(&pdev->dev);
 		pm_runtime_disable(&pdev->dev);
 		/*
-		 * Disable UART Core clk
-		 * 3 - to disable the UART clock
-		 * Thid parameter is not used here, but used in serial core.
-		 */
+                          
+                                  
+                                                              
+   */
 		msm_hsl_power(port, 3, 1);
 		break;
 	case 1:
 		pr_debug("%s(): Calling register_console\n", __func__);
 		/*
-		 * Disable UART Core clk
-		 * 0 - to enable the UART clock
-		 * Thid parameter is not used here, but used in serial core.
-		 */
+                          
+                                 
+                                                              
+   */
 		msm_hsl_power(port, 0, 1);
 		pm_runtime_enable(&pdev->dev);
 		register_console(port->cons);
@@ -1500,9 +1440,9 @@ static int __devinit msm_serial_hsl_probe(struct platform_device *pdev)
 #endif
 	msm_hsl_debugfs_init(msm_hsl_port, get_line(pdev));
 
-	/* Temporarily increase the refcount on the GSBI clock to avoid a race
-	 * condition with the earlyprintk handover mechanism.
-	 */
+	/*                                                                    
+                                                      
+  */
 	if (msm_hsl_port->pclk)
 		clk_prepare_enable(msm_hsl_port->pclk);
 	ret = uart_add_one_port(&msm_hsl_uart_driver, port);

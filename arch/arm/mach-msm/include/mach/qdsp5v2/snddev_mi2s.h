@@ -14,10 +14,10 @@
 #define __MACH_QDSP5_V2_SNDDEV_MI2S_H
 
 struct snddev_mi2s_data {
-	u32 capability; /* RX or TX */
+	u32 capability; /*          */
 	const char *name;
-	u32 copp_id; /* audpp routing */
-	u32 acdb_id; /* Audio Cal purpose */
+	u32 copp_id; /*               */
+	u32 acdb_id; /*                   */
 	u8 channel_mode;
 	u8 sd_lines;
 	void (*route) (void);

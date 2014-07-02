@@ -134,17 +134,9 @@ extern struct cred init_cred;
 
 #define INIT_TASK_COMM "swapper"
 
-#if defined(CONFIG_CCSECURITY) && !defined(CONFIG_CCSECURITY_USE_EXTERNAL_TASK_SECURITY)
-#define INIT_CCSECURITY          \
-	.ccs_domain_info = NULL, \
-	.ccs_flags = 0,
-#else
-#define INIT_CCSECURITY
-#endif
-
 /*
- *  INIT_TASK is used to set up the first task table, touch at
- * your own risk!. Base=0, limit=0x1fffff (=2MB)
+                                                              
+                                                
  */
 #define INIT_TASK(tsk)	\
 {									\
@@ -193,7 +185,7 @@ extern struct cred init_cred;
 	.journal_info	= NULL,						\
 	.cpu_timers	= INIT_CPU_TIMERS(tsk.cpu_timers),		\
 	.pi_lock	= __RAW_SPIN_LOCK_UNLOCKED(tsk.pi_lock),	\
-	.timer_slack_ns = 50000, /* 50 usec default slack */		\
+	.timer_slack_ns = 50000, /*                       */		\
 	.pids = {							\
 		[PIDTYPE_PID]  = INIT_PID_LINK(PIDTYPE_PID),		\
 		[PIDTYPE_PGID] = INIT_PID_LINK(PIDTYPE_PGID),		\
@@ -208,7 +200,6 @@ extern struct cred init_cred;
 	INIT_TRACE_RECURSION						\
 	INIT_TASK_RCU_PREEMPT(tsk)					\
 	INIT_CPUSET_SEQ							\
-	INIT_CCSECURITY                                                 \
 }
 
 
@@ -219,7 +210,7 @@ extern struct cred init_cred;
 	LIST_HEAD_INIT(cpu_timers[2]),					\
 }
 
-/* Attach to the init_task data structure for proper alignment */
+/*                                                             */
 #define __init_task_data __attribute__((__section__(".data..init_task")))
 
 

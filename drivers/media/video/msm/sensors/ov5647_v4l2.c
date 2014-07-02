@@ -1,4 +1,4 @@
-/* Copyright (c) 2012-2013, The Linux Foundation. All rights reserved.
+/* Copyright (c) 2012, The Linux Foundation. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -22,11 +22,11 @@ static struct msm_sensor_ctrl_t ov5647_s_ctrl;
 DEFINE_MUTEX(ov5647_mut);
 
 static struct msm_camera_i2c_reg_conf ov5647_start_settings[] = {
-	{0x4202, 0x00},  /* streaming on */
+	{0x4202, 0x00},  /*              */
 };
 
 static struct msm_camera_i2c_reg_conf ov5647_stop_settings[] = {
-	{0x4202, 0x0f},  /* streaming off*/
+	{0x4202, 0x0f},  /*              */
 };
 
 static struct msm_camera_i2c_reg_conf ov5647_groupon_settings[] = {
@@ -39,8 +39,8 @@ static struct msm_camera_i2c_reg_conf ov5647_groupoff_settings[] = {
 };
 
 static struct msm_camera_i2c_reg_conf ov5647_prev_settings[] = {
-	/*1280*960 Reference Setting 24M MCLK 2lane 280Mbps/lane 30fps
-	for back to preview*/
+	/*                                                            
+                    */
 	{0x3035, 0x21},
 	{0x3036, 0x37},
 	{0x3821, 0x07},
@@ -70,7 +70,7 @@ static struct msm_camera_i2c_reg_conf ov5647_prev_settings[] = {
 };
 
 static struct msm_camera_i2c_reg_conf ov5647_snap_settings[] = {
-	/*2608*1952 Reference Setting 24M MCLK 2lane 280Mbps/lane 30fps*/
+	/*                                                             */
 	{0x3035, 0x21},
 	{0x3036, 0x4f},
 	{0x3821, 0x06},
@@ -159,7 +159,7 @@ static struct msm_camera_i2c_reg_conf ov5647_video_90fps_settings[] = {
 
 static struct msm_camera_i2c_reg_conf ov5647_zsl_settings[] = {
 	{0x3035, 0x21},
-	{0x3036, 0x4f},
+	{0x3036, 0x2f},
 	{0x3821, 0x06},
 	{0x3820, 0x00},
 	{0x3612, 0x0b},
@@ -241,7 +241,7 @@ static struct msm_camera_i2c_reg_conf ov5647_recommend_settings[] = {
 	{0x3106, 0xf5},
 	{0x3034, 0x18},
 	{0x301c, 0xf8},
-	/*lens setting*/
+	/*            */
 	{0x5000, 0x86},
 	{0x5800, 0x11},
 	{0x5801, 0x0c},
@@ -305,13 +305,13 @@ static struct msm_camera_i2c_reg_conf ov5647_recommend_settings[] = {
 	{0x583b, 0x26},
 	{0x583c, 0x24},
 	{0x583d, 0xce},
-	/* manual AWB,manual AE,close Lenc,open WBC*/
-	{0x3503, 0x03}, /*manual AE*/
+	/*                                         */
+	{0x3503, 0x03}, /*         */
 	{0x3501, 0x10},
 	{0x3502, 0x80},
 	{0x350a, 0x00},
 	{0x350b, 0x7f},
-	{0x5001, 0x01}, /*manual AWB*/
+	{0x5001, 0x01}, /*          */
 	{0x5180, 0x08},
 	{0x5186, 0x04},
 	{0x5187, 0x00},
@@ -319,7 +319,7 @@ static struct msm_camera_i2c_reg_conf ov5647_recommend_settings[] = {
 	{0x5189, 0x00},
 	{0x518a, 0x04},
 	{0x518b, 0x00},
-	{0x5000, 0x06}, /*No lenc,WBC on*/
+	{0x5000, 0x06}, /*              */
 	{0x4005, 0x18},
 	{0x4051, 0x8f},
 };
@@ -343,6 +343,14 @@ static struct msm_camera_i2c_conf_array ov5647_confs[] = {
 	ARRAY_SIZE(ov5647_zsl_settings), 0, MSM_CAMERA_I2C_BYTE_DATA},
 };
 
+static struct msm_camera_csi_params ov5647_csi_params = {
+	.data_format = CSI_8BIT,
+	.lane_cnt    = 2,
+	.lane_assign = 0xe4,
+	.dpcm_scheme = 0,
+	.settle_cnt  = 10,
+};
+
 static struct v4l2_subdev_info ov5647_subdev_info[] = {
 	{
 		.code   = V4L2_MBUS_FMT_SBGGR10_1X10,
@@ -350,49 +358,49 @@ static struct v4l2_subdev_info ov5647_subdev_info[] = {
 		.fmt    = 1,
 		.order    = 0,
 	},
-	/* more can be supported, to be added later */
+	/*                                          */
 };
 
 static struct msm_sensor_output_info_t ov5647_dimensions[] = {
-	{ /* For SNAPSHOT */
-		.x_output = 0xA30,  /*2608*/  /*for 5Mp*/
-		.y_output = 0x7A0,   /*1952*/
+	{ /*              */
+		.x_output = 0xA30,  /*    */  /*       */
+		.y_output = 0x7A0,   /*    */
 		.line_length_pclk = 0xA8C,
 		.frame_length_lines = 0x7B0,
 		.vt_pixel_clk = 79704000,
 		.op_pixel_clk = 159408000,
 		.binning_factor = 0x0,
 	},
-	{ /* For PREVIEW */
-		.x_output = 0x500, /*1280*/
-		.y_output = 0x3C0, /*960*/
+	{ /*             */
+		.x_output = 0x500, /*    */
+		.y_output = 0x3C0, /*   */
 		.line_length_pclk = 0x768,
 		.frame_length_lines = 0x3D8,
 		.vt_pixel_clk = 55969920,
 		.op_pixel_clk = 159408000,
 		.binning_factor = 0x0,
 	},
-	{ /* For 60fps */
-		.x_output = 0x280,  /*640*/
-		.y_output = 0x1E0,   /*480*/
+	{ /*           */
+		.x_output = 0x280,  /*   */
+		.y_output = 0x1E0,   /*   */
 		.line_length_pclk = 0x73C,
 		.frame_length_lines = 0x1F8,
 		.vt_pixel_clk = 56004480,
 		.op_pixel_clk = 159408000,
 		.binning_factor = 0x0,
 	},
-	{ /* For 90fps */
-		.x_output = 0x280,  /*640*/
-		.y_output = 0x1E0,   /*480*/
+	{ /*           */
+		.x_output = 0x280,  /*   */
+		.y_output = 0x1E0,   /*   */
 		.line_length_pclk = 0x73C,
 		.frame_length_lines = 0x1F8,
 		.vt_pixel_clk = 56004480,
 		.op_pixel_clk = 159408000,
 		.binning_factor = 0x0,
 	},
-	{ /* For ZSL */
-		.x_output = 0xA30,  /*2608*/  /*for 5Mp*/
-		.y_output = 0x7A0,   /*1952*/
+	{ /*         */
+		.x_output = 0xA30,  /*    */  /*       */
+		.y_output = 0x7A0,   /*    */
 		.line_length_pclk = 0xA8C,
 		.frame_length_lines = 0x7B0,
 		.vt_pixel_clk = 79704000,
@@ -407,6 +415,14 @@ static struct msm_sensor_output_reg_addr_t ov5647_reg_addr = {
 	.y_output = 0x380A,
 	.line_length_pclk = 0x380C,
 	.frame_length_lines = 0x380E,
+};
+
+static struct msm_camera_csi_params *ov5647_csi_params_array[] = {
+	&ov5647_csi_params, /*          */
+	&ov5647_csi_params, /*         */
+	&ov5647_csi_params, /*       */
+	&ov5647_csi_params, /*       */
+	&ov5647_csi_params, /*     */
 };
 
 static struct msm_sensor_id_info_t ov5647_id_info = {
@@ -429,7 +445,7 @@ void ov5647_sensor_reset_stream(struct msm_sensor_ctrl_t *s_ctrl)
 }
 
 static int32_t ov5647_write_pict_exp_gain(struct msm_sensor_ctrl_t *s_ctrl,
-		uint16_t gain, uint32_t line, int32_t luma_avg, uint16_t fgain)
+		uint16_t gain, uint32_t line)
 {
 
 	static uint16_t max_line = 1964;
@@ -468,13 +484,13 @@ static int32_t ov5647_write_pict_exp_gain(struct msm_sensor_ctrl_t *s_ctrl,
 
 
 	line = line<<4;
-	/* ov5647 need this operation */
+	/*                            */
 	intg_time_hsb = (u8)(line>>16);
 	intg_time_msb = (u8) ((line & 0xFF00) >> 8);
 	intg_time_lsb = (u8) (line & 0x00FF);
 
-	/* FIXME for BLC trigger */
-	/* Coarse Integration Time */
+	/*                       */
+	/*                         */
 	msm_camera_i2c_write(s_ctrl->sensor_i2c_client,
 		s_ctrl->sensor_exp_gain_info->coarse_int_time_addr,
 		intg_time_hsb,
@@ -490,7 +506,7 @@ static int32_t ov5647_write_pict_exp_gain(struct msm_sensor_ctrl_t *s_ctrl,
 		intg_time_lsb,
 		MSM_CAMERA_I2C_BYTE_DATA);
 
-	/* gain */
+	/*      */
 
 	msm_camera_i2c_write(s_ctrl->sensor_i2c_client,
 		s_ctrl->sensor_exp_gain_info->global_gain_addr,
@@ -502,7 +518,7 @@ static int32_t ov5647_write_pict_exp_gain(struct msm_sensor_ctrl_t *s_ctrl,
 		gain_lsb^0x1,
 		MSM_CAMERA_I2C_BYTE_DATA);
 
-	/* Coarse Integration Time */
+	/*                         */
 	msm_camera_i2c_write(s_ctrl->sensor_i2c_client,
 		s_ctrl->sensor_exp_gain_info->coarse_int_time_addr,
 		intg_time_hsb,
@@ -518,7 +534,7 @@ static int32_t ov5647_write_pict_exp_gain(struct msm_sensor_ctrl_t *s_ctrl,
 		intg_time_lsb,
 		MSM_CAMERA_I2C_BYTE_DATA);
 
-	/* gain */
+	/*      */
 
 	msm_camera_i2c_write(s_ctrl->sensor_i2c_client,
 		s_ctrl->sensor_exp_gain_info->global_gain_addr,
@@ -538,10 +554,7 @@ static int32_t ov5647_write_pict_exp_gain(struct msm_sensor_ctrl_t *s_ctrl,
 
 
 static int32_t ov5647_write_prev_exp_gain(struct msm_sensor_ctrl_t *s_ctrl,
-						uint16_t gain,
-						uint32_t line,
-						int32_t luma_avg,
-						uint16_t fgain)
+						uint16_t gain, uint32_t line)
 {
 	u8 intg_time_hsb, intg_time_msb, intg_time_lsb;
 	uint8_t gain_lsb, gain_hsb;
@@ -558,9 +571,8 @@ static int32_t ov5647_write_prev_exp_gain(struct msm_sensor_ctrl_t *s_ctrl,
 
 	s_ctrl->func_tbl->sensor_group_hold_on(s_ctrl);
 
-	/* adjust frame rate */
-	if ((s_ctrl->curr_res < MSM_SENSOR_RES_2) &&
-		(line > (fl_lines - offset)))
+	/*                   */
+	if (line > (fl_lines - offset))
 		fl_lines = line + offset;
 
 	msm_camera_i2c_write(s_ctrl->sensor_i2c_client,
@@ -574,13 +586,13 @@ static int32_t ov5647_write_prev_exp_gain(struct msm_sensor_ctrl_t *s_ctrl,
 		MSM_CAMERA_I2C_BYTE_DATA);
 
 	line = line<<4;
-	/* ov5647 need this operation */
+	/*                            */
 	intg_time_hsb = (u8)(line>>16);
 	intg_time_msb = (u8) ((line & 0xFF00) >> 8);
 	intg_time_lsb = (u8) (line & 0x00FF);
 
 
-	/* Coarse Integration Time */
+	/*                         */
 	msm_camera_i2c_write(s_ctrl->sensor_i2c_client,
 		s_ctrl->sensor_exp_gain_info->coarse_int_time_addr,
 		intg_time_hsb,
@@ -596,7 +608,7 @@ static int32_t ov5647_write_prev_exp_gain(struct msm_sensor_ctrl_t *s_ctrl,
 		intg_time_lsb,
 		MSM_CAMERA_I2C_BYTE_DATA);
 
-	/* gain */
+	/*      */
 
 	msm_camera_i2c_write(s_ctrl->sensor_i2c_client,
 		s_ctrl->sensor_exp_gain_info->global_gain_addr,
@@ -708,7 +720,7 @@ int32_t ov5647_sensor_power_up(struct msm_sensor_ctrl_t *s_ctrl)
 		return rc;
 	}
 
-	/* turn on ldo and vreg */
+	/*                      */
 
 	gpio_direction_output(info->sensor_pwd, 0);
 	msleep(20);
@@ -721,15 +733,13 @@ int32_t ov5647_sensor_power_up(struct msm_sensor_ctrl_t *s_ctrl)
 
 static int32_t vfe_clk = 266667000;
 
-static void ov5647_stop_stream(struct msm_sensor_ctrl_t *s_ctrl)
+int32_t ov5647_sensor_setting(struct msm_sensor_ctrl_t *s_ctrl,
+			int update_type, int res)
 {
-	msm_camera_i2c_write_tbl(
-		s_ctrl->sensor_i2c_client,
-		s_ctrl->msm_sensor_reg->stop_stream_conf,
-		s_ctrl->msm_sensor_reg->stop_stream_conf_size,
-		s_ctrl->msm_sensor_reg->default_data_type);
-
-	if (s_ctrl->curr_res == MSM_SENSOR_RES_FULL)
+	int32_t rc = 0;
+	static int csi_config;
+	s_ctrl->func_tbl->sensor_stop_stream(s_ctrl);
+	if (csi_config == 0 || res == 0)
 		msleep(66);
 	else
 		msleep(266);
@@ -738,31 +748,37 @@ static void ov5647_stop_stream(struct msm_sensor_ctrl_t *s_ctrl)
 			s_ctrl->sensor_i2c_client,
 			0x4800, 0x25,
 			MSM_CAMERA_I2C_BYTE_DATA);
-}
-
-int32_t ov5647_sensor_setting(struct msm_sensor_ctrl_t *s_ctrl,
-			int update_type, int res)
-{
-	int32_t rc = 0;
 	if (update_type == MSM_SENSOR_REG_INIT) {
 		CDBG("Register INIT\n");
-		s_ctrl->func_tbl->sensor_stop_stream(s_ctrl);
+		s_ctrl->curr_csi_params = NULL;
 		msm_camera_i2c_write(
 				s_ctrl->sensor_i2c_client,
 				0x103, 0x1,
 				MSM_CAMERA_I2C_BYTE_DATA);
 		msm_sensor_enable_debugfs(s_ctrl);
 		msm_sensor_write_init_settings(s_ctrl);
+		csi_config = 0;
 	} else if (update_type == MSM_SENSOR_UPDATE_PERIODIC) {
 		CDBG("PERIODIC : %d\n", res);
 		msm_sensor_write_conf_array(
 			s_ctrl->sensor_i2c_client,
 			s_ctrl->msm_sensor_reg->mode_settings, res);
 		msleep(30);
+		if (!csi_config) {
+			s_ctrl->curr_csic_params = s_ctrl->csic_params[res];
+			CDBG("CSI config in progress\n");
+			v4l2_subdev_notify(&s_ctrl->sensor_v4l2_subdev,
+				NOTIFY_CSIC_CFG,
+				s_ctrl->curr_csic_params);
+			CDBG("CSI config is done\n");
+			mb();
+			msleep(30);
+			csi_config = 1;
 		msm_camera_i2c_write(
 			s_ctrl->sensor_i2c_client,
 			0x100, 0x1,
 			MSM_CAMERA_I2C_BYTE_DATA);
+		}
 		msm_camera_i2c_write(
 			s_ctrl->sensor_i2c_client,
 			0x4800, 0x4,
@@ -772,12 +788,14 @@ int32_t ov5647_sensor_setting(struct msm_sensor_ctrl_t *s_ctrl,
 			v4l2_subdev_notify(&s_ctrl->sensor_v4l2_subdev,
 					NOTIFY_PCLK_CHANGE,
 					&vfe_clk);
+		s_ctrl->func_tbl->sensor_start_stream(s_ctrl);
+		msleep(50);
 	}
 	return rc;
 }
 static struct msm_sensor_fn_t ov5647_func_tbl = {
 	.sensor_start_stream = msm_sensor_start_stream,
-	.sensor_stop_stream = ov5647_stop_stream,
+	.sensor_stop_stream = msm_sensor_stop_stream,
 	.sensor_group_hold_on = msm_sensor_group_hold_on,
 	.sensor_group_hold_off = msm_sensor_group_hold_off,
 	.sensor_set_fps = msm_sensor_set_fps,
@@ -790,6 +808,7 @@ static struct msm_sensor_fn_t ov5647_func_tbl = {
 	.sensor_config = msm_sensor_config,
 	.sensor_power_up = ov5647_sensor_power_up,
 	.sensor_power_down = ov5647_sensor_power_down,
+	.sensor_get_csi_params = msm_sensor_get_csi_params,
 };
 
 static struct msm_sensor_reg_t ov5647_regs = {
@@ -818,6 +837,7 @@ static struct msm_sensor_ctrl_t ov5647_s_ctrl = {
 	.sensor_id_info = &ov5647_id_info,
 	.sensor_exp_gain_info = &ov5647_exp_gain_info,
 	.cam_mode = MSM_SENSOR_MODE_INVALID,
+	.csic_params = &ov5647_csi_params_array[0],
 	.msm_sensor_mutex = &ov5647_mut,
 	.sensor_i2c_driver = &ov5647_i2c_driver,
 	.sensor_v4l2_subdev_info = ov5647_subdev_info,

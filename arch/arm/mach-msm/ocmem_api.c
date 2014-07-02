@@ -182,7 +182,7 @@ struct ocmem_buf *ocmem_allocate_range(int client_id, unsigned long min,
 		return NULL;
 	}
 
-	/* Asynchronous API requires notifier registration */
+	/*                                                 */
 	if (!check_notifier(client_id)) {
 		pr_err("ocmem: No notifier registered for client %d\n",
 				client_id);
@@ -216,7 +216,7 @@ struct ocmem_buf *ocmem_allocate_nb(int client_id, unsigned long size)
 		return NULL;
 	}
 
-	/* Asynchronous API requires notifier registration */
+	/*                                                 */
 	if (!check_notifier(client_id)) {
 		pr_err("ocmem: No notifier registered for client %d\n",
 				client_id);
@@ -331,7 +331,7 @@ int ocmem_map(int client_id, struct ocmem_buf *buffer,
 		return -EINVAL;
 	}
 
-	/* Asynchronous API requires notifier registration */
+	/*                                                 */
 	if (!check_notifier(client_id)) {
 		pr_err("ocmem: No notifier registered for client %d\n",
 				client_id);
@@ -376,7 +376,7 @@ int ocmem_unmap(int client_id, struct ocmem_buf *buffer,
 		return -EINVAL;
 	}
 
-	/* Asynchronous API requires notifier registration */
+	/*                                                 */
 	if (!check_notifier(client_id)) {
 		pr_err("ocmem: No notifier registered for client %d\n",
 				client_id);
@@ -408,9 +408,9 @@ unsigned long get_max_quota(int client_id)
 	return process_quota(client_id);
 }
 
-/* Synchronous eviction/restore calls */
-/* Only a single eviction or restoration is allowed */
-/* Evictions/Restorations cannot be concurrent with other maps */
+/*                                    */
+/*                                                  */
+/*                                                             */
 int ocmem_evict(int client_id)
 {
 	int ret = 0;
@@ -459,7 +459,7 @@ int ocmem_restore(int client_id)
 }
 EXPORT_SYMBOL(ocmem_restore);
 
-/* Wrappers until power control is transitioned to clients */
+/*                                                         */
 enum ocmem_power_state ocmem_get_power_state(int client_id,
 						struct ocmem_buf *buffer)
 {

@@ -39,33 +39,33 @@
  * PERFORMANCE OF THIS SOFTWARE.
  */
 
-/**=========================================================================
+/*                                                                          
 
-  \file  vos_api.c
+                  
 
-  \brief Stub file for all virtual Operating System Services (vOSS) APIs
+                                                                        
   
-  ========================================================================*/
- /*=========================================================================== 
+                                                                          */
+ /*                                                                            
 
-                       EDIT HISTORY FOR FILE 
+                                             
    
    
-  This section contains comments describing changes made to the module. 
-  Notice that changes are listed in reverse chronological order. 
+                                                                        
+                                                                 
    
    
-  $Header:$ $DateTime: $ $Author: $ 
+                                    
    
    
-  when        who    what, where, why 
-  --------    ---    --------------------------------------------------------
-  03/29/09    kanand     Created module. 
-===========================================================================*/
+                                      
+                                                                             
+                                         
+                                                                           */
 
-/*--------------------------------------------------------------------------
-  Include Files
-  ------------------------------------------------------------------------*/
+/*                                                                          
+               
+                                                                          */
 #include <vos_mq.h>
 #include "vos_sched.h"
 #include <vos_api.h>
@@ -92,30 +92,30 @@
 #include "bapApi.h"
 #include "bapInternal.h"
 #include "bap_hdd_main.h"
-#endif //WLAN_BTAMP_FEATURE
+#endif //                  
 
 
-/*---------------------------------------------------------------------------
- * Preprocessor Definitions and Constants
- * ------------------------------------------------------------------------*/
-/* Amount of time to wait for WDA to perform an asynchronous activity.
-   This value should be larger than the timeout used by WDI to wait for
-   a response from WCNSS since in the event that WCNSS is not responding,
-   WDI should handle that timeout */
+/*                                                                           
+                                         
+                                                                           */
+/*                                                                    
+                                                                       
+                                                                         
+                                  */
 #define VOS_WDA_TIMEOUT 15000
 
-/* Approximate amount of time to wait for WDA to stop WDI */
+/*                                                        */
 #define VOS_WDA_STOP_TIMEOUT WDA_STOP_TIMEOUT 
 
-/*---------------------------------------------------------------------------
- * Data definitions
- * ------------------------------------------------------------------------*/
+/*                                                                           
+                   
+                                                                           */
 static VosContextType  gVosContext;
 static pVosContextType gpVosContext;
 
-/*---------------------------------------------------------------------------
- * Forward declaration
- * ------------------------------------------------------------------------*/
+/*                                                                           
+                      
+                                                                           */
 v_VOID_t vos_sys_probe_thread_cback ( v_VOID_t *pUserData );
 
 v_VOID_t vos_core_return_msg(v_PVOID_t pVContext, pVosMsgWrapper pMsgWrapper);
@@ -124,40 +124,40 @@ v_VOID_t vos_fetch_tl_cfg_parms ( WLANTL_ConfigInfoType *pTLConfig,
     hdd_config_t * pConfig );
 
 
-/*---------------------------------------------------------------------------
+/*                                                                           
   
-  \brief vos_preOpen() - PreOpen the vOSS Module  
+                                                  
     
-  The \a vos_preOpen() function allocates the Vos Context, but do not      
-  initialize all the members. This overal initialization will happen
-  at vos_Open().
-  The reason why we need vos_preOpen() is to get a minimum context 
-  where to store BAL and SAL relative data, which happens before
-  vos_Open() is called.
+                                                                           
+                                                                    
+                
+                                                                   
+                                                                
+                       
   
-  \param  pVosContext: A pointer to where to store the VOS Context 
+                                                                   
  
   
-  \return VOS_STATUS_SUCCESS - Scheduler was successfully initialized and 
-          is ready to be used.
+                                                                          
+                              
               
-          VOS_STATUS_E_FAILURE - Failure to initialize the scheduler/   
+                                                                        
           
-  \sa vos_Open()
+                
   
----------------------------------------------------------------------------*/
+                                                                           */
 VOS_STATUS vos_preOpen ( v_CONTEXT_t *pVosContext )
 {
    if ( pVosContext == NULL)
       return VOS_STATUS_E_FAILURE;
 
-   /* Allocate the VOS Context */
+   /*                          */
    *pVosContext = NULL;
    gpVosContext = &gVosContext;
 
    if (NULL == gpVosContext)
    {
-     /* Critical Error ...Cannot proceed further */
+     /*                                          */
       VOS_TRACE( VOS_MODULE_ID_VOSS, VOS_TRACE_LEVEL_FATAL,
                  "%s: Failed to allocate VOS Context", __func__);
       VOS_ASSERT(0);
@@ -170,24 +170,24 @@ VOS_STATUS vos_preOpen ( v_CONTEXT_t *pVosContext )
 
    return VOS_STATUS_SUCCESS;
 
-} /* vos_preOpen()*/
+} /*              */
 
   
-/*---------------------------------------------------------------------------
+/*                                                                           
   
-  \brief vos_preClose() - PreClose the vOSS Module  
+                                                    
     
-  The \a vos_preClose() function frees the Vos Context.
+                                                       
   
-  \param  pVosContext: A pointer to where the VOS Context was stored 
+                                                                     
  
   
-  \return VOS_STATUS_SUCCESS - Always successful
+                                                
                   
           
-  \sa vos_preClose()
-  \sa vos_close()
----------------------------------------------------------------------------*/
+                    
+                 
+                                                                           */
 VOS_STATUS vos_preClose( v_CONTEXT_t *pVosContext )
 {
 
@@ -212,38 +212,38 @@ VOS_STATUS vos_preClose( v_CONTEXT_t *pVosContext )
 
    return VOS_STATUS_SUCCESS;
 
-} /* vos_preClose()*/
+} /*               */
 
-/*---------------------------------------------------------------------------
+/*                                                                           
   
-  \brief vos_open() - Open the vOSS Module  
+                                            
     
-  The \a vos_open() function opens the vOSS Scheduler
-  Upon successful initialization:
+                                                     
+                                 
   
-     - All VOS submodules should have been initialized
+                                                      
      
-     - The VOS scheduler should have opened
+                                           
      
-     - All the WLAN SW components should have been opened. This includes
-       SYS, MAC, SME, WDA and TL.
+                                                                        
+                                 
       
   
-  \param  hddContextSize: Size of the HDD context to allocate.
+                                                              
  
   
-  \return VOS_STATUS_SUCCESS - Scheduler was successfully initialized and 
-          is ready to be used.
+                                                                          
+                              
   
-          VOS_STATUS_E_RESOURCES - System resources (other than memory) 
-          are unavailable to initilize the scheduler
+                                                                        
+                                                    
 
           
-          VOS_STATUS_E_FAILURE - Failure to initialize the scheduler/   
+                                                                        
           
-  \sa vos_preOpen()
+                   
   
----------------------------------------------------------------------------*/
+                                                                           */
 VOS_STATUS vos_open( v_CONTEXT_t *pVosContext, v_SIZE_t hddContextSize )
 
 {
@@ -264,10 +264,10 @@ VOS_STATUS vos_open( v_CONTEXT_t *pVosContext, v_SIZE_t hddContextSize )
       return VOS_STATUS_E_FAILURE;
    }
 
-   /* Initialize the timer module */
+   /*                             */
    vos_timer_module_init();
 
-   /* Initialize the probe event */
+   /*                            */
    if (vos_event_init(&gpVosContext->ProbeEvent) != VOS_STATUS_SUCCESS)
    {
       VOS_TRACE( VOS_MODULE_ID_VOSS, VOS_TRACE_LEVEL_FATAL,
@@ -284,12 +284,12 @@ VOS_STATUS vos_open( v_CONTEXT_t *pVosContext, v_SIZE_t hddContextSize )
       goto err_probe_event;
    }
 
-   /* Initialize the free message queue */
+   /*                                   */
    vStatus = vos_mq_init(&gpVosContext->freeVosMq);
    if (! VOS_IS_STATUS_SUCCESS(vStatus))
    {
 
-      /* Critical Error ...  Cannot proceed further */
+      /*                                            */
       VOS_TRACE( VOS_MODULE_ID_VOSS, VOS_TRACE_LEVEL_FATAL,
                 "%s: Failed to initialize VOS free message queue", __func__);
       VOS_ASSERT(0);
@@ -304,13 +304,13 @@ VOS_STATUS vos_open( v_CONTEXT_t *pVosContext, v_SIZE_t hddContextSize )
       vos_mq_put(&gpVosContext->freeVosMq, &(gpVosContext->aMsgWrappers[iter]));
    }
 
-   /* Now Open the VOS Scheduler */
+   /*                            */
    vStatus= vos_sched_open(gpVosContext, &gpVosContext->vosSched,
                            sizeof(VosSchedContext));
 
    if (!VOS_IS_STATUS_SUCCESS(vStatus))
    {
-      /* Critical Error ...  Cannot proceed further */
+      /*                                            */
       VOS_TRACE( VOS_MODULE_ID_VOSS, VOS_TRACE_LEVEL_FATAL,
                 "%s: Failed to open VOS Scheduler", __func__);
       VOS_ASSERT(0);
@@ -318,14 +318,14 @@ VOS_STATUS vos_open( v_CONTEXT_t *pVosContext, v_SIZE_t hddContextSize )
    }
 
    /*
-   ** Need to open WDA first because it calls WDI_Init, which calls wpalOpen
-   ** The reason that is needed becasue vos_packet_open need to use PAL APIs
+                                                                            
+                                                                            
    */
 
-   /*Open the WDA module */
+   /*                    */
    vos_mem_set(&macOpenParms, sizeof(macOpenParms), 0);
-   /* UMA is supported in hardware for performing the
-   ** frame translation 802.11 <-> 802.3
+   /*                                                
+                                        
    */
    macOpenParms.frameTransRequired = 1;
    macOpenParms.driverType         = eDRIVER_TYPE_PRODUCTION;
@@ -333,32 +333,32 @@ VOS_STATUS vos_open( v_CONTEXT_t *pVosContext, v_SIZE_t hddContextSize )
 
    if (!VOS_IS_STATUS_SUCCESS(vStatus))
    {
-      /* Critical Error ...  Cannot proceed further */
+      /*                                            */
       VOS_TRACE( VOS_MODULE_ID_VOSS, VOS_TRACE_LEVEL_FATAL,
                 "%s: Failed to open WDA module", __func__);
       VOS_ASSERT(0);
       goto err_sched_close;
    }
 
-   /* Initialize here the VOS Packet sub module */
+   /*                                           */
    vStatus = vos_packet_open( gpVosContext, &gpVosContext->vosPacket,
                               sizeof( vos_pkt_context_t ) );
 
    if ( !VOS_IS_STATUS_SUCCESS( vStatus ) )
    {
-      /* Critical Error ...  Cannot proceed further */
+      /*                                            */
       VOS_TRACE( VOS_MODULE_ID_VOSS, VOS_TRACE_LEVEL_FATAL,
                 "%s: Failed to open VOS Packet Module", __func__);
       VOS_ASSERT(0);
       goto err_wda_close;
    }
 
-   /* Open the SYS module */
+   /*                     */
    vStatus = sysOpen(gpVosContext);
 
    if (!VOS_IS_STATUS_SUCCESS(vStatus))
    {
-      /* Critical Error ...  Cannot proceed further */
+      /*                                            */
       VOS_TRACE( VOS_MODULE_ID_VOSS, VOS_TRACE_LEVEL_FATAL,
                 "%s: Failed to open SYS module", __func__);
       VOS_ASSERT(0);
@@ -366,58 +366,58 @@ VOS_STATUS vos_open( v_CONTEXT_t *pVosContext, v_SIZE_t hddContextSize )
    }
 
 
-   /* initialize the NV module */
+   /*                          */
    vStatus = vos_nv_open();
    if (!VOS_IS_STATUS_SUCCESS(vStatus))
    {
-     // NV module cannot be initialized
+     //                                
      VOS_TRACE( VOS_MODULE_ID_VOSS, VOS_TRACE_LEVEL_FATAL,
                 "%s: Failed to initialize the NV module", __func__);
      goto err_sys_close;
    }
 
-   /* If we arrive here, both threads dispacthing messages correctly */
+   /*                                                                */
    
-   /* Now proceed to open the MAC */
+   /*                             */
 
-   /* UMA is supported in hardware for performing the
-      frame translation 802.11 <-> 802.3 */
+   /*                                                
+                                         */
    macOpenParms.frameTransRequired = 1;
    sirStatus = macOpen(&(gpVosContext->pMACContext), gpVosContext->pHDDContext,
                          &macOpenParms);
    
    if (eSIR_SUCCESS != sirStatus)
    {
-     /* Critical Error ...  Cannot proceed further */
+     /*                                            */
      VOS_TRACE( VOS_MODULE_ID_VOSS, VOS_TRACE_LEVEL_FATAL,
                "%s: Failed to open MAC", __func__);
      VOS_ASSERT(0);
      goto err_nv_close;
    }
-/* call crda before sme_Open which will read NV and store the default country code */
+/*                                                                                 */
    wlan_hdd_get_crda_regd_entry(
       ((hdd_context_t*)(gpVosContext->pHDDContext))->wiphy,
       ((hdd_context_t*)(gpVosContext->pHDDContext))->cfg_ini);
 
-   /* Now proceed to open the SME */
+   /*                             */
    vStatus = sme_Open(gpVosContext->pMACContext);
    if (!VOS_IS_STATUS_SUCCESS(vStatus))
    {
-     /* Critical Error ...  Cannot proceed further */
+     /*                                            */
      VOS_TRACE( VOS_MODULE_ID_VOSS, VOS_TRACE_LEVEL_FATAL,
                "%s: Failed to open SME", __func__);
      VOS_ASSERT(0);
      goto err_mac_close;
    }
 
-   /* Now proceed to open TL. Read TL config first */
+   /*                                              */
    vos_fetch_tl_cfg_parms ( &TLConfig, 
        ((hdd_context_t*)(gpVosContext->pHDDContext))->cfg_ini);
 
    vStatus = WLANTL_Open(gpVosContext, &TLConfig);
    if (!VOS_IS_STATUS_SUCCESS(vStatus))
    {
-     /* Critical Error ...  Cannot proceed further */
+     /*                                            */
      VOS_TRACE( VOS_MODULE_ID_VOSS, VOS_TRACE_LEVEL_FATAL,
                "%s: Failed to open TL", __func__);
      VOS_ASSERT(0);
@@ -465,34 +465,34 @@ err_probe_event:
 
    return VOS_STATUS_E_FAILURE;
 
-} /* vos_open() */
+} /*            */
 
-/*---------------------------------------------------------------------------
+/*                                                                           
 
-  \brief vos_preStart() -
+                         
 
-  The \a vos_preStart() function to download CFG.
-  including:
-      - ccmStart
+                                                 
+            
+                
 
-      - WDA: triggers the CFG download
-
-
-  \param  pVosContext: The VOS context
+                                      
 
 
-  \return VOS_STATUS_SUCCESS - Scheduler was successfully initialized and
-          is ready to be used.
-
-          VOS_STATUS_E_RESOURCES - System resources (other than memory)
-          are unavailable to initilize the scheduler
+                                      
 
 
-          VOS_STATUS_E_FAILURE - Failure to initialize the scheduler/
+                                                                         
+                              
 
-  \sa vos_start
+                                                                       
+                                                    
 
----------------------------------------------------------------------------*/
+
+                                                                     
+
+               
+
+                                                                           */
 VOS_STATUS vos_preStart( v_CONTEXT_t vosContext )
 {
    VOS_STATUS vStatus          = VOS_STATUS_SUCCESS;
@@ -507,7 +507,7 @@ VOS_STATUS vos_preStart( v_CONTEXT_t vosContext )
 
    VOS_ASSERT( NULL != pVosContext->pWDAContext);
 
-   /* call macPreStart */
+   /*                  */
    vStatus = macPreStart(gpVosContext->pMACContext);
    if ( !VOS_IS_STATUS_SUCCESS(vStatus) )
    {
@@ -516,14 +516,14 @@ VOS_STATUS vos_preStart( v_CONTEXT_t vosContext )
       return VOS_STATUS_E_FAILURE;
    }
 
-   /* call ccmStart */
+   /*               */
    ccmStart(gpVosContext->pMACContext);
 
-   /* Reset wda wait event */
+   /*                      */
    vos_event_reset(&gpVosContext->wdaCompleteEvent);   
     
 
-   /*call WDA pre start*/
+   /*                  */
    vStatus = WDA_preStart(gpVosContext);
    if (!VOS_IS_STATUS_SUCCESS(vStatus))
    {
@@ -535,7 +535,7 @@ VOS_STATUS vos_preStart( v_CONTEXT_t vosContext )
       return VOS_STATUS_E_FAILURE;
    }
 
-   /* Need to update time out of complete */
+   /*                                     */
    vStatus = vos_wait_single_event( &gpVosContext->wdaCompleteEvent,
                                     VOS_WDA_TIMEOUT );
    if ( vStatus != VOS_STATUS_SUCCESS )
@@ -559,39 +559,39 @@ VOS_STATUS vos_preStart( v_CONTEXT_t vosContext )
    return VOS_STATUS_SUCCESS;
 }
 
-/*---------------------------------------------------------------------------
+/*                                                                           
   
-  \brief vos_start() - Start the Libra SW Modules 
+                                                  
     
-  The \a vos_start() function starts all the components of the Libra SW
-  including:
-      - SAL/BAL, which in turn starts SSC
+                                                                       
+            
+                                         
       
-      - the MAC (HAL and PE)
+                            
       
-      - SME
+           
       
-      - TL
+          
       
-      - SYS: triggers the CFG download
+                                      
   
   
-  \param  pVosContext: The VOS context
+                                      
  
   
-  \return VOS_STATUS_SUCCESS - Scheduler was successfully initialized and 
-          is ready to be used.
+                                                                          
+                              
   
-          VOS_STATUS_E_RESOURCES - System resources (other than memory) 
-          are unavailable to initilize the scheduler
+                                                                        
+                                                    
 
           
-          VOS_STATUS_E_FAILURE - Failure to initialize the scheduler/   
+                                                                        
           
-  \sa vos_preStart()
-  \sa vos_open()
+                    
+                
   
----------------------------------------------------------------------------*/
+                                                                           */
 VOS_STATUS vos_start( v_CONTEXT_t vosContext )
 {
   VOS_STATUS vStatus          = VOS_STATUS_SUCCESS;
@@ -602,7 +602,7 @@ VOS_STATUS vos_start( v_CONTEXT_t vosContext )
   VOS_TRACE(VOS_MODULE_ID_VOSS, VOS_TRACE_LEVEL_INFO,
             "%s: Starting Libra SW", __func__);
 
-  /* We support only one instance for now ...*/
+  /*                                         */
   if (gpVosContext != pVosContext)
   {
      VOS_TRACE(VOS_MODULE_ID_VOSS, VOS_TRACE_LEVEL_ERROR,
@@ -626,10 +626,10 @@ VOS_STATUS vos_start( v_CONTEXT_t vosContext )
      return VOS_STATUS_E_FAILURE;
   }
 
-  /* WDA_Start will be called after NV image download because the 
-    NV image data has to be updated at HAL before HAL_Start gets executed*/
+  /*                                                              
+                                                                         */
 
-  /* Start the NV Image Download */
+  /*                             */
 
   vos_event_reset( &(gpVosContext->wdaCompleteEvent) );
 
@@ -666,7 +666,7 @@ VOS_STATUS vos_start( v_CONTEXT_t vosContext )
   VOS_TRACE(VOS_MODULE_ID_VOSS, VOS_TRACE_LEVEL_INFO,
             "%s: WDA_NVDownload_start correctly started", __func__);
 
-  /* Start the WDA */
+  /*               */
   vStatus = WDA_start(pVosContext);
   if ( vStatus != VOS_STATUS_SUCCESS )
   {
@@ -677,10 +677,10 @@ VOS_STATUS vos_start( v_CONTEXT_t vosContext )
   VOS_TRACE(VOS_MODULE_ID_VOSS, VOS_TRACE_LEVEL_INFO,
             "%s: WDA correctly started", __func__);
 
-  /* Start the MAC */
+  /*               */
   vos_mem_zero((v_PVOID_t)&halStartParams, sizeof(tHalMacStartParameters));
 
-  /* Start the MAC */
+  /*               */
   sirStatus = macStart(pVosContext->pMACContext,(v_PVOID_t)&halStartParams);
 
   if (eSIR_SUCCESS != sirStatus)
@@ -693,7 +693,7 @@ VOS_STATUS vos_start( v_CONTEXT_t vosContext )
   VOS_TRACE(VOS_MODULE_ID_VOSS, VOS_TRACE_LEVEL_INFO,
             "%s: MAC correctly started", __func__);
 
-  /* START SME */
+  /*           */
   vStatus = sme_Start(pVosContext->pMACContext);
 
   if (!VOS_IS_STATUS_SUCCESS(vStatus))
@@ -706,7 +706,7 @@ VOS_STATUS vos_start( v_CONTEXT_t vosContext )
   VOS_TRACE(VOS_MODULE_ID_VOSS, VOS_TRACE_LEVEL_INFO,
             "%s: SME correctly started", __func__);
 
-  /** START TL */
+  /*           */
   vStatus = WLANTL_Start(pVosContext);
   if (!VOS_IS_STATUS_SUCCESS(vStatus))
   {
@@ -763,16 +763,16 @@ err_wda_stop:
 
   return VOS_STATUS_E_FAILURE;
    
-} /* vos_start() */
+} /*             */
 
 
-/* vos_stop function */
+/*                   */
 VOS_STATUS vos_stop( v_CONTEXT_t vosContext )
 {
   VOS_STATUS vosStatus;
 
-  /* WDA_Stop is called before the SYS so that the processing of Riva 
-  pending responces will not be handled during uninitialization of WLAN driver */
+  /*                                                                  
+                                                                               */
   vos_event_reset( &(gpVosContext->wdaCompleteEvent) );
 
   vosStatus = WDA_stop( vosContext, HAL_STOP_TYPE_RF_KILL );
@@ -805,7 +805,7 @@ VOS_STATUS vos_stop( v_CONTEXT_t vosContext )
     }
   }
 
-  /* SYS STOP will stop SME and MAC */
+  /*                                */
   vosStatus = sysStop( vosContext);
   if (!VOS_IS_STATUS_SUCCESS(vosStatus))
   {
@@ -827,7 +827,7 @@ VOS_STATUS vos_stop( v_CONTEXT_t vosContext )
 }
 
 
-/* vos_close function */
+/*                    */
 VOS_STATUS vos_close( v_CONTEXT_t vosContext )
 {
   VOS_STATUS vosStatus;
@@ -840,7 +840,7 @@ VOS_STATUS vos_close( v_CONTEXT_t vosContext )
          "%s: Failed to close BAP", __func__);
      VOS_ASSERT( VOS_IS_STATUS_SUCCESS( vosStatus ) );
   }
-#endif // WLAN_BTAMP_FEATURE
+#endif //                   
 
 
   vosStatus = WLANTL_Close(vosContext);
@@ -888,7 +888,7 @@ VOS_STATUS vos_close( v_CONTEXT_t vosContext )
 
   if ( TRUE == WDA_needShutdown(vosContext ))
   {
-     /* if WDA stop failed, call WDA shutdown to cleanup WDA/WDI */
+     /*                                                          */
      vosStatus = WDA_shutdown( vosContext, VOS_TRUE );
      if (VOS_IS_STATUS_SUCCESS( vosStatus ) )
      {
@@ -912,7 +912,7 @@ VOS_STATUS vos_close( v_CONTEXT_t vosContext )
      }
   }
   
-  /* Let DXE return packets in WDA_close and then free them here */
+  /*                                                             */
   vosStatus = vos_packet_close( vosContext );
   if (!VOS_IS_STATUS_SUCCESS(vosStatus))
   {
@@ -944,24 +944,24 @@ VOS_STATUS vos_close( v_CONTEXT_t vosContext )
 }
                   
 
-/**---------------------------------------------------------------------------
+/*                                                                            
   
-  \brief vos_get_context() - get context data area
+                                                  
   
-  Each module in the system has a context / data area that is allocated
-  and maanged by voss.  This API allows any user to get a pointer to its 
-  allocated context data area from the VOSS global context.  
+                                                                       
+                                                                         
+                                                             
 
-  \param vosContext - the VOSS Global Context.  
+                                                
   
-  \param moduleId - the module ID, who's context data are is being retrived.
+                                                                            
                       
-  \return - pointer to the context data area.
+                                             
   
-          - NULL if the context data is not allocated for the module ID
-            specified 
+                                                                       
+                      
               
-  --------------------------------------------------------------------------*/
+                                                                            */
 v_VOID_t* vos_get_context( VOS_MODULE_ID moduleId, 
                            v_CONTEXT_t pVosContext )
 {
@@ -995,7 +995,7 @@ v_VOID_t* vos_get_context( VOS_MODULE_ID moduleId,
         pModContext = gpVosContext->pBAPContext;
         break;
     }    
-#endif //WLAN_BTAMP_FEATURE
+#endif //                  
 
     case VOS_MODULE_ID_SAP:
     {
@@ -1019,7 +1019,7 @@ v_VOID_t* vos_get_context( VOS_MODULE_ID moduleId,
     case VOS_MODULE_ID_PE:
     {
       /* 
-      ** In all these cases, we just return the MAC Context
+                                                           
       */
       pModContext = gpVosContext->pMACContext;
       break;
@@ -1027,14 +1027,14 @@ v_VOID_t* vos_get_context( VOS_MODULE_ID moduleId,
 
     case VOS_MODULE_ID_WDA:
     {
-      /* For WDA module */
+      /*                */
       pModContext = gpVosContext->pWDAContext;
       break;
     }
 
     case VOS_MODULE_ID_VOSS:
     {
-      /* For SYS this is VOS itself*/
+      /*                           */
       pModContext = gpVosContext;
       break;
     }
@@ -1056,26 +1056,26 @@ v_VOID_t* vos_get_context( VOS_MODULE_ID moduleId,
 
   return pModContext;
 
-} /* vos_get_context()*/
+} /*                  */
 
 
-/**---------------------------------------------------------------------------
+/*                                                                            
   
-  \brief vos_get_global_context() - get VOSS global Context
+                                                           
   
-  This API allows any user to get the VOS Global Context pointer from a
-  module context data area.  
+                                                                       
+                             
   
-  \param moduleContext - the input module context pointer
+                                                         
   
-  \param moduleId - the module ID who's context pointer is input in 
-         moduleContext.
+                                                                    
+                       
                       
-  \return - pointer to the VOSS global context
+                                              
   
-          - NULL if the function is unable to retreive the VOSS context. 
+                                                                         
               
-  --------------------------------------------------------------------------*/
+                                                                            */
 v_CONTEXT_t vos_get_global_context( VOS_MODULE_ID moduleId, 
                                     v_VOID_t *moduleContext )
 {
@@ -1087,7 +1087,7 @@ v_CONTEXT_t vos_get_global_context( VOS_MODULE_ID moduleId,
 
   return gpVosContext;
 
-} /* vos_get_global_context() */
+} /*                          */
 
 
 v_U8_t vos_is_logp_in_progress(VOS_MODULE_ID moduleId, v_VOID_t *moduleContext)
@@ -1138,44 +1138,44 @@ void vos_set_load_unload_in_progress(VOS_MODULE_ID moduleId, v_U8_t value)
    gpVosContext->isLoadUnloadInProgress = value;
 }
 
-/**---------------------------------------------------------------------------
+/*                                                                            
   
-  \brief vos_alloc_context() - allocate a context within the VOSS global Context
+                                                                                
   
-  This API allows any user to allocate a user context area within the 
-  VOS Global Context.  
+                                                                      
+                       
   
-  \param pVosContext - pointer to the global Vos context
+                                                        
   
-  \param moduleId - the module ID who's context area is being allocated.
+                                                                        
   
-  \param ppModuleContext - pointer to location where the pointer to the 
-                           allocated context is returned.  Note this 
-                           output pointer is valid only if the API
-                           returns VOS_STATUS_SUCCESS
+                                                                        
+                                                                     
+                                                                  
+                                                     
   
-  \param size - the size of the context area to be allocated.
+                                                             
                       
-  \return - VOS_STATUS_SUCCESS - the context for the module ID has been 
-            allocated successfully.  The pointer to the context area
-            can be found in *ppModuleContext.  
-            \note This function returns VOS_STATUS_SUCCESS if the 
-            module context was already allocated and the size 
-            allocated matches the size on this call.
+                                                                        
+                                                                    
+                                               
+                                                                  
+                                                              
+                                                    
 
-            VOS_STATUS_E_INVAL - the moduleId is not a valid or does 
-            not identify a module that can have a context allocated.
+                                                                     
+                                                                    
 
-            VOS_STATUS_E_EXISTS - vos could allocate the requested context 
-            because a context for this module ID already exists and it is
-            a *different* size that specified on this call.
+                                                                           
+                                                                         
+                                                           
             
-            VOS_STATUS_E_NOMEM - vos could not allocate memory for the 
-            requested context area.  
+                                                                       
+                                     
               
-  \sa vos_get_context(), vos_free_context()
+                                           
   
-  --------------------------------------------------------------------------*/
+                                                                            */
 VOS_STATUS vos_alloc_context( v_VOID_t *pVosContext, VOS_MODULE_ID moduleID, 
                               v_VOID_t **ppModuleContext, v_SIZE_t size )
 {
@@ -1207,7 +1207,7 @@ VOS_STATUS vos_alloc_context( v_VOID_t *pVosContext, VOS_MODULE_ID moduleID,
         pGpModContext = &(gpVosContext->pBAPContext);
         break;
     }    
-#endif //WLAN_BTAMP_FEATURE
+#endif //                  
 
     case VOS_MODULE_ID_SAP:
     {
@@ -1236,8 +1236,8 @@ VOS_STATUS vos_alloc_context( v_VOID_t *pVosContext, VOS_MODULE_ID moduleID,
   if ( NULL != *pGpModContext)
   {
     /*
-    ** Context has already been allocated!
-    ** Prevent double allocation
+                                          
+                                
     */
     VOS_TRACE( VOS_MODULE_ID_VOSS, VOS_TRACE_LEVEL_ERROR,
                "%s: Module ID %i context has already been allocated",
@@ -1246,7 +1246,7 @@ VOS_STATUS vos_alloc_context( v_VOID_t *pVosContext, VOS_MODULE_ID moduleID,
   }
   
   /*
-  ** Dynamically allocate the context for module
+                                                
   */
   
   *ppModuleContext = kmalloc(size, GFP_KERNEL);
@@ -1269,40 +1269,40 @@ VOS_STATUS vos_alloc_context( v_VOID_t *pVosContext, VOS_MODULE_ID moduleID,
 
   return VOS_STATUS_SUCCESS;
 
-} /* vos_alloc_context() */
+} /*                     */
 
 
-/**---------------------------------------------------------------------------
+/*                                                                            
   
-  \brief vos_free_context() - free an allocated a context within the 
-                               VOSS global Context
+                                                                     
+                                                  
   
-  This API allows a user to free the user context area within the 
-  VOS Global Context.  
+                                                                  
+                       
   
-  \param pVosContext - pointer to the global Vos context
+                                                        
   
-  \param moduleId - the module ID who's context area is being free
+                                                                  
   
-  \param pModuleContext - pointer to module context area to be free'd.
+                                                                      
                       
-  \return - VOS_STATUS_SUCCESS - the context for the module ID has been 
-            free'd.  The pointer to the context area is not longer 
-            available.
+                                                                        
+                                                                   
+                      
             
-            VOS_STATUS_E_FAULT - pVosContext or pModuleContext are not 
-            valid pointers.
+                                                                       
+                           
                                  
-            VOS_STATUS_E_INVAL - the moduleId is not a valid or does 
-            not identify a module that can have a context free'd.
+                                                                     
+                                                                 
             
-            VOS_STATUS_E_EXISTS - vos could not free the requested 
-            context area because a context for this module ID does not
-            exist in the global vos context.
+                                                                   
+                                                                      
+                                            
               
-  \sa vos_get_context()              
+                                     
   
-  --------------------------------------------------------------------------*/
+                                                                            */
 VOS_STATUS vos_free_context( v_VOID_t *pVosContext, VOS_MODULE_ID moduleID,
                              v_VOID_t *pModuleContext )
 {
@@ -1331,7 +1331,7 @@ VOS_STATUS vos_free_context( v_VOID_t *pVosContext, VOS_MODULE_ID moduleID,
         pGpModContext = &(gpVosContext->pBAPContext);
         break;
     }
-#endif //WLAN_BTAMP_FEATURE
+#endif //                  
  
     case VOS_MODULE_ID_SAP:
     {
@@ -1360,7 +1360,7 @@ VOS_STATUS vos_free_context( v_VOID_t *pVosContext, VOS_MODULE_ID moduleID,
   if ( NULL == *pGpModContext)
   {
     /*
-    ** Context has not been allocated or freed already!
+                                                       
     */
     VOS_TRACE( VOS_MODULE_ID_VOSS, VOS_TRACE_LEVEL_ERROR,"%s: Module ID %i "
         "context has not been allocated or freed already", __func__,moduleID);
@@ -1381,46 +1381,46 @@ VOS_STATUS vos_free_context( v_VOID_t *pVosContext, VOS_MODULE_ID moduleID,
 
   return VOS_STATUS_SUCCESS;
 
-} /* vos_free_context() */
+} /*                    */
                                                  
 
-/**---------------------------------------------------------------------------
+/*                                                                            
   
-  \brief vos_mq_post_message() - post a message to a message queue
+                                                                  
 
-  This API allows messages to be posted to a specific message queue.  Messages
-  can be posted to the following message queues:
+                                                                              
+                                                
   
-  <ul>
-    <li> SME
-    <li> PE
-    <li> HAL
-    <li> TL
-  </ul> 
+      
+            
+           
+            
+           
+        
   
-  \param msgQueueId - identifies the message queue upon which the message
-         will be posted.
+                                                                         
+                        
          
-  \param message - a pointer to a message buffer.  Memory for this message 
-         buffer is allocated by the caller and free'd by the vOSS after the
-         message is posted to the message queue.  If the consumer of the 
-         message needs anything in this message, it needs to copy the contents
-         before returning from the message queue handler.
+                                                                           
+                                                                           
+                                                                         
+                                                                              
+                                                         
   
-  \return VOS_STATUS_SUCCESS - the message has been successfully posted
-          to the message queue.
+                                                                       
+                               
           
-          VOS_STATUS_E_INVAL - The value specified by msgQueueId does not 
-          refer to a valid Message Queue Id.
+                                                                          
+                                            
           
-          VOS_STATUS_E_FAULT  - message is an invalid pointer.     
+                                                                   
           
-          VOS_STATUS_E_FAILURE - the message queue handler has reported
-          an unknown failure.
+                                                                       
+                             
 
-  \sa
+     
   
-  --------------------------------------------------------------------------*/
+                                                                            */
 VOS_STATUS vos_mq_post_message( VOS_MQ_ID msgQueueId, vos_msg_t *pMsg )
 {
   pVosMqType      pTargetMq   = NULL;
@@ -1436,42 +1436,42 @@ VOS_STATUS vos_mq_post_message( VOS_MQ_ID msgQueueId, vos_msg_t *pMsg )
 
   switch (msgQueueId)
   {
-    /// Message Queue ID for messages bound for SME
+    //                                             
     case  VOS_MQ_ID_SME: 
     {
        pTargetMq = &(gpVosContext->vosSched.smeMcMq);
        break;
     }
 
-    /// Message Queue ID for messages bound for PE
+    //                                            
     case VOS_MQ_ID_PE:  
     {
        pTargetMq = &(gpVosContext->vosSched.peMcMq);
        break;
     }
 
-    /// Message Queue ID for messages bound for WDA
+    //                                             
     case VOS_MQ_ID_WDA: 
     {
        pTargetMq = &(gpVosContext->vosSched.wdaMcMq);
        break;
     }
 
-    /// Message Queue ID for messages bound for WDI
+    //                                             
     case VOS_MQ_ID_WDI:
     {
        pTargetMq = &(gpVosContext->vosSched.wdiMcMq);
        break;
     }
 
-    /// Message Queue ID for messages bound for TL
+    //                                            
     case VOS_MQ_ID_TL: 
     {
        pTargetMq = &(gpVosContext->vosSched.tlMcMq);
        break;
     }
 
-    /// Message Queue ID for messages bound for the SYS module
+    //                                                        
     case VOS_MQ_ID_SYS:
     {
        pTargetMq = &(gpVosContext->vosSched.sysMcMq);
@@ -1496,7 +1496,7 @@ VOS_STATUS vos_mq_post_message( VOS_MQ_ID msgQueueId, vos_msg_t *pMsg )
   } 
 
   /*
-  ** Try and get a free Msg wrapper
+                                   
   */
   pMsgWrapper = vos_mq_get(&gpVosContext->freeVosMq);
 
@@ -1509,7 +1509,7 @@ VOS_STATUS vos_mq_post_message( VOS_MQ_ID msgQueueId, vos_msg_t *pMsg )
   }
   
   /*
-  ** Copy the message now
+                         
   */
   vos_mem_copy( (v_VOID_t*)pMsgWrapper->pVosMsg, 
                 (v_VOID_t*)pMsg, sizeof(vos_msg_t));
@@ -1521,45 +1521,45 @@ VOS_STATUS vos_mq_post_message( VOS_MQ_ID msgQueueId, vos_msg_t *pMsg )
 
   return VOS_STATUS_SUCCESS;
 
-} /* vos_mq_post_message()*/
+} /*                      */
 
 
-/**---------------------------------------------------------------------------
+/*                                                                            
   
-  \brief vos_tx_mq_serialize() - serialize a message to the Tx execution flow
+                                                                             
 
-  This API allows messages to be posted to a specific message queue in the 
-  Tx excution flow.  Messages for the Tx execution flow can be posted only 
-  to the following queue.
+                                                                           
+                                                                           
+                         
   
-  <ul>
-    <li> TL
-    <li> SSC/WDI
-  </ul>
+      
+           
+                
+       
   
-  \param msgQueueId - identifies the message queue upon which the message
-         will be posted.
+                                                                         
+                        
          
-  \param message - a pointer to a message buffer.  Body memory for this message 
-         buffer is allocated by the caller and free'd by the vOSS after the
-         message is dispacthed to the appropriate component.  If the consumer 
-         of the message needs to keep anything in the body, it needs to copy 
-         the contents before returning from the message handler.
+                                                                                
+                                                                           
+                                                                              
+                                                                             
+                                                                
   
-  \return VOS_STATUS_SUCCESS - the message has been successfully posted
-          to the message queue.
+                                                                       
+                               
           
-          VOS_STATUS_E_INVAL - The value specified by msgQueueId does not 
-          refer to a valid Message Queue Id.
+                                                                          
+                                            
           
-          VOS_STATUS_E_FAULT  - message is an invalid pointer.     
+                                                                   
           
-          VOS_STATUS_E_FAILURE - the message queue handler has reported
-          an unknown failure.
+                                                                       
+                             
 
-  \sa
+     
   
-  --------------------------------------------------------------------------*/
+                                                                            */
 VOS_STATUS vos_tx_mq_serialize( VOS_MQ_ID msgQueueId, vos_msg_t *pMsg )
 {
   pVosMqType      pTargetMq   = NULL;
@@ -1575,21 +1575,21 @@ VOS_STATUS vos_tx_mq_serialize( VOS_MQ_ID msgQueueId, vos_msg_t *pMsg )
 
   switch (msgQueueId)
   {
-    /// Message Queue ID for messages bound for SME
+    //                                             
     case  VOS_MQ_ID_TL: 
     {
        pTargetMq = &(gpVosContext->vosSched.tlTxMq);
        break;
     }
 
-    /// Message Queue ID for messages bound for SSC
+    //                                             
     case VOS_MQ_ID_WDI:  
     {
        pTargetMq = &(gpVosContext->vosSched.wdiTxMq);
        break;
     }
     
-    /// Message Queue ID for messages bound for the SYS module
+    //                                                        
     case VOS_MQ_ID_SYS:
     {
        pTargetMq = &(gpVosContext->vosSched.sysTxMq);
@@ -1599,7 +1599,7 @@ VOS_STATUS vos_tx_mq_serialize( VOS_MQ_ID msgQueueId, vos_msg_t *pMsg )
     default:
 
     VOS_TRACE(VOS_MODULE_ID_VOSS, VOS_TRACE_LEVEL_ERROR,
-              "Trying to queue msg into unknown Tx Msg queue ID %d",
+              "%s: Trying to queue msg into unknown Tx Msg queue ID %d",
                __func__, msgQueueId);
 
     return VOS_STATUS_E_FAILURE;
@@ -1614,7 +1614,7 @@ VOS_STATUS vos_tx_mq_serialize( VOS_MQ_ID msgQueueId, vos_msg_t *pMsg )
     
 
   /*
-  ** Try and get a free Msg wrapper
+                                   
   */
   pMsgWrapper = vos_mq_get(&gpVosContext->freeVosMq);
 
@@ -1627,7 +1627,7 @@ VOS_STATUS vos_tx_mq_serialize( VOS_MQ_ID msgQueueId, vos_msg_t *pMsg )
   }
 
   /*
-  ** Copy the message now
+                         
   */
   vos_mem_copy( (v_VOID_t*)pMsgWrapper->pVosMsg, 
                 (v_VOID_t*)pMsg, sizeof(vos_msg_t));
@@ -1639,44 +1639,44 @@ VOS_STATUS vos_tx_mq_serialize( VOS_MQ_ID msgQueueId, vos_msg_t *pMsg )
 
   return VOS_STATUS_SUCCESS;
 
-} /* vos_tx_mq_serialize()*/
+} /*                      */
 
-/**---------------------------------------------------------------------------
+/*                                                                            
 
-  \brief vos_rx_mq_serialize() - serialize a message to the Rx execution flow
+                                                                             
 
-  This API allows messages to be posted to a specific message queue in the
-  Tx excution flow.  Messages for the Rx execution flow can be posted only
-  to the following queue.
+                                                                          
+                                                                          
+                         
 
-  <ul>
-    <li> TL
-    <li> WDI
-  </ul>
+      
+           
+            
+       
 
-  \param msgQueueId - identifies the message queue upon which the message
-         will be posted.
+                                                                         
+                        
 
-  \param message - a pointer to a message buffer.  Body memory for this message
-         buffer is allocated by the caller and free'd by the vOSS after the
-         message is dispacthed to the appropriate component.  If the consumer
-         of the message needs to keep anything in the body, it needs to copy
-         the contents before returning from the message handler.
+                                                                               
+                                                                           
+                                                                             
+                                                                            
+                                                                
 
-  \return VOS_STATUS_SUCCESS - the message has been successfully posted
-          to the message queue.
+                                                                       
+                               
 
-          VOS_STATUS_E_INVAL - The value specified by msgQueueId does not
-          refer to a valid Message Queue Id.
+                                                                         
+                                            
 
-          VOS_STATUS_E_FAULT  - message is an invalid pointer.
+                                                              
 
-          VOS_STATUS_E_FAILURE - the message queue handler has reported
-          an unknown failure.
+                                                                       
+                             
 
-  \sa
+     
 
-  --------------------------------------------------------------------------*/
+                                                                            */
 
 VOS_STATUS vos_rx_mq_serialize( VOS_MQ_ID msgQueueId, vos_msg_t *pMsg )
 {
@@ -1699,7 +1699,7 @@ VOS_STATUS vos_rx_mq_serialize( VOS_MQ_ID msgQueueId, vos_msg_t *pMsg )
        break;
     }
 
-    /// Message Queue ID for messages bound for WDI
+    //                                             
     case VOS_MQ_ID_WDI:
     {
        pTargetMq = &(gpVosContext->vosSched.wdiRxMq);
@@ -1709,7 +1709,7 @@ VOS_STATUS vos_rx_mq_serialize( VOS_MQ_ID msgQueueId, vos_msg_t *pMsg )
     default:
 
     VOS_TRACE(VOS_MODULE_ID_VOSS, VOS_TRACE_LEVEL_ERROR,
-              "Trying to queue msg into unknown Rx Msg queue ID %d",
+              "%s: Trying to queue msg into unknown Rx Msg queue ID %d",
                __func__, msgQueueId);
 
     return VOS_STATUS_E_FAILURE;
@@ -1724,7 +1724,7 @@ VOS_STATUS vos_rx_mq_serialize( VOS_MQ_ID msgQueueId, vos_msg_t *pMsg )
 
 
   /*
-  ** Try and get a free Msg wrapper
+                                   
   */
   pMsgWrapper = vos_mq_get(&gpVosContext->freeVosMq);
 
@@ -1737,7 +1737,7 @@ VOS_STATUS vos_rx_mq_serialize( VOS_MQ_ID msgQueueId, vos_msg_t *pMsg )
   }
 
   /*
-  ** Copy the message now
+                         
   */
   vos_mem_copy( (v_VOID_t*)pMsgWrapper->pVosMsg,
                 (v_VOID_t*)pMsg, sizeof(vos_msg_t));
@@ -1749,7 +1749,7 @@ VOS_STATUS vos_rx_mq_serialize( VOS_MQ_ID msgQueueId, vos_msg_t *pMsg )
 
   return VOS_STATUS_SUCCESS;
 
-} /* vos_rx_mq_serialize()*/
+} /*                      */
 
 v_VOID_t 
 vos_sys_probe_thread_cback 
@@ -1771,7 +1771,7 @@ vos_sys_probe_thread_cback
      return;
   }
 
-} /* vos_sys_probe_thread_cback() */
+} /*                              */
 
 v_VOID_t vos_WDAComplete_cback
 (
@@ -1793,7 +1793,7 @@ v_VOID_t vos_WDAComplete_cback
      return;
   }
 
-} /* vos_WDAComplete_cback() */
+} /*                         */
 
 v_VOID_t vos_core_return_msg
 (
@@ -1822,22 +1822,22 @@ v_VOID_t vos_core_return_msg
   } 
   
   /*
-  ** Return the message on the free message queue
+                                                 
   */
   INIT_LIST_HEAD(&pMsgWrapper->msgNode);
   vos_mq_put(&pVosContext->freeVosMq, pMsgWrapper);
 
-} /* vos_core_return_msg() */
+} /*                       */
 
 
-/**
-  @brief vos_fetch_tl_cfg_parms() - this function will attempt to read the
-  TL config params from the registry
+/* 
+                                                                          
+                                    
    
-  @param pAdapter : [inout] pointer to TL config block
+                                                      
 
-  @return 
-  None
+          
+      
 
 */
 v_VOID_t 
@@ -1872,14 +1872,14 @@ void vos_abort_mac_scan(void)
     hdd_context_t *pHddCtx = NULL;
     v_CONTEXT_t pVosContext        = NULL;
 
-    /* Get the Global VOSS Context */
+    /*                             */
     pVosContext = vos_get_global_context(VOS_MODULE_ID_SYS, NULL);
     if(!pVosContext) {
        hddLog(VOS_TRACE_LEVEL_FATAL, "%s: Global VOS context is Null", __func__);
        return;
     }
     
-    /* Get the HDD context */
+    /*                     */
     pHddCtx = (hdd_context_t *)vos_get_context(VOS_MODULE_ID_HDD, pVosContext );
     if(!pHddCtx) {
        hddLog(VOS_TRACE_LEVEL_FATAL, "%s: HDD context is Null", __func__);
@@ -1890,24 +1890,24 @@ void vos_abort_mac_scan(void)
     return;
 }
 
-/*---------------------------------------------------------------------------
+/*                                                                           
 
-  \brief vos_shutdown() - shutdown VOS
+                                      
 
-     - All VOS submodules are closed.
+                                     
 
-     - All the WLAN SW components should have been opened. This includes
-       SYS, MAC, SME and TL.
-
-
-  \param  vosContext: Global vos context
+                                                                        
+                            
 
 
-  \return VOS_STATUS_SUCCESS - Operation successfull & vos is shutdown
+                                        
 
-          VOS_STATUS_E_FAILURE - Failure to close
 
----------------------------------------------------------------------------*/
+                                                                      
+
+                                                 
+
+                                                                           */
 VOS_STATUS vos_shutdown(v_CONTEXT_t vosContext)
 {
   VOS_STATUS vosStatus;
@@ -1920,7 +1920,7 @@ VOS_STATUS vos_shutdown(v_CONTEXT_t vosContext)
          "%s: Failed to close BAP", __func__);
      VOS_ASSERT( VOS_IS_STATUS_SUCCESS( vosStatus ) );
   }
-#endif // WLAN_BTAMP_FEATURE
+#endif //                   
 
   vosStatus = WLANTL_Close(vosContext);
   if (!VOS_IS_STATUS_SUCCESS(vosStatus))
@@ -1964,7 +1964,7 @@ VOS_STATUS vos_shutdown(v_CONTEXT_t vosContext)
      VOS_ASSERT( VOS_IS_STATUS_SUCCESS( vosStatus ) );
   }
 
- /* Let DXE return packets in WDA_close and then free them here */
+ /*                                                             */
   vosStatus = vos_packet_close( vosContext );
   if (!VOS_IS_STATUS_SUCCESS(vosStatus))
   {
@@ -1994,20 +1994,20 @@ VOS_STATUS vos_shutdown(v_CONTEXT_t vosContext)
   return VOS_STATUS_SUCCESS;
 }
 
-/*---------------------------------------------------------------------------
+/*                                                                           
 
-  \brief vos_wda_shutdown() - VOS interface to wda shutdown
+                                                           
 
-     - WDA/WDI shutdown
+                       
 
-  \param  vosContext: Global vos context
+                                        
 
 
-  \return VOS_STATUS_SUCCESS - Operation successfull
+                                                    
 
-          VOS_STATUS_E_FAILURE - Failure to close
+                                                 
 
----------------------------------------------------------------------------*/
+                                                                           */
 VOS_STATUS vos_wda_shutdown(v_CONTEXT_t vosContext)
 {
   VOS_STATUS vosStatus;
@@ -2021,19 +2021,19 @@ VOS_STATUS vos_wda_shutdown(v_CONTEXT_t vosContext)
   }
   return vosStatus;
 }
-/**
-  @brief vos_wlanShutdown() - This API will shutdown WLAN driver
+/* 
+                                                                
 
-  This function is called when Riva subsystem crashes.  There are two
-  methods (or operations) in WLAN driver to handle Riva crash,
-    1. shutdown: Called when Riva goes down, this will shutdown WLAN
-                 driver without handshaking with Riva.
-    2. re-init:  Next API
-  @param
-       NONE
-  @return
-       VOS_STATUS_SUCCESS   - Operation completed successfully.
-       VOS_STATUS_E_FAILURE - Operation failed.
+                                                                     
+                                                              
+                                                                    
+                                                      
+                         
+        
+           
+         
+                                                               
+                                               
 
 */
 VOS_STATUS vos_wlanShutdown(void)
@@ -2042,20 +2042,20 @@ VOS_STATUS vos_wlanShutdown(void)
    vstatus = vos_watchdog_wlan_shutdown();
    return vstatus;
 }
-/**
-  @brief vos_wlanReInit() - This API will re-init WLAN driver
+/* 
+                                                             
 
-  This function is called when Riva subsystem reboots.  There are two
-  methods (or operations) in WLAN driver to handle Riva crash,
-    1. shutdown: Previous API
-    2. re-init:  Called when Riva comes back after the crash. This will
-                 re-initialize WLAN driver. In some cases re-open may be
-                 referred instead of re-init.
-  @param
-       NONE
-  @return
-       VOS_STATUS_SUCCESS   - Operation completed successfully.
-       VOS_STATUS_E_FAILURE - Operation failed.
+                                                                     
+                                                              
+                             
+                                                                       
+                                                                        
+                                             
+        
+           
+         
+                                                               
+                                               
 
 */
 VOS_STATUS vos_wlanReInit(void)
@@ -2064,22 +2064,22 @@ VOS_STATUS vos_wlanReInit(void)
    vstatus = vos_watchdog_wlan_re_init();
    return vstatus;
 }
-/**
-  @brief vos_wlanRestart() - This API will reload WLAN driver.
+/* 
+                                                              
 
-  This function is called if driver detects any fatal state which 
-  can be recovered by a WLAN module reload ( Android framwork initiated ).
-  Note that this API will not initiate any RIVA subsystem restart.
+                                                                  
+                                                                          
+                                                                  
 
-  The function wlan_hdd_restart_driver protects against re-entrant calls.
+                                                                         
 
-  @param
-       NONE
-  @return
-       VOS_STATUS_SUCCESS   - Operation completed successfully.
-       VOS_STATUS_E_FAILURE - Operation failed.
-       VOS_STATUS_E_EMPTY   - No configured interface
-       VOS_STATUS_E_ALREADY - Request already in progress
+        
+           
+         
+                                                               
+                                               
+                                                     
+                                                         
 
 
 */
@@ -2089,7 +2089,7 @@ VOS_STATUS vos_wlanRestart(void)
    hdd_context_t *pHddCtx = NULL;
    v_CONTEXT_t pVosContext        = NULL;
 
-   /* Check whether driver load unload is in progress */
+   /*                                                 */
    if(vos_is_load_unload_in_progress( VOS_MODULE_ID_VOSS, NULL)) 
    {
       VOS_TRACE(VOS_MODULE_ID_VOSS, VOS_TRACE_LEVEL_ERROR, 
@@ -2097,7 +2097,7 @@ VOS_STATUS vos_wlanRestart(void)
       return VOS_STATUS_E_AGAIN;
    }
 
-   /* Get the Global VOSS Context */
+   /*                             */
    pVosContext = vos_get_global_context(VOS_MODULE_ID_VOSS, NULL);
    if(!pVosContext) {
       VOS_TRACE(VOS_MODULE_ID_VOSS, VOS_TRACE_LEVEL_FATAL, 
@@ -2105,7 +2105,7 @@ VOS_STATUS vos_wlanRestart(void)
       return VOS_STATUS_E_FAILURE;
    }
     
-   /* Get the HDD context */
+   /*                     */
    pHddCtx = (hdd_context_t *)vos_get_context(VOS_MODULE_ID_HDD, pVosContext );
    if(!pHddCtx) {
       VOS_TRACE(VOS_MODULE_ID_VOSS, VOS_TRACE_LEVEL_FATAL, 
@@ -2113,7 +2113,7 @@ VOS_STATUS vos_wlanRestart(void)
       return VOS_STATUS_E_FAILURE;
    }
 
-   /* Reload the driver */
+   /*                   */
    vstatus = wlan_hdd_restart_driver(pHddCtx);
    return vstatus;
 }

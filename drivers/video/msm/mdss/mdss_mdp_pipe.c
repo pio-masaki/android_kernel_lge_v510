@@ -30,7 +30,7 @@ static u32 mdss_mdp_smp_mmb_reserve(unsigned long *smp, size_t n)
 {
 	u32 i, mmb;
 
-	/* reserve more blocks if needed, but can't free mmb at this point */
+	/*                                                                 */
 	for (i = bitmap_weight(smp, SMP_MB_CNT); i < n; i++) {
 		if (bitmap_full(mdss_mdp_smp_mmb_pool, SMP_MB_CNT))
 			break;
@@ -336,7 +336,7 @@ static u32 mdss_mdp_scale_phase_step(int f_num, u32 src, u32 dst)
 	n = mdss_mdp_leading_zero(src);
 	if (n > f_num)
 		n = f_num;
-	s = src << n;	/* maximum to reduce lose of resolution */
+	s = src << n;	/*                                      */
 	val = s / dst;
 	if (n < f_num) {
 		n = f_num - n;
@@ -382,22 +382,22 @@ static int mdss_mdp_scale_setup(struct mdss_mdp_pipe *pipe)
 			u32 chr_dst_h = pipe->dst.h;
 			if ((chroma_sample == MDSS_MDP_CHROMA_420) ||
 			    (chroma_sample == MDSS_MDP_CHROMA_H1V2))
-				chr_dst_h *= 2;	/* 2x upsample chroma */
+				chr_dst_h *= 2;	/*                    */
 
 			if (pipe->src.h <= pipe->dst.h)
-				scale_config |= /* G/Y, A */
+				scale_config |= /*        */
 					(MDSS_MDP_SCALE_FILTER_BIL << 10) |
 					(MDSS_MDP_SCALE_FILTER_NEAREST << 18);
 			else
-				scale_config |= /* G/Y, A */
+				scale_config |= /*        */
 					(MDSS_MDP_SCALE_FILTER_PCMN << 10) |
 					(MDSS_MDP_SCALE_FILTER_NEAREST << 18);
 
 			if (pipe->src.h <= chr_dst_h)
-				scale_config |= /* CrCb */
+				scale_config |= /*      */
 					(MDSS_MDP_SCALE_FILTER_BIL << 14);
 			else
-				scale_config |= /* CrCb */
+				scale_config |= /*      */
 					(MDSS_MDP_SCALE_FILTER_PCMN << 14);
 
 			phasey_step = mdss_mdp_scale_phase_step(
@@ -408,11 +408,11 @@ static int mdss_mdp_scale_setup(struct mdss_mdp_pipe *pipe)
 					phasey_step);
 		} else {
 			if (pipe->src.h <= pipe->dst.h)
-				scale_config |= /* RGB, A */
+				scale_config |= /*        */
 					(MDSS_MDP_SCALE_FILTER_BIL << 10) |
 					(MDSS_MDP_SCALE_FILTER_NEAREST << 18);
 			else
-				scale_config |= /* RGB, A */
+				scale_config |= /*        */
 					(MDSS_MDP_SCALE_FILTER_PCMN << 10) |
 					(MDSS_MDP_SCALE_FILTER_NEAREST << 18);
 		}
@@ -440,22 +440,22 @@ static int mdss_mdp_scale_setup(struct mdss_mdp_pipe *pipe)
 
 			if ((chroma_sample == MDSS_MDP_CHROMA_420) ||
 			    (chroma_sample == MDSS_MDP_CHROMA_H2V1))
-				chr_dst_w *= 2;	/* 2x upsample chroma */
+				chr_dst_w *= 2;	/*                    */
 
 			if (pipe->src.w <= pipe->dst.w)
-				scale_config |= /* G/Y, A */
+				scale_config |= /*        */
 					(MDSS_MDP_SCALE_FILTER_BIL << 8) |
 					(MDSS_MDP_SCALE_FILTER_NEAREST << 16);
 			else
-				scale_config |= /* G/Y, A */
+				scale_config |= /*        */
 					(MDSS_MDP_SCALE_FILTER_PCMN << 8) |
 					(MDSS_MDP_SCALE_FILTER_NEAREST << 16);
 
 			if (pipe->src.w <= chr_dst_w)
-				scale_config |= /* CrCb */
+				scale_config |= /*      */
 					(MDSS_MDP_SCALE_FILTER_BIL << 12);
 			else
-				scale_config |= /* CrCb */
+				scale_config |= /*      */
 					(MDSS_MDP_SCALE_FILTER_PCMN << 12);
 
 			phasex_step = mdss_mdp_scale_phase_step(
@@ -465,11 +465,11 @@ static int mdss_mdp_scale_setup(struct mdss_mdp_pipe *pipe)
 					phasex_step);
 		} else {
 			if (pipe->src.w <= pipe->dst.w)
-				scale_config |= /* RGB, A */
+				scale_config |= /*        */
 					(MDSS_MDP_SCALE_FILTER_BIL << 8) |
 					(MDSS_MDP_SCALE_FILTER_NEAREST << 16);
 			else
-				scale_config |= /* RGB, A */
+				scale_config |= /*        */
 					(MDSS_MDP_SCALE_FILTER_PCMN << 8) |
 					(MDSS_MDP_SCALE_FILTER_NEAREST << 16);
 		}
@@ -578,11 +578,11 @@ static int mdss_mdp_vig_setup(struct mdss_mdp_pipe *pipe)
 	pr_debug("pnum=%x\n", pipe->num);
 
 	if (pipe->src_fmt->is_yuv)
-		opmode |= (0 << 19) |	/* DST_DATA=RGB */
-			  (1 << 18) |	/* SRC_DATA=YCBCR */
-			  (1 << 17);	/* CSC_1_EN */
+		opmode |= (0 << 19) |	/*              */
+			  (1 << 18) |	/*                */
+			  (1 << 17);	/*          */
 
-	/* only need to program once */
+	/*                           */
 	if (pipe->play_cnt == 0) {
 		mdss_mdp_csc_setup(MDSS_MDP_BLOCK_SSPP, pipe->num, 1,
 				   MDSS_MDP_CSC_YUV2RGB);

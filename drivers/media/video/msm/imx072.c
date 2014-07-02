@@ -23,26 +23,26 @@
 #include <mach/camera.h>
 #include "imx072.h"
 
-/* SENSOR REGISTER DEFINES */
+/*                         */
 #define REG_GROUPED_PARAMETER_HOLD		0x0104
 #define GROUPED_PARAMETER_HOLD_OFF		0x00
 #define GROUPED_PARAMETER_HOLD			0x01
-/* Integration Time */
+/*                  */
 #define REG_COARSE_INTEGRATION_TIME		0x0202
-/* Gain */
+/*      */
 #define REG_GLOBAL_GAIN					0x0204
 
-/* PLL registers */
+/*               */
 #define REG_FRAME_LENGTH_LINES			0x0340
 #define REG_LINE_LENGTH_PCK				0x0342
 
-/* 16bit address - 8 bit context register structure */
+/*                                                  */
 #define Q8  0x00000100
 #define Q10 0x00000400
 #define IMX072_MASTER_CLK_RATE 24000000
 #define IMX072_OFFSET		3
 
-/* AF Total steps parameters */
+/*                           */
 #define IMX072_AF_I2C_ADDR	0x18
 #define IMX072_TOTAL_STEPS_NEAR_TO_FAR    30
 
@@ -65,8 +65,8 @@ struct imx072_ctrl_t {
 	const struct  msm_camera_sensor_info *sensordata;
 
 	uint32_t sensormode;
-	uint32_t fps_divider;/* init to 1 * 0x00000400 */
-	uint32_t pict_fps_divider;/* init to 1 * 0x00000400 */
+	uint32_t fps_divider;/*                        */
+	uint32_t pict_fps_divider;/*                        */
 	uint16_t fps;
 
 	uint16_t curr_lens_pos;
@@ -249,14 +249,14 @@ static void imx072_stop_stream(void)
 
 static void imx072_get_pict_fps(uint16_t fps, uint16_t *pfps)
 {
-	/* input fps is preview fps in Q8 format */
+	/*                                       */
 	uint32_t divider, d1, d2;
 
 	d1 = prev_frame_length_lines * 0x00000400 / snap_frame_length_lines;
 	d2 = prev_line_length_pck * 0x00000400 / snap_line_length_pck;
 	divider = d1 * d2 / 0x400;
 
-	/*Verify PCLK settings and frame sizes.*/
+	/*                                     */
 	*pfps = (uint16_t) (fps * divider / 0x400);
 }
 
@@ -373,7 +373,7 @@ static int32_t imx072_video_config(int mode)
 {
 
 	int32_t rc = 0;
-	/* change sensor resolution if needed */
+	/*                                    */
 	if (imx072_sensor_setting(UPDATE_PERIODIC,
 		imx072_ctrl->prev_res) < 0)
 		return rc;
@@ -386,7 +386,7 @@ static int32_t imx072_video_config(int mode)
 static int32_t imx072_snapshot_config(int mode)
 {
 	int32_t rc = 0;
-	/*change sensor resolution if needed */
+	/*                                   */
 	if (imx072_ctrl->curr_res != imx072_ctrl->pict_res) {
 		if (imx072_sensor_setting(UPDATE_PERIODIC,
 					imx072_ctrl->pict_res) < 0)
@@ -401,7 +401,7 @@ static int32_t imx072_snapshot_config(int mode)
 static int32_t imx072_raw_snapshot_config(int mode)
 {
 	int32_t rc = 0;
-	/* change sensor resolution if needed */
+	/*                                    */
 	if (imx072_ctrl->curr_res != imx072_ctrl->pict_res) {
 		if (imx072_sensor_setting(UPDATE_PERIODIC,
 					imx072_ctrl->pict_res) < 0)
@@ -625,8 +625,8 @@ static int32_t imx072_af_power_down(void)
 		rc = imx072_set_default_focus();
 		CDBG("%s after imx072_set_default_focus\n", __func__);
 		msleep(40);
-		/*to avoid the sound during the power off.
-		brings the actuator to mechanical infinity gradually.*/
+		/*                                        
+                                                       */
 		for (i = 0; i < IMX072_TOTAL_STEPS_NEAR_TO_FAR; i++) {
 			dest_lens_position = dest_lens_position -
 				(imx072_af_initial_code /
@@ -685,7 +685,7 @@ static int imx072_probe_init_sensor(
 	CDBG(" imx072_probe_init_sensor is called\n");
 	rc = imx072_i2c_read(0x0, &chipid, 2);
 	CDBG("ID: %d\n", chipid);
-	/* 4. Compare sensor ID to IMX072 ID: */
+	/*                                    */
 	if (chipid != 0x0045) {
 		rc = -ENODEV;
 		pr_err("imx072_probe_init_sensor chip id doesnot match\n");
@@ -732,7 +732,7 @@ int imx072_sensor_open_init(const struct msm_camera_sensor_info *data)
 		return rc;
 	}
 	CDBG("%s: %d\n", __func__, __LINE__);
-	/* enable mclk first */
+	/*                   */
 	msm_camio_clk_rate_set(IMX072_MASTER_CLK_RATE);
 	rc = imx072_probe_init_sensor(data);
 	if (rc < 0)
@@ -755,7 +755,7 @@ init_done:
 
 static int imx072_init_client(struct i2c_client *client)
 {
-	/* Initialize the MSM_CAMI2C Chip */
+	/*                                */
 	init_waitqueue_head(&imx072_wait_queue);
 	return 0;
 }

@@ -75,8 +75,8 @@ struct sdio_cmux_ch {
 
 struct sdio_cmux_hdr {
 	uint16_t magic_no;
-	uint8_t status;         /* This field is reserved for commands other
-				 * than STATUS */
+	uint8_t status;         /*                                          
+                   */
 	uint8_t cmd;
 	uint8_t pad_bytes;
 	uint8_t lc_id;
@@ -552,8 +552,8 @@ static int process_cmux_pkt(void *pkt, int size)
 	case DATA:
 		id = (uint32_t)(mux_hdr->lc_id);
 		D("%s: Received DATA for ch%d\n", __func__, id);
-		/*Channel is not locally open & if single packet received
-		  then drop it*/
+		/*                                                       
+                */
 		mutex_lock(&logical_ch[id].lc_lock);
 		if (!logical_ch[id].is_remote_open) {
 			mutex_unlock(&logical_ch[id].lc_lock);

@@ -25,17 +25,17 @@
 static struct msm_panel_info pinfo;
 
 static struct mipi_dsi_phy_ctrl dsi_video_mode_phy_db = {
-/* 768*1280, RGB888, 4 Lane 60 fps video mode */
-	/* regulator */
+/*                                            */
+	/*           */
 	{0x03, 0x0a, 0x04, 0x00, 0x20},
-	/* timing */
+	/*        */
 	{0x66, 0x26, 0x1D, 0x00, 0x20, 0x95, 0x1E, 0x8F,
 	0x20, 0x03, 0x04, 0xA0},
-	/* phy ctrl */
+	/*          */
 	{0x5f, 0x00, 0x00, 0x10},
-	/* strength */
+	/*          */
 	{0xff, 0x00, 0x06, 0x00},
-	/* pll control */
+	/*             */
 	{0x00, 0xC4, 0x01, 0x1A, 0x00, 0x50, 0x48, 0x63,
 	0x41, 0x0F, 0x03, 0x00, 0x14, 0x03, 0x00, 0x02,
 	0x00, 0x20, 0x00, 0x01 },
@@ -62,8 +62,8 @@ static int __init mipi_video_lgit_wxga_pt_init(void)
 	pinfo.lcdc.v_back_porch = 22;
 	pinfo.lcdc.v_front_porch = 8;
 	pinfo.lcdc.v_pulse_width = 2;
-	pinfo.lcdc.border_clr = 0;        /* blk */
-	pinfo.lcdc.underflow_clr = 0x0;  /* black */
+	pinfo.lcdc.border_clr = 0;        /*     */
+	pinfo.lcdc.underflow_clr = 0x0;  /*       */
 	pinfo.lcdc.hsync_skew = 0;
 	pinfo.bl_max = 0x72;
 	pinfo.bl_min = 0x02;

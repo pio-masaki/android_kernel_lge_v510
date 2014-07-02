@@ -79,7 +79,7 @@ static void restart_gss(void)
 
 static void smsm_state_cb(void *data, uint32_t old_state, uint32_t new_state)
 {
-	/* Ignore if we're the one that set SMSM_RESET */
+	/*                                             */
 	if (crash_shutdown)
 		return;
 
@@ -114,7 +114,7 @@ void gss_crash_shutdown(const struct subsys_desc *desc)
 	smsm_reset_modem(SMSM_RESET);
 }
 
-/* FIXME: Get address, size from PIL */
+/*                                   */
 static struct ramdump_segment gss_segments[] = {
 	{0x89000000, 0x00D00000}
 };

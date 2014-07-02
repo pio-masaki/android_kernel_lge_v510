@@ -36,7 +36,7 @@ struct snd_msm {
 	struct msm_audio *prtd;
 	unsigned volume;
 };
-static struct snd_msm compressed_audio = {NULL, 0x20002000} ;
+static struct snd_msm compressed_audio = {NULL, 0x2000} ;
 
 static struct audio_locks the_locks;
 
@@ -60,7 +60,7 @@ static struct snd_pcm_hardware msm_compr_hardware_playback = {
 	.fifo_size =	    0,
 };
 
-/* Conventional and unconventional sample rate supported */
+/*                                                       */
 static unsigned int supported_sample_rates[] = {
 	8000, 11025, 12000, 16000, 22050, 24000, 32000, 44100, 48000
 };
@@ -191,7 +191,7 @@ static int msm_compr_playback_prepare(struct snd_pcm_substream *substream)
 	prtd->pcm_size = snd_pcm_lib_buffer_bytes(substream);
 	prtd->pcm_count = snd_pcm_lib_period_bytes(substream);
 	prtd->pcm_irq_pos = 0;
-	/* rate and channels are sent to audio driver */
+	/*                                            */
 	prtd->samp_rate = runtime->rate;
 	prtd->channel_mode = runtime->channels;
 	prtd->out_head = 0;
@@ -202,7 +202,7 @@ static int msm_compr_playback_prepare(struct snd_pcm_substream *substream)
 
 	switch (compr->info.codec_param.codec.id) {
 	case SND_AUDIOCODEC_MP3:
-		/* No media format block for mp3 */
+		/*                               */
 		break;
 	case SND_AUDIOCODEC_AAC:
 		pr_debug("SND_AUDIOCODEC_AAC\n");
@@ -265,7 +265,7 @@ static void populate_codec_list(struct compr_audio *compr,
 		struct snd_pcm_runtime *runtime)
 {
 	pr_debug("%s\n", __func__);
-	/* MP3 Block */
+	/*           */
 	compr->info.compr_cap.num_codecs = 1;
 	compr->info.compr_cap.min_fragment_size = runtime->hw.period_bytes_min;
 	compr->info.compr_cap.max_fragment_size = runtime->hw.period_bytes_max;
@@ -273,7 +273,7 @@ static void populate_codec_list(struct compr_audio *compr,
 	compr->info.compr_cap.max_fragments = runtime->hw.periods_max;
 	compr->info.compr_cap.codecs[0] = SND_AUDIOCODEC_MP3;
 	compr->info.compr_cap.codecs[1] = SND_AUDIOCODEC_AAC;
-	/* Add new codecs here */
+	/*                     */
 }
 
 static int msm_compr_open(struct snd_pcm_substream *substream)
@@ -281,6 +281,7 @@ static int msm_compr_open(struct snd_pcm_substream *substream)
 	struct snd_pcm_runtime *runtime = substream->runtime;
 	struct compr_audio *compr;
 	struct msm_audio *prtd;
+	int ret = 0;
 	struct asm_softpause_params softpause = {
 		.enable = SOFT_PAUSE_ENABLE,
 		.period = SOFT_PAUSE_PERIOD,
@@ -292,9 +293,8 @@ static int msm_compr_open(struct snd_pcm_substream *substream)
 		.step = SOFT_VOLUME_STEP,
 		.rampingcurve = SOFT_VOLUME_CURVE_LINEAR,
 	};
-	int ret = 0;
 
-	/* Capture path */
+	/*              */
 	if (substream->stream == SNDRV_PCM_STREAM_CAPTURE)
 		return -EINVAL;
 
@@ -325,7 +325,7 @@ static int msm_compr_open(struct snd_pcm_substream *substream)
 			&constraints_sample_rates);
 	if (ret < 0)
 		pr_info("snd_pcm_hw_constraint_list failed\n");
-	/* Ensure that buffer size is a multiple of period size */
+	/*                                                      */
 	ret = snd_pcm_hw_constraint_integer(runtime,
 			    SNDRV_PCM_HW_PARAM_PERIODS);
 	if (ret < 0)
@@ -337,7 +337,7 @@ static int msm_compr_open(struct snd_pcm_substream *substream)
 	populate_codec_list(compr, runtime);
 	runtime->private_data = compr;
 	compressed_audio.prtd =  &compr->prtd;
-	ret = compressed_set_volume(0);
+	ret = compressed_set_volume(compressed_audio.volume);
 	if (ret < 0)
 		pr_err("%s : Set Volume failed : %d", __func__, ret);
 
@@ -359,9 +359,8 @@ int compressed_set_volume(unsigned volume)
 {
 	int rc = 0;
 	if (compressed_audio.prtd && compressed_audio.prtd->audio_client) {
-		rc = q6asm_set_lrgain(compressed_audio.prtd->audio_client,
-						(volume >> 16) & 0xFFFF,
-						volume & 0xFFFF);
+		rc = q6asm_set_volume(compressed_audio.prtd->audio_client,
+								 volume);
 		if (rc < 0) {
 			pr_err("%s: Send Volume command failed rc=%d\n",
 						__func__, rc);
@@ -563,7 +562,7 @@ static int msm_compr_ioctl(struct snd_pcm_substream *substream,
 		}
 		switch (compr->info.codec_param.codec.id) {
 		case SND_AUDIOCODEC_MP3:
-			/* For MP3 we dont need any other parameter */
+			/*                                          */
 			pr_debug("SND_AUDIOCODEC_MP3\n");
 			compr->codec = FORMAT_MP3;
 			break;

@@ -47,4 +47,4 @@ bool mi2s_set_codec_output_path(uint8_t channels, uint8_t size);
 
 bool mi2s_set_codec_input_path(uint8_t channels, uint8_t size);
 
-#endif /* #ifndef MI2S_H */
+#endif /*                */

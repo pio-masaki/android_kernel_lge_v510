@@ -24,9 +24,9 @@
 #include <mach/camera.h>
 #include "mt9p012_km.h"
 
-/*=============================================================
-    SENSOR REGISTER DEFINES
-==============================================================*/
+/*                                                             
+                           
+                                                              */
 
 #define MT9P012_KM_REG_MODEL_ID      0x0000
 #define MT9P012_KM_MODEL_ID          0x2800
@@ -72,13 +72,13 @@ enum mt9p012_km_resolution {
 };
 
 enum mt9p012_km_reg_update {
-	/* Sensor egisters that need to be updated during initialization */
+	/*                                                               */
 	REG_INIT,
-	/* Sensor egisters that needs periodic I2C writes */
+	/*                                                */
 	UPDATE_PERIODIC,
-	/* All the sensor Registers will be updated */
+	/*                                          */
 	UPDATE_ALL,
-	/* Not valid update */
+	/*                  */
 	UPDATE_INVALID
 };
 
@@ -89,17 +89,17 @@ enum mt9p012_km_setting {
 
 uint8_t mode_mask = 0x04;
 
-/* actuator's Slave Address */
+/*                          */
 #define MT9P012_KM_AF_I2C_ADDR   (0x18 >> 1)
 
-/* AF Total steps parameters */
+/*                           */
 #define MT9P012_KM_STEPS_NEAR_TO_CLOSEST_INF  30
 #define MT9P012_KM_TOTAL_STEPS_NEAR_TO_FAR    30
 
-/* Time in milisecs for waiting for the sensor to reset.*/
+/*                                                      */
 #define MT9P012_KM_RESET_DELAY_MSECS   66
 
-/* for 20 fps preview */
+/*                    */
 #define MT9P012_KM_DEFAULT_CLOCK_RATE  24000000
 
 struct mt9p012_km_work {
@@ -112,8 +112,8 @@ struct mt9p012_km_ctrl {
 	const struct msm_camera_sensor_info *sensordata;
 
 	int sensormode;
-	uint32_t fps_divider;	/* init to 1 * 0x00000400 */
-	uint32_t pict_fps_divider;	/* init to 1 * 0x00000400 */
+	uint32_t fps_divider;	/*                        */
+	uint32_t pict_fps_divider;	/*                        */
 
 	uint16_t curr_lens_pos;
 	uint16_t init_curr_lens_pos;
@@ -130,7 +130,7 @@ static struct mt9p012_km_ctrl *mt9p012_km_ctrl;
 static DECLARE_WAIT_QUEUE_HEAD(mt9p012_km_wait_queue);
 DEFINE_MUTEX(mt9p012_km_mut);
 
-/*=============================================================*/
+/*                                                             */
 
 static int mt9p012_km_i2c_rxdata(unsigned short saddr, unsigned char *rxdata,
 			int length)
@@ -335,9 +335,9 @@ static int32_t mt9p012_km_set_lc(void)
 static void mt9p012_km_get_pict_fps(uint16_t fps, uint16_t *pfps)
 {
 
-	/* input fps is preview fps in Q8 format */
-	uint32_t divider;   /*Q10 */
-	uint32_t pclk_mult; /*Q10 */
+	/*                                       */
+	uint32_t divider;   /*    */
+	uint32_t pclk_mult; /*    */
 	uint32_t d1;
 	uint32_t d2;
 
@@ -361,7 +361,7 @@ static void mt9p012_km_get_pict_fps(uint16_t fps, uint16_t *pfps)
 		(mt9p012_km_regs.reg_pat[RES_PREVIEW].pll_multiplier));
 
 
-	/* Verify PCLK settings and frame sizes. */
+	/*                                       */
 	*pfps = (uint16_t)((((fps * pclk_mult) / 0x00000400) * divider)/
 				0x00000400);
 }
@@ -454,7 +454,7 @@ static int32_t mt9p012_km_write_exp_gain(uint16_t gain, uint32_t line)
 		gain = max_legal_gain;
 	}
 
-	/* Verify no overflow */
+	/*                    */
 	if (mt9p012_km_ctrl->sensormode == SENSOR_PREVIEW_MODE) {
 		line = (uint32_t) (line * mt9p012_km_ctrl->fps_divider /
 				   0x00000400);
@@ -540,7 +540,7 @@ static int32_t mt9p012_km_set_pict_exp_gain(uint16_t gain, uint32_t line)
 
 	mdelay(5);
 
-	/* camera_timed_wait(snapshot_wait*exposure_ratio); */
+	/*                                                  */
 	return rc;
 }
 
@@ -608,11 +608,11 @@ static int32_t mt9p012_km_setting(enum mt9p012_km_reg_update rupdate,
 			if (rc < 0)
 				return rc;
 
-			mdelay(15);	/* 15? wait for sensor to transition */
+			mdelay(15);	/*                                   */
 
 			return rc;
 		}
-		break;	/* UPDATE_PERIODIC */
+		break;	/*                 */
 
 	case REG_INIT:
 		if (rt == RES_PREVIEW || rt == RES_CAPTURE) {
@@ -638,8 +638,8 @@ static int32_t mt9p012_km_setting(enum mt9p012_km_reg_update rupdate,
 			struct mt9p012_km_i2c_reg_conf ipc_tbl2[] = {
 				{REG_GROUPED_PARAMETER_HOLD,
 				 GROUPED_PARAMETER_HOLD},
-				/* Optimized register settings for
-				   Rev3 Silicon */
+				/*                                
+                    */
 				{0x308A, 0x6424},
 				{0x3092, 0x0A52},
 				{0x3094, 0x4656},
@@ -656,7 +656,7 @@ static int32_t mt9p012_km_setting(enum mt9p012_km_reg_update rupdate,
 			};
 
 			struct mt9p012_km_i2c_reg_conf ipc_tbl3[] = {
-				/* Set preview or snapshot mode */
+				/*                              */
 				{REG_ROW_SPEED,
 				 mt9p012_km_regs.reg_pat[rt].row_speed},
 				{REG_X_ADDR_START,
@@ -688,7 +688,7 @@ static int32_t mt9p012_km_setting(enum mt9p012_km_reg_update rupdate,
 				 GROUPED_PARAMETER_UPDATE},
 			};
 
-			/* reset fps_divider */
+			/*                   */
 			mt9p012_km_ctrl->fps_divider = 1 * 0x0400;
 
 			rc = mt9p012_km_i2c_write_w_table(&ipc_tbl1[0],
@@ -710,7 +710,7 @@ static int32_t mt9p012_km_setting(enum mt9p012_km_reg_update rupdate,
 			if (rc < 0)
 				return rc;
 
-			/* load lens shading */
+			/*                   */
 			rc = mt9p012_km_i2c_write_w(mt9p012_km_client->addr,
 						 REG_GROUPED_PARAMETER_HOLD,
 						 GROUPED_PARAMETER_HOLD);
@@ -729,12 +729,12 @@ static int32_t mt9p012_km_setting(enum mt9p012_km_reg_update rupdate,
 				return rc;
 		}
 		update_type = rupdate;
-		break;		/* case REG_INIT: */
+		break;		/*                */
 
 	default:
 		rc = -EINVAL;
 		break;
-	}			/* switch (rupdate) */
+	}			/*                  */
 
 	return rc;
 }
@@ -761,7 +761,7 @@ static int32_t mt9p012_km_video_config(int mode, int res)
 
 	default:
 		return 0;
-	}			/* switch */
+	}			/*        */
 
 	mt9p012_km_ctrl->prev_res = res;
 	mt9p012_km_ctrl->curr_res = res;
@@ -835,9 +835,9 @@ static int32_t mt9p012_km_move_focus(int direction, int32_t num_steps)
 	}
 
 	if (direction == MOVE_NEAR)
-		step_direction = 16;	/* 10bit */
+		step_direction = 16;	/*       */
 	else if (direction == MOVE_FAR)
-		step_direction = -16;	/* 10 bit */
+		step_direction = -16;	/*        */
 	else {
 		CDBG("mt9p012_km_move_focus failed at line %d ...\n", __LINE__);
 		return -EINVAL;
@@ -861,14 +861,14 @@ static int32_t mt9p012_km_move_focus(int direction, int32_t num_steps)
 	code_val_lsb = (next_position & 0x000F) << 4;
 	code_val_lsb |= mode_mask;
 
-	/* Writing the digital code for current to the actuator */
+	/*                                                      */
 	if (mt9p012_km_i2c_write_b(MT9P012_KM_AF_I2C_ADDR >> 1,
 				code_val_msb, code_val_lsb) < 0) {
 		CDBG("mt9p012_km_move_focus failed at line %d ...\n", __LINE__);
 		return -EBUSY;
 	}
 
-	/* Storing the current lens Position */
+	/*                                   */
 	mt9p012_km_ctrl->curr_lens_pos = next_position;
 
 	return 0;
@@ -882,7 +882,7 @@ static int32_t mt9p012_km_set_default_focus(void)
 	code_val_msb = 0x00;
 	code_val_lsb = 0x04;
 
-	/* Write the digital code for current to the actuator */
+	/*                                                    */
 	rc = mt9p012_km_i2c_write_b(MT9P012_KM_AF_I2C_ADDR >> 1,
 				 code_val_msb, code_val_lsb);
 
@@ -913,7 +913,7 @@ static int
 
 	msleep(20);
 
-	/* RESET the sensor image part via I2C command */
+	/*                                             */
 	CDBG("mt9p012_km_sensor_init(): reseting sensor.\n");
 	rc = mt9p012_km_i2c_write_w(mt9p012_km_client->addr,
 				 MT9P012_KM_REG_RESET_REGISTER,
@@ -925,13 +925,13 @@ static int
 
 		msleep(MT9P012_KM_RESET_DELAY_MSECS);
 
-	/* 3. Read sensor Model ID: */
+	/*                          */
 	rc = mt9p012_km_i2c_read_w(mt9p012_km_client->addr,
 				MT9P012_KM_REG_MODEL_ID, &chipid);
 	if (rc < 0)
 		goto init_probe_fail;
 
-	/* 4. Compare sensor ID to MT9T012VC ID: */
+	/*                                       */
 	if (chipid != MT9P012_KM_MODEL_ID) {
 		CDBG("mt9p012_km wrong model_id = 0x%x\n", chipid);
 		rc = -ENODEV;
@@ -944,7 +944,7 @@ static int
 		goto init_probe_fail;
 	}
 
-	/* RESET_REGISTER, enable parallel interface and disable serialiser */
+	/*                                                                  */
 	CDBG("mt9p012_km_sensor_init(): enabling parallel interface.\n");
 	rc = mt9p012_km_i2c_write_w(mt9p012_km_client->addr, 0x301A, 0x10CC);
 	if (rc < 0) {
@@ -952,7 +952,7 @@ static int
 		goto init_probe_fail;
 	}
 
-	/* To disable the 2 extra lines */
+	/*                              */
 	rc = mt9p012_km_i2c_write_w(mt9p012_km_client->addr, 0x3064, 0x0805);
 
 	if (rc < 0) {
@@ -1006,7 +1006,7 @@ static int
 		goto init_fail1;
 	}
 
-	/* sensor : output enable */
+	/*                        */
 	CDBG("mt9p012_km_sensor_open_init(): enabling output.\n");
 	rc = mt9p012_km_i2c_write_w(mt9p012_km_client->addr,
 				 MT9P012_KM_REG_RESET_REGISTER,
@@ -1028,7 +1028,7 @@ init_done:
 
 static int mt9p012_km_init_client(struct i2c_client *client)
 {
-	/* Initialize the MSM_CAMI2C Chip */
+	/*                                */
 	init_waitqueue_head(&mt9p012_km_wait_queue);
 	return 0;
 }

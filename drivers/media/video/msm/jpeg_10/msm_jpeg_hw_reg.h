@@ -60,7 +60,7 @@
 
 #define JPEG_OFFLINE_CMD_START 0x00000001
 
-#define JPEG_RESET_DEFAULT 0x00000003 /* cfff? */
+#define JPEG_RESET_DEFAULT 0x00000003 /*       */
 
 #define JPEG_IRQ_DISABLE_ALL 0x00000000
 #define JPEG_IRQ_CLEAR_ALL 0xFFFFFFFF
@@ -118,4 +118,4 @@
 #define JPEG_VBIF_DDR_OUT_MAX_BURST            0xD8
 #define JPEG_VBIF_OCMEM_OUT_MAX_BURST          0xDC
 
-#endif /* MSM_JPEG_HW_REG_H */
+#endif /*                   */

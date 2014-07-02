@@ -760,7 +760,7 @@ int msm_vdec_cmd(struct msm_vidc_inst *inst, struct v4l2_decoder_cmd *dec)
 		mutex_lock(&inst->sync_lock);
 		ip_flush = dec->flags & V4L2_DEC_QCOM_CMD_FLUSH_OUTPUT;
 		op_flush = dec->flags & V4L2_DEC_QCOM_CMD_FLUSH_CAPTURE;
-		/* Only support flush on decoder (for now)*/
+		/*                                        */
 		if (inst->session_type == MSM_VIDC_ENCODER) {
 			pr_err("Buffer flushing not supported for encoder\n");
 			rc = -ENOTSUPP;
@@ -768,8 +768,8 @@ int msm_vdec_cmd(struct msm_vidc_inst *inst, struct v4l2_decoder_cmd *dec)
 			break;
 		}
 
-		/* Certain types of flushes aren't supported such as: */
-		/* 1) Input only flush */
+		/*                                                    */
+		/*                     */
 		if (ip_flush && !op_flush) {
 			pr_err("Input only flush not supported\n");
 			rc = -ENOTSUPP;
@@ -777,7 +777,7 @@ int msm_vdec_cmd(struct msm_vidc_inst *inst, struct v4l2_decoder_cmd *dec)
 			break;
 		}
 
-		/* 2) Output only flush when in reconfig */
+		/*                                       */
 		if (!ip_flush && op_flush && !inst->in_reconfig) {
 			pr_err("Output only flush only supported when reconfiguring\n");
 			rc = -ENOTSUPP;
@@ -785,7 +785,7 @@ int msm_vdec_cmd(struct msm_vidc_inst *inst, struct v4l2_decoder_cmd *dec)
 			break;
 		}
 
-		/* Finally flush */
+		/*               */
 		if (op_flush && ip_flush)
 			rc = vidc_hal_session_flush(inst->session,
 					HAL_FLUSH_ALL);
@@ -850,7 +850,7 @@ static int msm_vdec_op_s_ctrl(struct v4l2_ctrl *ctrl)
 	struct v4l2_control control;
 	struct hal_nal_stream_format_supported stream_format;
 	struct hal_enable_picture enable_picture;
-	struct hal_enable hal_property;/*, prop;*/
+	struct hal_enable hal_property;/*       */
 	u32 control_idx = 0;
 	enum hal_property property_id = 0;
 	u32 property_val = 0;
@@ -975,14 +975,14 @@ int msm_vdec_ctrl_init(struct msm_vidc_inst *inst)
 
 	for (; idx < NUM_CTRLS; idx++) {
 		if (IS_PRIV_CTRL(msm_vdec_ctrls[idx].id)) {
-			/*add private control*/
+			/*                   */
 			ctrl_cfg.def = msm_vdec_ctrls[idx].default_value;
 			ctrl_cfg.flags = 0;
 			ctrl_cfg.id = msm_vdec_ctrls[idx].id;
-			/*ctrl_cfg.is_private =
-			 * msm_vdec_ctrls[idx].is_private;
-			 * ctrl_cfg.is_volatile =
-			 * msm_vdec_ctrls[idx].is_volatile;*/
+			/*                     
+                                     
+                            
+                                      */
 			ctrl_cfg.max = msm_vdec_ctrls[idx].maximum;
 			ctrl_cfg.min = msm_vdec_ctrls[idx].minimum;
 			ctrl_cfg.menu_skip_mask =

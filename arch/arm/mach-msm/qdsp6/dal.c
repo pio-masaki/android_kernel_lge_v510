@@ -34,13 +34,13 @@
 #define DAL_TRACE 0
 
 struct dal_hdr {
-	uint32_t length:16;	/* message length (header inclusive) */
-	uint32_t version:8;	/* DAL protocol version */
+	uint32_t length:16;	/*                                   */
+	uint32_t version:8;	/*                      */
 	uint32_t priority:7;
 	uint32_t async:1;
-	uint32_t ddi:16;	/* DDI method number */
-	uint32_t prototype:8;	/* DDI serialization format */
-	uint32_t msgid:8;	/* message id (DDI, ATTACH, DETACH, ...) */
+	uint32_t ddi:16;	/*                   */
+	uint32_t prototype:8;	/*                          */
+	uint32_t msgid:8;	/*                                       */
 	void *from;
 	void *to;
 } __attribute__((packed));
@@ -71,24 +71,24 @@ struct dal_channel {
 	struct list_head list;
 	struct list_head clients;
 
-	/* synchronization for changing channel state,
-	 * adding/removing clients, smd callbacks, etc
-	 */
+	/*                                            
+                                               
+  */
 	spinlock_t lock;
 
 	struct smd_channel *sch;
 	char *name;
 
-	/* events are delivered at IRQ context immediately, so
-	 * we only need one assembly buffer for the entire channel
-	 */
+	/*                                                    
+                                                           
+  */
 	struct dal_hdr hdr;
 	unsigned char data[DAL_DATA_MAX];
 
 	unsigned count;
 	void *ptr;
 
-	/* client which the current inbound message is for */
+	/*                                                 */
 	struct dal_client *active;
 };
 
@@ -98,12 +98,12 @@ struct dal_client {
 	void *cookie;
 	dal_event_func_t event;
 
-	/* opaque handle for the far side */
+	/*                                */
 	void *remote;
 
-	/* dal rpc calls are fully synchronous -- only one call may be
-	 * active per client at a time
-	 */
+	/*                                                            
+                               
+  */
 	struct mutex write_lock;
 	wait_queue_head_t wait;
 
@@ -112,7 +112,7 @@ struct dal_client {
 	void *reply;
 	int reply_max;
 	int status;
-	unsigned msgid; /* msgid of expected reply */
+	unsigned msgid; /*                         */
 
 	spinlock_t tr_lock;
 	unsigned tr_head;
@@ -220,7 +220,7 @@ again:
 
 		dch->count = hdr->length - DAL_HDR_SIZE;
 
-		/* locate the client this message is targeted to */
+		/*                                               */
 		list_for_each_entry(client, &dch->clients, list) {
 			if (dch->hdr.to == client) {
 				dch->active = client;
@@ -326,7 +326,7 @@ found_it:
 					__func__);
 			dch = NULL;
 		}
-		/* FIXME: wait for channel to open before returning */
+		/*                                                  */
 		msleep(100);
 	}
 
@@ -361,7 +361,7 @@ int dal_call_raw(struct dal_client *client,
 		dal_trace_log(client, hdr, data, data_len);
 
 	spin_lock_irqsave(&dch->lock, flags);
-	/* FIXME: ensure entire message is written or none. */
+	/*                                                  */
 	smd_write(dch->sch, hdr, sizeof(*hdr));
 	smd_write(dch->sch, data, data_len);
 	spin_unlock_irqrestore(&dch->lock, flags);
@@ -499,11 +499,11 @@ int dal_detach(struct dal_client *client)
 	dch = client->dch;
 	spin_lock_irqsave(&dch->lock, flags);
 	if (dch->active == client) {
-		/* We have received a message header for this client
-		 * but not the body of the message.  Ensure that when
-		 * the body arrives we don't write it into the now-closed
-		 * client.  In *theory* this should never happen.
-		 */
+		/*                                                  
+                                                       
+                                                           
+                                                   
+   */
 		dch->active = 0;
 		dch->ptr = dch->data;
 	}
@@ -521,7 +521,7 @@ void *dal_get_remote_handle(struct dal_client *client)
 	return client->remote;
 }
 
-/* convenience wrappers */
+/*                      */
 
 int dal_call_f0(struct dal_client *client, uint32_t ddi, uint32_t arg1)
 {

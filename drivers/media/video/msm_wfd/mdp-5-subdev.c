@@ -56,7 +56,7 @@ int mdp_open(struct v4l2_subdev *sd, void *arg)
 		goto mdp_open_fail;
 	}
 	inst->sdev.name = "wfd";
-	/* Register wfd node to switch driver */
+	/*                                    */
 	rc = switch_dev_register(&inst->sdev);
 	if (rc) {
 		WFD_MSG_ERR("WFD switch registration failed\n");
@@ -121,7 +121,7 @@ int mdp_close(struct v4l2_subdev *sd, void *arg)
 	if (inst) {
 		fbi = (struct fb_info *)inst->mdp;
 		msm_fb_writeback_terminate(fbi);
-		/* Unregister wfd node from switch driver */
+		/*                                        */
 		switch_dev_unregister(&inst->sdev);
 		kfree(inst);
 	}

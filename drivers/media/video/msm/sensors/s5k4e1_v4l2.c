@@ -1,4 +1,4 @@
-/* Copyright (c) 2012-2013, The Linux Foundation. All rights reserved.
+/* Copyright (c) 2012, The Linux Foundation. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -38,82 +38,82 @@ static struct msm_camera_i2c_reg_conf s5k4e1_groupoff_settings[] = {
 };
 
 static struct msm_camera_i2c_reg_conf s5k4e1_prev_settings[] = {
-	/* output size (1304 x 980) */
-	{0x30A9, 0x02},/* Horizontal Binning On */
-	{0x300E, 0xEB},/* Vertical Binning On */
-	{0x0387, 0x03},/* y_odd_inc 03(10b AVG) */
-	{0x0344, 0x00},/* x_addr_start 0 */
+	/*                          */
+	{0x30A9, 0x02},/*                       */
+	{0x300E, 0xEB},/*                     */
+	{0x0387, 0x03},/*                       */
+	{0x0344, 0x00},/*                */
 	{0x0345, 0x00},
-	{0x0348, 0x0A},/* x_addr_end 2607 */
+	{0x0348, 0x0A},/*                 */
 	{0x0349, 0x2F},
-	{0x0346, 0x00},/* y_addr_start 0 */
+	{0x0346, 0x00},/*                */
 	{0x0347, 0x00},
-	{0x034A, 0x07},/* y_addr_end 1959 */
+	{0x034A, 0x07},/*                 */
 	{0x034B, 0xA7},
-	{0x0380, 0x00},/* x_even_inc 1 */
+	{0x0380, 0x00},/*              */
 	{0x0381, 0x01},
-	{0x0382, 0x00},/* x_odd_inc 1 */
+	{0x0382, 0x00},/*             */
 	{0x0383, 0x01},
-	{0x0384, 0x00},/* y_even_inc 1 */
+	{0x0384, 0x00},/*              */
 	{0x0385, 0x01},
-	{0x0386, 0x00},/* y_odd_inc 3 */
+	{0x0386, 0x00},/*             */
 	{0x0387, 0x03},
-	{0x034C, 0x05},/* x_output_size 1304 */
+	{0x034C, 0x05},/*                    */
 	{0x034D, 0x18},
-	{0x034E, 0x03},/* y_output_size 980 */
+	{0x034E, 0x03},/*                   */
 	{0x034F, 0xd4},
-	{0x30BF, 0xAB},/* outif_enable[7], data_type[5:0](2Bh = bayer 10bit} */
-	{0x30C0, 0xA0},/* video_offset[7:4] 3260%12 */
-	{0x30C8, 0x06},/* video_data_length 1600 = 1304 * 1.25 */
+	{0x30BF, 0xAB},/*                                                    */
+	{0x30C0, 0xA0},/*                           */
+	{0x30C8, 0x06},/*                                      */
 	{0x30C9, 0x5E},
-	/* Timing Configuration */
+	/*                      */
 	{0x0202, 0x03},
 	{0x0203, 0x14},
 	{0x0204, 0x00},
 	{0x0205, 0x80},
-	{0x0340, 0x03},/* Frame Length */
+	{0x0340, 0x03},/*              */
 	{0x0341, 0xE0},
-	{0x0342, 0x0A},/* 2738  Line Length */
+	{0x0342, 0x0A},/*                   */
 	{0x0343, 0xB2},
 };
 
 static struct msm_camera_i2c_reg_conf s5k4e1_snap_settings[] = {
-	/*Output Size (2608x1960)*/
-	{0x30A9, 0x03},/* Horizontal Binning Off */
-	{0x300E, 0xE8},/* Vertical Binning Off */
-	{0x0387, 0x01},/* y_odd_inc */
-	{0x034C, 0x0A},/* x_output size */
+	/*                       */
+	{0x30A9, 0x03},/*                        */
+	{0x300E, 0xE8},/*                      */
+	{0x0387, 0x01},/*           */
+	{0x034C, 0x0A},/*               */
 	{0x034D, 0x30},
-	{0x034E, 0x07},/* y_output size */
+	{0x034E, 0x07},/*               */
 	{0x034F, 0xA8},
-	{0x30BF, 0xAB},/* outif_enable[7], data_type[5:0](2Bh = bayer 10bit} */
-	{0x30C0, 0x80},/* video_offset[7:4] 3260%12 */
-	{0x30C8, 0x0C},/* video_data_length 3260 = 2608 * 1.25 */
+	{0x30BF, 0xAB},/*                                                    */
+	{0x30C0, 0x80},/*                           */
+	{0x30C8, 0x0C},/*                                      */
 	{0x30C9, 0xBC},
-	/*Timing configuration*/
+	/*                    */
 	{0x0202, 0x06},
 	{0x0203, 0x28},
 	{0x0204, 0x00},
 	{0x0205, 0x80},
-	{0x0340, 0x07},/* Frame Length */
+	{0x0340, 0x07},/*              */
 	{0x0341, 0xB4},
-	{0x0342, 0x0A},/* 2738 Line Length */
+	{0x0342, 0x0A},/*                  */
 	{0x0343, 0xB2},
 };
 
 static struct msm_camera_i2c_reg_conf s5k4e1_recommend_settings[] = {
-	/* Reset setting */
+	/*               */
 	{0x0103, 0x01},
-	/* MIPI settings */
-	{0x30BD, 0x00},/* SEL_CCP[0] */
-	{0x3084, 0x15},/* SYNC Mode */
-	{0x30BE, 0x1A},/* M_PCLKDIV_AUTO[4], M_DIV_PCLK[3:0] */
-	{0x30C1, 0x01},/* pack video enable [0] */
-	{0x30EE, 0x02},/* DPHY enable [ 1] */
-	{0x3111, 0x86},/* Embedded data off [5] */
+	/*               */
+	{0x30BD, 0x00},/*            */
+	{0x3084, 0x15},/*           */
+	{0x30BE, 0x1A},/*                                    */
+	{0x30C1, 0x01},/*                       */
+	{0x30EE, 0x02},/*                  */
+	{0x3111, 0x86},/*                       */
 
-	/* REC Settings */
-	/*CDS timing setting ... */
+	/*              */
+	/*                       */
 	{0x3000, 0x05},
 	{0x3001, 0x03},
 	{0x3002, 0x08},
@@ -132,7 +132,7 @@ static struct msm_camera_i2c_reg_conf s5k4e1_recommend_settings[] = {
 	{0x300F, 0x82},
 	{0x301B, 0x77},
 
-	/* CDS option setting ... */
+	/*                        */
 	{0x3010, 0x00},
 	{0x3011, 0x3A},
 	{0x3029, 0x04},
@@ -149,7 +149,7 @@ static struct msm_camera_i2c_reg_conf s5k4e1_recommend_settings[] = {
 	{0x3024, 0x40},
 	{0x3027, 0x08},
 
-	/* Pixel option setting ...   */
+	/*                            */
 	{0x301C, 0x04},
 	{0x30D8, 0x3F},
 	{0x302B, 0x01},
@@ -159,12 +159,12 @@ static struct msm_camera_i2c_reg_conf s5k4e1_recommend_settings[] = {
 	{0x3080, 0x04},
 	{0x3081, 0x38},
 
-	/* PLL settings */
+	/*              */
 	{0x0305, 0x04},
 	{0x0306, 0x00},
 	{0x0307, 0x44},
 	{0x30B5, 0x00},
-	{0x30E2, 0x01},/* num lanes[1:0] = 2 */
+	{0x30E2, 0x01},/*                    */
 	{0x30F1, 0xB0},
 };
 
@@ -175,7 +175,7 @@ static struct v4l2_subdev_info s5k4e1_subdev_info[] = {
 	.fmt    = 1,
 	.order    = 0,
 	},
-	/* more can be supported, to be added later */
+	/*                                          */
 };
 
 static struct msm_camera_i2c_conf_array s5k4e1_init_conf[] = {
@@ -211,6 +211,19 @@ static struct msm_sensor_output_info_t s5k4e1_dimensions[] = {
 	},
 };
 
+static struct msm_camera_csi_params s5k4e1_csi_params = {
+	.data_format = CSI_10BIT,
+	.lane_cnt    = 1,
+	.lane_assign = 0xe4,
+	.dpcm_scheme = 0,
+	.settle_cnt  = 24,
+};
+
+static struct msm_camera_csi_params *s5k4e1_csi_params_array[] = {
+	&s5k4e1_csi_params,
+	&s5k4e1_csi_params,
+};
+
 static struct msm_sensor_output_reg_addr_t s5k4e1_reg_addr = {
 	.x_output = 0x034C,
 	.y_output = 0x034E,
@@ -235,7 +248,7 @@ static inline uint8_t s5k4e1_byte(uint16_t word, uint8_t offset)
 }
 
 static int32_t s5k4e1_write_prev_exp_gain(struct msm_sensor_ctrl_t *s_ctrl,
-	uint16_t gain, uint32_t line, int32_t luma_avg, uint16_t fgain)
+						uint16_t gain, uint32_t line)
 {
 	uint16_t max_legal_gain = 0x0200;
 	int32_t rc = 0;
@@ -248,7 +261,7 @@ static int32_t s5k4e1_write_prev_exp_gain(struct msm_sensor_ctrl_t *s_ctrl,
 		gain = max_legal_gain;
 	}
 
-	/* Analogue Gain */
+	/*               */
 	msm_camera_i2c_write(s_ctrl->sensor_i2c_client,
 		s_ctrl->sensor_exp_gain_info->global_gain_addr,
 		s5k4e1_byte(gain, MSB),
@@ -269,7 +282,7 @@ static int32_t s5k4e1_write_prev_exp_gain(struct msm_sensor_ctrl_t *s_ctrl,
 			s_ctrl->sensor_output_reg_addr->frame_length_lines + 1,
 			s5k4e1_byte(fl_lines, LSB),
 			MSM_CAMERA_I2C_BYTE_DATA);
-		/* Coarse Integration Time */
+		/*                         */
 		msm_camera_i2c_write(s_ctrl->sensor_i2c_client,
 			s_ctrl->sensor_exp_gain_info->coarse_int_time_addr,
 			s5k4e1_byte(line, MSB),
@@ -285,7 +298,7 @@ static int32_t s5k4e1_write_prev_exp_gain(struct msm_sensor_ctrl_t *s_ctrl,
 			fl_lines = s_ctrl->curr_frame_length_lines;
 
 		s_ctrl->func_tbl->sensor_group_hold_on(s_ctrl);
-		/* Coarse Integration Time */
+		/*                         */
 		msm_camera_i2c_write(s_ctrl->sensor_i2c_client,
 			s_ctrl->sensor_exp_gain_info->coarse_int_time_addr,
 			s5k4e1_byte(line, MSB),
@@ -306,7 +319,7 @@ static int32_t s5k4e1_write_prev_exp_gain(struct msm_sensor_ctrl_t *s_ctrl,
 	} else {
 		fl_lines = line+4;
 		s_ctrl->func_tbl->sensor_group_hold_on(s_ctrl);
-		/* Coarse Integration Time */
+		/*                         */
 		msm_camera_i2c_write(s_ctrl->sensor_i2c_client,
 			s_ctrl->sensor_exp_gain_info->coarse_int_time_addr,
 			s5k4e1_byte(line, MSB),
@@ -321,7 +334,7 @@ static int32_t s5k4e1_write_prev_exp_gain(struct msm_sensor_ctrl_t *s_ctrl,
 }
 
 static int32_t s5k4e1_write_pict_exp_gain(struct msm_sensor_ctrl_t *s_ctrl,
-		uint16_t gain, uint32_t line, int32_t luma_avg, uint16_t fgain)
+		uint16_t gain, uint32_t line)
 {
 	uint16_t max_legal_gain = 0x0200;
 	uint16_t min_ll_pck = 0x0AB2;
@@ -379,7 +392,7 @@ static int32_t s5k4e1_write_pict_exp_gain(struct msm_sensor_ctrl_t *s_ctrl,
 		ll_pck_lsb,
 		MSM_CAMERA_I2C_BYTE_DATA);
 
-	/* Coarse Integration Time */
+	/*                         */
 	msm_camera_i2c_write(s_ctrl->sensor_i2c_client,
 		s_ctrl->sensor_exp_gain_info->coarse_int_time_addr,
 		intg_time_msb,
@@ -474,6 +487,7 @@ static struct msm_sensor_fn_t s5k4e1_func_tbl = {
 	.sensor_config = msm_sensor_config,
 	.sensor_power_up = msm_sensor_power_up,
 	.sensor_power_down = msm_sensor_power_down,
+	.sensor_get_csi_params = msm_sensor_get_csi_params,
 };
 
 static struct msm_sensor_reg_t s5k4e1_regs = {
@@ -502,6 +516,7 @@ static struct msm_sensor_ctrl_t s5k4e1_s_ctrl = {
 	.sensor_id_info = &s5k4e1_id_info,
 	.sensor_exp_gain_info = &s5k4e1_exp_gain_info,
 	.cam_mode = MSM_SENSOR_MODE_INVALID,
+	.csic_params = &s5k4e1_csi_params_array[0],
 	.msm_sensor_mutex = &s5k4e1_mut,
 	.sensor_i2c_driver = &s5k4e1_i2c_driver,
 	.sensor_v4l2_subdev_info = s5k4e1_subdev_info,

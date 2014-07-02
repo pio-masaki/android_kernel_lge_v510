@@ -16,13 +16,7 @@
 
 #ifdef __KERNEL__
 
-/* LGE_CHANGE_S, camera recovery patch, 2013.2.4, jungki.kim[Start] */
-#if defined(CONFIG_LGE_GK_CAMERA)
-#define LGE_GK_CAMERA_BSP
-#endif
-/* LGE_CHANGE_E, camera recovery patch, 2013.2.4, jungki.kim[End] */
-
-/* Header files */
+/*              */
 #include <linux/i2c.h>
 #include <linux/videodev2.h>
 #include <linux/pm_qos.h>
@@ -82,7 +76,7 @@
 #define MAX_NUM_CPP_DEV 1
 #define MAX_NUM_CCI_DEV 1
 
-/* msm queue management APIs*/
+/*                          */
 
 #define msm_dequeue(queue, member) ({	   \
 	unsigned long flags;		  \
@@ -153,28 +147,28 @@ struct rdi_count_msg {
 	uint32_t count;
 };
 
-/* message id for v4l2_subdev_notify*/
+/*                                  */
 enum msm_camera_v4l2_subdev_notify {
-	NOTIFY_ISP_MSG_EVT, /* arg = enum ISP_MESSAGE_ID */
-	NOTIFY_VFE_MSG_OUT, /* arg = struct isp_msg_output */
-	NOTIFY_VFE_MSG_STATS,  /* arg = struct isp_msg_stats */
-	NOTIFY_VFE_MSG_COMP_STATS, /* arg = struct msm_stats_buf */
-	NOTIFY_VFE_BUF_EVT, /* arg = struct msm_vfe_resp */
+	NOTIFY_ISP_MSG_EVT, /*                           */
+	NOTIFY_VFE_MSG_OUT, /*                             */
+	NOTIFY_VFE_MSG_STATS,  /*                            */
+	NOTIFY_VFE_MSG_COMP_STATS, /*                            */
+	NOTIFY_VFE_BUF_EVT, /*                           */
 	NOTIFY_VFE_CAMIF_ERROR,
-	NOTIFY_VFE_PIX_SOF_COUNT, /*arg = int*/
-	NOTIFY_AXI_RDI_SOF_COUNT, /*arg = struct rdi_count_msg*/
-	NOTIFY_PCLK_CHANGE, /* arg = pclk */
+	NOTIFY_VFE_PIX_SOF_COUNT, /*         */
+	NOTIFY_AXI_RDI_SOF_COUNT, /*                          */
+	NOTIFY_PCLK_CHANGE, /*            */
 	NOTIFY_VFE_IRQ,
 	NOTIFY_AXI_IRQ,
-	NOTIFY_GESTURE_EVT, /* arg = v4l2_event */
-	NOTIFY_GESTURE_CAM_EVT, /* arg = int */
+	NOTIFY_GESTURE_EVT, /*                  */
+	NOTIFY_GESTURE_CAM_EVT, /*           */
 	NOTIFY_INVALID
 };
 
 enum isp_vfe_cmd_id {
 	/*
-	*Important! Command_ID are arranged in order.
-	*Don't change!*/
+                                              
+               */
 	ISP_VFE_CMD_ID_STREAM_ON,
 	ISP_VFE_CMD_ID_STREAM_OFF,
 	ISP_VFE_CMD_ID_FRAME_BUF_RELEASE
@@ -193,9 +187,9 @@ enum msm_buffer_state {
 	MSM_BUFFER_STATE_DEQUEUED
 };
 
-/* buffer for one video frame */
+/*                            */
 struct msm_frame_buffer {
-	/* common v4l buffer stuff -- must be first */
+	/*                                          */
 	struct vb2_buffer         vidbuf;
 	struct list_head		  list;
 	enum v4l2_mbus_pixelcode  pxlcode;
@@ -236,7 +230,7 @@ struct msm_cam_buf_map_info {
 
 struct msm_cam_meta_frame {
 	struct msm_pp_frame frame;
-	/* Mapping information per plane */
+	/*                               */
 	struct msm_cam_buf_map_info map[VIDEO_MAX_PLANES];
 };
 
@@ -262,11 +256,11 @@ struct msm_mctl_pp_info {
 	struct msm_mctl_pp_ctrl pp_ctrl;
 
 };
-/* "Media Controller" represents a camera steaming session,
- * which consists of a "sensor" device and an "isp" device
- * (such as VFE, if needed), connected via an "IO" device,
- * (such as IPIF on 8960, or none on 8660) plus other extra
- * sub devices such as VPE and flash.
+/*                                                         
+                                                          
+                                                          
+                                                           
+                                     
  */
 
 struct msm_cam_media_controller {
@@ -286,48 +280,48 @@ struct msm_cam_media_controller {
 	int (*isp_notify)(struct msm_cam_media_controller *pmctl,
 		struct v4l2_subdev *sd, unsigned int notification, void *arg);
 
-	/* the following reflect the HW topology information*/
-	struct v4l2_subdev *sensor_sdev; /* sensor sub device */
-	struct v4l2_subdev *act_sdev; /* actuator sub device */
-	struct v4l2_subdev *csiphy_sdev; /*csiphy sub device*/
-	struct v4l2_subdev *csid_sdev; /*csid sub device*/
-	struct v4l2_subdev *csic_sdev; /*csid sub device*/
-	struct v4l2_subdev *ispif_sdev; /* ispif sub device */
-	struct v4l2_subdev *gemini_sdev; /* gemini sub device */
-	struct v4l2_subdev *vpe_sdev; /* vpe sub device */
-	struct v4l2_subdev *axi_sdev; /* axi sub device */
-	struct v4l2_subdev *vfe_sdev; /* vfe sub device */
-	struct v4l2_subdev *eeprom_sdev; /* eeprom sub device */
-	struct v4l2_subdev *cpp_sdev;/*cpp sub device*/
+	/*                                                  */
+	struct v4l2_subdev *sensor_sdev; /*                   */
+	struct v4l2_subdev *act_sdev; /*                     */
+	struct v4l2_subdev *csiphy_sdev; /*                 */
+	struct v4l2_subdev *csid_sdev; /*               */
+	struct v4l2_subdev *csic_sdev; /*               */
+	struct v4l2_subdev *ispif_sdev; /*                  */
+	struct v4l2_subdev *gemini_sdev; /*                   */
+	struct v4l2_subdev *vpe_sdev; /*                */
+	struct v4l2_subdev *axi_sdev; /*                */
+	struct v4l2_subdev *vfe_sdev; /*                */
+	struct v4l2_subdev *eeprom_sdev; /*                   */
+	struct v4l2_subdev *cpp_sdev;/*              */
 
 	struct msm_cam_config_dev *config_device;
 
-	/*mctl session control information*/
-	uint8_t opencnt; /*mctl ref count*/
-	const char *apps_id; /*ID for app that open this session*/
+	/*                                */
+	uint8_t opencnt; /*              */
+	const char *apps_id; /*                                 */
 	struct mutex lock;
-	struct wake_lock wake_lock; /*avoid low power mode when active*/
+	struct wake_lock wake_lock; /*                                */
 	struct pm_qos_request pm_qos_req_list;
 	struct msm_mctl_pp_info pp_info;
-	struct msm_mctl_stats_t stats_info; /*stats pmem info*/
-	uint32_t vfe_output_mode; /* VFE output mode */
+	struct msm_mctl_stats_t stats_info; /*               */
+	uint32_t vfe_output_mode; /*                 */
 	struct ion_client *client;
 	struct kref refcount;
 
-	/*pcam ptr*/
+	/*        */
 	struct msm_cam_v4l2_device *pcam_ptr;
 
-	/*sensor info*/
+	/*           */
 	struct msm_camera_sensor_info *sdata;
 
-	/*IOMMU mapped IMEM addresses*/
+	/*                           */
 	uint32_t ping_imem_y;
 	uint32_t ping_imem_cbcr;
 	uint32_t pong_imem_y;
 	uint32_t pong_imem_cbcr;
-	uint8_t hardware_running; /* LGE_CHANGE, patch for IOMMU page fault, 2012.09.06, jungryoul.choi@lge.com */
+	uint8_t hardware_running; /*                                                                            */
 
-	/*IOMMU domain for this session*/
+	/*                             */
 	int domain_num;
 	struct iommu_domain *domain;
 };
@@ -349,14 +343,14 @@ struct msm_cam_v4l2_dev_inst {
 	spinlock_t vq_irqlock;
 	struct list_head free_vq;
 	struct v4l2_format vid_fmt;
-	/* sensor pixel code*/
+	/*                  */
 	enum v4l2_mbus_pixelcode sensor_pxlcode;
 	struct msm_cam_v4l2_device *pcam;
 	int my_index;
 	uint32_t image_mode;
 	int path;
 	int buf_count;
-	/* buffer offsets, if any */
+	/*                        */
 	struct msm_cam_buf_offset **buf_offset;
 	struct v4l2_crop crop;
 	int streamon;
@@ -367,13 +361,10 @@ struct msm_cam_v4l2_dev_inst {
 	struct mutex inst_lock;
 	uint32_t inst_handle;
 	uint32_t sequence;
-#if defined(CONFIG_LGE_GK_CAMERA)
-	int is_closing;
-#endif
 };
 
 struct msm_cam_mctl_node {
-	/* MCTL V4l2 device */
+	/*                  */
 	struct v4l2_device v4l2_dev;
 	struct video_device *pvdev;
 	struct msm_cam_v4l2_dev_inst *dev_inst[MSM_DEV_INST_MAX];
@@ -383,17 +374,17 @@ struct msm_cam_mctl_node {
 	int use_count;
 };
 
-/* abstract camera device for each sensor successfully probed*/
+/*                                                           */
 struct msm_cam_v4l2_device {
 
-	/* device node information */
+	/*                         */
 	int vnode_id;
-	struct v4l2_device v4l2_dev; /* V4l2 device */
-	struct video_device *pvdev; /* registered as /dev/video*/
-	struct msm_cam_mctl_node mctl_node; /* node for buffer management */
-	struct media_device media_dev; /* node to get video node info*/
+	struct v4l2_device v4l2_dev; /*             */
+	struct video_device *pvdev; /*                         */
+	struct msm_cam_mctl_node mctl_node; /*                            */
+	struct media_device media_dev; /*                            */
 
-	/* device session information */
+	/*                            */
 	int use_count;
 	struct mutex vid_lock;
 	uint32_t server_queue_idx;
@@ -402,27 +393,27 @@ struct msm_cam_v4l2_device {
 	struct msm_cam_v4l2_dev_inst *dev_inst_map[MSM_MAX_IMG_MODE];
 	int op_mode;
 
-	/* v4l2 format support */
+	/*                     */
 	struct msm_isp_color_fmt *usr_fmts;
 	int num_fmts;
 
-	struct v4l2_subdev *sensor_sdev; /* sensor sub device */
-	struct v4l2_subdev *act_sdev; /* actuator sub device */
-	struct v4l2_subdev *eeprom_sdev; /* actuator sub device */
+	struct v4l2_subdev *sensor_sdev; /*                   */
+	struct v4l2_subdev *act_sdev; /*                     */
+	struct v4l2_subdev *eeprom_sdev; /*                     */
 	struct msm_camera_sensor_info *sdata;
 
-	struct msm_device_queue eventData_q; /*payload for events sent to app*/
+	struct msm_device_queue eventData_q; /*                              */
 	struct mutex event_lock;
 
-/* LGE_CHANGE_S, Patch for ION free, 2013.1.8, gayoung85.lee[Start] */
-#if defined(CONFIG_LGE_GK_CAMERA) || defined(CONFIG_MACH_APQ8064_AWIFI)
+/*                                                                  */
+#if defined(CONFIG_MACH_APQ8064_PALMAN)
 #ifdef CONFIG_MSM_MULTIMEDIA_USE_ION
 	spinlock_t ion_lock;
 	struct ion_client *client;
 	struct kref refcount;
 #endif
 #endif
-/* LGE_CHANGE_E, Patch for ION free, 2013.1.8, gayoung85.lee[End] */
+/*                                                                */
 };
 
 static inline struct msm_cam_v4l2_device *to_pcam(
@@ -431,14 +422,14 @@ static inline struct msm_cam_v4l2_device *to_pcam(
 	return container_of(v4l2_dev, struct msm_cam_v4l2_device, v4l2_dev);
 }
 
-/*pseudo v4l2 device and v4l2 event queue
-  for server and config cdevs*/
+/*                                       
+                             */
 struct v4l2_queue_util {
 	struct video_device *pvdev;
 	struct v4l2_fh  eventHandle;
 };
 
-/* abstract config device for all sensor successfully probed*/
+/*                                                          */
 struct msm_cam_config_dev {
 	struct cdev config_cdev;
 	struct v4l2_queue_util config_stat_event_queue;
@@ -449,7 +440,7 @@ struct msm_cam_config_dev {
 	int domain_num;
 	struct iommu_domain *domain;
 #ifdef CONFIG_MSM_MULTIMEDIA_USE_ION
-#if defined(CONFIG_LGE_GK_CAMERA) ||defined(CONFIG_MACH_APQ8064_AWIFI)
+#if defined(CONFIG_MACH_APQ8064_PALMAN)
 	struct msm_cam_v4l2_device *pcam;
 #endif
 #endif
@@ -457,14 +448,14 @@ struct msm_cam_config_dev {
 
 struct msm_cam_subdev_info {
 	uint8_t sdev_type;
-	/* Subdev index. For eg: CSIPHY0, CSIPHY1 etc */
+	/*                                            */
 	uint8_t sd_index;
-	/* This device/subdev's interrupt number, assigned
-	 * from the hardware document. */
+	/*                                                
+                                */
 	uint8_t irq_num;
 };
 
-/* 2 for camera, 1 for gesture */
+/*                             */
 #define MAX_NUM_ACTIVE_CAMERA 3
 
 struct msm_cam_server_queue {
@@ -488,96 +479,96 @@ struct msm_cam_server_irqmap_entry {
 };
 
 struct intr_table_entry {
-	/* irq_num as understood by msm.
-	 * Unique for every camera hw core & target. Use a mapping function
-	 * to map this irq number to its equivalent index in camera side. */
+	/*                              
+                                                                    
+                                                                   */
 	int irq_num;
-	/* Camera hw core idx, in case of non-composite IRQs*/
+	/*                                                  */
 	uint8_t cam_hw_idx;
-	/* Camera hw core mask, in case of composite IRQs. */
+	/*                                                 */
 	uint32_t cam_hw_mask;
-	/* Each interrupt is mapped to an index, which is used
-	 * to add/delete entries into the lookup table. Both the information
-	 * are needed in the lookup table to avoid another subdev call into
-	 * the IRQ Router subdev to get the irq_idx in the interrupt context */
+	/*                                                    
+                                                                     
+                                                                    
+                                                                      */
 	int irq_idx;
-	/* Is this irq composite? */
+	/*                        */
 	uint8_t is_composite;
-	/* IRQ Trigger type: TRIGGER_RAISING, TRIGGER_HIGH, etc. */
+	/*                                                       */
 	uint32_t irq_trigger_type;
-	/* If IRQ Router hw is present,
-	 * this field holds the number of camera hw core
-	 * which are bundled together in the above
-	 * interrupt. > 1 in case of composite irqs.
-	 * If IRQ Router hw is not present, this field should be set to 1. */
+	/*                             
+                                                 
+                                           
+                                             
+                                                                    */
 	int num_hwcore;
-	/* Pointers to the subdevs composited in this
-	 * irq. If not composite, the 0th index stores the subdev to which
-	 * this irq needs to be dispatched to. */
+	/*                                           
+                                                                   
+                                        */
 	struct v4l2_subdev *subdev_list[CAMERA_SS_IRQ_MAX];
-	/* Device requesting the irq. */
+	/*                            */
 	const char *dev_name;
-	/* subdev private data, if any */
+	/*                             */
 	void *data;
 };
 
 struct irqmgr_intr_lkup_table {
-	/* Individual(hw) interrupt lookup table:
-	 * This table is populated during initialization and doesnt
-	 * change, unless the IRQ Router has been configured
-	 * for composite IRQs. If the IRQ Router has been configured
-	 * for composite IRQs, the is_composite field of that IRQ will
-	 * be set to 1(default 0). And when there is an interrupt on
-	 * that line, the composite interrupt lookup table is used
-	 * for handling the interrupt. */
+	/*                                       
+                                                            
+                                                     
+                                                             
+                                                               
+                                                             
+                                                           
+                                */
 	struct intr_table_entry ind_intr_tbl[CAMERA_SS_IRQ_MAX];
 
-	/* Composite interrupt lookup table:
-	 * This table can be dynamically modified based on the usecase.
-	 * If the usecase requires two or more HW core IRQs to be bundled
-	 * into a single composite IRQ, then this table is populated
-	 * accordingly. Also when this is done, the composite field
-	 * in the intr_lookup_table has to be updated to reflect that
-	 * the irq 'irq_num' will now  be triggered in composite mode. */
+	/*                                  
+                                                                
+                                                                  
+                                                             
+                                                            
+                                                              
+                                                                */
 	struct intr_table_entry comp_intr_tbl[CAMERA_SS_IRQ_MAX];
 };
 
 struct interface_map {
-	/* The interface a particular stream belongs to.
-	 * PIX0, RDI0, RDI1, or RDI2
-	 */
+	/*                                              
+                             
+  */
 	int interface;
-	/* The handle of the mctl instance, interface runs on */
+	/*                                                    */
 	uint32_t mctl_handle;
 	int vnode_id;
 	int is_bayer_sensor;
 };
 
-/* abstract camera server device for all sensor successfully probed*/
+/*                                                                 */
 struct msm_cam_server_dev {
 
-	/* config node device*/
+	/*                   */
 	struct platform_device *server_pdev;
-	/* server node v4l2 device */
+	/*                         */
 	struct v4l2_device v4l2_dev;
 	struct video_device *video_dev;
 	struct media_device media_dev;
 
-	/* info of sensors successfully probed*/
+	/*                                    */
 	struct msm_camera_info camera_info;
-	/* info of configs successfully created*/
+	/*                                     */
 	struct msm_cam_config_dev_info config_info;
-	/* active working camera device - only one allowed at this time*/
+	/*                                                             */
 	struct msm_cam_v4l2_device *pcam_active[MAX_NUM_ACTIVE_CAMERA];
-	/* save the opened pcam for finding the mctl when doing buf lookup */
+	/*                                                                 */
 	struct msm_cam_v4l2_device *opened_pcam[MAX_NUM_ACTIVE_CAMERA];
-	/* number of camera devices opened*/
+	/*                                */
 	atomic_t number_pcam_active;
 	struct v4l2_queue_util server_command_queue;
 
-	/* This queue used by the config thread to send responses back to the
-	 * control thread.  It is accessed only from a process context.
-	 */
+	/*                                                                   
+                                                                
+  */
 	struct msm_cam_server_queue server_queue[MAX_NUM_ACTIVE_CAMERA];
 	uint32_t server_evt_id;
 
@@ -587,13 +578,13 @@ struct msm_cam_server_dev {
 	struct interface_map interface_map_table[INTF_MAX];
 
 	int use_count;
-	/* all the registered ISP subdevice*/
+	/*                                 */
 	struct msm_isp_ops *isp_subdev[MSM_MAX_CAMERA_CONFIGS];
-	/* info of MCTL nodes successfully probed*/
+	/*                                       */
 	struct msm_mctl_node_info mctl_node_info;
 	struct mutex server_lock;
 	struct mutex server_queue_lock;
-	/*v4l2 subdevs*/
+	/*            */
 	struct v4l2_subdev *sensor_device[MAX_NUM_SENSOR_DEV];
 	struct v4l2_subdev *csiphy_device[MAX_NUM_CSIPHY_DEV];
 	struct v4l2_subdev *csid_device[MAX_NUM_CSID_DEV];
@@ -609,27 +600,17 @@ struct msm_cam_server_dev {
 
 	spinlock_t  intr_table_lock;
 	struct irqmgr_intr_lkup_table irq_lkup_table;
-	/* Stores the pointer to the subdev when the individual
-	 * subdevices register themselves with the server. This
-	 * will be used while dispatching composite irqs. The
-	 * cam_hw_idx will serve as the index into this array to
-	 * dispatch the irq to the corresponding subdev. */
+	/*                                                     
+                                                        
+                                                      
+                                                         
+                                                  */
 	struct v4l2_subdev *subdev_table[MSM_CAM_HW_MAX];
 	struct msm_cam_server_irqmap_entry hw_irqmap[CAMERA_SS_IRQ_MAX];
 
-    /*IOMMU domain (Page table)*/
+    /*                         */
 	int domain_num;
 	struct iommu_domain *domain;
-
-/* LGE_CHANGE_S, camera recovery patch, 2013.1.16, jungki.kim[Start] */
-#if defined(CONFIG_LGE_GK_CAMERA)
-	struct task_struct	*prev_task;
-	wait_queue_head_t ft_wq;
-	unsigned long	wait_ft_timeout;
-	spinlock_t	ft_spin;
-#endif
-/* LGE_CHANGE_E, camera recovery patch, 2013.1.16, jungki.kim[End] */
-
 };
 
 enum msm_cam_buf_lookup_type {
@@ -644,14 +625,14 @@ struct msm_cam_buf_handle {
 	uint32_t inst_handle;
 };
 
-/* ISP related functions */
+/*                       */
 void msm_isp_vfe_dev_init(struct v4l2_subdev *vd);
 int msm_isp_config(struct msm_cam_media_controller *pmctl,
 			 unsigned int cmd, unsigned long arg);
 int msm_isp_notify(struct msm_cam_media_controller *pmctl,
 	struct v4l2_subdev *sd, unsigned int notification, void *arg);
 /*
-int msm_isp_register(struct msm_cam_v4l2_device *pcam);
+                                                       
 */
 int msm_sensor_register(struct v4l2_subdev *);
 int msm_isp_init_module(int g_num_config_nodes);
@@ -675,7 +656,7 @@ int msm_mctl_reserve_free_buf(struct msm_cam_media_controller *pmctl,
 int msm_mctl_release_free_buf(struct msm_cam_media_controller *pmctl,
 	struct msm_cam_v4l2_dev_inst *pcam_inst,
 	struct msm_free_buf *free_buf);
-/*Memory(PMEM) functions*/
+/*                      */
 int msm_register_pmem(struct hlist_head *ptype, void __user *arg,
 	struct ion_client *client, int domain_num);
 int msm_pmem_table_del(struct hlist_head *ptype, void __user *arg,
@@ -754,11 +735,11 @@ int msm_mctl_unmap_user_frame(struct msm_cam_meta_frame *meta_frame,
 	struct ion_client *client, int domain_num);
 int msm_mctl_pp_mctl_divert_done(struct msm_cam_media_controller *p_mctl,
 	void __user *arg);
-/* LGE_CHANGE_S, Patch for ION free, 2013.1.8, gayoung85.lee[Start] */
-#if !defined(CONFIG_LGE_GK_CAMERA) && !defined(CONFIG_MACH_APQ8064_AWIFI)
+/*                                                                  */
+#if !defined(CONFIG_MACH_APQ8064_PALMAN)
 void msm_release_ion_client(struct kref *ref);
 #endif
-/* LGE_CHANGE_E, Patch for ION free, 2013.1.8, gayoung85.lee[End] */
+/*                                                                */
 int msm_cam_register_subdev_node(struct v4l2_subdev *sd,
 	struct msm_cam_subdev_info *sd_info);
 int msm_mctl_find_sensor_subdevs(struct msm_cam_media_controller *p_mctl,
@@ -775,20 +756,20 @@ int msm_mctl_pp_get_vpe_buf_info(struct msm_mctl_pp_frame_info *zoom);
 void msm_queue_init(struct msm_device_queue *queue, const char *name);
 void msm_enqueue(struct msm_device_queue *queue, struct list_head *entry);
 void msm_drain_eventq(struct msm_device_queue *queue);
-int get_server_use_count(void); /* LGE_CHANGE, patch for IOMMU page fault, 2012.09.06, jungryoul.choi@lge.com */
-// Start LGE_BSP_CAMERA::seongjo.kim@lge.com 2012-08-10 handle server daemon crash elegantly
+int get_server_use_count(void); /*                                                                            */
+//                                                                                          
 void msm_cam_stop_hardware(struct msm_cam_v4l2_device *pcam);
-// End LGE_BSP_CAMERA::seongjo.kim@lge.com 2012-08-10 handle server daemon crash elegantly
+//                                                                                        
 
-/* LGE_CHANGE_S, Patch for ION free, 2013.1.8, gayoung85.lee[Start] */
-#if defined(CONFIG_LGE_GK_CAMERA) ||defined(CONFIG_MACH_APQ8064_AWIFI)
+/*                                                                  */
+#if defined(CONFIG_MACH_APQ8064_PALMAN)
 #ifdef CONFIG_MSM_MULTIMEDIA_USE_ION
 void msm_camera_v4l2_release_ion_client(struct kref *ref);
 struct ion_client *msm_camera_v4l2_get_ion_client(struct msm_cam_v4l2_device *pcam);
 int msm_camera_v4l2_put_ion_client(struct msm_cam_v4l2_device *pcam);
 #endif
 #endif
-/* LGE_CHANGE_E, Patch for ION free, 2013.1.8, gayoung85.lee[End] */
-#endif /* __KERNEL__ */
+/*                                                                */
+#endif /*            */
 
-#endif /* _MSM_H */
+#endif /*        */

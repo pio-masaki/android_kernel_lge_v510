@@ -36,4 +36,4 @@ int msm_mercury_platform_init(struct platform_device *pdev,
 int msm_mercury_platform_release(struct resource *mem, void *base, int irq,
 	void *context);
 
-#endif /* MSM_MERCURY_PLATFORM_H */
+#endif /*                        */

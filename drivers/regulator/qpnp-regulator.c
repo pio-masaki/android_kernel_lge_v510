@@ -29,13 +29,13 @@
 #include <linux/regulator/of_regulator.h>
 #include <linux/regulator/qpnp-regulator.h>
 
-/* Debug Flag Definitions */
+/*                        */
 enum {
-	QPNP_VREG_DEBUG_REQUEST		= BIT(0), /* Show requests */
-	QPNP_VREG_DEBUG_DUPLICATE	= BIT(1), /* Show duplicate requests */
-	QPNP_VREG_DEBUG_INIT		= BIT(2), /* Show state after probe */
-	QPNP_VREG_DEBUG_WRITES		= BIT(3), /* Show SPMI writes */
-	QPNP_VREG_DEBUG_READS		= BIT(4), /* Show SPMI reads */
+	QPNP_VREG_DEBUG_REQUEST		= BIT(0), /*               */
+	QPNP_VREG_DEBUG_DUPLICATE	= BIT(1), /*                         */
+	QPNP_VREG_DEBUG_INIT		= BIT(2), /*                        */
+	QPNP_VREG_DEBUG_WRITES		= BIT(3), /*                  */
+	QPNP_VREG_DEBUG_READS		= BIT(4), /*                 */
 };
 
 static int qpnp_vreg_debug_mask;
@@ -46,7 +46,7 @@ module_param_named(
 #define vreg_err(vreg, fmt, ...) \
 	pr_err("%s: " fmt, vreg->rdesc.name, ##__VA_ARGS__)
 
-/* These types correspond to unique register layouts. */
+/*                                                    */
 enum qpnp_regulator_logical_type {
 	QPNP_REGULATOR_LOGICAL_TYPE_SMPS,
 	QPNP_REGULATOR_LOGICAL_TYPE_LDO,
@@ -110,7 +110,7 @@ enum qpnp_boost_registers {
 	QPNP_BOOST_REG_CURRENT_LIMIT		= 0x4A,
 };
 
-/* Used for indexing into ctrl_reg.  These are offets from 0x40 */
+/*                                                              */
 enum qpnp_common_control_register_index {
 	QPNP_COMMON_IDX_VOLTAGE_RANGE		= 0,
 	QPNP_COMMON_IDX_VOLTAGE_SET		= 1,
@@ -118,7 +118,7 @@ enum qpnp_common_control_register_index {
 	QPNP_COMMON_IDX_ENABLE			= 6,
 };
 
-/* Common regulator control register layout */
+/*                                          */
 #define QPNP_COMMON_ENABLE_MASK			0x80
 #define QPNP_COMMON_ENABLE			0x80
 #define QPNP_COMMON_DISABLE			0x00
@@ -128,7 +128,7 @@ enum qpnp_common_control_register_index {
 #define QPNP_COMMON_ENABLE_FOLLOW_HW_EN0_MASK	0x01
 #define QPNP_COMMON_ENABLE_FOLLOW_ALL_MASK	0x0F
 
-/* Common regulator mode register layout */
+/*                                       */
 #define QPNP_COMMON_MODE_HPM_MASK		0x80
 #define QPNP_COMMON_MODE_AUTO_MASK		0x40
 #define QPNP_COMMON_MODE_BYPASS_MASK		0x20
@@ -139,32 +139,32 @@ enum qpnp_common_control_register_index {
 #define QPNP_COMMON_MODE_FOLLOW_HW_EN0_MASK	0x01
 #define QPNP_COMMON_MODE_FOLLOW_ALL_MASK	0x1F
 
-/* Common regulator pull down control register layout */
+/*                                                    */
 #define QPNP_COMMON_PULL_DOWN_ENABLE_MASK	0x80
 
-/* LDO regulator current limit control register layout */
+/*                                                     */
 #define QPNP_LDO_CURRENT_LIMIT_ENABLE_MASK	0x80
 
-/* LDO regulator soft start control register layout */
+/*                                                  */
 #define QPNP_LDO_SOFT_START_ENABLE_MASK		0x80
 
-/* VS regulator over current protection control register layout */
+/*                                                              */
 #define QPNP_VS_OCP_ENABLE_MASK			0x80
 #define QPNP_VS_OCP_OVERRIDE_MASK		0x01
 #define QPNP_VS_OCP_DISABLE			0x00
 
-/* VS regulator soft start control register layout */
+/*                                                 */
 #define QPNP_VS_SOFT_START_ENABLE_MASK		0x80
 #define QPNP_VS_SOFT_START_SEL_MASK		0x03
 
-/* Boost regulator current limit control register layout */
+/*                                                       */
 #define QPNP_BOOST_CURRENT_LIMIT_ENABLE_MASK	0x80
 #define QPNP_BOOST_CURRENT_LIMIT_MASK		0x07
 
 /*
- * This voltage in uV is returned by get_voltage functions when there is no way
- * to determine the current voltage level.  It is needed because the regulator
- * framework treats a 0 uV voltage as an error.
+                                                                               
+                                                                              
+                                               
  */
 #define VOLTAGE_UNKNOWN 1
 
@@ -208,7 +208,7 @@ struct qpnp_regulator {
 	u32					write_count;
 	u32					prev_write_count;
 	u16					base_addr;
-	/* ctrl_reg provides a shadow copy of register values 0x40 to 0x47. */
+	/*                                                                  */
 	u8					ctrl_reg[8];
 };
 
@@ -242,11 +242,11 @@ struct qpnp_regulator {
 };
 
 /*
- * These tables contain the physically available PMIC regulator voltage setpoint
- * ranges.  Where two ranges overlap in hardware, one of the ranges is trimmed
- * to ensure that the setpoints available to software are monotonically
- * increasing and unique.  The set_voltage callback functions expect these
- * properties to hold.
+                                                                                
+                                                                              
+                                                                       
+                                                                          
+                      
  */
 static struct qpnp_voltage_range pldo_ranges[] = {
 	VOLTAGE_RANGE(2,  750000,  750000, 1537500, 12500),
@@ -305,7 +305,7 @@ static struct qpnp_voltage_set_points *all_set_points[] = {
 	&boost_set_points,
 };
 
-/* Determines which label to add to a debug print statement. */
+/*                                                           */
 enum qpnp_regulator_action {
 	QPNP_REGULATOR_ACTION_INIT,
 	QPNP_REGULATOR_ACTION_ENABLE,
@@ -373,23 +373,23 @@ static inline int qpnp_vreg_write(struct qpnp_regulator *vreg, u16 addr,
 }
 
 /*
- * qpnp_vreg_write_optimized - write the minimum sized contiguous subset of buf
- * @vreg:	qpnp_regulator pointer for this regulator
- * @addr:	local SPMI address offset from this peripheral's base address
- * @buf:	new data to write into the SPMI registers
- * @buf_save:	old data in the registers
- * @len:	number of bytes to write
- *
- * This function checks for unchanged register values between buf and buf_save
- * starting at both ends of buf.  Only the contiguous subset in the middle of
- * buf starting and ending with new values is sent.
- *
- * Consider the following example:
- * buf offset: 0 1 2 3 4 5 6 7
- * reg state:  U U C C U C U U
- * (U = unchanged, C = changed)
- * In this example registers 2 through 5 will be written with a single
- * transaction.
+                                                                               
+                                                   
+                                                                       
+                                                  
+                                       
+                                 
+  
+                                                                              
+                                                                             
+                                                   
+  
+                                  
+                              
+                              
+                               
+                                                                      
+               
  */
 static inline int qpnp_vreg_write_optimized(struct qpnp_regulator *vreg,
 		u16 addr, u8 *buf, u8 *buf_save, int len)
@@ -407,7 +407,7 @@ static inline int qpnp_vreg_write_optimized(struct qpnp_regulator *vreg,
 	end = i;
 
 	if (start > end) {
-		/* No modified register values present. */
+		/*                                      */
 		return 0;
 	}
 
@@ -420,9 +420,9 @@ static inline int qpnp_vreg_write_optimized(struct qpnp_regulator *vreg,
 }
 
 /*
- * Perform a masked write to a PMIC register only if the new value differs
- * from the last value written to the register.  This removes redundant
- * register writing.
+                                                                          
+                                                                       
+                    
  */
 static int qpnp_vreg_masked_write(struct qpnp_regulator *vreg, u16 addr, u8 val,
 		u8 mask, u8 *reg_save)
@@ -446,9 +446,9 @@ static int qpnp_vreg_masked_write(struct qpnp_regulator *vreg, u16 addr, u8 val,
 }
 
 /*
- * Perform a masked read-modify-write to a PMIC register only if the new value
- * differs from the value currently in the register.  This removes redundant
- * register writing.
+                                                                              
+                                                                            
+                    
  */
 static int qpnp_vreg_masked_read_write(struct qpnp_regulator *vreg, u16 addr,
 		u8 val, u8 mask)
@@ -498,7 +498,7 @@ static int qpnp_regulator_vs_enable(struct regulator_dev *rdev)
 	u8 reg;
 
 	if (vreg->ocp_enable == QPNP_REGULATOR_ENABLE) {
-		/* Disable OCP */
+		/*             */
 		reg = QPNP_VS_OCP_DISABLE;
 		rc = qpnp_vreg_write(vreg, QPNP_VS_REG_OCP, &reg, 1);
 		if (rc)
@@ -510,7 +510,7 @@ static int qpnp_regulator_vs_enable(struct regulator_dev *rdev)
 		goto fail;
 
 	if (vreg->ocp_enable == QPNP_REGULATOR_ENABLE) {
-		/* Wait for inrush current to subsided, then enable OCP. */
+		/*                                                       */
 		udelay(vreg->ocp_enable_time);
 		reg = QPNP_VS_OCP_ENABLE_MASK;
 		rc = qpnp_vreg_write(vreg, QPNP_VS_REG_OCP, &reg, 1);
@@ -549,7 +549,7 @@ static int qpnp_regulator_select_voltage(struct qpnp_regulator *vreg,
 	int uV = min_uV;
 	int lim_min_uV, lim_max_uV, i;
 
-	/* Check if request voltage is outside of physically settable range. */
+	/*                                                                   */
 	lim_min_uV = vreg->set_points->range[0].set_point_min_uV;
 	lim_max_uV =
 		vreg->set_points->range[vreg->set_points->count - 1].max_uV;
@@ -564,7 +564,7 @@ static int qpnp_regulator_select_voltage(struct qpnp_regulator *vreg,
 		return -EINVAL;
 	}
 
-	/* Find the range which uV is inside of. */
+	/*                                       */
 	for (i = vreg->set_points->count - 1; i > 0; i--)
 		if (uV > vreg->set_points->range[i - 1].max_uV)
 			break;
@@ -572,9 +572,9 @@ static int qpnp_regulator_select_voltage(struct qpnp_regulator *vreg,
 	*range_sel = range->range_sel;
 
 	/*
-	 * Force uV to be an allowed set point by applying a ceiling function to
-	 * the uV value.
-	 */
+                                                                         
+                 
+  */
 	*voltage_sel = (uV - range->min_uV + range->step_uV - 1)
 			/ range->step_uV;
 	uV = *voltage_sel * range->step_uV + range->min_uV;
@@ -608,7 +608,7 @@ static int qpnp_regulator_common_set_voltage(struct regulator_dev *rdev,
 	buf[1] = voltage_sel;
 	if ((vreg->ctrl_reg[QPNP_COMMON_IDX_VOLTAGE_RANGE] != range_sel)
 	    && (vreg->ctrl_reg[QPNP_COMMON_IDX_VOLTAGE_SET] == voltage_sel)) {
-		/* Handle latched range change. */
+		/*                              */
 		rc = qpnp_vreg_write(vreg, QPNP_COMMON_REG_VOLTAGE_RANGE,
 				buf, 2);
 		if (!rc) {
@@ -616,7 +616,7 @@ static int qpnp_regulator_common_set_voltage(struct regulator_dev *rdev,
 			vreg->ctrl_reg[QPNP_COMMON_IDX_VOLTAGE_SET] = buf[1];
 		}
 	} else {
-		/* Either write can be optimized away safely. */
+		/*                                            */
 		rc = qpnp_vreg_write_optimized(vreg,
 			QPNP_COMMON_REG_VOLTAGE_RANGE, buf,
 			&vreg->ctrl_reg[QPNP_COMMON_IDX_VOLTAGE_RANGE], 2);
@@ -669,9 +669,9 @@ static int qpnp_regulator_boost_set_voltage(struct regulator_dev *rdev,
 	}
 
 	/*
-	 * Boost type regulators do not have range select register so only
-	 * voltage set register needs to be written.
-	 */
+                                                                   
+                                             
+  */
 	rc = qpnp_vreg_masked_write(vreg, QPNP_COMMON_REG_VOLTAGE_SET,
 	       voltage_sel, 0xFF, &vreg->ctrl_reg[QPNP_COMMON_IDX_VOLTAGE_SET]);
 
@@ -794,7 +794,7 @@ static void qpnp_vreg_show_state(struct regulator_dev *rdev,
 	bool show_req, show_dupe, show_init, has_changed;
 	u8 en_reg, mode_reg;
 
-	/* Do not print unless appropriate flags are set. */
+	/*                                                */
 	show_req = qpnp_vreg_debug_mask & QPNP_VREG_DEBUG_REQUEST;
 	show_dupe = qpnp_vreg_debug_mask & QPNP_VREG_DEBUG_DUPLICATE;
 	show_init = qpnp_vreg_debug_mask & QPNP_VREG_DEBUG_INIT;
@@ -967,11 +967,11 @@ static struct regulator_ops qpnp_ftsmps_ops = {
 	.enable_time		= qpnp_regulator_common_enable_time,
 };
 
-/* Maximum possible digital major revision value */
+/*                                               */
 #define INF 0xFF
 
 static const struct qpnp_regulator_mapping supported_regulators[] = {
-	/*           type subtype dig_min dig_max ltype ops setpoints hpm_min */
+	/*                                                                    */
 	QPNP_VREG_MAP(BUCK,  GP_CTL,   0, INF, SMPS,   smps,   smps,   100000),
 	QPNP_VREG_MAP(LDO,   N300,     0, INF, LDO,    ldo,    nldo1,   10000),
 	QPNP_VREG_MAP(LDO,   N600,     0,   0, LDO,    ldo,    nldo2,   10000),
@@ -1016,9 +1016,9 @@ static int qpnp_regulator_match(struct qpnp_regulator *vreg)
 					- QPNP_COMMON_REG_DIG_MAJOR_REV];
 
 	/*
-	 * Override type and subtype register values if qcom,force-type is
-	 * present in the device tree node.
-	 */
+                                                                   
+                                    
+  */
 	rc = of_property_read_u32_array(node, "qcom,force-type", type_reg, 2);
 	if (!rc) {
 		type = type_reg[0];
@@ -1064,7 +1064,7 @@ static int qpnp_regulator_init_registers(struct qpnp_regulator *vreg,
 	for (i = 0; i < ARRAY_SIZE(ctrl_reg); i++)
 		ctrl_reg[i] = vreg->ctrl_reg[i];
 
-	/* Set up enable pin control. */
+	/*                            */
 	if ((type == QPNP_REGULATOR_LOGICAL_TYPE_SMPS
 	     || type == QPNP_REGULATOR_LOGICAL_TYPE_LDO
 	     || type == QPNP_REGULATOR_LOGICAL_TYPE_VS)
@@ -1076,7 +1076,7 @@ static int qpnp_regulator_init_registers(struct qpnp_regulator *vreg,
 		    pdata->pin_ctrl_enable & QPNP_COMMON_ENABLE_FOLLOW_ALL_MASK;
 	}
 
-	/* Set up auto mode control. */
+	/*                           */
 	if ((type == QPNP_REGULATOR_LOGICAL_TYPE_SMPS
 	     || type == QPNP_REGULATOR_LOGICAL_TYPE_LDO
 	     || type == QPNP_REGULATOR_LOGICAL_TYPE_VS
@@ -1088,7 +1088,7 @@ static int qpnp_regulator_init_registers(struct qpnp_regulator *vreg,
 		     (pdata->auto_mode_enable ? QPNP_COMMON_MODE_AUTO_MASK : 0);
 	}
 
-	/* Set up mode pin control. */
+	/*                          */
 	if ((type == QPNP_REGULATOR_LOGICAL_TYPE_SMPS
 	    || type == QPNP_REGULATOR_LOGICAL_TYPE_LDO)
 		&& !(pdata->pin_ctrl_hpm
@@ -1116,7 +1116,7 @@ static int qpnp_regulator_init_registers(struct qpnp_regulator *vreg,
 				? QPNP_COMMON_MODE_BYPASS_MASK : 0);
 	}
 
-	/* Set boost current limit. */
+	/*                          */
 	if (type == QPNP_REGULATOR_LOGICAL_TYPE_BOOST
 		&& pdata->boost_current_limit
 			!= QPNP_BOOST_CURRENT_LIMIT_HW_DEFAULT) {
@@ -1130,7 +1130,7 @@ static int qpnp_regulator_init_registers(struct qpnp_regulator *vreg,
 		}
 	}
 
-	/* Write back any control register values that were modified. */
+	/*                                                            */
 	rc = qpnp_vreg_write_optimized(vreg, QPNP_COMMON_REG_VOLTAGE_RANGE,
 		ctrl_reg, vreg->ctrl_reg, 8);
 	if (rc) {
@@ -1138,7 +1138,7 @@ static int qpnp_regulator_init_registers(struct qpnp_regulator *vreg,
 		return rc;
 	}
 
-	/* Set pull down. */
+	/*                */
 	if ((type == QPNP_REGULATOR_LOGICAL_TYPE_SMPS
 	    || type == QPNP_REGULATOR_LOGICAL_TYPE_LDO
 	    || type == QPNP_REGULATOR_LOGICAL_TYPE_VS)
@@ -1154,7 +1154,7 @@ static int qpnp_regulator_init_registers(struct qpnp_regulator *vreg,
 
 	if (type == QPNP_REGULATOR_LOGICAL_TYPE_FTSMPS
 	    && pdata->pull_down_enable != QPNP_REGULATOR_USE_HW_DEFAULT) {
-		/* FTSMPS has other bits in the pull down control register. */
+		/*                                                          */
 		reg = pdata->pull_down_enable
 			? QPNP_COMMON_PULL_DOWN_ENABLE_MASK : 0;
 		rc = qpnp_vreg_masked_read_write(vreg,
@@ -1166,7 +1166,7 @@ static int qpnp_regulator_init_registers(struct qpnp_regulator *vreg,
 		}
 	}
 
-	/* Set soft start for LDO. */
+	/*                         */
 	if (type == QPNP_REGULATOR_LOGICAL_TYPE_LDO
 	    && pdata->soft_start_enable != QPNP_REGULATOR_USE_HW_DEFAULT) {
 		reg = pdata->soft_start_enable
@@ -1178,7 +1178,7 @@ static int qpnp_regulator_init_registers(struct qpnp_regulator *vreg,
 		}
 	}
 
-	/* Set soft start strength and over current protection for VS. */
+	/*                                                             */
 	if (type == QPNP_REGULATOR_LOGICAL_TYPE_VS) {
 		reg = 0;
 		mask = 0;
@@ -1214,7 +1214,7 @@ static int qpnp_regulator_init_registers(struct qpnp_regulator *vreg,
 	return rc;
 }
 
-/* Fill in pdata elements based on values found in device tree. */
+/*                                                              */
 static int qpnp_regulator_get_dt_config(struct spmi_device *spmi,
 				struct qpnp_regulator_platform_data *pdata)
 {
@@ -1234,9 +1234,9 @@ static int qpnp_regulator_get_dt_config(struct spmi_device *spmi,
 	pdata->base_addr = res->start;
 
 	/*
-	 * Initialize configuration parameters to use hardware default in case
-	 * no value is specified via device tree.
-	 */
+                                                                       
+                                          
+  */
 	pdata->auto_mode_enable		= QPNP_REGULATOR_USE_HW_DEFAULT;
 	pdata->bypass_mode_enable	= QPNP_REGULATOR_USE_HW_DEFAULT;
 	pdata->ocp_enable		= QPNP_REGULATOR_USE_HW_DEFAULT;
@@ -1247,7 +1247,7 @@ static int qpnp_regulator_get_dt_config(struct spmi_device *spmi,
 	pdata->pin_ctrl_hpm	    = QPNP_REGULATOR_PIN_CTRL_HPM_HW_DEFAULT;
 	pdata->vs_soft_start_strength	= QPNP_VS_SOFT_START_STR_HW_DEFAULT;
 
-	/* These bindings are optional, so it is okay if they are not found. */
+	/*                                                                   */
 	of_property_read_u32(node, "qcom,auto-mode-enable",
 		&pdata->auto_mode_enable);
 	of_property_read_u32(node, "qcom,bypass-mode-enable",
@@ -1296,7 +1296,7 @@ static int __devinit qpnp_regulator_probe(struct spmi_device *spmi)
 
 	is_dt = of_match_device(spmi_match_table, &spmi->dev);
 
-	/* Check if device tree is in use. */
+	/*                                 */
 	if (is_dt) {
 		init_data = of_get_regulator_init_data(&spmi->dev,
 						       spmi->dev.of_node);
@@ -1369,7 +1369,7 @@ static int __devinit qpnp_regulator_probe(struct spmi_device *spmi)
 	}
 
 	if (is_dt && rdesc->ops) {
-		/* Fill in ops and mode masks when using device tree. */
+		/*                                                    */
 		if (rdesc->ops->enable)
 			pdata->init_data.constraints.valid_ops_mask
 				|= REGULATOR_CHANGE_STATUS;
@@ -1452,8 +1452,8 @@ static struct spmi_driver qpnp_regulator_driver = {
 };
 
 /*
- * Pre-compute the number of set points available for each regulator type to
- * avoid unnecessary calculations later in runtime.
+                                                                            
+                                                   
  */
 static void qpnp_regulator_set_point_init(void)
 {
@@ -1475,11 +1475,11 @@ static void qpnp_regulator_set_point_init(void)
 	}
 }
 
-/**
- * qpnp_regulator_init() - register spmi driver for qpnp-regulator
- *
- * This initialization function should be called in systems in which driver
- * registration ordering must be controlled precisely.
+/* 
+                                                                  
+  
+                                                                           
+                                                      
  */
 int __init qpnp_regulator_init(void)
 {

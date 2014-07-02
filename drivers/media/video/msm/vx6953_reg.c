@@ -15,113 +15,113 @@
 #include "vx6953.h"
 const struct reg_struct_init vx6953_reg_init[1] = {
 	{
-		10,			/*REG = 0x0112 , 10 bit */
-		10,			/*REG = 0x0113*/
-		9,			/*REG = 0x0301 vt_pix_clk_div*/
-		4,		/*REG = 0x0305 pre_pll_clk_div*/
-		133,		/*REG = 0x0307 pll_multiplier*/
-		10,		/*REG = 0x0309 op_pix_clk_div*/
-		0x08,		/*REG = 0x3030*/
-		0x02,		/*REG = 0x0111*/
-		0x01,		/*REG = 0x0b00 ,lens shading off */
-		0x30,		/*REG = 0x3001*/
-		0x33,		/*REG = 0x3004*/
-		0x09,		/*REG = 0x3007*/
-		0x1F,		/*REG = 0x3016*/
-		0x03,		/*REG = 0x301d*/
-		0x11,		/*REG = 0x317E*/
-		0x09,		/*REG = 0x317F*/
-		0x38,		/*REG = 0x3400*/
-		0x00,		/*REG_0x0b06*/
-		0x80,		/*REG_0x0b07*/
-		0x01,		/*REG_0x0b08*/
-		0x4F,		/*REG_0x0b09*/
-		0x18,		/*REG_0x0136*/
-		0x00,		/*/REG_0x0137*/
-		0x20,		/*REG = 0x0b83*/
-		0x90,		/*REG = 0x0b84*/
-		0x20,		/*REG = 0x0b85*/
-		0x80,		/*REG = 0x0b88*/
-		0x00,		/*REG = 0x0b89*/
-		0x00,		/*REG = 0x0b8a*/
+		10,			/*                      */
+		10,			/*            */
+		9,			/*                           */
+		4,		/*                            */
+		133,		/*                           */
+		10,		/*                           */
+		0x08,		/*            */
+		0x02,		/*            */
+		0x01,		/*                               */
+		0x30,		/*            */
+		0x33,		/*            */
+		0x09,		/*            */
+		0x1F,		/*            */
+		0x03,		/*            */
+		0x11,		/*            */
+		0x09,		/*            */
+		0x38,		/*            */
+		0x00,		/*          */
+		0x80,		/*          */
+		0x01,		/*          */
+		0x4F,		/*          */
+		0x18,		/*          */
+		0x00,		/*           */
+		0x20,		/*            */
+		0x90,		/*            */
+		0x20,		/*            */
+		0x80,		/*            */
+		0x00,		/*            */
+		0x00,		/*            */
 	}
 };
 const struct reg_struct vx6953_reg_pat[2] = {
-	{/* Preview */
-		0x03,	/*REG = 0x0202 coarse integration_time_hi*/
-		0xd0,	/*REG = 0x0203 coarse_integration_time_lo*/
-		0xc0,	/*REG = 0x0205 analogue_gain_code_global*/
-		0x03,	/*REG = 0x0340 frame_length_lines_hi*/
-		0xf0,	/*REG = 0x0341 frame_length_lines_lo*/
-		0x0b,	/*REG = 0x0342  line_length_pck_hi*/
-		0x74,	/*REG = 0x0343  line_length_pck_lo*/
-		0x03,	/*REG = 0x3005*/
-		0x00,	/*REG = 0x3010*/
-		0x01,	/*REG = 0x3011*/
-		0x6a,	/*REG = 0x301a*/
-		0x03,	/*REG = 0x3035*/
-		0x2c,	/*REG = 0x3036*/
-		0x00,	/*REG = 0x3041*/
-		0x24,	/*REG = 0x3042*/
-		0x81,	/*REG = 0x3045*/
-		0x02,	/*REG = 0x0b80 edof estimate*/
-		0x01,	/*REG = 0x0900*/
-		0x22,	/*REG = 0x0901*/
-		0x04,	/*REG = 0x0902*/
-		0x03,	/*REG = 0x0383*/
-		0x03,	/*REG = 0x0387*/
-		0x05,	/*REG = 0x034c*/
-		0x18,	/*REG = 0x034d*/
-		0x03,	/*REG = 0x034e*/
-		0xd4,	/*REG = 0x034f*/
-		0x02,	/*0x1716*/
-		0x04,	/*0x1717*/
-		0x08,	/*0x1718*/
-		0x2c,	/*0x1719*/
-		0x01,   /*0x3210*/
-		0x02,   /*0x111*/
-		0x01,   /*0x3410*/
-		0x01,   /*0x3098*/
-		0x05,   /*0x309D*/
+	{/*         */
+		0x03,	/*                                       */
+		0xd0,	/*                                       */
+		0xc0,	/*                                      */
+		0x03,	/*                                  */
+		0xf0,	/*                                  */
+		0x0b,	/*                                */
+		0x74,	/*                                */
+		0x03,	/*            */
+		0x00,	/*            */
+		0x01,	/*            */
+		0x6a,	/*            */
+		0x03,	/*            */
+		0x2c,	/*            */
+		0x00,	/*            */
+		0x24,	/*            */
+		0x81,	/*            */
+		0x02,	/*                          */
+		0x01,	/*            */
+		0x22,	/*            */
+		0x04,	/*            */
+		0x03,	/*            */
+		0x03,	/*            */
+		0x05,	/*            */
+		0x18,	/*            */
+		0x03,	/*            */
+		0xd4,	/*            */
+		0x02,	/*      */
+		0x04,	/*      */
+		0x08,	/*      */
+		0x2c,	/*      */
+		0x01,   /*      */
+		0x02,   /*     */
+		0x01,   /*      */
+		0x01,   /*      */
+		0x05,   /*      */
 		0x02,
 		0x04,
 	},
-	{ /* Snapshot */
-		0x07,/*REG = 0x0202 coarse_integration_time_hi*/
-		0x00,/*REG = 0x0203 coarse_integration_time_lo*/
-		0xc0,/*REG = 0x0205 analogue_gain_code_global*/
-		0x07,/*REG = 0x0340 frame_length_lines_hi*/
-		0xd0,/*REG = 0x0341 frame_length_lines_lo*/
-		0x0b,/*REG = 0x0342 line_length_pck_hi*/
-		0x8c,/*REG = 0x0343 line_length_pck_lo*/
-		0x01,/*REG = 0x3005*/
-		0x00,/*REG = 0x3010*/
-		0x00,/*REG = 0x3011*/
-		0x55,/*REG = 0x301a*/
-		0x01,/*REG = 0x3035*/
-		0x23,/*REG = 0x3036*/
-		0x00,/*REG = 0x3041*/
-		0x24,/*REG = 0x3042*/
-		0xb7,/*REG = 0x3045*/
-		0x01,/*REG = 0x0b80 edof application*/
-		0x00,/*REG = 0x0900*/
-		0x00,/*REG = 0x0901*/
-		0x00,/*REG = 0x0902*/
-		0x01,/*REG = 0x0383*/
-		0x01,/*REG = 0x0387*/
-		0x0A,/*REG = 0x034c*/
-		0x30,/*REG = 0x034d*/
-		0x07,/*REG = 0x034e*/
-		0xA8,/*REG = 0x034f*/
-		0x02,/*0x1716*/
-		0x0d,/*0x1717*/
-		0x07,/*0x1718*/
-		0x7d,/*0x1719*/
-		0x01,/*0x3210*/
-		0x02,/*0x111*/
-		0x01,/*0x3410*/
-		0x01,/*0x3098*/
-		0x05, /*0x309D*/
+	{ /*          */
+		0x07,/*                                       */
+		0x00,/*                                       */
+		0xc0,/*                                      */
+		0x07,/*                                  */
+		0xd0,/*                                  */
+		0x0b,/*                               */
+		0x8c,/*                               */
+		0x01,/*            */
+		0x00,/*            */
+		0x00,/*            */
+		0x55,/*            */
+		0x01,/*            */
+		0x23,/*            */
+		0x00,/*            */
+		0x24,/*            */
+		0xb7,/*            */
+		0x01,/*                             */
+		0x00,/*            */
+		0x00,/*            */
+		0x00,/*            */
+		0x01,/*            */
+		0x01,/*            */
+		0x0A,/*            */
+		0x30,/*            */
+		0x07,/*            */
+		0xA8,/*            */
+		0x02,/*      */
+		0x0d,/*      */
+		0x07,/*      */
+		0x7d,/*      */
+		0x01,/*      */
+		0x02,/*     */
+		0x01,/*      */
+		0x01,/*      */
+		0x05, /*      */
 		0x02,
 		0x00,
 	}

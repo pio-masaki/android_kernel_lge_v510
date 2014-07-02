@@ -15,9 +15,9 @@
 
 #include <media/msm_mercury.h>
 
-/*number of pel per block (horiz/vert)*/
+/*                                    */
 #define JPEGDEC_BLOCK_SIZE                 (8)
-/* Hardware alignment*/
+/*                   */
 #define JPEGDEC_HW_ALIGN                   (8)
 #define JPEGDEC_HW_SAMPLING_RATIO_MAX      (4)
 
@@ -55,7 +55,7 @@ uint32_t msm_mercury_hw_read(struct msm_mercury_hw_cmd *hw_cmd_p);
 void msm_mercury_hw_write(struct msm_mercury_hw_cmd *hw_cmd_p);
 int msm_mercury_hw_wait(struct msm_mercury_hw_cmd *hw_cmd_p, int m_us);
 void msm_mercury_hw_delay(struct msm_mercury_hw_cmd *hw_cmd_p, int m_us);
-int msm_mercury_hw_exec_cmds(struct msm_mercury_hw_cmd *hw_cmd_p, int m_cmds);
+int msm_mercury_hw_exec_cmds(struct msm_mercury_hw_cmd *hw_cmd_p, uint32_t m_cmds);
 void msm_mercury_hw_region_dump(int size);
 
 
@@ -67,4 +67,4 @@ void msm_mercury_hw_output_u_buf_cfg(uint32_t u_buf_addr);
 void msm_mercury_hw_output_v_buf_cfg(uint32_t v_buf_addr);
 void msm_mercury_hw_bitstream_buf_cfg(uint32_t bitstream_buf_addr);
 
-#endif /* MSM_MERCURY_HW_H */
+#endif /*                  */

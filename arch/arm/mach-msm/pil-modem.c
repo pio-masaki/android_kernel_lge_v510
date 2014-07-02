@@ -87,29 +87,29 @@ static int modem_reset(struct pil_desc *pil)
 	u32 reg;
 	const struct modem_data *drv = dev_get_drvdata(pil->dev);
 
-	/* Put modem AHB0,1,2 clocks into reset */
+	/*                                      */
 	writel_relaxed(BIT(0) | BIT(1), MAHB0_SFAB_PORT_RESET);
 	writel_relaxed(BIT(7), MAHB1_CLK_CTL);
 	writel_relaxed(BIT(7), MAHB2_CLK_CTL);
 
-	/* Vote for pll8 on behalf of the modem */
+	/*                                      */
 	reg = readl_relaxed(PLL_ENA_MARM);
 	reg |= BIT(8);
 	writel_relaxed(reg, PLL_ENA_MARM);
 
-	/* Wait for PLL8 to enable */
+	/*                         */
 	while (!(readl_relaxed(PLL8_STATUS) & BIT(16)))
 		cpu_relax();
 
-	/* Set MAHB1 divider to Div-5 to run MAHB1,2 and sfab at 79.8 Mhz*/
+	/*                                                               */
 	writel_relaxed(0x4, MAHB1_NS);
 
-	/* Vote for modem AHB1 and 2 clocks to be on on behalf of the modem */
+	/*                                                                  */
 	reg = readl_relaxed(MARM_CLK_BRANCH_ENA_VOTE);
 	reg |= BIT(0) | BIT(1);
 	writel_relaxed(reg, MARM_CLK_BRANCH_ENA_VOTE);
 
-	/* Source marm_clk off of PLL8 */
+	/*                             */
 	reg = readl_relaxed(MARM_CLK_SRC_CTL);
 	if ((reg & 0x1) == 0) {
 		writel_relaxed(0x3, MARM_CLK_SRC1_NS);
@@ -121,16 +121,16 @@ static int modem_reset(struct pil_desc *pil)
 	writel_relaxed(reg | 0x2, MARM_CLK_SRC_CTL);
 
 	/*
-	 * Force core on and periph on signals to remain active during halt
-	 * for marm_clk and mahb2_clk
-	 */
+                                                                    
+                              
+  */
 	writel_relaxed(0x6F, MARM_CLK_FS);
 	writel_relaxed(0x6F, MAHB2_CLK_FS);
 
 	/*
-	 * Enable all of the marm_clk branches, cxo sourced marm branches,
-	 * and sleep clock branches
-	 */
+                                                                   
+                            
+  */
 	writel_relaxed(0x10, MARM_CLK_CTL);
 	writel_relaxed(0x10, MAHB0_CLK_CTL);
 	writel_relaxed(0x10, SFAB_MSS_S_HCLK_CTL);
@@ -138,24 +138,24 @@ static int modem_reset(struct pil_desc *pil)
 	writel_relaxed(0x10, MSS_SLP_CLK_CTL);
 	writel_relaxed(0x10, MSS_MARM_SYS_REF_CLK_CTL);
 
-	/* Wait for above clocks to be turned on */
+	/*                                       */
 	while (readl_relaxed(CLK_HALT_MSS_SMPSS_MISC_STATE) & (BIT(7) | BIT(8) |
 				BIT(9) | BIT(10) | BIT(4) | BIT(6)))
 		cpu_relax();
 
-	/* Take MAHB0,1,2 clocks out of reset */
+	/*                                    */
 	writel_relaxed(0x0, MAHB2_CLK_CTL);
 	writel_relaxed(0x0, MAHB1_CLK_CTL);
 	writel_relaxed(0x0, MAHB0_SFAB_PORT_RESET);
 	mb();
 
-	/* Setup exception vector table base address */
+	/*                                           */
 	writel_relaxed(drv->start_addr | 0x1, drv->base + MARM_BOOT_CONTROL);
 
-	/* Wait for vector table to be setup */
+	/*                                   */
 	mb();
 
-	/* Bring modem out of reset */
+	/*                          */
 	writel_relaxed(0x0, MARM_RESET);
 
 	return 0;
@@ -165,20 +165,20 @@ static int modem_shutdown(struct pil_desc *pil)
 {
 	u32 reg;
 
-	/* Put modem into reset */
+	/*                      */
 	writel_relaxed(0x1, MARM_RESET);
 	mb();
 
-	/* Put modem AHB0,1,2 clocks into reset */
+	/*                                      */
 	writel_relaxed(BIT(0) | BIT(1), MAHB0_SFAB_PORT_RESET);
 	writel_relaxed(BIT(7), MAHB1_CLK_CTL);
 	writel_relaxed(BIT(7), MAHB2_CLK_CTL);
 	mb();
 
 	/*
-	 * Disable all of the marm_clk branches, cxo sourced marm branches,
-	 * and sleep clock branches
-	 */
+                                                                    
+                            
+  */
 	writel_relaxed(0x0, MARM_CLK_CTL);
 	writel_relaxed(0x0, MAHB0_CLK_CTL);
 	writel_relaxed(0x0, SFAB_MSS_S_HCLK_CTL);
@@ -186,15 +186,15 @@ static int modem_shutdown(struct pil_desc *pil)
 	writel_relaxed(0x0, MSS_SLP_CLK_CTL);
 	writel_relaxed(0x0, MSS_MARM_SYS_REF_CLK_CTL);
 
-	/* Disable marm_clk */
+	/*                  */
 	reg = readl_relaxed(MARM_CLK_SRC_CTL);
 	reg &= ~0x2;
 	writel_relaxed(reg, MARM_CLK_SRC_CTL);
 
-	/* Clear modem's votes for ahb clocks */
+	/*                                    */
 	writel_relaxed(0x0, MARM_CLK_BRANCH_ENA_VOTE);
 
-	/* Clear modem's votes for PLLs */
+	/*                              */
 	writel_relaxed(0x0, PLL_ENA_MARM);
 
 	return 0;

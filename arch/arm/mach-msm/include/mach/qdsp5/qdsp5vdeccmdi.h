@@ -27,24 +27,24 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 *====*====*====*====*====*====*====*====*====*====*====*====*====*====*====*/
-/*===========================================================================
+/*                                                                           
 
-                      EDIT HISTORY FOR FILE
+                                           
 
-This section contains comments describing changes made to this file.
-Notice that changes are listed in reverse chronological order.
+                                                                    
+                                                              
    
-$Header: //source/qcom/qct/multimedia2/AdspSvc/7XXX/qdsp5cmd/video/qdsp5vdeccmdi.h#2 $ $DateTime: 2008/07/30 10:50:23 $ $Author: pavanr $                     
-Revision History:                                              
+                                                                                                                                                              
+                                                               
   
-when       who     what, where, why
---------   ---     ----------------------------------------------------------
-05/10/08   ac      initial version
-===========================================================================*/
+                                   
+                                                                             
+                                  
+                                                                           */
 
 
 /*
- * Command to inform VIDDEC that new subframe packet is ready
+                                                             
  */
 
 #define	VIDDEC_CMD_SUBFRAME_PKT		0x0000
@@ -91,7 +91,7 @@ typedef struct {
 
 
 /*
- * Command to inform VIDDEC task that post processing is required for the frame
+                                                                               
  */
 
 #define	VIDDEC_CMD_PP_ENABLE		0x0001
@@ -123,7 +123,7 @@ typedef struct {
 
 
 /*
- * FRAME Header Packet : It is at the start of new frame
+                                                        
  */
 
 #define	VIDDEC_CMD_FRAME_HEADER_PACKET	0x0002
@@ -132,8 +132,8 @@ typedef struct {
 #define	VIDDEC_CMD_FRAME_INFO_0_ERROR_BLACK	0x0800
 
 /*
- * SLICE HEADER PACKET 
- * I-Slice and P-Slice
+                       
+                      
  */
 
 #define	VIDDEC_CMD_SLICE_HEADER_PKT_ISLICE		0x0003

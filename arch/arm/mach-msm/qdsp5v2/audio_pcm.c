@@ -53,7 +53,7 @@
 #define ADRV_STATUS_IBUF_GIVEN 0x00000004
 #define ADRV_STATUS_FSYNC 0x00000008
 
-/* Size must be power of 2 */
+/*                         */
 #define BUFSZ_MAX 32768
 #define BUFSZ_MIN 4096
 #define DMASZ_MAX (BUFSZ_MAX * 2)
@@ -61,13 +61,13 @@
 
 #define AUDDEC_DEC_PCM 0
 
-/* Decoder status received from AUDPPTASK */
+/*                                        */
 #define  AUDPP_DEC_STATUS_SLEEP	0
 #define  AUDPP_DEC_STATUS_INIT  1
 #define  AUDPP_DEC_STATUS_CFG   2
 #define  AUDPP_DEC_STATUS_PLAY  3
 
-#define AUDPCM_EVENT_NUM 10 /* Default number of pre-allocated event packets */
+#define AUDPCM_EVENT_NUM 10 /*                                               */
 
 #define __CONTAINS(r, v, l) ({					\
 	typeof(r) __r = r;					\
@@ -105,7 +105,7 @@ struct audio;
 struct buffer {
 	void *data;
 	unsigned size;
-	unsigned used;		/* Input usage actual DSP produced PCM size  */
+	unsigned used;		/*                                           */
 	unsigned addr;
 };
 
@@ -152,9 +152,9 @@ struct audio {
 
 	uint8_t out_head;
 	uint8_t out_tail;
-	uint8_t out_needed; /* number of buffers the dsp is waiting for */
+	uint8_t out_needed; /*                                          */
 	unsigned out_dma_sz;
-	struct list_head out_queue; /* queue to retain output buffers */
+	struct list_head out_queue; /*                                */
 	atomic_t out_bytes;
 
 	struct mutex lock;
@@ -163,25 +163,25 @@ struct audio {
 
 	struct msm_adsp_module *audplay;
 
-	/* configuration to use on next enable */
+	/*                                     */
 	uint32_t out_sample_rate;
 	uint32_t out_channel_mode;
-	uint32_t out_bits; /* bits per sample */
+	uint32_t out_bits; /*                 */
 
-	/* data allocated for various buffers */
+	/*                                    */
 	char *data;
 	int32_t phys;
 	void *map_v_write;
 	uint32_t drv_status;
-	int wflush; /* Write flush */
+	int wflush; /*             */
 	int opened;
 	int enabled;
 	int running;
-	int stopped; /* set when stopped, cleared on flush */
-	int teos; /* valid only if tunnel mode & no data left for decoder */
-	enum msm_aud_decoder_state dec_state; /* Represents decoder state */
-	int reserved; /* A byte is being reserved */
-	char rsv_byte; /* Handle odd length user data */
+	int stopped; /*                                    */
+	int teos; /*                                                      */
+	enum msm_aud_decoder_state dec_state; /*                          */
+	int reserved; /*                          */
+	char rsv_byte; /*                             */
 
 	const char *module_name;
 	unsigned queue_id;
@@ -206,10 +206,10 @@ struct audio {
 	spinlock_t event_queue_lock;
 	struct mutex get_event_lock;
 	int event_abort;
-	/* AV sync Info */
-	int avsync_flag;              /* Flag to indicate feedback from DSP */
-	wait_queue_head_t avsync_wait;/* Wait queue for AV Sync Message     */
-	/* flags, 48 bits sample/bytes counter per channel */
+	/*              */
+	int avsync_flag;              /*                                    */
+	wait_queue_head_t avsync_wait;/*                                    */
+	/*                                                 */
 	uint16_t avsync[AUDPP_AVSYNC_CH_COUNT * AUDPP_AVSYNC_NUM_WORDS + 1];
 
 	struct list_head pmem_region_queue;
@@ -255,10 +255,10 @@ static void pcm_listner(u32 evt_id, union auddev_evt_data *evt_payload,
 		break;
 	}
 }
-/* must be called with audio->lock held */
+/*                                      */
 static int audio_enable(struct audio *audio)
 {
-	MM_DBG("\n"); /* Macro prints the file name and function */
+	MM_DBG("\n"); /*                                         */
 
 	if (audio->enabled)
 		return 0;
@@ -282,11 +282,11 @@ static int audio_enable(struct audio *audio)
 	return 0;
 }
 
-/* must be called with audio->lock held */
+/*                                      */
 static int audio_disable(struct audio *audio)
 {
 	int rc = 0;
-	MM_DBG("\n"); /* Macro prints the file name and function */
+	MM_DBG("\n"); /*                                         */
 	if (audio->enabled) {
 		audio->enabled = 0;
 		audio->dec_state = MSM_AUD_DECODER_STATE_NONE;
@@ -308,7 +308,7 @@ static int audio_disable(struct audio *audio)
 	return rc;
 }
 
-/* ------------------- dsp --------------------- */
+/*                                               */
 static void audplay_dsp_event(void *data, unsigned id, size_t len,
 			      void (*getevent) (void *ptr, size_t len))
 {
@@ -353,7 +353,7 @@ static void audio_dsp_event(void *private, unsigned id, uint16_t *msg)
 						MSM_AUD_DECODER_STATE_FAILURE;
 					wake_up(&audio->wait);
 				} else if (reason == AUDPP_MSG_REASON_NONE) {
-					/* decoder is in disable state */
+					/*                             */
 					audio->dec_state =
 						MSM_AUD_DECODER_STATE_CLOSE;
 					wake_up(&audio->wait);
@@ -475,7 +475,7 @@ static int audplay_dsp_send_data_avail(struct audio *audio,
 	cmd.buf_ptr		= audio->out[idx].addr;
 	cmd.buf_size		= len/2;
 	cmd.partition_number	= 0;
-	/* complete writes to the input buffer */
+	/*                                     */
 	wmb();
 	return audplay_send_queue0(audio, &cmd, sizeof(cmd));
 }
@@ -492,7 +492,7 @@ static void audpcm_async_send_data(struct audio *audio, unsigned needed)
 	if (needed && !audio->wflush) {
 		audio->out_needed = 1;
 		if (audio->drv_status & ADRV_STATUS_OBUF_GIVEN) {
-			/* pop one node out of queue */
+			/*                           */
 			union msm_audio_event_payload payload;
 			struct audpcm_buffer_node *used_buf;
 
@@ -530,7 +530,7 @@ static void audpcm_async_send_data(struct audio *audio, unsigned needed)
 				cmd.buf_ptr	= (unsigned) next_buf->paddr;
 				cmd.buf_size = next_buf->buf.data_len >> 1;
 				cmd.partition_number	= 0;
-				/* complete writes to the input buffer */
+				/*                                     */
 				wmb();
 				audplay_send_queue0(audio, &cmd, sizeof(cmd));
 				audio->out_needed = 0;
@@ -552,12 +552,12 @@ static void audplay_send_data(struct audio *audio, unsigned needed)
 	spin_lock_irqsave(&audio->dsp_lock, flags);
 
 	if (needed && !audio->wflush) {
-		/* We were called from the callback because the DSP
-		 * requested more data.  Note that the DSP does want
-		 * more data, and if a buffer was in-flight, mark it
-		 * as available (since the DSP must now be done with
-		 * it).
-		 */
+		/*                                                 
+                                                      
+                                                      
+                                                      
+         
+   */
 		audio->out_needed = 1;
 		frame = audio->out + audio->out_tail;
 		if (frame->used == 0xffffffff) {
@@ -569,12 +569,12 @@ static void audplay_send_data(struct audio *audio, unsigned needed)
 	}
 
 	if (audio->out_needed) {
-		/* If the DSP currently wants data and we have a
-		 * buffer available, we will send it and reset
-		 * the needed flag.  We'll mark the buffer as in-flight
-		 * so that it won't be recycled until the next buffer
-		 * is requested
-		 */
+		/*                                              
+                                                
+                                                         
+                                                       
+                 
+   */
 
 		frame = audio->out + audio->out_tail;
 		if (frame->used) {
@@ -589,14 +589,14 @@ static void audplay_send_data(struct audio *audio, unsigned needed)
 	spin_unlock_irqrestore(&audio->dsp_lock, flags);
 }
 
-/* ------------------- device --------------------- */
+/*                                                  */
 static void audpcm_async_flush(struct audio *audio)
 {
 	struct audpcm_buffer_node *buf_node;
 	struct list_head *ptr, *next;
 	union msm_audio_event_payload payload;
 
-	MM_DBG("\n"); /* Macro prints the file name and function */
+	MM_DBG("\n"); /*                                         */
 	list_for_each_safe(ptr, next, &audio->out_queue) {
 		buf_node = list_entry(ptr, struct audpcm_buffer_node, list);
 		list_del(&buf_node->list);
@@ -624,10 +624,10 @@ static void audio_flush(struct audio *audio)
 static void audio_ioport_reset(struct audio *audio)
 {
 	if (audio->drv_status & ADRV_STATUS_AIO_INTF) {
-		/* If fsync is in progress, make sure
-		 * return value of fsync indicates
-		 * abort due to flush
-		 */
+		/*                                   
+                                    
+                       
+   */
 		if (audio->drv_status & ADRV_STATUS_FSYNC) {
 			MM_DBG("fsync in progress\n");
 			wake_up(&audio->write_wait);
@@ -637,10 +637,10 @@ static void audio_ioport_reset(struct audio *audio)
 		} else
 			audio->drv_ops.out_flush(audio);
 	} else {
-		/* Make sure read/write thread are free from
-		 * sleep and knowing that system is not able
-		 * to process io request at the moment
-		 */
+		/*                                          
+                                              
+                                        
+   */
 		wake_up(&audio->write_wait);
 		mutex_lock(&audio->write_lock);
 		audio->drv_ops.out_flush(audio);
@@ -774,7 +774,7 @@ static int audpcm_pmem_add(struct audio *audio,
 	struct audpcm_pmem_region *region;
 	int rc = -EINVAL;
 
-	MM_DBG("\n"); /* Macro prints the file name and function */
+	MM_DBG("\n"); /*                                         */
 	region = kmalloc(sizeof(*region), GFP_KERNEL);
 	if (!region)
 		return -ENOMEM;
@@ -845,15 +845,15 @@ static int audpcm_pmem_lookup_vaddr(struct audio *audio, void *addr,
 
 	*region = NULL;
 
-	/* returns physical address or zero */
+	/*                                  */
 	list_for_each_entry(region_elt, &audio->pmem_region_queue,
 		list) {
 		if (addr >= region_elt->vaddr &&
 		    addr < region_elt->vaddr + region_elt->len &&
 		    addr + len <= region_elt->vaddr + region_elt->len) {
-			/* offset since we could pass vaddr inside a registerd
-			 * pmem buffer
-			 */
+			/*                                                    
+                 
+    */
 			match_count++;
 			if (!*region)
 				*region = region_elt;
@@ -898,7 +898,7 @@ static unsigned long audpcm_pmem_fixup(struct audio *audio, void *addr,
 	return paddr;
 }
 
-/* audio -> lock must be held at this point */
+/*                                          */
 static int audpcm_aio_buf_add(struct audio *audio, unsigned dir,
 	void __user *arg)
 {
@@ -923,7 +923,7 @@ static int audpcm_aio_buf_add(struct audio *audio, unsigned dir,
 		audio, buf_node->buf.buf_addr,
 		buf_node->buf.buf_len, 1);
 	if (dir) {
-		/* write */
+		/*       */
 		if (!buf_node->paddr ||
 		    (buf_node->paddr & 0x1) ||
 		    (buf_node->buf.data_len & 0x1) ||
@@ -950,11 +950,11 @@ static int audio_get_avsync_data(struct audio *audio,
 
 	local_irq_save(flags);
 	if (audio->dec_id == audio->avsync[0] && audio->avsync_flag) {
-		/* av_sync sample count */
+		/*                      */
 		stats->sample_count = (audio->avsync[2] << 16) |
 						(audio->avsync[3]);
 
-		/* av_sync byte_count */
+		/*                    */
 		stats->byte_count = (audio->avsync[5] << 16) |
 						(audio->avsync[6]);
 
@@ -1168,23 +1168,23 @@ static long audio_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 	return rc;
 }
 
-/* Only useful in tunnel-mode */
+/*                            */
 int audpcm_async_fsync(struct audio *audio)
 {
 	int rc = 0;
 
-	MM_DBG("\n"); /* Macro prints the file name and function */
+	MM_DBG("\n"); /*                                         */
 
-	/* Blocking client sends more data */
+	/*                                 */
 	mutex_lock(&audio->lock);
 	audio->drv_status |= ADRV_STATUS_FSYNC;
 	mutex_unlock(&audio->lock);
 
 	mutex_lock(&audio->write_lock);
-	/* pcm dmamiss message is sent continously
-	 * when decoder is starved so no race
-	 * condition concern
-	 */
+	/*                                        
+                                      
+                     
+  */
 	audio->teos = 0;
 
 	rc = wait_event_interruptible(audio->write_wait,
@@ -1208,7 +1208,7 @@ int audpcm_sync_fsync(struct audio *audio)
 	struct buffer *frame;
 	int rc = 0;
 
-	MM_DBG("\n"); /* Macro prints the file name and function */
+	MM_DBG("\n"); /*                                         */
 
 	mutex_lock(&audio->write_lock);
 
@@ -1245,10 +1245,10 @@ int audpcm_sync_fsync(struct audio *audio)
 		}
 	}
 
-	/* pcm dmamiss message is sent continously
-	 * when decoder is starved so no race
-	 * condition concern
-	 */
+	/*                                        
+                                      
+                     
+  */
 	audio->teos = 0;
 
 	rc = wait_event_interruptible(audio->write_wait,
@@ -1428,7 +1428,7 @@ static void audpcm_suspend(struct early_suspend *h)
 		container_of(h, struct audpcm_suspend_ctl, node);
 	union msm_audio_event_payload payload;
 
-	MM_DBG("\n"); /* Macro prints the file name and function */
+	MM_DBG("\n"); /*                                         */
 	audpcm_post_event(ctl->audio, AUDIO_EVENT_SUSPEND, payload);
 }
 
@@ -1438,7 +1438,7 @@ static void audpcm_resume(struct early_suspend *h)
 		container_of(h, struct audpcm_suspend_ctl, node);
 	union msm_audio_event_payload payload;
 
-	MM_DBG("\n"); /* Macro prints the file name and function */
+	MM_DBG("\n"); /*                                         */
 	audpcm_post_event(ctl->audio, AUDIO_EVENT_RESUME, payload);
 }
 #endif
@@ -1473,10 +1473,10 @@ static ssize_t audpcm_debug_read(struct file *file, char __user *buf,
 	n += scnprintf(buffer + n, debug_bufmax - n,
 		"channel mode %d \n", audio->out_channel_mode);
 	mutex_unlock(&audio->lock);
-	/* Following variables are only useful for debugging when
-	 * when playback halts unexpectedly. Thus, no mutual exclusion
-	 * enforced
-	 */
+	/*                                                       
+                                                               
+            
+  */
 	n += scnprintf(buffer + n, debug_bufmax - n,
 				   "wflush %d\n", audio->wflush);
 	n += scnprintf(buffer + n, debug_bufmax - n,
@@ -1511,11 +1511,11 @@ static int audio_open(struct inode *inode, struct file *file)
 	unsigned pmem_sz = DMASZ_MAX;
 
 #ifdef CONFIG_DEBUG_FS
-	/* 4 bytes represents decoder number, 1 byte for terminate string */
+	/*                                                                */
 	char name[sizeof "msm_pcm_dec_" + 5];
 #endif
 
-	/* Allocate audio instance, set to zero */
+	/*                                      */
 	audio = kzalloc(sizeof(struct audio), GFP_KERNEL);
 	if (!audio) {
 		MM_ERR("no memory to allocate audio instance \n");
@@ -1524,7 +1524,7 @@ static int audio_open(struct inode *inode, struct file *file)
 	}
 	MM_INFO("audio instance 0x%08x created\n", (int)audio);
 
-	/* Allocate the decoder */
+	/*                      */
 	dec_attrb = AUDDEC_DEC_PCM;
 	if (file->f_mode & FMODE_READ) {
 		MM_ERR("Non-Tunneled mode not supported\n");
@@ -1545,7 +1545,7 @@ static int audio_open(struct inode *inode, struct file *file)
 	}
 	audio->dec_id = decid & MSM_AUD_DECODER_MASK;
 
-	/* AIO interface */
+	/*               */
 	if (file->f_flags & O_NONBLOCK) {
 		MM_DBG("set to aio interface\n");
 		audio->drv_status |= ADRV_STATUS_AIO_INTF;
@@ -1608,7 +1608,7 @@ static int audio_open(struct inode *inode, struct file *file)
 		goto err;
 	}
 
-	/* Initialize all locks of audio instance */
+	/*                                        */
 	mutex_init(&audio->lock);
 	mutex_init(&audio->write_lock);
 	mutex_init(&audio->get_event_lock);

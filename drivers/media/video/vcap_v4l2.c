@@ -303,7 +303,7 @@ void dealloc_resources(struct vcap_client_data *cd)
 	cd->set_vp_o = false;
 }
 
-/* VCAP Internal QBUF and DQBUF for VC + VP */
+/*                                          */
 int vcvp_qbuf(struct vb2_queue *q, struct v4l2_buffer *b)
 {
 	struct vb2_buffer *vb;
@@ -495,7 +495,7 @@ int free_ion_handle(struct vcap_dev *dev, struct vb2_queue *q,
 	return 0;
 }
 
-/* VC Videobuf operations */
+/*                        */
 
 static int capture_queue_setup(struct vb2_queue *vq,
 			       const struct v4l2_format *fmt,
@@ -562,7 +562,7 @@ static int capture_stop_streaming(struct vb2_queue *vq)
 		vb2_buffer_done(&buf->vb, VB2_BUF_STATE_ERROR);
 	}
 
-	/* clean ion handles */
+	/*                   */
 	list_for_each_entry(vb, &vq->queued_list, queued_entry)
 		free_ion_handle_work(c_data->dev, vb);
 	return 0;
@@ -588,7 +588,7 @@ static struct vb2_ops capture_video_qops = {
 	.buf_cleanup		= capture_buffer_cleanup,
 };
 
-/* VP I/P Videobuf operations */
+/*                            */
 
 static int vp_in_queue_setup(struct vb2_queue *vq,
 			     const struct v4l2_format *fmt,
@@ -629,10 +629,10 @@ static void vp_in_buffer_queue(struct vb2_buffer *vb)
 		if (cd->vid_vp_action.vp_state == VP_FRAME1) {
 			if (atomic_read(&q->queued_count) > 1 &&
 				atomic_read(&cd->vp_out_vidq.queued_count) > 0)
-				/* Valid code flow for VC-VP mode */
+				/*                                */
 				kickoff_vp(cd);
 		} else {
-			/* VP has already kicked off just needs cont */
+			/*                                           */
 			continue_vp(cd);
 		}
 	}
@@ -659,7 +659,7 @@ static int vp_in_stop_streaming(struct vb2_queue *vq)
 		vb2_buffer_done(&buf->vb, VB2_BUF_STATE_ERROR);
 	}
 
-	/* clean ion handles */
+	/*                   */
 	list_for_each_entry(vb, &vq->queued_list, queued_entry)
 		free_ion_handle_work(c_data->dev, vb);
 	return 0;
@@ -686,7 +686,7 @@ static struct vb2_ops vp_in_video_qops = {
 };
 
 
-/* VP O/P Videobuf operations */
+/*                            */
 
 static int vp_out_queue_setup(struct vb2_queue *vq,
 			      const struct v4l2_format *fmt,
@@ -730,7 +730,7 @@ static void vp_out_buffer_queue(struct vb2_buffer *vb)
 					cd->vp_in_vidq.queued_count) > 1)
 				kickoff_vp(cd);
 		} else {
-			/* VP has already kicked off just needs cont */
+			/*                                           */
 			continue_vp(cd);
 		}
 	}
@@ -757,7 +757,7 @@ static int vp_out_stop_streaming(struct vb2_queue *vq)
 		vb2_buffer_done(&buf->vb, VB2_BUF_STATE_ERROR);
 	}
 
-	/* clean ion handles */
+	/*                   */
 	list_for_each_entry(vb, &vq->queued_list, queued_entry)
 		free_ion_handle_work(c_data->dev, vb);
 	return 0;
@@ -783,7 +783,7 @@ static struct vb2_ops vp_out_video_qops = {
 	.buf_cleanup		= vp_out_buffer_cleanup,
 };
 
-/* IOCTL vidioc handling */
+/*                       */
 
 static int vidioc_querycap(struct file *file, void  *priv,
 					struct v4l2_capability *cap)
@@ -919,7 +919,7 @@ static int vidioc_reqbufs(struct file *file, void *priv,
 			c_data->vp_in_fmt.height =
 				(c_data->vc_format.vactive_end -
 				c_data->vc_format.vactive_start);
-			/* VC outputs YCbCr 4:2:2 */
+			/*                        */
 			c_data->vp_in_fmt.pixfmt = V4L2_PIX_FMT_NV16;
 			rb->type = V4L2_BUF_TYPE_INTERLACED_IN_DECODER;
 			rc = vb2_reqbufs(&c_data->vp_in_vidq, rb);
@@ -965,7 +965,7 @@ static int vidioc_qbuf(struct file *file, void *priv, struct v4l2_buffer *p)
 	switch (p->type) {
 	case V4L2_BUF_TYPE_VIDEO_CAPTURE:
 		if (c_data->op_mode == VC_AND_VP_VCAP_OP) {
-			/* If buffer in vp_in_q it will be coming back */
+			/*                                             */
 			q = &c_data->vp_in_vidq;
 			if (p->index >= q->num_buffers) {
 				dprintk(1, "qbuf: buffer index out of range\n");
@@ -1059,8 +1059,8 @@ static int vidioc_dqbuf(struct file *file, void *priv, struct v4l2_buffer *p)
 }
 
 /*
- * When calling streamon on multiple queues there is a need to first verify
- * that the steamon will succeed on all queues, similarly for streamoff
+                                                                           
+                                                                       
  */
 int streamon_validate_q(struct vb2_queue *q)
 {
@@ -1312,7 +1312,7 @@ static int vidioc_streamon(struct file *file, void *priv, enum v4l2_buf_type i)
 		c_data->vid_vp_action.vp_state = VP_FRAME1;
 		c_data->streaming = 1;
 
-		/* These stream on calls should not fail */
+		/*                                       */
 		rc = vb2_streamon(&c_data->vc_vidq,
 				V4L2_BUF_TYPE_VIDEO_CAPTURE);
 		if (rc < 0)
@@ -1424,7 +1424,7 @@ int streamoff_work(struct vcap_client_data *c_data)
 			return rc;
 		c_data->streaming = 0;
 
-		/* These stream on calls should not fail */
+		/*                                       */
 		rc = vb2_streamoff(&c_data->vp_in_vidq,
 				V4L2_BUF_TYPE_INTERLACED_IN_DECODER);
 		if (rc < 0)
@@ -1471,7 +1471,7 @@ int streamoff_work(struct vcap_client_data *c_data)
 		if (rc < 0)
 			return rc;
 
-		/* These stream on calls should not fail */
+		/*                                       */
 		c_data->streaming = 0;
 		rc = vb2_streamoff(&c_data->vc_vidq,
 				V4L2_BUF_TYPE_VIDEO_CAPTURE);
@@ -1584,7 +1584,7 @@ static long vidioc_default(struct file *file, void *fh, bool valid_prio,
 	return 0;
 }
 
-/* VCAP fops */
+/*           */
 static void *vcap_ops_get_userptr(void *alloc_ctx, unsigned long vaddr,
 					unsigned long size, int write)
 {
@@ -1623,7 +1623,7 @@ static int vcap_open(struct file *file)
 
 	spin_lock_init(&c_data->cap_slock);
 
-	/* initialize vc queue */
+	/*                     */
 	q = &c_data->vc_vidq;
 	memset(q, 0, sizeof(c_data->vc_vidq));
 	q->type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
@@ -1636,7 +1636,7 @@ static int vcap_open(struct file *file)
 	if (ret < 0)
 		goto vc_q_failed;
 
-	/* initialize vp in queue */
+	/*                        */
 	q = &c_data->vp_in_vidq;
 	memset(q, 0, sizeof(c_data->vp_in_vidq));
 	q->type = V4L2_BUF_TYPE_INTERLACED_IN_DECODER;
@@ -1649,7 +1649,7 @@ static int vcap_open(struct file *file)
 	if (ret < 0)
 		goto vp_in_q_failed;
 
-	/* initialize vp out queue */
+	/*                         */
 	q = &c_data->vp_out_vidq;
 	memset(q, 0, sizeof(c_data->vp_out_vidq));
 	q->type = V4L2_BUF_TYPE_VIDEO_OUTPUT;
@@ -1803,14 +1803,14 @@ static unsigned int vcap_poll(struct file *file,
 	poll_wait(file, &(c_data->vfh.wait), wait);
 	return mask;
 }
-/* V4L2 and video device structures */
+/*                                  */
 
 static const struct v4l2_file_operations vcap_fops = {
 	.owner		= THIS_MODULE,
 	.open		= vcap_open,
 	.release	= vcap_close,
 	.poll		= vcap_poll,
-	.unlocked_ioctl = video_ioctl2, /* V4L2 ioctl handler */
+	.unlocked_ioctl = video_ioctl2, /*                    */
 };
 
 static const struct v4l2_ioctl_ops vcap_ioctl_ops = {
@@ -1941,7 +1941,7 @@ static int __devinit vcap_probe(struct platform_device *pdev)
 	if (ret)
 		goto power_down;
 
-	/* init video device*/
+	/*                  */
 	vfd = video_device_alloc();
 	if (!vfd)
 		goto deinit_vc;

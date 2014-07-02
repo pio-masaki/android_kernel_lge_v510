@@ -172,11 +172,11 @@ static int msm_iommu_ctx_parse_dt(struct platform_device *pdev,
 	if (ret)
 		return -EINVAL;
 
-	/* Calculate the context bank number using the base addresses. The
-	 * first 8 pages belong to the global address space which is followed
-	 * by the context banks, hence subtract by 8 to get the context bank
-	 * number.
-	 */
+	/*                                                                
+                                                                      
+                                                                     
+           
+  */
 	ctx_drvdata->num = ((r->start - rp.start) >> CTX_SHIFT) - 8;
 
 	if (of_property_read_string(pdev->dev.of_node, "label",

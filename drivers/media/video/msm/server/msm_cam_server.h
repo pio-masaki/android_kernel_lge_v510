@@ -24,7 +24,7 @@ struct iommu_domain *msm_cam_server_get_domain(void);
 int msm_cam_server_get_domain_num(void);
 struct msm_cam_media_controller *msm_cam_server_get_mctl(uint32_t handle);
 void msm_cam_server_free_mctl(uint32_t handle);
-/* Server session control APIs */
+/*                             */
 int msm_server_begin_session(struct msm_cam_v4l2_device *pcam,
 	int server_q_idx);
 int msm_server_end_session(struct msm_cam_v4l2_device *pcam);
@@ -32,7 +32,7 @@ int msm_send_open_server(struct msm_cam_v4l2_device *pcam);
 int msm_send_close_server(struct msm_cam_v4l2_device *pcam);
 int msm_server_update_sensor_info(struct msm_cam_v4l2_device *pcam,
 	struct msm_camera_sensor_info *sdata);
-/* Server camera control APIs */
+/*                            */
 int msm_server_streamon(struct msm_cam_v4l2_device *pcam, int idx);
 int msm_server_streamoff(struct msm_cam_v4l2_device *pcam, int idx);
 int msm_server_get_usecount(void);
@@ -72,4 +72,4 @@ int msm_cam_server_config_interface_map(u32 extendedmode,
 	uint32_t mctl_handle, int vnode_id, int is_bayer_sensor);
 uint32_t msm_cam_find_handle_from_mctl_ptr(
 	struct msm_cam_media_controller *p_mctl);
-#endif /* _MSM_CAM_SERVER_H */
+#endif /*                   */

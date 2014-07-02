@@ -15,36 +15,36 @@
 #define QDSP5AUDPREPROCCMDI_H
 
 /*
- * AUDIOPREPROC COMMANDS:
- * ARM uses uPAudPreProcAudRecCmdQueue to communicate with AUDPREPROCTASK
- * Location : MEMB
- * Buffer size : 7
- * Number of buffers in a queue : 4
+                         
+                                                                         
+                  
+                  
+                                   
  */
 
 /*
- * Command to enable or disable particular encoder for new interface
+                                                                    
  */
 
 #define AUDPREPROC_AUDREC_CMD_ENC_CFG		0x0000
 #define	AUDPREPROC_AUDREC_CMD_ENC_CFG_LEN	\
 	sizeof(struct audpreproc_audrec_cmd_enc_cfg)
-#define AUDREC_TASK_0	0x00 /* SBC / PCM */
-#define AUDREC_TASK_1	0x01 /* AAC / PCM / VOICE ENC */
+#define AUDREC_TASK_0	0x00 /*           */
+#define AUDREC_TASK_1	0x01 /*                       */
 
 #define ENCODE_ENABLE	0x8000
 
-/* encoder type supported */
+/*                        */
 #define ENC_TYPE_WAV	0x00
 #define ENC_TYPE_AAC	0x01
 #define ENC_TYPE_SBC	0x02
 #define ENC_TYPE_AMRNB	0x03
 #define ENC_TYPE_EVRC	0x04
 #define ENC_TYPE_V13K	0x05
-#define ENC_TYPE_EXT_WAV   0x0F /* to dynamically configure frame size */
+#define ENC_TYPE_EXT_WAV   0x0F /*                                     */
 
-/* structure definitions according to
- * command description of ARM-DSP interface specifications
+/*                                   
+                                                          
  */
 struct audpreproc_audrec_cmd_enc_cfg {
 	unsigned short	cmd_id;
@@ -53,7 +53,7 @@ struct audpreproc_audrec_cmd_enc_cfg {
 } __attribute__((packed));
 
 /*
- * Command to configure parameters of selected Encoder
+                                                      
  */
 
 #define AUDPREPROC_AUDREC_CMD_PARAM_CFG	0x0001
@@ -69,7 +69,7 @@ struct audpreproc_audrec_cmd_param_cfg_common {
 } __attribute__((packed));
 
 /*
- * Command Structure to configure WAV Encoder
+                                             
  */
 
 #define AUDPREPROC_AUDREC_CMD_PARAM_CFG_WAV_LEN		\
@@ -86,7 +86,7 @@ struct audpreproc_audrec_cmd_parm_cfg_wav {
 } __attribute__((packed));
 
 /*
- * Command Structure to configure AAC Encoder
+                                             
  */
 
 #define AUDPREPROC_AUDREC_CMD_PARAM_CFG_AAC_LEN		\
@@ -100,13 +100,13 @@ struct audpreproc_audrec_cmd_parm_cfg_aac {
 } __attribute__((packed));
 
 /*
- * Command Structure to configure SBC Encoder
+                                             
  */
 
 #define AUDPREPROC_AUDREC_CMD_PARAM_CFG_SBC_LEN		\
 	sizeof(struct audpreproc_audrec_cmd_parm_cfg_sbc)
 
-/* encoder parameters mask definitions*/
+/*                                    */
 
 #define AUDREC_SBC_ENC_PARAM_VER_MASK				0x000A
 #define AUDREC_SBC_ENC_PARAM_ENAHANCED_SBC_BASELINE_VERSION	0x0000
@@ -133,7 +133,7 @@ struct audpreproc_audrec_cmd_parm_cfg_sbc {
 } __attribute__((packed));
 
 /*
- * Command Structure to configure AMRNB Encoder
+                                               
  */
 
 #define AUDPREPROC_AUDREC_CMD_PARAM_CFG_AMRNB_LEN		\
@@ -162,7 +162,7 @@ struct audpreproc_audrec_cmd_parm_cfg_amrnb {
 } __attribute__((packed)) ;
 
 /*
- * Command Structure to configure EVRC Encoder
+                                              
  */
 
 #define AUDPREPROC_AUDREC_CMD_PARAM_CFG_EVRC_LEN		\
@@ -176,7 +176,7 @@ struct audpreproc_audrec_cmd_parm_cfg_evrc {
 } __attribute__((packed));
 
 /*
- * Command Structure to configure QCELP_13K Encoder
+                                                   
  */
 
 #define AUDPREPROC_AUDREC_CMD_PARAM_CFG_QCELP13K_LEN		\
@@ -191,7 +191,7 @@ struct audpreproc_audrec_cmd_parm_cfg_qcelp13k {
 } __attribute__((packed));
 
 /*
- * Command to configure AFE for recording paths
+                                               
  */
 #define AUDPREPROC_AFE_CMD_AUDIO_RECORD_CFG 0x0002
 
@@ -218,7 +218,7 @@ struct audpreproc_afe_cmd_audio_record_cfg {
 } __attribute__((packed));
 
 /*
- * Command to configure Tunnel(RT) or Non-Tunnel(FTRT) mode
+                                                           
  */
 #define AUDPREPROC_AUDREC_CMD_ROUTING_MODE 0x0003
 #define	AUDPREPROC_AUDREC_CMD_ROUTING_MODE_LEN	\
@@ -234,8 +234,8 @@ struct audpreproc_audrec_cmd_routing_mode {
 } __attribute__((packed));
 
 /*
- * Command to configure DSP for topology where resampler moved
- * in front of pre processing chain
+                                                              
+                                   
  */
 #define AUDPREPROC_AUDREC_CMD_ENC_CFG_2		0x0004
 #define	AUDPREPROC_AUDREC_CMD_ENC_CFG_2_LEN	\
@@ -249,15 +249,15 @@ struct audpreproc_audrec_cmd_enc_cfg_2 {
 } __attribute__((packed));
 
 /*
- * AUDIOPREPROC COMMANDS:
- * ARM uses uPAudPreProcCmdQueue to communicate with AUDPREPROCTASK
- * Location : MEMB
- * Buffer size : 52
- * Number of buffers in a queue : 3
+                         
+                                                                   
+                  
+                   
+                                   
  */
 
 /*
- * Command to configure the parameters of AGC
+                                             
  */
 
 #define	AUDPREPROC_CMD_CFG_AGC_PARAMS	0x0000
@@ -320,7 +320,7 @@ struct audpreproc_cmd_cfg_agc_params {
 } __attribute__((packed));
 
 /*
- * Command to configure the params of Advanved AGC
+                                                  
  */
 
 #define	AUDPREPROC_CMD_CFG_AGC_PARAMS_2		0x0001
@@ -351,7 +351,7 @@ struct audpreproc_cmd_cfg_agc_params_2 {
 } __attribute__((packed));
 
 /*
- * Command to configure params for ns
+                                     
  */
 
 #define	AUDPREPROC_CMD_CFG_NS_PARAMS		0x0002
@@ -399,7 +399,7 @@ struct audpreproc_cmd_cfg_ns_params {
 } __attribute__((packed));
 
 /*
- * Command to configure parameters for IIR tuning filter
+                                                        
  */
 
 #define	AUDPREPROC_CMD_CFG_IIR_TUNING_FILTER_PARAMS		0x0003
@@ -475,7 +475,7 @@ struct audpreproc_cmd_cfg_iir_tuning_filter_params {
 } __attribute__((packed));
 
 /*
- * Command to configure parameters for calibration gain rx
+                                                          
  */
 
 #define AUDPREPROC_CMD_CFG_CAL_GAIN_PARAMS 0x0004
@@ -516,4 +516,4 @@ struct rtc_audpreproc_read_data {
 	unsigned short	extbufstartlsw;
 } __attribute__((packed)) ;
 
-#endif /* QDSP5AUDPREPROCCMDI_H */
+#endif /*                       */

@@ -78,18 +78,18 @@ enum vcap_op_mode {
 struct vcap_action {
 	struct list_head		active;
 
-	/* thread for generating video stream*/
+	/*                                   */
 	struct task_struct		*kthread;
 	wait_queue_head_t		wq;
 
-	/* Buffer index */
+	/*              */
 	enum rdy_buf            buf_ind;
 
-	/* Buffers inside vc */
+	/*                   */
 	struct vcap_buffer      *buf1;
 	struct vcap_buffer      *buf2;
 
-	/* Counters to control fps rate */
+	/*                              */
 	int						frame;
 	int						ini_jiffies;
 };
@@ -104,13 +104,13 @@ struct vp_action {
 	struct list_head		in_active;
 	struct list_head		out_active;
 
-	/* Buffer index */
+	/*              */
 	enum vp_state			vp_state;
 #ifdef TOP_FIELD_FIX
 	bool					top_field;
 #endif
 
-	/* Buffers inside vc */
+	/*                   */
 	struct vcap_buffer      *bufTm1;
 	struct vcap_buffer      *bufT0;
 	struct vcap_buffer      *bufT1;
@@ -151,7 +151,7 @@ struct vcap_dev {
 	struct clk				*vcap_p_clk;
 	struct clk				*vcap_npl_clk;
 	struct device			*ddev;
-	/*struct platform_device	*pdev;*/
+	/*                             */
 
 	uint32_t				bus_client_handle;
 
@@ -181,7 +181,7 @@ struct vp_format_data {
 };
 
 struct vcap_buffer {
-	/* common v4l buffer stuff -- must be first */
+	/*                                          */
 	struct vb2_buffer	vb;
 	struct list_head	list;
 	unsigned long		paddr;

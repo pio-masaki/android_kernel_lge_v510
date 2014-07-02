@@ -43,7 +43,7 @@
 #include <mach/debug_mm.h>
 #include <mach/msm_memtypes.h>
 
-/* this is the ACDB device ID */
+/*                            */
 #define DALDEVICEID_ACDB		0x02000069
 #define ACDB_PORT_NAME			"DAL00"
 #define ACDB_CPU			SMD_APPS_MODEM
@@ -55,11 +55,11 @@
 #define ACDB_VALUES_FILLED		1
 #define MAX_RETRY			10
 
-/*below macro is used to align the session info received from
-Devctl driver with the state mentioned as not to alter the
-Existing code*/
+/*                                                           
+                                                          
+             */
 #define AUDREC_OFFSET	2
-/* rpc table index */
+/*                 */
 enum {
 	ACDB_DalACDB_ioctl = DALDEVICE_FIRST_DEVICE_API_IDX
 };
@@ -117,16 +117,16 @@ struct acdb_data {
 	spinlock_t dsp_lock;
 	int dec_id;
 	struct audpp_cmd_cfg_object_params_eqalizer eq;
-	 /*status to enable or disable the fluence*/
+	 /*                                       */
 	int fleuce_feature_status[MAX_AUDREC_SESSIONS];
 	struct audrec_session_info session_info;
-	/*pmem info*/
+	/*         */
 	int pmem_fd;
 	unsigned long paddr;
 	unsigned long kvaddr;
 	unsigned long pmem_len;
 	struct file *file;
-	/* pmem for get acdb blk */
+	/*                       */
 	unsigned long	get_blk_paddr;
 	u8		*get_blk_kvaddr;
 	void *map_v_get_blk;
@@ -144,19 +144,19 @@ struct acdb_cache_node {
 	struct auddev_evt_audcal_info device_info;
 };
 
-/*for RX devices  acdb values are applied based on copp ID so
-the depth of tx cache is MAX number of COPP supported in the system*/
+/*                                                           
+                                                                   */
 struct acdb_cache_node acdb_cache_rx[MAX_COPP_NODE_SUPPORTED];
 
-/*for TX devices acdb values are applied based on AUDREC session and
-the depth of the tx cache is define by number of AUDREC sessions supported*/
+/*                                                                  
+                                                                          */
 struct acdb_cache_node acdb_cache_tx[MAX_AUDREC_SESSIONS];
 
-/*Audrec session info includes Attributes Sampling frequency and enc_id */
+/*                                                                      */
 struct audrec_session_info session_info[MAX_AUDREC_SESSIONS];
 #ifdef CONFIG_DEBUG_FS
 
-#define RTC_MAX_TIMEOUT 500 /* 500 ms */
+#define RTC_MAX_TIMEOUT 500 /*        */
 #define PMEM_RTC_ACDB_QUERY_MEM 4096
 #define EXTRACT_HIGH_WORD(x) ((x & 0xFFFF0000)>>16)
 #define EXTRACT_LOW_WORD(x) (0x0000FFFF & x)
@@ -227,7 +227,7 @@ static u32 acdb_audpp_entry[][4] = {
      AUDPREPROC_CMD_CFG_IIR_TUNING_FILTER_PARAMS,\
      ACDB_RTC_TX
   }
- /*Any new entries should be added here*/
+ /*                                    */
 };
 
 static struct dentry *get_set_abid_dentry;
@@ -1192,7 +1192,7 @@ error:
 	}
 	return false;
 }
-#endif /*CONFIG_DEBUG_FS*/
+#endif /*               */
 static s32 acdb_set_calibration_blk(unsigned long arg)
 {
 	struct acdb_cmd_device acdb_cmd;
@@ -1382,11 +1382,11 @@ static s32 acdb_get_calibration(void)
 				" result = %d\n", result);
 			goto error;
 		}
-		/*following check is introduced to handle boot up race
-		condition between AUDCAL SW peers running on apps
-		and modem (ACDB_RES_BADSTATE indicates modem AUDCAL SW is
-		not in initialized sate) we need to retry to get ACDB
-		values*/
+		/*                                                    
+                                                   
+                                                           
+                                                       
+        */
 		if (acdb_data.acdb_result.result == ACDB_RES_BADSTATE) {
 			msleep(500);
 			iterations++;
@@ -1467,27 +1467,27 @@ static u8 check_device_info_already_present(
 			(audcal_info.acdb_id ==
 				acdb_cache_free_node->device_info.acdb_id)) {
 		MM_DBG("acdb values are already present\n");
-		/*if acdb state is not set for CAL_DATA_READY and node status
-		is filled, acdb state should be updated with CAL_DATA_READY
-		state*/
+		/*                                                           
+                                                             
+       */
 		acdb_data.acdb_state |= CAL_DATA_READY;
-		/*checking for cache node status if it is not filled then the
-		acdb values are not cleaned from node so update node status
-		with acdb value filled*/
+		/*                                                           
+                                                             
+                        */
 		if ((acdb_cache_free_node->node_status != ACDB_VALUES_FILLED) &&
 			((audcal_info.dev_type & RX_DEVICE) == 1)) {
 			MM_DBG("device was released earlier\n");
 			acdb_cache_free_node->node_status = ACDB_VALUES_FILLED;
-			return 2; /*node is presnet but status as not filled*/
+			return 2; /*                                        */
 		}
-		return 1; /*node is present but status as filled*/
+		return 1; /*                                    */
 	}
 	MM_DBG("copying device info into node\n");
-	/*as device information is not present in cache copy
-	the current device information into the node*/
+	/*                                                  
+                                             */
 	memcpy(&acdb_cache_free_node->device_info,
 				 &audcal_info, sizeof(audcal_info));
-	return 0; /*cant find the node*/
+	return 0; /*                  */
 }
 
 static struct acdb_iir_block *get_audpp_irr_block(void)
@@ -1945,7 +1945,7 @@ static s32 acdb_fill_audpreproc_agc(void)
 	memset(acdb_data.preproc_agc, 0, sizeof(*acdb_data.preproc_agc));
 	acdb_data.preproc_agc->cmd_id = AUDPREPROC_CMD_CFG_AGC_PARAMS;
 	acdb_data.preproc_agc->stream_id = acdb_data.preproc_stream_id;
-	/* 0xFE00 to configure all parameters */
+	/*                                    */
 	acdb_data.preproc_agc->tx_agc_param_mask = 0xFFFF;
 
 	if (acdb_agc->enable_status)
@@ -1968,7 +1968,7 @@ static s32 acdb_fill_audpreproc_agc(void)
 	acdb_data.preproc_agc->compressor_rlink_slope =
 		acdb_agc->comp_rlink_slope;
 
-	/* 0xFFF0 to configure all parameters */
+	/*                                    */
 	acdb_data.preproc_agc->tx_adc_agc_param_mask = 0xFFFF;
 
 	acdb_data.preproc_agc->comp_rlink_aig_attackk =
@@ -2422,8 +2422,8 @@ static void handle_tx_device_ready_callback(void)
 
 	if (acdb_data.multiple_sessions) {
 		for (i = 0; i < MAX_AUDREC_SESSIONS; i++) {
-			/*check is to exclude copying acdb values in the
-			current node pointed by acdb_data structure*/
+			/*                                              
+                                              */
 			if (acdb_cache_tx[i].phys_addr_acdb_values !=
 							acdb_data.phys_addr) {
 				ret = check_device_info_already_present(\
@@ -2441,7 +2441,7 @@ static void handle_tx_device_ready_callback(void)
 		}
 		acdb_data.multiple_sessions = 0;
 	}
-	/*check wheather AUDREC enabled before device call backs*/
+	/*                                                      */
 	if ((acdb_data.acdb_state & AUDREC0_READY) &&
 			!(acdb_data.audrec_applied & AUDREC0_READY)) {
 		MM_DBG("AUDREC0 already enabled apply acdb values\n");
@@ -2529,7 +2529,7 @@ static u32 allocate_memory_acdb_cache_tx(void)
 	u32 result = 0;
 	u32 i = 0;
 	u32 err = 0;
-	/*initialize local cache */
+	/*                       */
 	for (i = 0; i < MAX_AUDREC_SESSIONS; i++) {
 		acdb_cache_tx[i].phys_addr_acdb_values =
 				allocate_contiguous_ebi_nomap(ACDB_BUF_SIZE,
@@ -2571,7 +2571,7 @@ static u32 allocate_memory_acdb_cache_rx(void)
 	u32 i = 0;
 	u32 err = 0;
 
-	/*initialize local cache */
+	/*                       */
 	for (i = 0; i < MAX_COPP_NODE_SUPPORTED; i++) {
 		acdb_cache_rx[i].phys_addr_acdb_values =
 					allocate_contiguous_ebi_nomap(
@@ -2846,9 +2846,9 @@ static u32 free_acdb_cache_node(union auddev_evt_data *evt)
 {
 	u32 session_id;
 	if ((evt->audcal_info.dev_type & TX_DEVICE) == 2) {
-		/*Second argument to find_first_bit should be maximum number
-		of bits interested
-		*/
+		/*                                                          
+                    
+  */
 		session_id = find_first_bit(
 				(unsigned long *)&(evt->audcal_info.sessions),
 				sizeof(evt->audcal_info.sessions) * 8);
@@ -2868,8 +2868,8 @@ static u8 check_device_change(struct auddev_evt_audcal_info audcal_info)
 {
 	if (!acdb_data.device_info) {
 		MM_ERR("not pointing to previous valid device detail\n");
-		return 1; /*device info will not be pointing to*/
-			/* valid device when acdb driver comes up*/
+		return 1; /*                                   */
+			/*                                       */
 	}
 	if ((audcal_info.dev_id == acdb_data.device_info->dev_id) &&
 		(audcal_info.sample_rate ==
@@ -2894,9 +2894,9 @@ static void device_cb(u32 evt_id, union auddev_evt_data *evt, void *private)
 		(evt_id == AUDDEV_EVT_DEV_RLS))) {
 		goto done;
 	}
-	/*if session value is zero it indicates that device call back is for
-	voice call we will drop the request as acdb values for voice call is
-	not applied from acdb driver*/
+	/*                                                                  
+                                                                     
+                             */
 	if (!evt->audcal_info.sessions) {
 		MM_DBG("no active sessions and call back is for"
 				" voice call\n");
@@ -2907,7 +2907,7 @@ static void device_cb(u32 evt_id, union auddev_evt_data *evt, void *private)
 					evt->audcal_info.dev_id);
 		acdb_data.acdb_state &= ~CAL_DATA_READY;
 		free_acdb_cache_node(evt);
-		/*reset the applied flag for the session routed to the device*/
+		/*                                                           */
 		acdb_data.audrec_applied &= ~(evt->audcal_info.sessions
 							<< AUDREC_OFFSET);
 		goto done;
@@ -2937,16 +2937,16 @@ static void device_cb(u32 evt_id, union auddev_evt_data *evt, void *private)
 				goto update_cache;
 		}
 	} else
-		/* state is updated to querry the modem for values */
+		/*                                                 */
 		acdb_data.acdb_state &= ~CAL_DATA_READY;
 
 update_cache:
 	if ((audcal_info.dev_type & TX_DEVICE) == 2) {
-		/*loop is to take care of use case:- multiple Audrec
-		sessions are routed before enabling the device in this use
-		case we will get the sessions value as bits set for all the
-		sessions routed before device enable, so we should take care
-		of copying device info to all the sessions*/
+		/*                                                  
+                                                            
+                                                             
+                                                              
+                                            */
 		for (i = 0; i < MAX_AUDREC_SESSIONS; i++) {
 			stream_id = ((audcal_info.sessions >> i) & 0x01);
 			if (stream_id) {
@@ -2968,8 +2968,8 @@ update_cache:
 		if (ret == 1) {
 			MM_DBG("got device ready call back for another "
 					"audplay task sessions on same COPP\n");
-			/*stream_id is used to keep track of number of active*/
-			/*sessions active on this device*/
+			/*                                                   */
+			/*                              */
 			acdb_cache_free_node->stream_id++;
 			mutex_unlock(&acdb_data.acdb_mutex);
 			goto done;
@@ -3099,11 +3099,11 @@ static void audpreproc_cb(void *private, u32 id, void *msg)
 		acdb_data.acdb_state &= ~CAL_DATA_READY;
 		goto done;
 	}
-	/*Following check is added to make sure that device info
-	  is updated. audpre proc layer enabled without device
-	  callback at this scenario we should not access
-	  device information
-	 */
+	/*                                                      
+                                                       
+                                                 
+                     
+  */
 	if (acdb_data.build_id[17] != '0') {
 		if (acdb_data.device_info &&
 			session_info[stream_id].sampling_freq) {
@@ -3229,7 +3229,7 @@ static s32 initialize_modem_acdb(void)
 		acdb_cmd.adie_type = ACDB_CURRENT_ADIE_MODE_UNKNOWN;
 	acdb_cmd.command_id = ACDB_CMD_INITIALIZE_FOR_ADIE;
 	do {
-		/*Initialize ACDB software on modem based on codec type*/
+		/*                                                     */
 		result = dalrpc_fcn_8(ACDB_DalACDB_ioctl, acdb_data.handle,
 				(const void *)&acdb_cmd, sizeof(acdb_cmd),
 				&acdb_data.acdb_result,
@@ -3238,11 +3238,11 @@ static s32 initialize_modem_acdb(void)
 			MM_ERR("ACDB=> RPC failure result = %d\n", result);
 			goto error;
 		}
-		/*following check is introduced to handle boot up race
-		condition between AUDCAL SW peers running on apps
-		and modem (ACDB_RES_BADSTATE indicates modem AUDCAL SW is
-		not in initialized sate) we need to retry to get ACDB
-		initialized*/
+		/*                                                    
+                                                   
+                                                           
+                                                       
+             */
 		if (acdb_data.acdb_result.result == ACDB_RES_BADSTATE) {
 			msleep(500);
 			iterations++;
@@ -3269,7 +3269,7 @@ static s32 acdb_calibrate_device(void *data)
 {
 	s32 result = 0;
 
-	/* initialize driver */
+	/*                   */
 	result = acdb_initialize_data();
 	if (result)
 		goto done;
@@ -3291,14 +3291,14 @@ static s32 acdb_calibrate_device(void *data)
 			if (!(acdb_data.acdb_state & CAL_DATA_READY)) {
 				if ((acdb_data.device_info->dev_type
 							& RX_DEVICE) == 1) {
-					/*we need to get calibration values
-					only for RX device as resampler
-					moved to start of the pre - proc chain
-					tx calibration value will be based on
-					sampling frequency what audrec is
-					configured, calibration values for tx
-					device are fetch in audpreproc
-					callback*/
+					/*                                 
+                                    
+                                           
+                                          
+                                      
+                                          
+                                   
+             */
 					result = acdb_get_calibration();
 					if (result < 0) {
 						mutex_unlock(
@@ -3378,7 +3378,7 @@ static int __init acdb_init(void)
 	MM_INFO("build id used is = %s\n", acdb_data.build_id);
 
 #ifdef CONFIG_DEBUG_FS
-	/*This is RTC specific INIT used only with debugfs*/
+	/*                                                */
 	if (!rtc_acdb_init())
 		MM_ERR("RTC ACDB=>INIT Failure\n");
 

@@ -24,7 +24,7 @@
 #define DBG_CSIC 0
 
 #define V4L2_IDENT_CSIC			50004
-/* MIPI	CSI controller registers */
+/*                               */
 #define	MIPI_PHY_CONTROL		0x00000000
 #define	MIPI_PROTOCOL_CONTROL		0x00000004
 #define	MIPI_INTERRUPT_STATUS		0x00000008
@@ -43,91 +43,91 @@
 #define	MIPI_PWR_CNTL			0x00000054
 
 /*
- * MIPI_PROTOCOL_CONTROL register bits to enable/disable the features of
- * CSI Rx Block
+                                                                        
+               
  */
 
-/* DPCM scheme */
+/*             */
 #define	MIPI_PROTOCOL_CONTROL_DPCM_SCHEME_SHFT			0x1e
-/* SW_RST to issue a SW reset to the CSI core */
+/*                                            */
 #define	MIPI_PROTOCOL_CONTROL_SW_RST_BMSK			0x8000000
-/* To Capture Long packet Header Info in MIPI_PROTOCOL_STATUS register */
+/*                                                                     */
 #define	MIPI_PROTOCOL_CONTROL_LONG_PACKET_HEADER_CAPTURE_BMSK	0x200000
-/* Data format for unpacking purpose */
+/*                                   */
 #define	MIPI_PROTOCOL_CONTROL_DATA_FORMAT_SHFT			0x13
-/* Enable decoding of payload based on data type filed of packet hdr */
+/*                                                                   */
 #define	MIPI_PROTOCOL_CONTROL_DECODE_ID_BMSK			0x40000
-/* Enable error correction on packet headers */
+/*                                           */
 #define	MIPI_PROTOCOL_CONTROL_ECC_EN_BMSK			0x20000
 
 /*
- * MIPI_CALIBRATION_CONTROL register contains control info for
- * calibration impledence controller
+                                                              
+                                    
 */
 
-/* Enable bit for calibration pad */
+/*                                */
 #define	MIPI_CALIBRATION_CONTROL_SWCAL_CAL_EN_SHFT		0x16
-/* With SWCAL_STRENGTH_OVERRIDE_EN, SW_CAL_EN and MANUAL_OVERRIDE_EN
- * the hardware calibration circuitry associated with CAL_SW_HW_MODE
- * is bypassed
+/*                                                                  
+                                                                    
+              
 */
 #define	MIPI_CALIBRATION_CONTROL_SWCAL_STRENGTH_OVERRIDE_EN_SHFT	0x15
-/* To indicate the Calibration process is in the control of HW/SW */
+/*                                                                */
 #define	MIPI_CALIBRATION_CONTROL_CAL_SW_HW_MODE_SHFT		0x14
-/* When this is set the strength value of the data and clk lane impedence
- * termination is updated with MANUAL_STRENGTH settings and calibration
- * sensing logic is idle.
+/*                                                                       
+                                                                       
+                         
 */
 #define	MIPI_CALIBRATION_CONTROL_MANUAL_OVERRIDE_EN_SHFT	0x7
 
-/* Data lane0 control */
-/* T-hs Settle count value  for Rx */
+/*                    */
+/*                                 */
 #define	MIPI_PHY_D0_CONTROL2_SETTLE_COUNT_SHFT			0x18
-/* Rx termination control */
+/*                        */
 #define	MIPI_PHY_D0_CONTROL2_HS_TERM_IMP_SHFT			0x10
-/* LP Rx enable */
+/*              */
 #define	MIPI_PHY_D0_CONTROL2_LP_REC_EN_SHFT			0x4
 /*
- * Enable for error in sync sequence
- * 1 - one bit error in sync seq
- * 0 - requires all 8 bit correct seq
+                                    
+                                
+                                     
 */
 #define	MIPI_PHY_D0_CONTROL2_ERR_SOT_HS_EN_SHFT			0x3
 
-/* Comments are same as D0 */
+/*                         */
 #define	MIPI_PHY_D1_CONTROL2_SETTLE_COUNT_SHFT			0x18
 #define	MIPI_PHY_D1_CONTROL2_HS_TERM_IMP_SHFT			0x10
 #define	MIPI_PHY_D1_CONTROL2_LP_REC_EN_SHFT			0x4
 #define	MIPI_PHY_D1_CONTROL2_ERR_SOT_HS_EN_SHFT			0x3
 
-/* Comments are same as D0 */
+/*                         */
 #define	MIPI_PHY_D2_CONTROL2_SETTLE_COUNT_SHFT			0x18
 #define	MIPI_PHY_D2_CONTROL2_HS_TERM_IMP_SHFT			0x10
 #define	MIPI_PHY_D2_CONTROL2_LP_REC_EN_SHFT			0x4
 #define	MIPI_PHY_D2_CONTROL2_ERR_SOT_HS_EN_SHFT			0x3
 
-/* Comments are same as D0 */
+/*                         */
 #define	MIPI_PHY_D3_CONTROL2_SETTLE_COUNT_SHFT			0x18
 #define	MIPI_PHY_D3_CONTROL2_HS_TERM_IMP_SHFT			0x10
 #define	MIPI_PHY_D3_CONTROL2_LP_REC_EN_SHFT			0x4
 #define	MIPI_PHY_D3_CONTROL2_ERR_SOT_HS_EN_SHFT			0x3
 
-/* PHY_CL_CTRL programs the parameters of clk lane of CSIRXPHY */
-/* HS Rx termination control */
+/*                                                             */
+/*                           */
 #define	MIPI_PHY_CL_CONTROL_HS_TERM_IMP_SHFT			0x18
-/* Start signal for T-hs delay */
+/*                             */
 #define	MIPI_PHY_CL_CONTROL_LP_REC_EN_SHFT			0x2
 
-/* PHY DATA lane 0 control */
+/*                         */
 /*
- * HS RX equalizer strength control
- * 00 - 0db 01 - 3db 10 - 5db 11 - 7db
+                                   
+                                      
 */
 #define	MIPI_PHY_D0_CONTROL_HS_REC_EQ_SHFT			0x1c
-/* PHY DATA lane 1 control */
-/* Shutdown signal for MIPI clk phy line */
+/*                         */
+/*                                       */
 #define	MIPI_PHY_D1_CONTROL_MIPI_CLK_PHY_SHUTDOWNB_SHFT		0x9
-/* Shutdown signal for MIPI data phy line */
+/*                                        */
 #define	MIPI_PHY_D1_CONTROL_MIPI_DATA_PHY_SHUTDOWNB_SHFT	0x8
 
 #define MSM_AXI_QOS_PREVIEW 200000
@@ -149,7 +149,7 @@ static int msm_csic_config(struct v4l2_subdev *sd,
 	csic_dev = v4l2_get_subdevdata(sd);
 	csicbase = csic_dev->base;
 
-	/* Enable error correction for DATA lane. Applies to all data lanes */
+	/*                                                                  */
 	msm_camera_io_w(0x4, csicbase + MIPI_PHY_CONTROL);
 
 	msm_camera_io_w(MIPI_PROTOCOL_CONTROL_SW_RST_BMSK,
@@ -191,7 +191,7 @@ static int msm_csic_config(struct v4l2_subdev *sd,
 	msm_camera_io_w(0x00000000, csicbase + MIPI_PHY_D2_CONTROL);
 	msm_camera_io_w(0x00000000, csicbase + MIPI_PHY_D3_CONTROL);
 
-	/* program number of lanes and lane mapping */
+	/*                                          */
 	switch (csic_params->lane_cnt) {
 	case 1:
 		msm_camera_io_w(csic_params->lane_assign << 8 | 0x4,
@@ -212,7 +212,7 @@ static int msm_csic_config(struct v4l2_subdev *sd,
 	}
 
 	msm_camera_io_w(0xF077F3C0, csicbase + MIPI_INTERRUPT_MASK);
-	/*clear IRQ bits*/
+	/*              */
 	msm_camera_io_w(0xF077F3C0, csicbase + MIPI_INTERRUPT_STATUS);
 
 	return rc;
@@ -230,7 +230,7 @@ static irqreturn_t msm_csic_irq(int irq_num, void *data)
 		msm_camera_io_r(csic_dev->base + MIPI_PROTOCOL_CONTROL));
 	msm_camera_io_w(irq, csic_dev->base + MIPI_INTERRUPT_STATUS);
 
-	/* TODO: Needs to send this info to upper layers */
+	/*                                               */
 	if ((irq >> 19) & 0x1)
 		pr_info("Unsupported packet format is received\n");
 	return IRQ_HANDLED;

@@ -48,9 +48,9 @@ static int __init omap3_l3_init(void)
 	char oh_name[L3_MODULES_MAX_LEN];
 
 	/*
-	 * To avoid code running on other OMAPs in
-	 * multi-omap builds
-	 */
+                                           
+                     
+  */
 	if (!(cpu_is_omap34xx()))
 		return -ENODEV;
 
@@ -77,14 +77,14 @@ static int __init omap4_l3_init(void)
 	struct platform_device *pdev;
 	char oh_name[L3_MODULES_MAX_LEN];
 
-	/* If dtb is there, the devices will be created dynamically */
+	/*                                                          */
 	if (of_have_populated_dt())
 		return -ENODEV;
 
 	/*
-	 * To avoid code running on other OMAPs in
-	 * multi-omap builds
-	 */
+                                           
+                     
+  */
 	if (!(cpu_is_omap44xx()))
 		return -ENODEV;
 
@@ -227,7 +227,7 @@ int omap3_init_camera(struct isp_platform_data *pdata)
 	return platform_device_register(&omap3isp_device);
 }
 
-#else /* !CONFIG_IOMMU_API */
+#else /*                   */
 
 int omap3_init_camera(struct isp_platform_data *pdata)
 {
@@ -293,42 +293,9 @@ static inline void __init omap_init_mbox(void)
 }
 #else
 static inline void omap_init_mbox(void) { }
-#endif /* CONFIG_OMAP_MBOX_FWK */
+#endif /*                      */
 
 static inline void omap_init_sti(void) {}
-
-#if defined CONFIG_ARCH_OMAP4
-
-static struct platform_device codec_dmic0 = {
-	.name	= "dmic-codec",
-	.id	= 0,
-};
-
-static struct platform_device codec_dmic1 = {
-	.name	= "dmic-codec",
-	.id	= 1,
-};
-
-static struct platform_device codec_dmic2 = {
-	.name	= "dmic-codec",
-	.id	= 2,
-};
-
-static struct platform_device omap_abe_dai = {
-	.name	= "omap-abe-dai",
-	.id	= -1,
-};
-
-static inline void omap_init_abe(void)
-{
-	platform_device_register(&codec_dmic0);
-	platform_device_register(&codec_dmic1);
-	platform_device_register(&codec_dmic2);
-	platform_device_register(&omap_abe_dai);
-}
-#else
-static inline void omap_init_abe(void) {}
-#endif
 
 #if defined(CONFIG_SND_SOC) || defined(CONFIG_SND_SOC_MODULE)
 
@@ -605,7 +572,7 @@ static void omap_init_aes(void)
 static inline void omap_init_aes(void) { }
 #endif
 
-/*-------------------------------------------------------------------------*/
+/*                                                                         */
 
 #if defined(CONFIG_MMC_OMAP) || defined(CONFIG_MMC_OMAP_MODULE)
 
@@ -637,9 +604,9 @@ static inline void omap242x_mmc_mux(struct omap_mmc_platform_data
 	}
 
 	/*
-	 * Use internal loop-back in MMC/SDIO Module Input Clock
-	 * selection
-	 */
+                                                         
+             
+  */
 	if (mmc_controller->slots[0].internal_clock) {
 		u32 v = omap_ctrl_readl(OMAP2_CONTROL_DEVCONF0);
 		v |= (1 << 24);
@@ -663,7 +630,7 @@ void __init omap242x_init_mmc(struct omap_mmc_platform_data **mmc_data)
 
 #endif
 
-/*-------------------------------------------------------------------------*/
+/*                                                                         */
 
 #if defined(CONFIG_HDQ_MASTER_OMAP) || defined(CONFIG_HDQ_MASTER_OMAP_MODULE)
 #define OMAP_HDQ_BASE	0x480B2000
@@ -698,7 +665,7 @@ static inline void omap_hdq_init(void)
 static inline void omap_hdq_init(void) {}
 #endif
 
-/*---------------------------------------------------------------------------*/
+/*                                                                           */
 
 #if defined(CONFIG_VIDEO_OMAP2_VOUT) || \
 	defined(CONFIG_VIDEO_OMAP2_VOUT_MODULE)
@@ -725,15 +692,14 @@ static void omap_init_vout(void)
 static inline void omap_init_vout(void) {}
 #endif
 
-/*-------------------------------------------------------------------------*/
+/*                                                                         */
 
 static int __init omap2_init_devices(void)
 {
 	/*
-	 * please keep these calls, and their implementations above,
-	 * in alphabetical order so they're easier to sort through.
-	 */
-	omap_init_abe();
+                                                             
+                                                            
+  */
 	omap_init_audio();
 	omap_init_mcpdm();
 	omap_init_dmic();

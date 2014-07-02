@@ -23,7 +23,7 @@
 #include <mach/msm_rtb.h>
 #include <mach/msm_cache_dump.h>
 
-/* Macros assume PMIC GPIOs and MPPs start at 1 */
+/*                                              */
 #define PM8921_GPIO_BASE		NR_GPIO_IRQS
 #define PM8921_GPIO_PM_TO_SYS(pm_gpio)	(pm_gpio - 1 + PM8921_GPIO_BASE)
 #define PM8921_MPP_BASE			(PM8921_GPIO_BASE + PM8921_NR_GPIOS)
@@ -84,7 +84,7 @@ extern struct platform_device wireless_charger;
 extern struct platform_device batt_temp_ctrl;
 
 extern struct msm_camera_board_info apq8064_camera_board_info;
-/* Enabling flash LED for camera */
+/*                               */
 extern struct msm_camera_board_info apq8064_lge_camera_board_info;
 
 void apq8064_init_cam(void);
@@ -95,7 +95,7 @@ void apq8064_init_cam(void);
 #define APQ_8064_GSBI4_QUP_I2C_BUS_ID 4
 #define APQ_8064_GSBI5_QUP_I2C_BUS_ID 5
 
-/* Camera GPIO Settings */
+/*                      */
 #define GPIO_CAM_MCLK0          (5)
 
 #define GPIO_CAM_MCLK2          (2)

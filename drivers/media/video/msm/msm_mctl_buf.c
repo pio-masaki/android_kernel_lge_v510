@@ -35,9 +35,9 @@
 #define D(fmt, args...) do {} while (0)
 #endif
 
-// Start LGE_BSP_CAMERA::seongjo.kim@lge.com Control camera kernel log
+//                                                                    
 int logcount_nofreebuffer_available = 0;
-// End LGE_BSP_CAMERA::seongjo.kim@lge.com Control camera kernel log
+//                                                                  
 
 static int msm_vb2_ops_queue_setup(struct vb2_queue *vq,
 				const struct v4l2_format *fmt,
@@ -46,7 +46,7 @@ static int msm_vb2_ops_queue_setup(struct vb2_queue *vq,
 				unsigned int sizes[],
 				void *alloc_ctxs[])
 {
-	/* get the video device */
+	/*                      */
 	struct msm_cam_v4l2_dev_inst *pcam_inst = vb2_get_drv_priv(vq);
 	struct msm_cam_v4l2_device *pcam = pcam_inst->pcam;
 	int i;
@@ -70,11 +70,11 @@ static int msm_vb2_ops_queue_setup(struct vb2_queue *vq,
 
 static void msm_vb2_ops_wait_prepare(struct vb2_queue *q)
 {
-	/* we use polling so do not use this fn now */
+	/*                                          */
 }
 static void msm_vb2_ops_wait_finish(struct vb2_queue *q)
 {
-	/* we use polling so do not use this fn now */
+	/*                                          */
 }
 
 static int msm_vb2_ops_buf_init(struct vb2_buffer *vb)
@@ -177,14 +177,14 @@ static int msm_vb2_ops_buf_prepare(struct vb2_buffer *vb)
 		pr_err("%s error : pointer is NULL\n", __func__);
 		return -EINVAL;
 	}
-	/* by this time vid_fmt should be already set.
-	 * return error if it is not. */
+	/*                                            
+                               */
 	if ((pcam_inst->vid_fmt.fmt.pix.width == 0) ||
 		(pcam_inst->vid_fmt.fmt.pix.height == 0)) {
 		pr_err("%s error : pcam vid_fmt is not set\n", __func__);
 		return -EINVAL;
 	}
-	/* prefill in the byteused field */
+	/*                               */
 	for (i = 0; i < vb->num_planes; i++) {
 		len = vb2_plane_size(vb, i);
 		vb2_set_plane_payload(vb, i, len);
@@ -276,15 +276,15 @@ static void msm_vb2_ops_buf_cleanup(struct vb2_buffer *vb)
 		buf->state = MSM_BUFFER_STATE_UNUSED;
 		return;
 	}
-/* LGE_CHANGE_S, patch for IOMMU page fault, 2012.09.06, jungryoul.choi@lge.com */
+/*                                                                              */
 	if (!get_server_use_count() &&
 		pmctl && pmctl->hardware_running) {
 		pr_err("%s: daemon crashed but hardware is still running\n",
 			   __func__);
 		if (pmctl->mctl_release) {
 			pr_err("%s: Releasing now\n", __func__);
-			/*do not send any commands to hardware
-			after reaching this point*/
+			/*                                    
+                            */
 			pmctl->mctl_cmd = NULL;
 			pmctl->mctl_release(pmctl);
 			pmctl->mctl_release = NULL;
@@ -297,20 +297,13 @@ static void msm_vb2_ops_buf_cleanup(struct vb2_buffer *vb)
 		pr_err("server use count %d, pmctl pointer %p, hardware_running %d\n", get_server_use_count(),
 		pmctl, pmctl->hardware_running);
 	}
-/* LGE_CHANGE_E, patch for IOMMU page fault, 2012.09.06, jungryoul.choi@lge.com */
+/*                                                                              */
 	for (i = 0; i < vb->num_planes; i++) {
 		mem = vb2_plane_cookie(vb, i);
 		if (mem) {
-//End  LGE_BSP_CAMERA : Fixed WBT - jonghwan.ko@lge.com
-		videobuf2_pmem_contig_user_put(mem, pmctl->client,
-			pmctl->domain_num
-/* LGE_CHANGE_S, ion leakage patch, 2013.1.23, jungki.kim[Start] */
-#if defined(CONFIG_LGE_GK_CAMERA)
-			, pcam_inst->is_closing
-#endif
-/* LGE_CHANGE_E, ion leakage patch, 2013.1.23, jungki.kim[End] */
-			);
-
+//                                                     
+			videobuf2_pmem_contig_user_put(mem, pmctl->client,
+				pmctl->domain_num);
 		} else {
 			pr_err("%s Inst %p buffer plane cookie is null",
 				__func__, pcam_inst);
@@ -352,7 +345,7 @@ static void msm_vb2_ops_buf_queue(struct vb2_buffer *vb)
 		vb->v4l2_buf.index);
 	buf = container_of(vb, struct msm_frame_buffer, vidbuf);
 	spin_lock_irqsave(&pcam_inst->vq_irqlock, flags);
-	/* we are returning a buffer to the queue */
+	/*                                        */
 	list_add_tail(&buf->list, &pcam_inst->free_vq);
 	spin_unlock_irqrestore(&pcam_inst->vq_irqlock, flags);
 	buf->state = MSM_BUFFER_STATE_QUEUED;
@@ -372,7 +365,7 @@ static struct vb2_ops msm_vb2_ops = {
 };
 
 
-/* prepare a video buffer queue for a vl42 device*/
+/*                                               */
 static int msm_vbqueue_init(struct msm_cam_v4l2_dev_inst *pcam_inst,
 			struct vb2_queue *q, enum v4l2_buf_type type)
 {
@@ -427,7 +420,7 @@ struct msm_frame_buffer *msm_mctl_buf_find(
 	uint32_t buf_idx, offset = 0;
 	struct videobuf2_contig_pmem *mem;
 
-	/* we actually need a list, not a queue */
+	/*                                      */
 	spin_lock_irqsave(&pcam_inst->vq_irqlock, flags);
 	list_for_each_entry_safe(buf, tmp,
 			&pcam_inst->free_vq, list) {
@@ -531,29 +524,25 @@ int msm_mctl_buf_done(struct msm_cam_media_controller *p_mctl,
 		rc = msm_mctl_do_pp_divert(p_mctl, buf_handle,
 			fbuf, frame_id, pp_type);
 	} else {
-		/* Find the instance on which vb2_buffer_done() needs to be
-		 * called, so that the user can get the buffer.
-		 * If the lookup type is
-		 * - By instance handle:
-		 *    Either mctl_pp inst idx or video inst idx should be set.
-		 *    Try to get the MCTL_PP inst idx first, if its not set,
-		 *    fall back to video inst idx. Once we get the inst idx,
-		 *    get the pcam_inst from the corresponding dev_inst[] map.
-		 *    If neither are set, its a serious error, trigger a BUG_ON.
-		 * - By image mode:
-		 *    Legacy usecase. Use the image mode and get the pcam_inst
-		 *    from the video node.
-		 */
+		/*                                                         
+                                                 
+                          
+                          
+                                                                
+                                                              
+                                                              
+                                                                
+                                                                  
+                     
+                                                                
+                            
+   */
 		if (buf_handle->buf_lookup_type == BUF_LOOKUP_BY_INST_HANDLE) {
 			idx = GET_MCTLPP_INST_IDX(buf_handle->inst_handle);
 			if (idx > MSM_DEV_INST_MAX) {
 				idx = GET_VIDEO_INST_IDX(
 					buf_handle->inst_handle);
-				if (idx > MSM_DEV_INST_MAX) {
-					pr_err("%s Invalid idx %d ", __func__,
-						idx);
-					return -EINVAL;
-				}
+				BUG_ON(idx > MSM_DEV_INST_MAX);
 				pcam_inst = p_mctl->pcam_ptr->dev_inst[idx];
 			} else {
 				pcam_inst = p_mctl->pcam_ptr->mctl_node.
@@ -620,9 +609,9 @@ struct msm_cam_v4l2_dev_inst *msm_mctl_get_inst_by_img_mode(
 	struct msm_cam_v4l2_device *pcam = pmctl->pcam_ptr;
 	int idx;
 
-	/* Valid image mode. Search the mctl node first.
-	 * If mctl node doesnt have the instance, then
-	 * search in the user's video node */
+	/*                                              
+                                               
+                                    */
 	if (pmctl->vfe_output_mode == VFE_OUTPUTS_MAIN_AND_THUMB
 		|| pmctl->vfe_output_mode == VFE_OUTPUTS_THUMB_AND_MAIN
 		|| pmctl->vfe_output_mode == VFE_OUTPUTS_MAIN_AND_PREVIEW) {
@@ -662,33 +651,30 @@ struct msm_cam_v4l2_dev_inst *msm_mctl_get_pcam_inst(
 	struct msm_cam_v4l2_device *pcam = pmctl->pcam_ptr;
 	int idx;
 
-	/* Get the pcam instance on based on the following rules:
-	 * If the lookup type is
-	 * - By instance handle:
-	 *    Either mctl_pp inst idx or video inst idx should be set.
-	 *    Try to get the MCTL_PP inst idx first, if its not set,
-	 *    fall back to video inst idx. Once we get the inst idx,
-	 *    get the pcam_inst from the corresponding dev_inst[] map.
-	 *    If neither are set, its a serious error, trigger a BUG_ON.
-	 * - By image mode:(Legacy usecase)
-	 *    If vfe is in configured in snapshot mode, first check if
-	 *    mctl pp node has a instance created for this image mode
-	 *    and if there is a buffer queued for that instance.
-	 *    If so, return that instance, otherwise get the pcam instance
-	 *    for this image_mode from the video instance.
-	 *    If the vfe is configured in any other mode, then first check
-	 *    if mctl pp node has a instance created for this image mode,
-	 *    otherwise get the pcam instance for this image mode from the
-	 *    video instance.
-	 */
+	/*                                                       
+                         
+                         
+                                                               
+                                                             
+                                                             
+                                                               
+                                                                 
+                                    
+                                                               
+                                                              
+                                                         
+                                                                   
+                                                   
+                                                                   
+                                                                  
+                                                                   
+                      
+  */
 	if (buf_handle->buf_lookup_type == BUF_LOOKUP_BY_INST_HANDLE) {
 		idx = GET_MCTLPP_INST_IDX(buf_handle->inst_handle);
 		if (idx > MSM_DEV_INST_MAX) {
 			idx = GET_VIDEO_INST_IDX(buf_handle->inst_handle);
-			if (idx > MSM_DEV_INST_MAX) {
-				pr_err("%s Invalid idx %d ", __func__, idx);
-				return NULL;
-			}
+			BUG_ON(idx > MSM_DEV_INST_MAX);
 			pcam_inst = pcam->dev_inst[idx];
 		} else {
 			pcam_inst = pcam->mctl_node.dev_inst[idx];
@@ -724,20 +710,10 @@ int msm_mctl_reserve_free_buf(
 	}
 	memset(free_buf, 0, sizeof(struct msm_free_buf));
 
-	/* If the caller wants to reserve a buffer from a particular
-	 * camera instance, he would send the preferred camera instance.
-	 * If the preferred camera instance is NULL, get the
-	 * camera instance using the image mode passed */
-
-/* LGE_CHANGE_S, add messages to debug null, 2013.4.29, jungki.kim[Start] */
-#ifdef CONFIG_LGE_GK_CAMERA
-	if(!buf_handle->inst_handle){
-		pr_err("%s: buf_handle->inst_handle is 0\n", __func__);
-		return rc;
-	}
-#endif
-/* LGE_CHANGE_E, add messages to debug null, 2013.4.29, jungki.kim[End] */
-
+	/*                                                          
+                                                                 
+                                                     
+                                                */
 	if (!pcam_inst) {
 		pcam_inst = msm_mctl_get_pcam_inst(pmctl, buf_handle);
 		if(!pcam_inst) {
@@ -823,7 +799,7 @@ int msm_mctl_reserve_free_buf(
 		break;
 	}
 	if (rc != 0)
-	// Start LGE_BSP_CAMERA::seongjo.kim@lge.com Control camera kernel log
+	//                                                                    
 	{
 		logcount_nofreebuffer_available++;
 		if (logcount_nofreebuffer_available > 30)
@@ -833,7 +809,7 @@ int msm_mctl_reserve_free_buf(
 			logcount_nofreebuffer_available = 0;
 		}
 	}
-	// End LGE_BSP_CAMERA::seongjo.kim@lge.com Control camera kernel log
+	//                                                                  
 	spin_unlock_irqrestore(&pcam_inst->vq_irqlock, flags);
 	return rc;
 }
@@ -892,10 +868,7 @@ int msm_mctl_buf_done_pp(struct msm_cam_media_controller *pmctl,
 		idx = GET_MCTLPP_INST_IDX(buf_handle->inst_handle);
 		if (idx > MSM_DEV_INST_MAX) {
 			idx = GET_VIDEO_INST_IDX(buf_handle->inst_handle);
-			if (idx > MSM_DEV_INST_MAX) {
-				pr_err("%s Invalid idx %d ", __func__, idx);
-				return -EINVAL;
-			}
+			BUG_ON(idx > MSM_DEV_INST_MAX);
 			pcam_inst = pmctl->pcam_ptr->dev_inst[idx];
 		} else {
 			pcam_inst = pmctl->pcam_ptr->mctl_node.dev_inst[idx];
@@ -925,7 +898,7 @@ int msm_mctl_buf_done_pp(struct msm_cam_media_controller *pmctl,
 	cam_ts.timestamp = ret_frame->timestamp;
 	cam_ts.frame_id   = ret_frame->frame_id;
 	if (ret_frame->dirty || (ret_frame->frame_id < pcam_inst->sequence))
-		/* the frame is dirty, not going to disptach to app */
+		/*                                                  */
 		rc = msm_mctl_release_free_buf(pmctl, pcam_inst, frame);
 	else
 		rc = msm_mctl_buf_done_proc(pmctl, pcam_inst, frame,
@@ -975,7 +948,7 @@ int msm_mctl_buf_return_buf(struct msm_cam_media_controller *pmctl,
 }
 
 #ifdef CONFIG_MSM_MULTIMEDIA_USE_ION
-/* Unmap using ION APIs */
+/*                      */
 static void __msm_mctl_unmap_user_frame(struct msm_cam_meta_frame *meta_frame,
 	struct ion_client *client, int domain_num)
 {
@@ -989,7 +962,7 @@ static void __msm_mctl_unmap_user_frame(struct msm_cam_meta_frame *meta_frame,
 	}
 }
 
-/* Map using ION APIs */
+/*                    */
 static int __msm_mctl_map_user_frame(struct msm_cam_meta_frame *meta_frame,
 	struct ion_client *client, int domain_num)
 {
@@ -1003,7 +976,7 @@ static int __msm_mctl_map_user_frame(struct msm_cam_meta_frame *meta_frame,
 		if (IS_ERR_OR_NULL(meta_frame->map[i].handle)) {
 			pr_err("%s: ion_import failed for plane = %d fd = %d",
 				__func__, i, meta_frame->frame.mp[i].fd);
-			/* Roll back previous plane mappings, if any */
+			/*                                           */
 			for (j = i-1; j >= 0; j--) {
 				ion_unmap_iommu(client,
 					meta_frame->map[j].handle,
@@ -1020,7 +993,7 @@ static int __msm_mctl_map_user_frame(struct msm_cam_meta_frame *meta_frame,
 				0, &paddr, &len, 0, 0) < 0) {
 			pr_err("%s: cannot map address plane %d", __func__, i);
 			ion_free(client, meta_frame->map[i].handle);
-			/* Roll back previous plane mappings, if any */
+			/*                                           */
 			for (j = i-1; j >= 0; j--) {
 				if (meta_frame->map[j].handle) {
 					ion_unmap_iommu(client,
@@ -1033,7 +1006,7 @@ static int __msm_mctl_map_user_frame(struct msm_cam_meta_frame *meta_frame,
 			return -EFAULT;
 		}
 
-		/* Validate the offsets with the mapped length. */
+		/*                                              */
 		if ((meta_frame->frame.mp[i].addr_offset > len) ||
 			(meta_frame->frame.mp[i].data_offset +
 			meta_frame->frame.mp[i].length > len)) {
@@ -1041,7 +1014,7 @@ static int __msm_mctl_map_user_frame(struct msm_cam_meta_frame *meta_frame,
 				__func__, meta_frame->frame.mp[i].addr_offset,
 				meta_frame->frame.mp[i].data_offset,
 				meta_frame->frame.mp[i].length, len);
-			/* Roll back previous plane mappings, if any */
+			/*                                           */
 			for (j = i; j >= 0; j--) {
 				if (meta_frame->map[j].handle) {
 					ion_unmap_iommu(client,
@@ -1055,10 +1028,10 @@ static int __msm_mctl_map_user_frame(struct msm_cam_meta_frame *meta_frame,
 		}
 		meta_frame->map[i].data_offset =
 			meta_frame->frame.mp[i].data_offset;
-		/* Add the addr_offset to the paddr here itself. The addr_offset
-		 * will be non-zero only if the user has allocated a buffer with
-		 * a single fd, but logically partitioned it into
-		 * multiple planes or buffers.*/
+		/*                                                              
+                                                                  
+                                                   
+                                */
 		paddr += meta_frame->frame.mp[i].addr_offset;
 		meta_frame->map[i].paddr = paddr;
 		meta_frame->map[i].len = len;
@@ -1071,7 +1044,7 @@ static int __msm_mctl_map_user_frame(struct msm_cam_meta_frame *meta_frame,
 	return 0;
 }
 #else
-/* Unmap using PMEM APIs */
+/*                       */
 static int __msm_mctl_unmap_user_frame(struct msm_cam_meta_frame *meta_frame,
 	struct ion_client *client, int domain_num)
 {
@@ -1084,7 +1057,7 @@ static int __msm_mctl_unmap_user_frame(struct msm_cam_meta_frame *meta_frame,
 	}
 }
 
-/* Map using PMEM APIs */
+/*                     */
 static int __msm_mctl_map_user_frame(struct msm_cam_meta_frame *meta_frame,
 	struct ion_client *client, int domain_num)
 {
@@ -1100,7 +1073,7 @@ static int __msm_mctl_map_user_frame(struct msm_cam_meta_frame *meta_frame,
 		if (rc < 0) {
 			pr_err("%s: get_pmem_file fd %d error %d\n",
 				__func__, meta_frame->frame.mp[i].fd, rc);
-			/* Roll back previous plane mappings, if any */
+			/*                                           */
 			for (j = i-1; j >= 0; j--)
 				if (meta_frame->map[j].file)
 					put_pmem_file(meta_frame->map[j].file);
@@ -1110,7 +1083,7 @@ static int __msm_mctl_map_user_frame(struct msm_cam_meta_frame *meta_frame,
 		D("%s Got pmem file for fd %d plane %d as %p", __func__,
 			meta_frame->frame.mp[i].fd, i, file);
 		meta_frame->map[i].file = file;
-		/* Validate the offsets with the mapped length. */
+		/*                                              */
 		if ((meta_frame->frame.mp[i].addr_offset > len) ||
 			(meta_frame->frame.mp[i].data_offset +
 			meta_frame->frame.mp[i].length > len)) {
@@ -1118,7 +1091,7 @@ static int __msm_mctl_map_user_frame(struct msm_cam_meta_frame *meta_frame,
 				__func__, meta_frame->frame.mp[i].addr_offset,
 				meta_frame->frame.mp[i].data_offset,
 				meta_frame->frame.mp[i].length, len);
-			/* Roll back previous plane mappings, if any */
+			/*                                           */
 			for (j = i; j >= 0; j--)
 				if (meta_frame->map[j].file)
 					put_pmem_file(meta_frame->map[j].file);
@@ -1127,10 +1100,10 @@ static int __msm_mctl_map_user_frame(struct msm_cam_meta_frame *meta_frame,
 		}
 		meta_frame->map[i].data_offset =
 			meta_frame->frame.mp[i].data_offset;
-		/* Add the addr_offset to the paddr here itself. The addr_offset
-		 * will be non-zero only if the user has allocated a buffer with
-		 * a single fd, but logically partitioned it into
-		 * multiple planes or buffers.*/
+		/*                                                              
+                                                                  
+                                                   
+                                */
 		paddr += meta_frame->frame.mp[i].addr_offset;
 		meta_frame->map[i].paddr = paddr;
 		meta_frame->map[i].len = len;

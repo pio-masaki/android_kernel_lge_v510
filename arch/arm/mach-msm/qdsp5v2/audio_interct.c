@@ -24,7 +24,7 @@
 #define AUDIO_INTERCT_ADSPAV_AUX_REGSEL_BMSK 0x100
 #define AUDIO_INTERCT_ADSPAV_AUX_REGSEL_SHFT 0x8
 
-/* Should look to protect this register */
+/*                                      */
 void __iomem *aictl_reg;
 
 void audio_interct_codec(u32 source)

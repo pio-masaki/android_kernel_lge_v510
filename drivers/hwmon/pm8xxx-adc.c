@@ -23,7 +23,6 @@
 #include <linux/hwmon.h>
 #include <linux/module.h>
 #include <linux/debugfs.h>
-#include <linux/wakelock.h>
 #include <linux/interrupt.h>
 #include <linux/completion.h>
 #include <linux/hwmon-sysfs.h>
@@ -34,7 +33,7 @@
 #include <linux/mfd/pm8xxx/pm8xxx-adc.h>
 #include <mach/msm_xo.h>
 
-/* User Bank register set */
+/*                        */
 #define PM8XXX_ADC_ARB_USRP_CNTRL1			0x197
 #define PM8XXX_ADC_ARB_USRP_CNTRL1_EN_ARB		BIT(0)
 #define PM8XXX_ADC_ARB_USRP_CNTRL1_RSV1			BIT(1)
@@ -125,15 +124,12 @@
 #define PM8XXX_ADC_HWMON_NAME_LENGTH			32
 #define PM8XXX_ADC_BTM_INTERVAL_MAX			0x14
 #define PM8XXX_ADC_COMPLETION_TIMEOUT			(2 * HZ)
-/* Ref patch test */
+#ifdef CONFIG_MACH_APQ8064_PALMAN
+/*                */
 #define PM8XXX_ADC_APQ_THERM_VREG_UV_MIN               2220000
 #define PM8XXX_ADC_APQ_THERM_VREG_UV_MAX               2220000
 #define PM8XXX_ADC_APQ_THERM_VREG_UA_LOAD              100000
-
-#ifndef CUST_A_TOUCH
-#define CUST_A_TOUCH
 #endif
-
 
 struct pm8xxx_adc {
 	struct device				*dev;
@@ -152,12 +148,13 @@ struct pm8xxx_adc {
 	struct work_struct			cool_work;
 	uint32_t				mpp_base;
 	struct device				*hwmon;
-	struct wake_lock			adc_wakelock;
 	struct msm_xo_voter			*adc_voter;
 	int					msm_suspend_check;
 	struct pm8xxx_adc_amux_properties	*conv;
 	struct pm8xxx_adc_arb_btm_param		batt;
+#ifdef CONFIG_MACH_APQ8064_PALMAN
 	bool					apq_therm;
+#endif
 	struct sensor_device_attribute		sens_attr[0];
 };
 
@@ -178,7 +175,9 @@ static const struct pm8xxx_adc_scaling_ratio pm8xxx_amux_scaling_ratio[] = {
 
 static struct pm8xxx_adc *pmic_adc;
 static struct regulator *pa_therm;
+#ifdef CONFIG_MACH_APQ8064_PALMAN
 static struct regulator *apq_therm;
+#endif
 
 static struct pm8xxx_adc_scale_fn adc_scale_fn[] = {
 	[ADC_SCALE_DEFAULT] = {pm8xxx_adc_scale_default},
@@ -186,26 +185,28 @@ static struct pm8xxx_adc_scale_fn adc_scale_fn[] = {
 	[ADC_SCALE_PA_THERM] = {pm8xxx_adc_scale_pa_therm},
 	[ADC_SCALE_PMIC_THERM] = {pm8xxx_adc_scale_pmic_therm},
 	[ADC_SCALE_XOTHERM] = {pm8xxx_adc_tdkntcg_therm},
+#ifdef CONFIG_MACH_APQ8064_PALMAN
 	[ADC_SCALE_APQ_THERM] = {pm8xxx_adc_scale_apq_therm},
+#endif
 };
 
-/* On PM8921 ADC the MPP needs to first be configured
-as an analog input to the AMUX pre-mux channel before
-issuing a read request. PM8921 MPP 8 is mapped to AMUX8
-and is common between remote processor's.
-On PM8018 ADC the MPP is directly connected to the AMUX
-pre-mux. Therefore clients of the PM8018 MPP do not need
-to configure the MPP as an analog input to the pre-mux.
-Clients can directly issue request on the pre-mux AMUX
-channel to read the ADC on the MPP */
+/*                                                   
+                                                     
+                                                       
+                                         
+                                                       
+                                                        
+                                                       
+                                                      
+                                   */
 static struct pm8xxx_mpp_config_data pm8xxx_adc_mpp_config = {
 	.type		= PM8XXX_MPP_TYPE_A_INPUT,
-	/* AMUX6 is dedicated to be used for apps processor */
+	/*                                                  */
 	.level		= PM8XXX_MPP_AIN_AMUX_CH6,
 	.control	= PM8XXX_MPP_AOUT_CTRL_DISABLE,
 };
 
-/* MPP Configuration for default settings */
+/*                                        */
 static struct pm8xxx_mpp_config_data pm8xxx_adc_mpp_unconfig = {
 	.type		= PM8XXX_MPP_TYPE_SINK,
 	.level		= PM8XXX_MPP_AIN_AMUX_CH5,
@@ -238,11 +239,10 @@ static int32_t pm8xxx_adc_arb_cntrl(uint32_t arb_cntrl,
 			pr_err("PM8xxx ADC request made after suspend_noirq "
 					"with channel: %d\n", channel);
 		data_arb_cntrl |= PM8XXX_ADC_ARB_USRP_CNTRL1_EN_ARB;
-		wake_lock(&adc_pmic->adc_wakelock);
 	}
 
-	/* Write twice to the CNTRL register for the arbiter settings
-	   to take into effect */
+	/*                                                           
+                        */
 	for (i = 0; i < 2; i++) {
 		rc = pm8xxx_writeb(adc_pmic->dev->parent,
 				PM8XXX_ADC_ARB_USRP_CNTRL1, data_arb_cntrl);
@@ -257,12 +257,12 @@ static int32_t pm8xxx_adc_arb_cntrl(uint32_t arb_cntrl,
 		INIT_COMPLETION(adc_pmic->adc_rslt_completion);
 		rc = pm8xxx_writeb(adc_pmic->dev->parent,
 			PM8XXX_ADC_ARB_USRP_CNTRL1, data_arb_cntrl);
-	} else
-		wake_unlock(&adc_pmic->adc_wakelock);
+	}
 
 	return 0;
 }
 
+#ifdef CONFIG_MACH_APQ8064_PALMAN
 static int32_t pm8xxx_adc_apqtherm_power(bool on)
 {
 	int rc = 0;
@@ -307,6 +307,7 @@ static int32_t pm8xxx_adc_apqtherm_power(bool on)
 
 	return rc;
 }
+#endif
 
 static int32_t pm8xxx_adc_patherm_power(bool on)
 {
@@ -368,17 +369,21 @@ static int32_t pm8xxx_adc_xo_vote(bool on)
 static int32_t pm8xxx_adc_channel_power_enable(uint32_t channel,
 							bool power_cntrl)
 {
+#ifdef CONFIG_MACH_APQ8064_PALMAN
 	struct pm8xxx_adc *adc_pmic = pmic_adc;
+#endif
 	int rc = 0;
 
 	switch (channel) {
 	case ADC_MPP_1_AMUX8:
 		rc = pm8xxx_adc_patherm_power(power_cntrl);
 		break;
+#ifdef CONFIG_MACH_APQ8064_PALMAN
 	case ADC_MPP_1_AMUX3:
 		if (adc_pmic->apq_therm)
 			rc = pm8xxx_adc_apqtherm_power(power_cntrl);
 		break;
+#endif
 	case CHANNEL_DIE_TEMP:
 	case CHANNEL_MUXOFF:
 		rc = pm8xxx_adc_xo_vote(power_cntrl);
@@ -456,8 +461,8 @@ static int32_t pm8xxx_adc_configure(
 	if (rc < 0)
 		return rc;
 
-	/* Default 2.4Mhz clock rate */
-	/* Client chooses the decimation */
+	/*                           */
+	/*                               */
 	switch (chan_prop->decimation) {
 	case ADC_DECIMATION_TYPE1:
 		data_dig_param |= PM8XXX_ADC_ARB_USRP_DIG_PARAM_DEC_RATE0;
@@ -512,14 +517,14 @@ static uint32_t pm8xxx_adc_read_adc_code(int32_t *data)
 
 	*data = (rslt_msb << 8) | rslt_lsb;
 
-	/* Use the midpoint to determine underflow or overflow */
+	/*                                                     */
 	if (*data > max_ideal_adc_code + (max_ideal_adc_code >> 1))
 		*data |= ((1 << (8 * sizeof(*data) -
 			adc_pmic->adc_prop->bitresolution)) - 1) <<
 			adc_pmic->adc_prop->bitresolution;
 
-	/* Default value for switching off the arbiter after reading
-	   the ADC value. Bit 0 set to 0. */
+	/*                                                          
+                                   */
 	rc = pm8xxx_adc_arb_cntrl(0, CHANNEL_NONE);
 	if (rc < 0) {
 		pr_err("%s: Configuring ADC Arbiter disable"
@@ -676,7 +681,7 @@ static uint32_t pm8xxx_adc_calib_device(void)
 					"failed\n", __func__);
 		return rc;
 	}
-	/* Ratiometric Calibration */
+	/*                         */
 	conv.amux_channel = CHANNEL_MUXOFF;
 	conv.decimation = ADC_DECIMATION_TYPE2;
 	conv.amux_ip_rsv = AMUX_RSV5;
@@ -1094,8 +1099,8 @@ uint32_t pm8xxx_adc_btm_end(void)
 
 	spin_lock_irqsave(&adc_pmic->btm_lock, flags);
 
-	/* Write twice to the CNTRL register for the arbiter settings
-	   to take into effect */
+	/*                                                           
+                        */
 	for (i = 0; i < 2; i++) {
 		rc = pm8xxx_adc_write_reg(PM8XXX_ADC_ARB_BTM_CNTRL1,
 							data_arb_btm_cntrl);
@@ -1111,18 +1116,6 @@ uint32_t pm8xxx_adc_btm_end(void)
 }
 EXPORT_SYMBOL_GPL(pm8xxx_adc_btm_end);
 
-#if defined(CONFIG_MACH_APQ8064_L05E)
-static int temp_prev = 480;
-static int highTemp_count = 0;
-#endif
-
-#ifdef CUST_A_TOUCH
-extern  void check_touch_bat_therm(int type);
-int touch_thermal_mode = 0;
-int thermal_threshold = 30;
-#endif
-
-
 static ssize_t pm8xxx_adc_show(struct device *dev,
 			struct device_attribute *devattr, char *buf)
 {
@@ -1134,37 +1127,6 @@ static ssize_t pm8xxx_adc_show(struct device *dev,
 
 	if (rc)
 		return 0;
-
-/* [LGE_UPDATE_S for high temperature scaling]  only DCM*/
-#if defined(CONFIG_MACH_APQ8064_L05E)
-	if (attr->index == 8){
-		if (highTemp_count > 3){
-			highTemp_count = 0;
-			temp_prev = result.physical;
-		}
-		else if (result.physical >= 490 ){
-			result.physical = temp_prev;
-			highTemp_count++;
-		}
-		else {
-			highTemp_count = 0;
-			temp_prev = result.physical;
-		}
-	}
-#endif
-/* [LGE_UPDATE_# for high temperature scaling]  only DCM*/
-
-#ifdef CUST_A_TOUCH
-	if(attr->index == CHANNEL_BATT_THERM){
-		if(touch_thermal_mode == 0 && result.physical >= 500) {
-			touch_thermal_mode = 1;
-			check_touch_bat_therm(1);
-		} else if(touch_thermal_mode == 1 && result.physical < (500-thermal_threshold)){
-			touch_thermal_mode = 0;
-			check_touch_bat_therm(0);
-		}
-	}
-#endif
 
 	return snprintf(buf, PM8XXX_ADC_HWMON_NAME_LENGTH,
 		"Result:%lld Raw:%d\n", result.physical, result.adc_code);
@@ -1278,7 +1240,6 @@ static int __devexit pm8xxx_adc_teardown(struct platform_device *pdev)
 	struct pm8xxx_adc *adc_pmic = pmic_adc;
 	int i;
 
-	wake_lock_destroy(&adc_pmic->adc_wakelock);
 	msm_xo_put(adc_pmic->adc_voter);
 	platform_set_drvdata(pdev, NULL);
 	pmic_adc = NULL;
@@ -1381,8 +1342,6 @@ static int __devinit pm8xxx_adc_probe(struct platform_device *pdev)
 
 	disable_irq_nosync(adc_pmic->btm_cool_irq);
 	platform_set_drvdata(pdev, adc_pmic);
-	wake_lock_init(&adc_pmic->adc_wakelock, WAKE_LOCK_SUSPEND,
-					"pm8xxx_adc_wakelock");
 	adc_pmic->msm_suspend_check = 0;
 	pmic_adc = adc_pmic;
 
@@ -1414,24 +1373,17 @@ static int __devinit pm8xxx_adc_probe(struct platform_device *pdev)
 		pr_err("failed to request pa_therm vreg with error %d\n", rc);
 		pa_therm = NULL;
 	}
-
+#ifdef CONFIG_MACH_APQ8064_PALMAN
 	if (pdata->apq_therm) {
 		apq_therm = regulator_get(adc_pmic->dev, "apq_therm");
-#ifdef CONFIG_MACH_APQ8064_GVAR_CMCC
-		if (IS_ERR(pa_therm)) {
-			rc = PTR_ERR(pa_therm);
-			pr_err("failed to request apq_therm vreg with error %d\n", rc);
-			apq_therm = NULL;
-		}
-#else
 		if (IS_ERR(apq_therm)) {
 			rc = PTR_ERR(apq_therm);
 			pr_err("failed to request apq_therm vreg with error %d\n", rc);
 			apq_therm = NULL;
 		}
-#endif
 		adc_pmic->apq_therm = true;
 	}
+#endif
 	return 0;
 }
 

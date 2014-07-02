@@ -20,7 +20,7 @@
 #define OCMEM_MIN_ALLOC SZ_64K
 #define OCMEM_MIN_ALIGN SZ_64K
 
-/* Maximum number of slots in DM */
+/*                               */
 #define OCMEM_MAX_CHUNKS 32
 #define MIN_CHUNK_SIZE 128
 
@@ -65,29 +65,29 @@ struct ocmem_vectors {
 	struct ocmem_resource *r;
 };
 
-/* List of clients that allocate/interact with OCMEM */
-/* Must be in sync with client_names */
+/*                                                   */
+/*                                   */
 enum ocmem_client {
-	/* GMEM clients */
+	/*              */
 	OCMEM_GRAPHICS = 0x0,
-	/* TCMEM clients */
+	/*               */
 	OCMEM_VIDEO,
 	OCMEM_CAMERA,
-	/* Dummy Clients */
+	/*               */
 	OCMEM_HP_AUDIO,
 	OCMEM_VOICE,
-	/* IMEM Clients */
+	/*              */
 	OCMEM_LP_AUDIO,
 	OCMEM_SENSORS,
 	OCMEM_OTHER_OS,
 	OCMEM_CLIENT_MAX,
 };
 
-/**
- * List of OCMEM notification events which will be broadcasted
- * to clients that optionally register for these notifications
- * on a per allocation basis.
- **/
+/* 
+                                                              
+                                                              
+                             
+  */
 enum ocmem_notif_type {
 	OCMEM_MAP_DONE = 1,
 	OCMEM_MAP_FAIL,
@@ -98,18 +98,18 @@ enum ocmem_notif_type {
 	OCMEM_NOTIF_TYPE_COUNT,
 };
 
-/* APIS */
-/* Notification APIs */
+/*      */
+/*                   */
 struct ocmem_notifier *ocmem_notifier_register(int client_id,
 						struct notifier_block *nb);
 
 int ocmem_notifier_unregister(struct ocmem_notifier *notif_hndl,
 				struct notifier_block *nb);
 
-/* Obtain the maximum quota for the client */
+/*                                         */
 unsigned long get_max_quota(int client_id);
 
-/* Allocation APIs */
+/*                 */
 struct ocmem_buf *ocmem_allocate(int client_id, unsigned long size);
 
 struct ocmem_buf *ocmem_allocate_nowait(int client_id, unsigned long size);
@@ -119,14 +119,14 @@ struct ocmem_buf *ocmem_allocate_nb(int client_id, unsigned long size);
 struct ocmem_buf *ocmem_allocate_range(int client_id, unsigned long min,
 			unsigned long goal, unsigned long step);
 
-/* Free APIs */
+/*           */
 int ocmem_free(int client_id, struct ocmem_buf *buf);
 
-/* Dynamic Resize APIs */
+/*                     */
 int ocmem_shrink(int client_id, struct ocmem_buf *buf,
 			unsigned long new_size);
 
-/* Transfer APIs */
+/*               */
 int ocmem_map(int client_id, struct ocmem_buf *buffer,
 			struct ocmem_map_list *list);
 
@@ -134,12 +134,12 @@ int ocmem_map(int client_id, struct ocmem_buf *buffer,
 int ocmem_unmap(int client_id, struct ocmem_buf *buffer,
 			struct ocmem_map_list *list);
 
-/* Priority Enforcement APIs */
+/*                           */
 int ocmem_evict(int client_id);
 
 int ocmem_restore(int client_id);
 
-/* Power Control APIs */
+/*                    */
 int ocmem_set_power_state(int client_id, struct ocmem_buf *buf,
 				enum ocmem_power_state new_state);
 

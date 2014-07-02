@@ -28,11 +28,11 @@
 #include <mach/debug_mm.h>
 
 struct voice_data {
-	void *handle; /* DALRPC handle */
-	void *cb_handle; /* DALRPC callback handle */
-	int network; /* Network information */
-	int dev_state;/*READY, CHANGE, REL_DONE,INIT*/
-	int voc_state;/*INIT, CHANGE, RELEASE, ACQUIRE */
+	void *handle; /*               */
+	void *cb_handle; /*                        */
+	int network; /*                     */
+	int dev_state;/*                            */
+	int voc_state;/*                               */
 	struct mutex voc_lock;
 	struct mutex vol_lock;
 	int voc_event;
@@ -45,16 +45,16 @@ struct voice_data {
 	wait_queue_head_t dev_wait;
 	wait_queue_head_t voc_wait;
 	uint32_t device_events;
-	/* cache the values related to Rx and Tx */
+	/*                                       */
 	struct device_data dev_rx;
 	struct device_data dev_tx;
-	/* these default values are for all devices */
+	/*                                          */
 	uint32_t default_mute_val;
 	uint32_t default_vol_val;
 	uint32_t default_sample_val;
-	/* call status */
-	int v_call_status; /* Start or End */
-	s32 max_rx_vol[VOC_RX_VOL_ARRAY_NUM]; /* [0] is for NB, [1] for WB */
+	/*             */
+	int v_call_status; /*              */
+	s32 max_rx_vol[VOC_RX_VOL_ARRAY_NUM]; /*                           */
 	s32 min_rx_vol[VOC_RX_VOL_ARRAY_NUM];
 };
 
@@ -76,7 +76,7 @@ static int voice_cmd_change(void)
 	hdr.id = CMD_DEVICE_CHANGE;
 	hdr.data_len = 0;
 
-	MM_DBG("\n"); /* Macro prints the file name and function */
+	MM_DBG("\n"); /*                                         */
 
 	err = dalrpc_fcn_5(VOICE_DALRPC_CMD, v->handle, &hdr,
 			sizeof(struct voice_header));
@@ -126,12 +126,12 @@ static void voice_auddev_cb_function(u32 evt_id,
 			v->dev_state = DEV_CHANGE;
 			mutex_lock(&voice.voc_lock);
 			if (v->voc_state == VOICE_ACQUIRE) {
-				/* send device change to modem */
+				/*                             */
 				voice_cmd_change();
 				mutex_unlock(&voice.voc_lock);
 				msm_snddev_enable_sidetone(v->dev_rx.dev_id,
 				0);
-				/* block to wait for CHANGE_START */
+				/*                                */
 				rc = wait_event_interruptible(
 				v->voc_wait, (v->voc_state == VOICE_CHANGE)
 				|| (atomic_read(&v->chg_start_flag) == 1)
@@ -148,7 +148,7 @@ static void voice_auddev_cb_function(u32 evt_id,
 			MM_ERR(" device is not at proper state\n");
 		break;
 	case AUDDEV_EVT_DEV_RDY:
-		/* update the dev info */
+		/*                     */
 		if (evt_payload->voc_devinfo.dev_type == DIR_RX) {
 			for (i = 0; i < VOC_RX_VOL_ARRAY_NUM; i++) {
 				v->max_rx_vol[i] =
@@ -232,11 +232,11 @@ static void voice_auddev_cb_function(u32 evt_id,
 		else
 			v->dev_rx.volume = evt_payload->
 						voc_vm_info.dev_vm_val.vol;
-		/* send device info */
+		/*                  */
 		voice_cmd_device_info(v);
 		break;
 	case AUDDEV_EVT_REL_PENDING:
-		/* recover the tx mute and rx volume to the default values */
+		/*                                                         */
 		if (v->dev_state == DEV_READY) {
 			if (atomic_read(&v->rel_start_flag)) {
 				atomic_dec(&v->rel_start_flag);
@@ -261,7 +261,7 @@ static void voice_auddev_cb_function(u32 evt_id,
 				mutex_unlock(&voice.voc_lock);
 				wake_up(&v->dev_wait);
 			} else {
-				/* send device change to modem */
+				/*                             */
 				voice_cmd_change();
 				mutex_unlock(&voice.voc_lock);
 				rc = wait_event_interruptible(
@@ -270,7 +270,7 @@ static void voice_auddev_cb_function(u32 evt_id,
 				|| (atomic_read(&v->rel_start_flag) == 1));
 				if (atomic_read(&v->rel_start_flag) == 1)
 					atomic_dec(&v->rel_start_flag);
-				/* clear Rx/Tx to Disable */
+				/*                        */
 				if (evt_payload->voc_devinfo.dev_type == DIR_RX)
 					v->dev_rx.enabled = VOICE_DEV_DISABLED;
 				else
@@ -287,7 +287,7 @@ static void voice_auddev_cb_function(u32 evt_id,
 		}
 		break;
 	case AUDDEV_EVT_END_VOICE:
-		/* recover the tx mute and rx volume to the default values */
+		/*                                                         */
 		v->dev_tx.mute = v->default_mute_val;
 		v->dev_rx.volume = v->default_vol_val;
 
@@ -311,20 +311,20 @@ static void voice_auddev_cb_function(u32 evt_id,
 				mutex_unlock(&voice.voc_lock);
 				wake_up(&v->dev_wait);
 			} else {
-				/* send mute and default volume value to MCAD */
+				/*                                            */
 				voice_cmd_device_info(v);
-				/* send device change to modem */
+				/*                             */
 				voice_cmd_change();
 				mutex_unlock(&voice.voc_lock);
-				/* block to wait for RELEASE_START
-						or CHANGE_START */
+				/*                                
+                      */
 				rc = wait_event_interruptible(
 				v->voc_wait, (v->voc_state == VOICE_CHANGE)
 				|| (atomic_read(&v->chg_start_flag) == 1)
 				|| (atomic_read(&v->rel_start_flag) == 1));
 				if (atomic_read(&v->rel_start_flag) == 1)
 					atomic_dec(&v->rel_start_flag);
-				/* set voice call to END state */
+				/*                             */
 				v->v_call_status = VOICE_CALL_END;
 				v->dev_state = DEV_REL_DONE;
 				wake_up(&v->dev_wait);
@@ -344,10 +344,10 @@ static void voice_auddev_cb_function(u32 evt_id,
 			if (v->voc_state == VOICE_ACQUIRE) {
 				msm_snddev_enable_sidetone(v->dev_rx.dev_id,
 				0);
-				/* send device change to modem */
+				/*                             */
 				voice_cmd_change();
 				mutex_unlock(&voice.voc_lock);
-				/* block to wait for CHANGE_START */
+				/*                                */
 				rc = wait_event_interruptible(
 				v->voc_wait, (v->voc_state == VOICE_CHANGE)
 				|| (atomic_read(&v->chg_start_flag) == 1)
@@ -394,8 +394,8 @@ static void remote_cb_function(void *context, u32 param,
 		complete(&v->complete);
 		break;
 	case EVENT_RELEASE_START:
-		/* If ACQUIRED come in before the RELEASE,
-		* will only services the RELEASE */
+		/*                                        
+                                   */
 		atomic_inc(&v->rel_start_flag);
 		wake_up(&v->voc_wait);
 		wake_up(&v->dev_wait);
@@ -409,9 +409,9 @@ static void remote_cb_function(void *context, u32 param,
 		complete(&v->complete);
 		break;
 	case EVENT_NETWORK_RECONFIG:
-		/* send network change to audio_dev,
-		if sample rate is less than 16k,
-		otherwise, send acquire done */
+		/*                                  
+                                  
+                               */
 		v->voc_event = VOICE_NETWORK_RECONFIG;
 		v->network = ((struct voice_network *)evt_buf)->network_info;
 		complete(&v->complete);
@@ -428,7 +428,7 @@ static int voice_cmd_init(struct voice_data *v)
 	struct voice_init cmd;
 	int err;
 
-	MM_DBG("\n"); /* Macro prints the file name and function */
+	MM_DBG("\n"); /*                                         */
 
 	cmd.hdr.id = CMD_VOICE_INIT;
 	cmd.hdr.data_len = sizeof(struct voice_init) -
@@ -451,9 +451,9 @@ static int voice_cmd_acquire_done(struct voice_data *v)
 	hdr.id = CMD_ACQUIRE_DONE;
 	hdr.data_len = 0;
 
-	MM_INFO("\n"); /* Macro prints the file name and function */
+	MM_INFO("\n"); /*                                         */
 
-	/* Enable HW sidetone if device supports it  */
+	/*                                           */
 	msm_snddev_enable_sidetone(v->dev_rx.dev_id, 1);
 
 	err = dalrpc_fcn_5(VOICE_DALRPC_CMD, v->handle, &hdr,
@@ -488,7 +488,7 @@ static int voice_cmd_device_info(struct voice_data *v)
 		vol = v->min_rx_vol[VOC_NB_INDEX] +
 			((v->max_rx_vol[VOC_NB_INDEX] -
 			v->min_rx_vol[VOC_NB_INDEX]) * v->dev_rx.volume)/100;
-	cmd.rx_volume = (u32)vol; /* in mb */
+	cmd.rx_volume = (u32)vol; /*       */
 	cmd.rx_mute = 0;
 	cmd.tx_mute = v->dev_tx.mute;
 	cmd.rx_sample = v->dev_rx.sample/1000;
@@ -539,9 +539,9 @@ static int voice_thread(void *data)
 				v->voc_event, v->voc_state, v->dev_event);
 		switch (v->voc_event) {
 		case VOICE_ACQUIRE_START:
-			/* check if dev_state = READY */
-			/* if ready, send device_info and acquire_done */
-			/* if not ready, block to wait the dev_state = READY */
+			/*                            */
+			/*                                             */
+			/*                                                   */
 			if ((v->voc_state == VOICE_INIT) ||
 				(v->voc_state == VOICE_RELEASE)) {
 				if (v->dev_state == DEV_READY) {
@@ -598,7 +598,7 @@ static int voice_thread(void *data)
 				msm_snddev_withdraw_freq(0, SNDDEV_CAP_TX,
 					AUDDEV_CLNT_VOC);
 			} else {
-				/* wait for the dev_state = RELEASE */
+				/*                                  */
 				rc = wait_event_interruptible(v->dev_wait,
 					(v->dev_state == DEV_REL_DONE)
 				|| (atomic_read(&v->acq_start_flag) == 1));
@@ -638,7 +638,7 @@ static int voice_thread(void *data)
 				mutex_lock(&voice.voc_lock);
 				msm_snddev_enable_sidetone(v->dev_rx.dev_id,
 				1);
-				/* update voice state */
+				/*                    */
 				v->voc_state = VOICE_ACQUIRE;
 				v->dev_event = 0;
 				mutex_unlock(&voice.voc_lock);
@@ -665,15 +665,15 @@ static int __init voice_init(void)
 {
 	int rc, i;
 	struct voice_data *v = &voice;
-	MM_INFO("\n"); /* Macro prints the file name and function */
+	MM_INFO("\n"); /*                                         */
 
 	mutex_init(&voice.voc_lock);
 	mutex_init(&voice.vol_lock);
 	v->handle = NULL;
 	v->cb_handle = NULL;
 
-	/* set default value */
-	v->default_mute_val = 1;  /* default is mute */
+	/*                   */
+	v->default_mute_val = 1;  /*                 */
 	v->default_vol_val = 0;
 	v->default_sample_val = 8000;
 	for (i = 0; i < VOC_RX_VOL_ARRAY_NUM; i++) {
@@ -682,7 +682,7 @@ static int __init voice_init(void)
 	}
 	v->network = NETWORK_GSM;
 
-	/* initialize dev_rx and dev_tx */
+	/*                              */
 	memset(&v->dev_tx, 0, sizeof(struct device_data));
 	memset(&v->dev_rx, 0, sizeof(struct device_data));
 	v->dev_rx.volume = v->default_vol_val;
@@ -698,7 +698,7 @@ static int __init voice_init(void)
 	init_waitqueue_head(&v->dev_wait);
 	init_waitqueue_head(&v->voc_wait);
 
-	 /* get device handle */
+	 /*                   */
 	rc = daldevice_attach(VOICE_DALRPC_DEVICEID,
 				VOICE_DALRPC_PORT_NAME,
 				VOICE_DALRPC_CPU,
@@ -708,14 +708,14 @@ static int __init voice_init(void)
 		goto done;
 	}
 
-	/* Allocate the callback handle */
+	/*                              */
 	v->cb_handle = dalrpc_alloc_cb(v->handle, remote_cb_function, v);
 	if (v->cb_handle == NULL) {
 		MM_ERR("Allocate Callback failure\n");
 		goto err;
 	}
 
-	/* setup the callback */
+	/*                    */
 	rc = voice_cmd_init(v);
 	if (rc)
 		goto err1;
@@ -729,11 +729,11 @@ static int __init voice_init(void)
 			AUDDEV_EVT_FREQ_CHG;
 
 	MM_DBG(" to register call back \n");
-	/* register callback to auddev */
+	/*                             */
 	auddev_register_evt_listner(v->device_events, AUDDEV_CLNT_VOC,
 				0, voice_auddev_cb_function, v);
 
-	/* create and start thread */
+	/*                         */
 	v->task = kthread_run(voice_thread, v, "voice");
 	if (IS_ERR(v->task)) {
 		rc = PTR_ERR(v->task);

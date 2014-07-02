@@ -23,9 +23,9 @@
 #include <linux/slab.h>
 #include "vx6953.h"
 
-/*=============================================================
-	SENSOR REGISTER DEFINES
-==============================================================*/
+/*                                                             
+                        
+                                                              */
 
 #define REG_GROUPED_PARAMETER_HOLD			0x0104
 #define GROUPED_PARAMETER_HOLD_OFF			0x00
@@ -33,13 +33,13 @@
 #define REG_MODE_SELECT					0x0100
 #define MODE_SELECT_STANDBY_MODE			0x00
 #define MODE_SELECT_STREAM				0x01
-/* Integration Time */
+/*                  */
 #define REG_COARSE_INTEGRATION_TIME_HI			0x0202
 #define REG_COARSE_INTEGRATION_TIME_LO			0x0203
-/* Gain */
+/*      */
 #define REG_ANALOGUE_GAIN_CODE_GLOBAL_HI		0x0204
 #define REG_ANALOGUE_GAIN_CODE_GLOBAL_LO		0x0205
-/* Digital Gain */
+/*              */
 #define REG_DIGITAL_GAIN_GREEN_R_HI			0x020E
 #define REG_DIGITAL_GAIN_GREEN_R_LO			0x020F
 #define REG_DIGITAL_GAIN_RED_HI				0x0210
@@ -48,10 +48,10 @@
 #define REG_DIGITAL_GAIN_BLUE_LO			0x0213
 #define REG_DIGITAL_GAIN_GREEN_B_HI			0x0214
 #define REG_DIGITAL_GAIN_GREEN_B_LO			0x0215
-/* output bits setting */
+/*                     */
 #define REG_0x0112					0x0112
 #define REG_0x0113					0x0113
-/* PLL registers */
+/*               */
 #define REG_VT_PIX_CLK_DIV				0x0301
 #define REG_PRE_PLL_CLK_DIV				0x0305
 #define REG_PLL_MULTIPLIER				0x0307
@@ -117,14 +117,14 @@
 #define REG_0x0b08					0x0b08
 #define REG_0x0b09					0x0b09
 #define REG_0x3640					0x3640
-/* Test Pattern */
+/*              */
 #define REG_TEST_PATTERN_MODE				0x0601
 
-/*============================================================================
-							 TYPE DECLARATIONS
-============================================================================*/
+/*                                                                            
+                         
+                                                                            */
 
-/* 16bit address - 8 bit context register structure */
+/*                                                  */
 #define	VX6953_STM5M0EDOF_OFFSET	9
 #define	Q8		0x00000100
 #define	Q10		0x00000400
@@ -132,28 +132,28 @@
 #define	VX6953_STM5M0EDOF_DEFAULT_MASTER_CLK_RATE	24000000
 #define	VX6953_STM5M0EDOF_OP_PIXEL_CLOCK_RATE	79800000
 #define	VX6953_STM5M0EDOF_VT_PIXEL_CLOCK_RATE	88670000
-/* Full	Size */
+/*           */
 #define	VX6953_FULL_SIZE_WIDTH	2608
 #define	VX6953_FULL_SIZE_HEIGHT		1960
 #define	VX6953_FULL_SIZE_DUMMY_PIXELS	1
 #define	VX6953_FULL_SIZE_DUMMY_LINES	0
-/* Quarter Size	*/
+/*              */
 #define	VX6953_QTR_SIZE_WIDTH	1304
 #define	VX6953_QTR_SIZE_HEIGHT		980
 #define	VX6953_QTR_SIZE_DUMMY_PIXELS	1
 #define	VX6953_QTR_SIZE_DUMMY_LINES		0
-/* Blanking	as measured	on the scope */
-/* Full	Size */
+/*                                   */
+/*           */
 #define	VX6953_HRZ_FULL_BLK_PIXELS	348
 #define	VX6953_VER_FULL_BLK_LINES	40
-/* Quarter Size	*/
+/*              */
 #define	VX6953_HRZ_QTR_BLK_PIXELS	1628
 #define	VX6953_VER_QTR_BLK_LINES	28
 #define	MAX_LINE_LENGTH_PCK		8190
 #define	MAX_FRAME_LENGTH_LINES	16383
-#define	VX6953_REVISION_NUMBER_CUT2	0x10/*revision number	for	Cut2.0*/
-#define	VX6953_REVISION_NUMBER_CUT3	0x20/*revision number	for	Cut3.0*/
-/* FIXME: Changes from here */
+#define	VX6953_REVISION_NUMBER_CUT2	0x10/*                          */
+#define	VX6953_REVISION_NUMBER_CUT3	0x20/*                          */
+/*                          */
 struct vx6953_work_t {
 	struct work_struct work;
 };
@@ -165,8 +165,8 @@ struct vx6953_ctrl_t {
 	const struct  msm_camera_sensor_info *sensordata;
 
 	uint32_t sensormode;
-	uint32_t fps_divider;   	/* init to 1 * 0x00000400 */
-	uint32_t pict_fps_divider;  /* init to 1 * 0x00000400 */
+	uint32_t fps_divider;   	/*                        */
+	uint32_t pict_fps_divider;  /*                        */
 	uint16_t fps;
 
 	int16_t curr_lens_pos;
@@ -194,26 +194,26 @@ static struct vx6953_ctrl_t *vx6953_ctrl;
 static DECLARE_WAIT_QUEUE_HEAD(vx6953_wait_queue);
 DEFINE_MUTEX(vx6953_mut);
 static struct vx6953_i2c_reg_conf patch_tbl_cut2[] = {
-	{0xFB94, 0},	/*intialise Data Xfer Status reg*/
-	{0xFB95, 0},	/*gain 1	  (0x00)*/
-	{0xFB96, 0},	/*gain 1.07   (0x10)*/
-	{0xFB97, 0},	/*gain 1.14   (0x20)*/
-	{0xFB98, 0},	/*gain 1.23   (0x30)*/
-	{0xFB99, 0},	/*gain 1.33   (0x40)*/
-	{0xFB9A, 0},	/*gain 1.45   (0x50)*/
-	{0xFB9B, 0},	/*gain 1.6    (0x60)*/
-	{0xFB9C, 0},	/*gain 1.78   (0x70)*/
-	{0xFB9D, 2},	/*gain 2	  (0x80)*/
-	{0xFB9E, 2},	/*gain 2.29   (0x90)*/
-	{0xFB9F, 3},	/*gain 2.67   (0xA0)*/
-	{0xFBA0, 3},	/*gain 3.2    (0xB0)*/
-	{0xFBA1, 4},	/*gain 4	  (0xC0)*/
-	{0xFBA2, 7},	/*gain 5.33   (0xD0)*/
-	{0xFBA3, 10},	/*gain 8	  (0xE0)*/
-	{0xFBA4, 11},	/*gain 9.14   (0xE4)*/
-	{0xFBA5, 13},	/*gain 10.67  (0xE8)*/
-	{0xFBA6, 15},	/*gain 12.8   (0xEC)*/
-	{0xFBA7, 19},	/*gain 16     (0xF0)*/
+	{0xFB94, 0},	/*                              */
+	{0xFB95, 0},	/*               */
+	{0xFB96, 0},	/*                  */
+	{0xFB97, 0},	/*                  */
+	{0xFB98, 0},	/*                  */
+	{0xFB99, 0},	/*                  */
+	{0xFB9A, 0},	/*                  */
+	{0xFB9B, 0},	/*                  */
+	{0xFB9C, 0},	/*                  */
+	{0xFB9D, 2},	/*               */
+	{0xFB9E, 2},	/*                  */
+	{0xFB9F, 3},	/*                  */
+	{0xFBA0, 3},	/*                  */
+	{0xFBA1, 4},	/*               */
+	{0xFBA2, 7},	/*                  */
+	{0xFBA3, 10},	/*               */
+	{0xFBA4, 11},	/*                  */
+	{0xFBA5, 13},	/*                  */
+	{0xFBA6, 15},	/*                  */
+	{0xFBA7, 19},	/*                  */
 	{0xF800, 0x12},
 	{0xF801, 0x06},
 	{0xF802, 0xf7},
@@ -668,18 +668,18 @@ static struct vx6953_i2c_reg_conf patch_tbl_cut2[] = {
 	{0xF9C3, 0x0e},
 	{0xF9C4, 0x79},
 	{0xF9C5, 0x22},
-	/* Offsets:*/
-	{0x35C6, 0x00},/* FIDDLEDARKCAL*/
+	/*         */
+	{0x35C6, 0x00},/*              */
 	{0x35C7, 0x00},
-	{0x35C8, 0x01},/*STOREDISTANCEATSTOPSTREAMING*/
+	{0x35C8, 0x01},/*                            */
 	{0x35C9, 0x20},
-	{0x35CA, 0x01},/*BRUCEFIX*/
+	{0x35CA, 0x01},/*        */
 	{0x35CB, 0x62},
-	{0x35CC, 0x01},/*FIXDATAXFERSTATUSREG*/
+	{0x35CC, 0x01},/*                    */
 	{0x35CD, 0x87},
-	{0x35CE, 0x01},/*FOCUSDISTANCEUPDATE*/
+	{0x35CE, 0x01},/*                   */
 	{0x35CF, 0xA6},
-	{0x35D0, 0x01},/*SKIPEDOFRESET*/
+	{0x35D0, 0x01},/*             */
 	{0x35D1, 0xC2},
 	{0x35D2, 0x00},
 	{0x35D3, 0xFB},
@@ -697,17 +697,17 @@ static struct vx6953_i2c_reg_conf patch_tbl_cut2[] = {
 	{0x35DF, 0xFB},
 	{0x35E0, 0x00},
 	{0x35E1, 0x94},
-	{0x35E6, 0x18},/* FIDDLEDARKCAL*/
+	{0x35E6, 0x18},/*              */
 	{0x35E7, 0x2F},
-	{0x35E8, 0x03},/* STOREDISTANCEATSTOPSTREAMING*/
+	{0x35E8, 0x03},/*                             */
 	{0x35E9, 0x93},
-	{0x35EA, 0x18},/* BRUCEFIX*/
+	{0x35EA, 0x18},/*         */
 	{0x35EB, 0x99},
-	{0x35EC, 0x00},/* FIXDATAXFERSTATUSREG*/
+	{0x35EC, 0x00},/*                     */
 	{0x35ED, 0xA3},
-	{0x35EE, 0x21},/* FOCUSDISTANCEUPDATE*/
+	{0x35EE, 0x21},/*                    */
 	{0x35EF, 0x5B},
-	{0x35F0, 0x0E},/* SKIPEDOFRESET*/
+	{0x35F0, 0x0E},/*              */
 	{0x35F1, 0x74},
 	{0x35F2, 0x04},
 	{0x35F3, 0x64},
@@ -725,12 +725,12 @@ static struct vx6953_i2c_reg_conf patch_tbl_cut2[] = {
 	{0x35FF, 0xEF},
 	{0x3600, 0x04},
 	{0x3601, 0xF0},
-	/*Jump/Data:*/
-	{0x35C2, 0x3F},/* Jump Reg*/
-	{0x35C3, 0xFF},/* Jump Reg*/
-	{0x35C4, 0x3F},/* Data Reg*/
-	{0x35C5, 0xC0},/* Data Reg*/
-	{0x35C0, 0x01},/* Enable*/
+	/*          */
+	{0x35C2, 0x3F},/*         */
+	{0x35C3, 0xFF},/*         */
+	{0x35C4, 0x3F},/*         */
+	{0x35C5, 0xC0},/*         */
+	{0x35C0, 0x01},/*       */
 
 };
 
@@ -1977,13 +1977,13 @@ static short int LSC_CorrectionForCast[cast_MAX][NUM_LSC_CAST_REGS] = {
 };
 
 static unsigned short LSC_CastRegs[] = {
-	0xFB7E,			/* H   */
-	0xFB3C,			/* U30 */
-	0xFAFA,			/* CW  */
-	0xFAB8			/* D65 */
+	0xFB7E,			/*     */
+	0xFB3C,			/*     */
+	0xFAFA,			/*     */
+	0xFAB8			/*     */
 };
 
-/*=============================================================*/
+/*                                                             */
 
 static int vx6953_i2c_rxdata(unsigned short saddr,
 	unsigned char *rxdata, int length)
@@ -2115,16 +2115,16 @@ static int32_t vx6953_i2c_write_w_table(struct vx6953_i2c_reg_conf const
 
 static void vx6953_get_pict_fps(uint16_t fps, uint16_t *pfps)
 {
-	/* input fps is preview fps in Q8 format */
+	/*                                       */
 	uint16_t preview_frame_length_lines, snapshot_frame_length_lines;
 	uint16_t preview_line_length_pck, snapshot_line_length_pck;
 	uint32_t divider, d1, d2;
-	/* Total frame_length_lines and line_length_pck for preview */
+	/*                                                          */
 	preview_frame_length_lines = VX6953_QTR_SIZE_HEIGHT +
 		VX6953_VER_QTR_BLK_LINES;
 	preview_line_length_pck = VX6953_QTR_SIZE_WIDTH +
 		VX6953_HRZ_QTR_BLK_PIXELS;
-	/* Total frame_length_lines and line_length_pck for snapshot */
+	/*                                                           */
 	snapshot_frame_length_lines = VX6953_FULL_SIZE_HEIGHT +
 		VX6953_VER_FULL_BLK_LINES;
 	snapshot_line_length_pck = VX6953_FULL_SIZE_WIDTH +
@@ -2134,10 +2134,10 @@ static void vx6953_get_pict_fps(uint16_t fps, uint16_t *pfps)
 	d2 = preview_line_length_pck * 0x00000400/
 		snapshot_line_length_pck;
 	divider = d1 * d2 / 0x400;
-	/*Verify PCLK settings and frame sizes.*/
+	/*                                     */
 	*pfps = (uint16_t) (fps * divider / 0x400);
-	/* 2 is the ratio of no.of snapshot channels
-	to number of preview channels */
+	/*                                          
+                               */
 
 }
 
@@ -2254,7 +2254,7 @@ static int32_t vx6953_write_exp_gain(uint16_t gain, uint32_t line)
 	vx6953_i2c_write_b_sensor(REG_FRAME_LENGTH_LINES_LO,
 		frame_length_lines_lo);
 
-	/* update analogue gain registers */
+	/*                                */
 	gain_hi = (uint8_t) ((gain & 0xFF00) >> 8);
 	gain_lo = (uint8_t) (gain & 0x00FF);
 	vx6953_i2c_write_b_sensor(REG_ANALOGUE_GAIN_CODE_GLOBAL_LO,
@@ -2265,7 +2265,7 @@ static int32_t vx6953_write_exp_gain(uint16_t gain, uint32_t line)
 	vx6953_i2c_write_b_sensor(REG_DIGITAL_GAIN_GREEN_B_LO, gain_hi);
 	CDBG("%s, gain_hi 0x%x, gain_lo 0x%x\n", __func__,
 		gain_hi, gain_lo);
-	/* update line count registers */
+	/*                             */
 	intg_time_hi = (uint8_t) (((uint16_t)line & 0xFF00) >> 8);
 	intg_time_lo = (uint8_t) ((uint16_t)line & 0x00FF);
 	vx6953_i2c_write_b_sensor(REG_COARSE_INTEGRATION_TIME_HI,
@@ -2283,7 +2283,7 @@ static int32_t vx6953_set_pict_exp_gain(uint16_t gain, uint32_t line)
 	int32_t rc = 0;
 	rc = vx6953_write_exp_gain(gain, line);
 	return rc;
-} /* endof vx6953_set_pict_exp_gain*/
+} /*                               */
 
 static int32_t vx6953_move_focus(int direction,
 	int32_t num_steps)
@@ -2303,10 +2303,10 @@ static int32_t vx6953_test(enum vx6953_test_mode_t mo)
 	if (mo == TEST_OFF)
 		return rc;
 	else {
-		/* REG_0x30D8[4] is TESBYPEN: 0: Normal Operation,
-		1: Bypass Signal Processing
-		REG_0x30D8[5] is EBDMASK: 0:
-		Output Embedded data, 1: No output embedded data */
+		/*                                                
+                             
+                              
+                                                   */
 		if (vx6953_i2c_write_b_sensor(REG_TEST_PATTERN_MODE,
 			(uint8_t) mo) < 0) {
 			return rc;
@@ -2319,17 +2319,17 @@ static int vx6953_enable_edof(enum edof_mode_t edof_mode)
 {
 	int rc = 0;
 	if (edof_mode == VX6953_EDOF_ESTIMATION) {
-		/* EDof Estimation mode for preview */
+		/*                                  */
 		if (vx6953_i2c_write_b_sensor(REG_0x0b80, 0x02) < 0)
 			return rc;
 		CDBG("VX6953_EDOF_ESTIMATION");
 	} else if (edof_mode == VX6953_EDOF_APPLICATION) {
-		/* EDof Application mode for Capture */
+		/*                                   */
 		if (vx6953_i2c_write_b_sensor(REG_0x0b80, 0x01) < 0)
 			return rc;
 		CDBG("VX6953_EDOF_APPLICATION");
 	} else {
-		/* EDOF disabled */
+		/*               */
 		if (vx6953_i2c_write_b_sensor(REG_0x0b80, 0x00) < 0)
 			return rc;
 		CDBG("VX6953_EDOF_DISABLE");
@@ -2464,9 +2464,9 @@ static int32_t vx6953_sensor_setting(int update_type, int rt)
 				{0x338e, 0x08},
 				{0x338f, 0x00},
 			};
-			/* reset fps_divider */
+			/*                   */
 			vx6953_ctrl->fps = 30 * Q8;
-			/* stop streaming */
+			/*                */
 
 			count = 0;
 			CDBG("Init vx6953_sensor_setting standby\n");
@@ -2612,7 +2612,7 @@ static int32_t vx6953_sensor_setting(int update_type, int rt)
 				{0x3140, 0x01},
 				{REG_0x3640, 0x00},
 			};
-			/* stop streaming */
+			/*                */
 
 			if (vx6953_i2c_write_b_sensor(REG_MODE_SELECT,
 				MODE_SELECT_STANDBY_MODE) < 0)
@@ -2654,7 +2654,7 @@ static int32_t vx6953_sensor_setting(int update_type, int rt)
 			vx6953_i2c_write_b_sensor(REG_GROUPED_PARAMETER_HOLD,
 			GROUPED_PARAMETER_HOLD_OFF);
 
-			/* Start sensor streaming */
+			/*                        */
 			if (vx6953_i2c_write_b_sensor(REG_MODE_SELECT,
 				MODE_SELECT_STREAM) < 0)
 				return rc;
@@ -2706,7 +2706,7 @@ static int32_t vx6953_sensor_setting(int update_type, int rt)
 				analogue_gain_code_global},
 			{REG_0x3030,
 				vx6953_regs.reg_pat_init[0].reg_0x3030},
-			/* 953 specific registers */
+			/*                        */
 			{REG_0x0111,
 				vx6953_regs.reg_pat_init[0].reg_0x0111},
 			{REG_0x0b00,
@@ -2727,28 +2727,28 @@ static int32_t vx6953_sensor_setting(int update_type, int rt)
 				vx6953_regs.reg_pat_init[0].reg_0x317f},
 			{REG_0x3400,
 				vx6953_regs.reg_pat_init[0].reg_0x3400},
-			/* DEFCOR settings */
-			/*Single Defect Correction Weight DISABLE*/
+			/*                 */
+			/*                                       */
 			{0x0b06,
 				vx6953_regs.reg_pat_init[0].reg_0x0b06},
-			/*Single_defect_correct_weight = auto*/
+			/*                                   */
 			{0x0b07,
 				vx6953_regs.reg_pat_init[0].reg_0x0b07},
-			/*Dynamic couplet correction ENABLED*/
+			/*                                  */
 			{0x0b08,
 				vx6953_regs.reg_pat_init[0].reg_0x0b08},
-			/*Dynamic couplet correction weight*/
+			/*                                 */
 			{0x0b09,
 				vx6953_regs.reg_pat_init[0].reg_0x0b09},
-			/* Clock Setup */
-			/* Tell sensor ext clk is 24MHz*/
+			/*             */
+			/*                             */
 			{0x0136,
 				vx6953_regs.reg_pat_init[0].reg_0x0136},
 			{0x0137,
 				vx6953_regs.reg_pat_init[0].reg_0x0137},
-			/* The white balance gains must be written
-			to the sensor every frame. */
-			/* Edof */
+			/*                                        
+                              */
+			/*      */
 			{REG_0x0b83,
 				vx6953_regs.reg_pat_init[0].reg_0x0b83},
 			{REG_0x0b84,
@@ -2761,7 +2761,7 @@ static int32_t vx6953_sensor_setting(int update_type, int rt)
 				vx6953_regs.reg_pat_init[0].reg_0x0b89},
 			{REG_0x0b8a,
 				vx6953_regs.reg_pat_init[0].reg_0x0b8a},
-			/* Mode specific regieters */
+			/*                         */
 			{REG_FRAME_LENGTH_LINES_HI,
 				vx6953_regs.reg_pat[rt].
 				frame_length_lines_hi},
@@ -2792,9 +2792,9 @@ static int32_t vx6953_sensor_setting(int update_type, int rt)
 				vx6953_regs.reg_pat[rt].reg_0x3042},
 			{REG_0x3045,
 				vx6953_regs.reg_pat[rt].reg_0x3045},
-			/*EDOF: Estimation settings for Preview mode
-			Application settings for capture mode
-			(standard settings - Not tuned) */
+			/*                                          
+                                        
+                                   */
 			{REG_0x0b80,
 				vx6953_regs.reg_pat[rt].reg_0x0b80},
 			{REG_0x0900,
@@ -2807,7 +2807,7 @@ static int32_t vx6953_sensor_setting(int update_type, int rt)
 				vx6953_regs.reg_pat[rt].reg_0x0383},
 			{REG_0x0387,
 				vx6953_regs.reg_pat[rt].reg_0x0387},
-			/* Change output size / frame rate */
+			/*                                 */
 			{REG_0x034c,
 				vx6953_regs.reg_pat[rt].reg_0x034c},
 			{REG_0x034d,
@@ -2825,11 +2825,11 @@ static int32_t vx6953_sensor_setting(int update_type, int rt)
 			{REG_0x1719,
 				vx6953_regs.reg_pat[rt].reg_0x1719},
 			};
-						/* reset fps_divider */
+						/*                   */
 			vx6953_ctrl->fps = 30 * Q8;
-			/* stop streaming */
+			/*                */
 
-			/* Reset everything first */
+			/*                        */
 			if (vx6953_i2c_write_b_sensor(0x103, 0x01) < 0) {
 				CDBG("S/W reset failed\n");
 				return rc;
@@ -2842,7 +2842,7 @@ static int32_t vx6953_sensor_setting(int update_type, int rt)
 			if (vx6953_i2c_write_b_sensor(REG_MODE_SELECT,
 				MODE_SELECT_STANDBY_MODE) < 0)
 				return rc;
-				/*vx6953_stm5m0edof_delay_msecs_stdby*/
+				/*                                   */
 			msleep(vx6953_stm5m0edof_delay_msecs_stdby);
 			vx6953_patch_for_cut2();
 			rc = vx6953_i2c_write_w_table(&init_tbl[0],
@@ -2882,7 +2882,7 @@ static int32_t vx6953_sensor_setting(int update_type, int rt)
 				analogue_gain_code_global},
 			{REG_0x3030,
 				vx6953_regs.reg_pat_init[0].reg_0x3030},
-			/* 953 specific registers */
+			/*                        */
 			{REG_0x0111,
 				vx6953_regs.reg_pat_init[0].reg_0x0111},
 			{REG_0x0b00,
@@ -2905,24 +2905,24 @@ static int32_t vx6953_sensor_setting(int update_type, int rt)
 				vx6953_regs.reg_pat_init[0].reg_0x3400},
 			{0x0b06,
 				vx6953_regs.reg_pat_init[0].reg_0x0b06},
-			/*Single_defect_correct_weight = auto*/
+			/*                                   */
 			{0x0b07,
 				vx6953_regs.reg_pat_init[0].reg_0x0b07},
-			/*Dynamic couplet correction ENABLED*/
+			/*                                  */
 			{0x0b08,
 				vx6953_regs.reg_pat_init[0].reg_0x0b08},
-			/*Dynamic couplet correction weight*/
+			/*                                 */
 			{0x0b09,
 				vx6953_regs.reg_pat_init[0].reg_0x0b09},
-			/* Clock Setup */
-			/* Tell sensor ext clk is 24MHz*/
+			/*             */
+			/*                             */
 			{0x0136,
 				vx6953_regs.reg_pat_init[0].reg_0x0136},
 			{0x0137,
 				vx6953_regs.reg_pat_init[0].reg_0x0137},
-			/* The white balance gains must be written
-			to the sensor every frame. */
-			/* Edof */
+			/*                                        
+                              */
+			/*      */
 			{REG_0x0b83,
 				vx6953_regs.reg_pat_init[0].reg_0x0b83},
 			{REG_0x0b84,
@@ -2935,7 +2935,7 @@ static int32_t vx6953_sensor_setting(int update_type, int rt)
 				vx6953_regs.reg_pat_init[0].reg_0x0b89},
 			{REG_0x0b8a,
 				vx6953_regs.reg_pat_init[0].reg_0x0b8a},
-			/* Mode specific regieters */
+			/*                         */
 			{REG_FRAME_LENGTH_LINES_HI,
 				vx6953_regs.reg_pat[rt].
 				frame_length_lines_hi},
@@ -2966,9 +2966,9 @@ static int32_t vx6953_sensor_setting(int update_type, int rt)
 				vx6953_regs.reg_pat[rt].reg_0x3042},
 			{REG_0x3045,
 				vx6953_regs.reg_pat[rt].reg_0x3045},
-			/*EDOF: Estimation settings for Preview mode
-			Application settings for capture mode
-			(standard settings - Not tuned) */
+			/*                                          
+                                        
+                                   */
 			{REG_0x0b80,
 				vx6953_regs.reg_pat[rt].reg_0x0b80},
 			{REG_0x0900,
@@ -2981,7 +2981,7 @@ static int32_t vx6953_sensor_setting(int update_type, int rt)
 				vx6953_regs.reg_pat[rt].reg_0x0383},
 			{REG_0x0387,
 				vx6953_regs.reg_pat[rt].reg_0x0387},
-			/* Change output size / frame rate */
+			/*                                 */
 			{REG_0x034c,
 				vx6953_regs.reg_pat[rt].reg_0x034c},
 			{REG_0x034d,
@@ -3016,7 +3016,7 @@ static int32_t vx6953_sensor_setting(int update_type, int rt)
 			{REG_OP_PIX_CLK_DIV,
 				vx6953_regs.reg_pat_init[0].
 				op_pix_clk_div},
-		/* Mode specific regieters */
+		/*                         */
 			{REG_FRAME_LENGTH_LINES_HI,
 				vx6953_regs.reg_pat[rt].frame_length_lines_hi},
 			{REG_FRAME_LENGTH_LINES_LO,
@@ -3034,31 +3034,31 @@ static int32_t vx6953_sensor_setting(int update_type, int rt)
 			{REG_0x3041, vx6953_regs.reg_pat[rt].reg_0x3041},
 			{0x3042, vx6953_regs.reg_pat[rt].reg_0x3042},
 			{REG_0x3045, vx6953_regs.reg_pat[rt].reg_0x3045},
-			/*EDOF: Estimation settings for Preview mode
-			Application settings for capture
-			mode(standard settings - Not tuned) */
+			/*                                          
+                                   
+                                       */
 			{REG_0x0b80, vx6953_regs.reg_pat[rt].reg_0x0b80},
 			{REG_0x0900, vx6953_regs.reg_pat[rt].reg_0x0900},
 			{REG_0x0901, vx6953_regs.reg_pat[rt].reg_0x0901},
 			{REG_0x0902, vx6953_regs.reg_pat[rt].reg_0x0902},
 			{REG_0x0383, vx6953_regs.reg_pat[rt].reg_0x0383},
 			{REG_0x0387, vx6953_regs.reg_pat[rt].reg_0x0387},
-			/* Change output size / frame rate */
+			/*                                 */
 			{REG_0x034c, vx6953_regs.reg_pat[rt].reg_0x034c},
 			{REG_0x034d, vx6953_regs.reg_pat[rt].reg_0x034d},
 			{REG_0x034e, vx6953_regs.reg_pat[rt].reg_0x034e},
 			{REG_0x034f, vx6953_regs.reg_pat[rt].reg_0x034f},
-			/*{0x200, vx6953_regs.reg_pat[rt].reg_0x0200},
-			{0x201, vx6953_regs.reg_pat[rt].reg_0x0201},*/
+			/*                                            
+                                               */
 			{REG_0x1716, vx6953_regs.reg_pat[rt].reg_0x1716},
 			{REG_0x1717, vx6953_regs.reg_pat[rt].reg_0x1717},
 			{REG_0x1718, vx6953_regs.reg_pat[rt].reg_0x1718},
 			{REG_0x1719, vx6953_regs.reg_pat[rt].reg_0x1719},
 			};
-			/* stop streaming */
+			/*                */
 			msleep(5);
 
-			/* Reset everything first */
+			/*                        */
 			if (vx6953_i2c_write_b_sensor(0x103, 0x01) < 0) {
 				CDBG("S/W reset failed\n");
 				return rc;
@@ -3070,7 +3070,7 @@ static int32_t vx6953_sensor_setting(int update_type, int rt)
 			if (vx6953_i2c_write_b_sensor(REG_MODE_SELECT,
 				MODE_SELECT_STANDBY_MODE) < 0)
 				return rc;
-			/*vx6953_stm5m0edof_delay_msecs_stdby*/
+			/*                                   */
 			msleep(vx6953_stm5m0edof_delay_msecs_stdby);
 
 
@@ -3100,7 +3100,7 @@ static int32_t vx6953_sensor_setting(int update_type, int rt)
 
 			msleep(vx6953_stm5m0edof_delay_msecs_stdby);
 
-			/* Start sensor streaming */
+			/*                        */
 			if (vx6953_i2c_write_b_sensor(REG_MODE_SELECT,
 				MODE_SELECT_STREAM) < 0)
 				return rc;
@@ -3130,7 +3130,7 @@ static int32_t vx6953_video_config(int mode)
 
 	int32_t	rc = 0;
 	int	rt;
-	/* change sensor resolution	if needed */
+	/*                                    */
 	if (vx6953_ctrl->curr_res != vx6953_ctrl->prev_res) {
 		if (vx6953_ctrl->prev_res == QTR_SIZE) {
 			rt = RES_PREVIEW;
@@ -3163,7 +3163,7 @@ static int32_t vx6953_snapshot_config(int mode)
 {
 	int32_t rc = 0;
 	int rt;
-	/*change sensor resolution if needed */
+	/*                                   */
 	if (vx6953_ctrl->curr_res != vx6953_ctrl->pict_res) {
 		if (vx6953_ctrl->pict_res == QTR_SIZE) {
 			rt = RES_PREVIEW;
@@ -3186,13 +3186,13 @@ static int32_t vx6953_snapshot_config(int mode)
 	vx6953_ctrl->curr_res = vx6953_ctrl->pict_res;
 	vx6953_ctrl->sensormode = mode;
 	return rc;
-} /*end of vx6953_snapshot_config*/
+} /*                             */
 
 static int32_t vx6953_raw_snapshot_config(int mode)
 {
 	int32_t rc = 0;
 	int rt;
-	/* change sensor resolution if needed */
+	/*                                    */
 	if (vx6953_ctrl->curr_res != vx6953_ctrl->pict_res) {
 		if (vx6953_ctrl->pict_res == QTR_SIZE) {
 			rt = RES_PREVIEW;
@@ -3214,7 +3214,7 @@ static int32_t vx6953_raw_snapshot_config(int mode)
 	vx6953_ctrl->curr_res = vx6953_ctrl->pict_res;
 	vx6953_ctrl->sensormode = mode;
 	return rc;
-} /*end of vx6953_raw_snapshot_config*/
+} /*                                 */
 static int32_t vx6953_set_sensor_mode(int mode,
 	int res)
 {
@@ -3267,7 +3267,7 @@ static int vx6953_probe_init_sensor(const struct msm_camera_sensor_info *data)
 	}
 	msleep(20);
 	CDBG(" vx6953_probe_init_sensor is called\n");
-	/* 3. Read sensor Model ID: */
+	/*                          */
 	rc = vx6953_i2c_read(0x0000, &chipidh, 1);
 	if (rc < 0) {
 		CDBG(" vx6953_probe_init_sensor 3\n");
@@ -3279,7 +3279,7 @@ static int vx6953_probe_init_sensor(const struct msm_camera_sensor_info *data)
 		goto init_probe_fail;
 	}
 	CDBG("vx6953 model_id = 0x%x  0x%x\n", chipidh, chipidl);
-	/* 4. Compare sensor ID to VX6953 ID: */
+	/*                                    */
 	if (chipidh != 0x03 || chipidl != 0xB9) {
 		rc = -ENODEV;
 		CDBG("vx6953_probe_init_sensor fail chip id doesnot match\n");
@@ -3293,7 +3293,7 @@ init_probe_done:
 	CDBG(" vx6953_probe_init_sensor finishes\n");
 	return rc;
 	}
-/* camsensor_iu060f_vx6953_reset */
+/*                               */
 int vx6953_sensor_open_init(const struct msm_camera_sensor_info *data)
 {
 	unsigned short revision_number;
@@ -3322,7 +3322,7 @@ int vx6953_sensor_open_init(const struct msm_camera_sensor_info *data)
 		return rc;
 	}
 	CDBG("%s: %d\n", __func__, __LINE__);
-	/* enable mclk first */
+	/*                   */
 	msm_camio_clk_rate_set(VX6953_STM5M0EDOF_DEFAULT_MASTER_CLK_RATE);
 	CDBG("%s: %d\n", __func__, __LINE__);
 	rc = vx6953_probe_init_sensor(data);
@@ -3342,7 +3342,7 @@ int vx6953_sensor_open_init(const struct msm_camera_sensor_info *data)
 	} else if (revision_number == VX6953_REVISION_NUMBER_CUT2) {
 		vx6953_ctrl->sensor_type = VX6953_STM5M0EDOF_CUT_2;
 		CDBG("VX6953 EDof Cut 2.0 sensor\n ");
-	} else {/* Cut1.0 reads 0x00 for register 0x0018*/
+	} else {/*                                      */
 		vx6953_ctrl->sensor_type = VX6953_STM5M0EDOF_CUT_1;
 		CDBG("VX6953 EDof Cut 1.0 sensor\n ");
 	}
@@ -3365,11 +3365,11 @@ init_fail:
 init_done:
 	CDBG("init_done\n");
 	return rc;
-} /*endof vx6953_sensor_open_init*/
+} /*                             */
 
 static int vx6953_init_client(struct i2c_client *client)
 {
-	/* Initialize the MSM_CAMI2C Chip */
+	/*                                */
 	init_waitqueue_head(&vx6953_wait_queue);
 	return 0;
 }
@@ -3418,17 +3418,17 @@ static int vx6953_send_wb_info(struct wb_info_cfg *wb)
 	int rc = 0;
 	int i = 0;
 
-	/* red_gain */
+	/*          */
 	temp[2] = wb->red_gain >> 8;
 	temp[3] = wb->red_gain & 0xFF;
 
-	/* green_gain */
+	/*            */
 	temp[0] = wb->green_gain >> 8;
 	temp[1] = wb->green_gain & 0xFF;
 	temp[6] = temp[0];
 	temp[7] = temp[1];
 
-	/* blue_gain */
+	/*           */
 	temp[4] = wb->blue_gain >> 8;
 	temp[5] = wb->blue_gain & 0xFF;
 	rc = vx6953_i2c_write_seq_sensor(0x0B8E, &temp[0], 8);
@@ -3442,7 +3442,7 @@ static int vx6953_send_wb_info(struct wb_info_cfg *wb)
 	if (rc < 0)
 		return rc;
 	return rc;
-} /*end of vx6953_snapshot_config*/
+} /*                             */
 
 static int __exit vx6953_remove(struct i2c_client *client)
 {

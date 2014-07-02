@@ -70,21 +70,21 @@ static long q6_aac_in_ioctl(struct file *file,
 		memset(&rpc, 0, sizeof(rpc));
 
 		rpc.format_block.binary.format = ADSP_AUDIO_FORMAT_MPEG4_AAC;
-		/* only 48k sample rate is supported */
+		/*                                   */
 		sample_rate = 3;
 
-		/* AAC OBJECT LC */
+		/*               */
 		audio_object_type = 2;
 
 		aac_type = (u32 *)rpc.format_block.binary.data;
 		switch (aac->cfg.stream_format) {
 
 		case AUDIO_AAC_FORMAT_ADTS:
-			/* AAC Encoder expect MPEG4_ADTS media type */
+			/*                                          */
 			*aac_type = ADSP_AUDIO_AAC_MPEG4_ADTS;
 			break;
 		case AUDIO_AAC_FORMAT_RAW:
-			/* for ADIF recording */
+			/*                    */
 			*aac_type = ADSP_AUDIO_AAC_RAW;
 			break;
 		}

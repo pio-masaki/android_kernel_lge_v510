@@ -28,4 +28,4 @@ struct afe_msg_codec_config_ack {
 	uint16_t reserved;
 } __attribute__((packed));
 
-#endif /* QDSP5AFEMSG_H */
+#endif /*               */

@@ -22,8 +22,8 @@
 #define CSDIO_IOC_MAXNR   12
 
 struct csdio_cmd53_ctrl_t {
-	uint32_t    m_block_mode;   /* data tran. byte(0)/block(1) mode */
-	uint32_t    m_op_code;      /* address auto increment flag */
+	uint32_t    m_block_mode;   /*                                  */
+	uint32_t    m_op_code;      /*                             */
 	uint32_t    m_address;
 } __attribute__ ((packed));
 

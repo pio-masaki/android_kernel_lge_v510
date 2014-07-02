@@ -75,7 +75,7 @@ module_param(hsic_tty_data_rx_req_size, uint, S_IRUGO | S_IWUSR);
 unsigned int hsic_tty_data_tx_intr_thld = HSIC_TTY_DATA_TX_INTR_THRESHOLD;
 module_param(hsic_tty_data_tx_intr_thld, uint, S_IRUGO | S_IWUSR);
 
-/*flow ctrl*/
+/*         */
 #define HSIC_TTY_DATA_FLOW_CTRL_EN_THRESHOLD	500
 #define HSIC_TTY_DATA_FLOW_CTRL_DISABLE		300
 #define HSIC_TTY_DATA_FLOW_CTRL_SUPPORT		1
@@ -115,10 +115,10 @@ struct hsic_tty_info {
 	spinlock_t reset_lock;
 	struct hsic_config *hsic;
 
-	/* gadget */
+	/*        */
 	atomic_t connected;
 
-	/* data transfer queues */
+	/*                      */
 	unsigned int tx_q_size;
 	struct list_head tx_idle;
 	struct sk_buff_head tx_skb_q;
@@ -129,7 +129,7 @@ struct hsic_tty_info {
 	struct sk_buff_head rx_skb_q;
 	spinlock_t rx_lock;
 
-	/* work */
+	/*      */
 	struct workqueue_struct *wq;
 	struct work_struct connect_w;
 	struct work_struct disconnect_w;
@@ -138,10 +138,10 @@ struct hsic_tty_info {
 
 	struct bridge brdg;
 
-	/*bridge status */
+	/*              */
 	unsigned long bridge_sts;
 
-	/*counters */
+	/*         */
 	unsigned long to_modem;
 	unsigned long to_host;
 	unsigned int rx_throttled_cnt;
@@ -152,13 +152,13 @@ struct hsic_tty_info {
 	unsigned int unthrottled_pnd_skbs;
 };
 
-/**
- * HSIC port configuration.
- *
- * @tty_dev_index   Index into hsic_tty[]
- * @port_name       Name of the HSIC port
- * @dev_name        Name of the TTY Device (if NULL, @port_name is used)
- * @edge            HSIC edge
+/* 
+                           
+  
+                                         
+                                         
+                                                                        
+                             
  */
 struct hsic_config {
 	uint32_t tty_dev_index;
@@ -168,7 +168,7 @@ struct hsic_config {
 
 static struct hsic_config hsic_configs[] = {
 	{0, "dun_data_hsic0", NULL},
-	//{1, "rmnet_data_hsic0", NULL},
+	//                              
 };
 
 static struct hsic_tty_info hsic_tty[MAX_HSIC_TTYS];
@@ -210,7 +210,7 @@ static void hsic_tty_data_write_tohost(struct work_struct *w)
 	spin_lock_irqsave(&info->tx_lock, flags);
 	for (;;) {
 		if (is_in_reset(info)) {
-			/* signal TTY clients using TTY_BREAK */
+			/*                                    */
 			tty_insert_flip_char(tty, 0x00, TTY_BREAK);
 			tty_flip_buffer_push(tty);
 			break;
@@ -247,7 +247,7 @@ static void hsic_tty_data_write_tohost(struct work_struct *w)
 		info->to_host++;
 	}
 
-	/* XXX only when writable and necessary */
+	/*                                      */
 	tty_wakeup(tty);
 	spin_unlock_irqrestore(&info->tx_lock, flags);
 }
@@ -315,7 +315,7 @@ static void hsic_tty_data_write_tomdm(struct work_struct *w)
 		spin_lock_irqsave(&info->rx_lock, flags);
 		if (ret < 0) {
 			if (ret == -EBUSY) {
-				/*flow control */
+				/*             */
 				info->tx_throttled_cnt++;
 				break;
 			}
@@ -381,7 +381,7 @@ static void hsic_tty_data_disconnect_w(struct work_struct *w)
 	info->is_open = 0;
 	wake_up_interruptible(&info->ch_opened_wait_queue);
 	spin_unlock_irqrestore(&info->reset_lock, flags);
-	/* schedule task to send TTY_BREAK */
+	/*                                 */
 	queue_work(info->wq, &info->write_tohost_w);
 }
 
@@ -404,9 +404,9 @@ static int hsic_tty_open(struct tty_struct *tty, struct file *f)
 
 	if (info->open_count++ == 0) {
 		/*
-		 * Wait for a channel to be allocated so we know
-		 * the modem is ready enough.
-		 */
+                                                  
+                               
+   */
 		if (hsic_tty_modem_wait) {
 			res = try_wait_for_completion(&info->ch_allocated);
 
@@ -514,7 +514,7 @@ static void hsic_tty_close(struct tty_struct *tty, struct file *f)
 
 			pr_info("%s: waiting to close hsic %s completely\n",
 				__func__, hsic_tty[n].hsic->port_name);
-			/* wait for reopen ready status in seconds */
+			/*                                         */
 			res =
 			    wait_event_interruptible_timeout(info->
 							     ch_opened_wait_queue,
@@ -522,7 +522,7 @@ static void hsic_tty_close(struct tty_struct *tty, struct file *f)
 							     (lge_ds_modem_wait
 							      * HZ));
 			if (res == 0) {
-				/* just in case, remain result value */
+				/*                                   */
 				res = -ETIMEDOUT;
 				pr_err("%s: timeout to wait for %s hsic_close.\
                         next hsic_open may fail....%d\n", __func__, hsic_tty[n].hsic->port_name, res);
@@ -560,17 +560,17 @@ static int hsic_tty_write(struct tty_struct *tty, const unsigned char *buf,
 
 	pr_debug("%s\n", __func__);
 
-	/* if we're writing to a packet channel we will
-	 ** never be able to write more data than there
-	 ** is currently space for
-	 */
+	/*                                             
+                                                
+                           
+  */
 	if (is_in_reset(info))
 		return -ENETRESET;
 
 	avail = test_bit(CH_OPENED, &info->bridge_sts);
-	/* if no space, we'll have to setup a notification later to wake up the
-	 * tty framework when space becomes avaliable
-	 */
+	/*                                                                     
+                                              
+  */
 	if (!avail)
 		return 0;
 
@@ -644,7 +644,7 @@ static int hsic_tty_dummy_probe(struct platform_device *pdev)
 		if (!hsic_configs[n].dev_name)
 			continue;
 
-		if (/* pdev->id == hsic_configs[n].edge && */
+		if (/*                                     */
 		    !strncmp(pdev->name, hsic_configs[n].dev_name,
 			    DATA_BRIDGE_NAME_MAX_LEN)) {
 			complete_all(&hsic_tty[idx].ch_allocated);
@@ -712,7 +712,7 @@ static int __init hsic_tty_init(void)
 			return -ENOMEM;
 		}
 
-		/* port initialization */
+		/*                     */
 		spin_lock_init(&hsic_tty[idx].rx_lock);
 		spin_lock_init(&hsic_tty[idx].tx_lock);
 
@@ -752,7 +752,7 @@ static int __init hsic_tty_init(void)
 	return 0;
 
 out:
-	/* unregister platform devices */
+	/*                             */
 	for (n = 0; n < ARRAY_SIZE(hsic_configs); ++n) {
 		idx = hsic_configs[n].tty_dev_index;
 

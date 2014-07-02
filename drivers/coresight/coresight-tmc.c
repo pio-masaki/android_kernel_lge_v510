@@ -159,7 +159,7 @@ static void tmc_wait_for_flush(struct tmc_drvdata *drvdata)
 {
 	int count;
 
-	/* Ensure no flush is in progress */
+	/*                                */
 	for (count = TIMEOUT_US; BVAL(tmc_readl(drvdata, TMC_FFSR), 0) != 0
 				&& count > 0; count--)
 		udelay(1);
@@ -171,7 +171,7 @@ static void tmc_wait_for_ready(struct tmc_drvdata *drvdata)
 {
 	int count;
 
-	/* Ensure formatter, unformatter and hardware fifo are empty */
+	/*                                                           */
 	for (count = TIMEOUT_US; BVAL(tmc_readl(drvdata, TMC_STS), 2) != 1
 				&& count > 0; count--)
 		udelay(1);
@@ -189,7 +189,7 @@ static void tmc_flush_and_stop(struct tmc_drvdata *drvdata)
 	tmc_writel(drvdata, ffcr, TMC_FFCR);
 	ffcr |= BIT(6);
 	tmc_writel(drvdata, ffcr, TMC_FFCR);
-	/* Ensure flush completes */
+	/*                        */
 	for (count = TIMEOUT_US; BVAL(tmc_readl(drvdata, TMC_FFCR), 6) != 0
 				&& count > 0; count--)
 		udelay(1);
@@ -229,10 +229,10 @@ static void __tmc_etr_enable_to_bam(struct tmc_drvdata *drvdata)
 	if (drvdata->enable_to_bam)
 		return;
 
-	/* Configure and enable required CSR registers */
+	/*                                             */
 	msm_qdss_csr_enable_bam_to_usb();
 
-	/* Configure and enable ETR for usb bam output */
+	/*                                             */
 
 	TMC_UNLOCK(drvdata);
 
@@ -267,12 +267,12 @@ static int tmc_etr_bam_enable(struct tmc_drvdata *drvdata)
 	if (bamdata->enable)
 		return 0;
 
-	/* Reset bam to start with */
+	/*                         */
 	ret = sps_device_reset(bamdata->handle);
 	if (ret)
 		goto err0;
 
-	/* Now configure and enable bam */
+	/*                              */
 
 	bamdata->pipe = sps_alloc_endpoint();
 	if (!bamdata->pipe)
@@ -310,7 +310,7 @@ static void __tmc_etr_disable_to_bam(struct tmc_drvdata *drvdata)
 	if (!drvdata->enable_to_bam)
 		return;
 
-	/* Ensure periodic flush is disabled in CSR block */
+	/*                                                */
 	msm_qdss_csr_disable_flush();
 
 	TMC_UNLOCK(drvdata);
@@ -321,7 +321,7 @@ static void __tmc_etr_disable_to_bam(struct tmc_drvdata *drvdata)
 
 	TMC_LOCK(drvdata);
 
-	/* Disable CSR configuration */
+	/*                           */
 	msm_qdss_csr_disable_bam_to_usb();
 	drvdata->enable_to_bam = false;
 }
@@ -366,7 +366,7 @@ static void usb_notifier(void *priv, unsigned int event,
 
 static void __tmc_etb_enable(struct tmc_drvdata *drvdata)
 {
-	/* Zero out the memory to help with debug */
+	/*                                        */
 	memset(drvdata->buf, 0, drvdata->size);
 
 	TMC_UNLOCK(drvdata);
@@ -383,7 +383,7 @@ static void __tmc_etr_enable_to_mem(struct tmc_drvdata *drvdata)
 {
 	uint32_t axictl;
 
-	/* Zero out the memory to help with debug */
+	/*                                        */
 	memset(drvdata->vaddr, 0, drvdata->size);
 
 	TMC_UNLOCK(drvdata);
@@ -1061,8 +1061,8 @@ static int __devinit tmc_etr_bam_init(struct platform_device *pdev,
 		return -ENOMEM;
 	bamdata->props.virt_size = resource_size(res);
 
-	bamdata->props.event_threshold = 0x4; /* Pipe event threshold */
-	bamdata->props.summing_threshold = 0x10; /* BAM event threshold */
+	bamdata->props.event_threshold = 0x4; /*                      */
+	bamdata->props.summing_threshold = 0x10; /*                     */
 	bamdata->props.irq = 0;
 	bamdata->props.num_pipes = TMC_ETR_BAM_NR_PIPES;
 
@@ -1180,10 +1180,10 @@ static int __devinit tmc_probe(struct platform_device *pdev)
 		dump.end_addr = dump.start_addr + PAGE_SIZE + drvdata->size;
 		ret = msm_dump_table_register(&dump);
 		/*
-		 * Don't free the buffer in case of error since it can still
-		 * be used to provide dump collection via the device node or
-		 * as part of abort.
-		 */
+                                                              
+                                                              
+                      
+   */
 		if (ret)
 			dev_info(dev, "TMC ETF-ETB dump setup failed\n");
 		etfetb_count++;
@@ -1198,10 +1198,10 @@ static int __devinit tmc_probe(struct platform_device *pdev)
 		dump.end_addr = dump.start_addr + PAGE_SIZE + reg_size;
 		ret = msm_dump_table_register(&dump);
 		/*
-		 * Don't free the buffer in case of error since it can still
-		 * be used to dump registers as part of abort to aid post crash
-		 * parsing.
-		 */
+                                                              
+                                                                 
+             
+   */
 		if (ret)
 			dev_info(dev, "TMC REG dump setup failed\n");
 	} else {

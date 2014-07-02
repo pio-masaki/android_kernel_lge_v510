@@ -14,8 +14,8 @@
 #define __MACH_QDSP5_V2_AUX_PCM_H
 #include <mach/qdsp5v2/audio_def.h>
 
-/* define some values in AUX_CODEC_CTL register */
-#define AUX_CODEC_CTL__ADSP_CODEC_CTL_EN__MSM_V 0 /* default */
+/*                                              */
+#define AUX_CODEC_CTL__ADSP_CODEC_CTL_EN__MSM_V 0 /*         */
 #define AUX_CODEC_CTL__ADSP_CODEC_CTL_EN__ADSP_V 0x800
 #define AUX_CODEC_CTL__PCM_SYNC_LONG_OFFSET_V  0x400
 #define AUX_CODEC_CTL__PCM_SYNC_SHORT_OFFSET_V 0x200
@@ -33,17 +33,17 @@
 #define AUX_CODEC_CTL__AUX_CODEC_MDOE__PCM_V 0
 #define AUX_CODEC_CTL__AUX_CODEC_MODE__I2S_V 0x2
 
-/* define some values in PCM_PATH_CTL register */
+/*                                             */
 #define PCM_PATH_CTL__ADSP_CTL_EN__MSM_V 0
 #define PCM_PATH_CTL__ADSP_CTL_EN__ADSP_V 0x8
 
-/* define some values for aux codec config of AFE*/
-/* PCM CTL */
+/*                                               */
+/*         */
 #define PCM_CTL__RPCM_WIDTH__LINEAR_V 0x1
 #define PCM_CTL__TPCM_WIDTH__LINEAR_V 0x2
-/* AUX_CODEC_INTF_CTL */
+/*                    */
 #define AUX_CODEC_INTF_CTL__PCMINTF_DATA_EN_V 0x800
-/* DATA_FORMAT_PADDING_INFO */
+/*                          */
 #define DATA_FORMAT_PADDING_INFO__RPCM_FORMAT_V 0x400
 #define DATA_FORMAT_PADDING_INFO__TPCM_FORMAT_V 0x2000
 

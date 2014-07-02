@@ -73,7 +73,7 @@ uint32_t msm_mercury_platform_v2p(int fd, uint32_t len,
 		goto error1;
 	}
 
-	/* validate user input */
+	/*                     */
 	if (len > size) {
 		MCR_PR_ERR("%s: invalid offset + len\n", __func__);
 		goto error1;

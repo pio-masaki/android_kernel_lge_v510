@@ -11,7 +11,7 @@
  *
  */
 
-/* Qualcomm Over the Air (OTA) Crypto driver */
+/*                                           */
 
 #include <linux/types.h>
 #include <linux/platform_device.h>
@@ -56,8 +56,8 @@ struct ota_async_req {
 };
 
 /*
- * Register ourselves as a misc device to be able to access the ota
- * from userspace.
+                                                                   
+                  
  */
 
 
@@ -66,13 +66,13 @@ struct ota_async_req {
 
 struct ota_dev_control {
 
-	/* misc device */
+	/*             */
 	struct miscdevice miscdevice;
 
-	/* qce handle */
+	/*            */
 	void *qce;
 
-	/* platform device */
+	/*                 */
 	struct platform_device *pdev;
 
 	unsigned magic;
@@ -274,7 +274,7 @@ static int start_req(struct ota_dev_control *podev)
 	struct qce_f8_req *pf8;
 	int ret = 0;
 
-	/* start the command on the podev->active_command */
+	/*                                                */
 	areq = podev->active_command;
 	areq->podev = podev;
 
@@ -371,7 +371,7 @@ static long qcota_ioctl(struct file *file,
 		return -ENOENT;
 	}
 
-	/* Verify user arguments. */
+	/*                        */
 	if (_IOC_TYPE(cmd) != QCOTA_IOC_MAGIC)
 		return -ENOTTY;
 
@@ -442,7 +442,7 @@ static long qcota_ioctl(struct file *file,
 		if (k_buf == NULL)
 			return -ENOMEM;
 
-		/* k_buf returned from kmalloc should be cache line aligned */
+		/*                                                          */
 		if (user_src && __copy_from_user(k_buf,
 				(void __user *)user_src, total)) {
 			kfree(k_buf);
@@ -490,7 +490,7 @@ static long qcota_ioctl(struct file *file,
 		k_buf = kmalloc(total, GFP_KERNEL);
 		if (k_buf == NULL)
 			return -ENOMEM;
-		/* k_buf returned from kmalloc should be cache line aligned */
+		/*                                                          */
 		if (__copy_from_user(k_buf, (void __user *)user_src, total)) {
 			kfree(k_buf);
 
@@ -537,7 +537,7 @@ static int qcota_probe(struct platform_device *pdev)
 	spin_lock_init(&podev->lock);
 	tasklet_init(&podev->done_tasklet, req_done, (unsigned long)podev);
 
-	/* open qce */
+	/*          */
 	handle = qce_open(pdev, &rc);
 	if (handle == NULL) {
 		pr_err("%s: device id %d, can not open qce\n",

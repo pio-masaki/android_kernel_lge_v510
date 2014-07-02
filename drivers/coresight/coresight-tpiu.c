@@ -69,7 +69,7 @@ static void __tpiu_enable(struct tpiu_drvdata *drvdata)
 {
 	TPIU_UNLOCK(drvdata);
 
-	/* TODO: fill this up */
+	/*                    */
 
 	TPIU_LOCK(drvdata);
 }
@@ -171,7 +171,7 @@ static int __devinit tpiu_probe(struct platform_device *pdev)
 	if (ret)
 		return ret;
 
-	/* Disable tpiu to support older targets that need this */
+	/*                                                      */
 	__tpiu_disable(drvdata);
 
 	clk_disable_unprepare(drvdata->clk);

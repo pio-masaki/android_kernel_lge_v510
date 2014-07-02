@@ -25,7 +25,7 @@
 #define WLED_IDAC_DLY_REG(base, n)	(WLED_MOD_EN_REG(base, n) + 0x01)
 #define WLED_FULL_SCALE_REG(base, n)	(WLED_IDAC_DLY_REG(base, n) + 0x01)
 
-/* wled control registers */
+/*                        */
 #define WLED_BRIGHTNESS_CNTL_LSB(base, n)	(base + 0x40 + 2*n)
 #define WLED_BRIGHTNESS_CNTL_MSB(base, n)	(base + 0x41 + 2*n)
 #define WLED_MOD_CTRL_REG(base)			(base + 0x46)
@@ -76,15 +76,15 @@
 #define WLED_CTRL_DLY_DEFAULT		0x00
 #define WLED_SWITCH_FREQ_DEFAULT	0x02
 
-/**
- * enum qpnp_leds - QPNP supported led ids
- * @QPNP_ID_WLED - White led backlight
+/* 
+                                          
+                                      
  */
 enum qpnp_leds {
 	QPNP_ID_WLED,
 };
 
-/* current boost limit */
+/*                     */
 enum wled_current_boost_limit {
 	WLED_CURR_LIMIT_105mA,
 	WLED_CURR_LIMIT_385mA,
@@ -96,7 +96,7 @@ enum wled_current_boost_limit {
 	WLED_CURR_LIMIT_1680mA,
 };
 
-/* over voltage protection threshold */
+/*                                   */
 enum wled_ovp_threshold {
 	WLED_OVP_35V,
 	WLED_OVP_32V,
@@ -104,7 +104,7 @@ enum wled_ovp_threshold {
 	WLED_OVP_37V,
 };
 
-/* switch frquency */
+/*                 */
 enum wled_switch_freq {
 	WLED_800kHz = 0,
 	WLED_960kHz,
@@ -113,27 +113,27 @@ enum wled_switch_freq {
 };
 
 static u8 wled_debug_regs[] = {
-	/* common registers */
+	/*                  */
 	0x46, 0x47, 0x48, 0x49, 0x4a, 0x4b, 0x4c, 0x4d, 0x4d, 0x4e, 0x4f,
 	0x50, 0x51, 0x52, 0x53, 0x54, 0x55, 0x56, 0x57, 0x58, 0x59,
-	/* LED1 */
+	/*      */
 	0x60, 0x61, 0x62, 0x63, 0x66,
-	/* LED1 */
+	/*      */
 	0x70, 0x71, 0x72, 0x73, 0x76,
-	/* LED1 */
+	/*      */
 	0x80, 0x81, 0x82, 0x83, 0x86,
 };
 
-/**
- *  wled_config_data - wled configuration data
- *  @num_strings - number of wled strings supported
- *  @ovp_val - over voltage protection threshold
- *  @boost_curr_lim - boot current limit
- *  @cp_select - high pole capacitance
- *  @ctrl_delay_us - delay in activation of led
- *  @dig_mod_gen_en - digital module generator
- *  @cs_out_en - current sink output enable
- *  @op_fdbck - selection of output as feedback for the boost
+/* 
+                                              
+                                                   
+                                                
+                                        
+                                      
+                                               
+                                              
+                                           
+                                                             
  */
 struct wled_config_data {
 	u8	num_strings;
@@ -147,15 +147,15 @@ struct wled_config_data {
 	bool	op_fdbck;
 };
 
-/**
- * struct qpnp_led_data - internal led data structure
- * @led_classdev - led class device
- * @id - led index
- * @base_reg - base register given in device tree
- * @lock - to protect the transactions
- * @reg - cached value of led register
- * @max_current - maximum current supported by LED
- * @default_on - true: default state max, false, default state 0
+/* 
+                                                     
+                                   
+                  
+                                                 
+                                      
+                                      
+                                                  
+                                                                
  */
 struct qpnp_led_data {
 	struct led_classdev	cdev;
@@ -228,7 +228,7 @@ static int qpnp_wled_set(struct qpnp_led_data *led)
 
 	num_wled_strings = led->wled_cfg->num_strings;
 
-	/* program brightness control registers */
+	/*                                      */
 	for (i = 0; i < num_wled_strings; i++) {
 		rc = qpnp_led_masked_write(led,
 			WLED_BRIGHTNESS_CNTL_MSB(led->base, i), WLED_MSB_MASK,
@@ -249,7 +249,7 @@ static int qpnp_wled_set(struct qpnp_led_data *led)
 		}
 	}
 
-	/* sync */
+	/*      */
 	val = WLED_SYNC_VAL;
 	rc = spmi_ext_register_writel(led->spmi_dev->ctrl, led->spmi_dev->sid,
 		WLED_SYNC_REG(led->base), &val, 1);
@@ -346,7 +346,7 @@ static int __devinit qpnp_wled_init(struct qpnp_led_data *led)
 
 	num_wled_strings = led->wled_cfg->num_strings;
 
-	/* verify ranges */
+	/*               */
 	if (led->wled_cfg->ovp_val > WLED_OVP_37V) {
 		dev_err(&led->spmi_dev->dev, "Invalid ovp value\n");
 		return -EINVAL;
@@ -373,7 +373,7 @@ static int __devinit qpnp_wled_init(struct qpnp_led_data *led)
 		return -EINVAL;
 	}
 
-	/* program over voltage protection threshold */
+	/*                                           */
 	rc = qpnp_led_masked_write(led, WLED_OVP_CFG_REG(led->base),
 		WLED_OVP_VAL_MASK,
 		(led->wled_cfg->ovp_val << WLED_OVP_VAL_BIT_SHFT));
@@ -383,7 +383,7 @@ static int __devinit qpnp_wled_init(struct qpnp_led_data *led)
 		return rc;
 	}
 
-	/* program current boost limit */
+	/*                             */
 	rc = qpnp_led_masked_write(led, WLED_BOOST_LIMIT_REG(led->base),
 		WLED_BOOST_LIMIT_MASK, led->wled_cfg->boost_curr_lim);
 	if (rc) {
@@ -392,7 +392,7 @@ static int __devinit qpnp_wled_init(struct qpnp_led_data *led)
 		return rc;
 	}
 
-	/* program output feedback */
+	/*                         */
 	rc = qpnp_led_masked_write(led, WLED_FDBCK_CTRL_REG(led->base),
 		WLED_OP_FDBCK_MASK,
 		(led->wled_cfg->op_fdbck << WLED_OP_FDBCK_BIT_SHFT));
@@ -402,7 +402,7 @@ static int __devinit qpnp_wled_init(struct qpnp_led_data *led)
 		return rc;
 	}
 
-	/* program switch frequency */
+	/*                          */
 	rc = qpnp_led_masked_write(led, WLED_SWITCHING_FREQ_REG(led->base),
 		WLED_SWITCH_FREQ_MASK, led->wled_cfg->switch_freq);
 	if (rc) {
@@ -411,7 +411,7 @@ static int __devinit qpnp_wled_init(struct qpnp_led_data *led)
 		return rc;
 	}
 
-	/* program current sink */
+	/*                      */
 	if (led->wled_cfg->cs_out_en) {
 		rc = qpnp_led_masked_write(led, WLED_CURR_SINK_REG(led->base),
 			WLED_CURR_SINK_MASK,
@@ -423,7 +423,7 @@ static int __devinit qpnp_wled_init(struct qpnp_led_data *led)
 		}
 	}
 
-	/* program high pole capacitance */
+	/*                               */
 	rc = qpnp_led_masked_write(led, WLED_HIGH_POLE_CAP_REG(led->base),
 		WLED_CP_SELECT_MASK, led->wled_cfg->cp_select);
 	if (rc) {
@@ -432,7 +432,7 @@ static int __devinit qpnp_wled_init(struct qpnp_led_data *led)
 		return rc;
 	}
 
-	/* program modulator, current mod src and cabc */
+	/*                                             */
 	for (i = 0; i < num_wled_strings; i++) {
 		rc = qpnp_led_masked_write(led, WLED_MOD_EN_REG(led->base, i),
 			WLED_NO_MASK, WLED_EN_MASK);
@@ -463,7 +463,7 @@ static int __devinit qpnp_wled_init(struct qpnp_led_data *led)
 
 	}
 
-	/* dump wled registers */
+	/*                     */
 	qpnp_wled_dump_regs(led);
 
 	return 0;
@@ -489,7 +489,7 @@ static int __devinit qpnp_led_initialize(struct qpnp_led_data *led)
 }
 
 /*
- * Handlers for alternative sources of platform_data
+                                                    
  */
 static int __devinit qpnp_get_config_wled(struct qpnp_led_data *led,
 				struct device_node *node)
@@ -671,7 +671,7 @@ static int __devinit qpnp_leds_probe(struct spmi_device *spmi)
 		goto fail_id_check;
 	}
 
-	/* configure default state */
+	/*                         */
 	if (led->default_on)
 		led->cdev.brightness = led->cdev.max_brightness;
 

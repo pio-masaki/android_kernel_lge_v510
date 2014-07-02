@@ -22,62 +22,62 @@
 #define OFF 0
 
 static const char *vfe_general_cmd[] = {
-	"START",  /* 0 */
+	"START",  /*   */
 	"RESET",
 	"AXI_INPUT_CONFIG",
 	"CAMIF_CONFIG",
 	"AXI_OUTPUT_CONFIG",
-	"BLACK_LEVEL_CONFIG",  /* 5 */
+	"BLACK_LEVEL_CONFIG",  /*   */
 	"ROLL_OFF_CONFIG",
 	"DEMUX_CHANNEL_GAIN_CONFIG",
 	"DEMOSAIC_CONFIG",
 	"FOV_CROP_CONFIG",
-	"MAIN_SCALER_CONFIG",  /* 10 */
+	"MAIN_SCALER_CONFIG",  /*    */
 	"WHITE_BALANCE_CONFIG",
 	"COLOR_CORRECTION_CONFIG",
 	"LA_CONFIG",
 	"RGB_GAMMA_CONFIG",
-	"CHROMA_ENHAN_CONFIG",  /* 15 */
+	"CHROMA_ENHAN_CONFIG",  /*    */
 	"CHROMA_SUPPRESSION_CONFIG",
 	"ASF_CONFIG",
 	"SCALER2Y_CONFIG",
 	"SCALER2CbCr_CONFIG",
-	"CHROMA_SUBSAMPLE_CONFIG",  /* 20 */
+	"CHROMA_SUBSAMPLE_CONFIG",  /*    */
 	"FRAME_SKIP_CONFIG",
 	"OUTPUT_CLAMP_CONFIG",
 	"TEST_GEN_START",
 	"UPDATE",
-	"OUTPUT1_ACK",  /* 25 */
+	"OUTPUT1_ACK",  /*    */
 	"OUTPUT2_ACK",
 	"EPOCH1_ACK",
 	"EPOCH2_ACK",
 	"STATS_AUTOFOCUS_ACK",
-	"STATS_WB_EXP_ACK",  /* 30 */
+	"STATS_WB_EXP_ACK",  /*    */
 	"BLACK_LEVEL_UPDATE",
 	"DEMUX_CHANNEL_GAIN_UPDATE",
 	"DEMOSAIC_BPC_UPDATE",
 	"DEMOSAIC_ABF_UPDATE",
-	"FOV_CROP_UPDATE",  /* 35 */
+	"FOV_CROP_UPDATE",  /*    */
 	"WHITE_BALANCE_UPDATE",
 	"COLOR_CORRECTION_UPDATE",
 	"LA_UPDATE",
 	"RGB_GAMMA_UPDATE",
-	"CHROMA_ENHAN_UPDATE",  /* 40 */
+	"CHROMA_ENHAN_UPDATE",  /*    */
 	"CHROMA_SUPPRESSION_UPDATE",
 	"MAIN_SCALER_UPDATE",
 	"SCALER2CbCr_UPDATE",
 	"SCALER2Y_UPDATE",
-	"ASF_UPDATE",  /* 45 */
+	"ASF_UPDATE",  /*    */
 	"FRAME_SKIP_UPDATE",
 	"CAMIF_FRAME_UPDATE",
 	"STATS_AUTOFOCUS_UPDATE",
 	"STATS_WB_EXP_UPDATE",
-	"STOP",  /* 50 */
+	"STOP",  /*    */
 	"GET_HW_VERSION",
 	"STATS_SETTING",
 	"STATS_AUTOFOCUS_START",
 	"STATS_AUTOFOCUS_STOP",
-	"STATS_WB_EXP_START",  /* 55 */
+	"STATS_WB_EXP_START",  /*    */
 	"STATS_WB_EXP_STOP",
 	"ASYNC_TIMER_SETTING",
 };
@@ -130,7 +130,7 @@ static void vfe_config_axi(int mode,
 			}
 			regptr++;
 		}
-	} /* if OUTPUT1 or Both */
+	} /*                    */
 
 	if (mode == OUTPUT_2 || mode == OUTPUT_1_AND_2) {
 
@@ -160,11 +160,11 @@ static void vfe_config_axi(int mode,
 			regptr++;
 		}
 	}
-	/* For video configuration */
+	/*                         */
 	if (mode == OUTPUT_1_AND_3) {
-		/* this is preview buffer. */
+		/*                         */
 		regptr =  &(ad->region[0]);
-		/* this is video buffer. */
+		/*                       */
 		regptr1 = &(ad->region[ad->bufnum1]);
 		CDBG("bufnum1 = %d\n", ad->bufnum1);
 		CDBG("bufnum2 = %d\n", ad->bufnum2);
@@ -246,7 +246,7 @@ static int vfe_proc_general(struct msm_vfe_command_8k *cmd)
 		struct vfe_cmd_start start;
 			CHECKED_COPY_FROM_USER(&start);
 
-		/* msm_camio_camif_pad_reg_reset_2(); */
+		/*                                    */
 		msm_camio_camif_pad_reg_reset();
 		vfe_start(&start);
 	}
@@ -269,7 +269,7 @@ static int vfe_proc_general(struct msm_vfe_command_8k *cmd)
 		break;
 
 	case VFE_CMD_ID_ROLL_OFF_CONFIG:{
-			/* rolloff is too big to be on the stack */
+			/*                                       */
 			struct vfe_cmd_roll_off_config *rolloff =
 			    kmalloc(sizeof(struct vfe_cmd_roll_off_config),
 				    GFP_KERNEL);
@@ -278,10 +278,10 @@ static int vfe_proc_general(struct msm_vfe_command_8k *cmd)
 				rc = -ENOMEM;
 				break;
 			}
-			/* Wrap CHECKED_COPY_FROM_USER() in a do-while(0) loop
-			 * to make sure we free rolloff when copy_from_user()
-			 * fails.
-			 */
+			/*                                                    
+                                                        
+            
+    */
 			do {
 				CHECKED_COPY_FROM_USER(rolloff);
 				vfe_roll_off_config(rolloff);
@@ -294,7 +294,7 @@ static int vfe_proc_general(struct msm_vfe_command_8k *cmd)
 		struct vfe_cmd_demux_channel_gain_config demuxc;
 			CHECKED_COPY_FROM_USER(&demuxc);
 
-		/* demux is always enabled.  */
+		/*                           */
 		vfe_demux_channel_gain_config(&demuxc);
 	}
 		break;
@@ -427,7 +427,7 @@ static int vfe_proc_general(struct msm_vfe_command_8k *cmd)
 	}
 		break;
 
-	/* module update commands */
+	/*                        */
 	case VFE_CMD_ID_BLACK_LEVEL_UPDATE: {
 		struct vfe_cmd_black_level_config blk;
 			CHECKED_COPY_FROM_USER(&blk);
@@ -487,7 +487,7 @@ static int vfe_proc_general(struct msm_vfe_command_8k *cmd)
 	case VFE_CMD_ID_FRAME_SKIP_UPDATE: {
 		struct vfe_cmd_frame_skip_update fskip;
 			CHECKED_COPY_FROM_USER(&fskip);
-			/* Start recording */
+			/*                 */
 			if (fskip.output2Pattern == 0xffffffff)
 				update_axi_qos(MSM_AXI_QOS_RECORDING);
 			 else if (fskip.output2Pattern == 0)
@@ -505,7 +505,7 @@ static int vfe_proc_general(struct msm_vfe_command_8k *cmd)
 	}
 		break;
 
-	/* stats update commands */
+	/*                       */
 	case VFE_CMD_ID_STATS_AUTOFOCUS_UPDATE: {
 		struct vfe_cmd_stats_af_update afup;
 			CHECKED_COPY_FROM_USER(&afup);
@@ -522,7 +522,7 @@ static int vfe_proc_general(struct msm_vfe_command_8k *cmd)
 	}
 		break;
 
-	/* control of start, stop, update, etc... */
+	/*                                        */
 	case VFE_CMD_ID_STOP:
 		vfe_stop();
 		break;
@@ -530,7 +530,7 @@ static int vfe_proc_general(struct msm_vfe_command_8k *cmd)
 	case VFE_CMD_ID_GET_HW_VERSION:
 		break;
 
-	/* stats */
+	/*       */
 	case VFE_CMD_ID_STATS_SETTING: {
 		struct vfe_cmd_stats_setting stats;
 			CHECKED_COPY_FROM_USER(&stats);
@@ -570,33 +570,33 @@ static int vfe_proc_general(struct msm_vfe_command_8k *cmd)
 		vfe_update();
 		break;
 
-	/* test gen */
+	/*          */
 	case VFE_CMD_ID_TEST_GEN_START:
 		break;
 
 /*
-  acknowledge from upper layer
-	these are not in general command.
+                              
+                                  
 
-	case VFE_CMD_ID_OUTPUT1_ACK:
-		break;
-	case VFE_CMD_ID_OUTPUT2_ACK:
-		break;
-	case VFE_CMD_ID_EPOCH1_ACK:
-		break;
-	case VFE_CMD_ID_EPOCH2_ACK:
-		break;
-	case VFE_CMD_ID_STATS_AUTOFOCUS_ACK:
-		break;
-	case VFE_CMD_ID_STATS_WB_EXP_ACK:
-		break;
+                             
+        
+                             
+        
+                            
+        
+                            
+        
+                                     
+        
+                                  
+        
 */
 
 	default:
 		pr_err("%s: invalid cmd id %d\n", __func__, cmd->id);
 		rc = -EINVAL;
 		break;
-	} /* switch */
+	} /*        */
 
 	return rc;
 }
@@ -680,7 +680,7 @@ static int vfe_config(struct msm_vfe_cfg_cmd *cmd, void *data)
 		break;
 
 	case CMD_FRAME_BUF_RELEASE: {
-		/* preview buffer release */
+		/*                        */
 		struct msm_frame *b;
 		unsigned long p;
 		struct vfe_cmd_output_ack fack;
@@ -737,7 +737,7 @@ static int vfe_config(struct msm_vfe_cfg_cmd *cmd, void *data)
 					__func__, __LINE__);
 			return -EFAULT;
 		}
-			/* Validate the data from user space */
+			/*                                   */
 			if (axio.output2.fragmentCount <
 				VFE_MIN_NUM_FRAGMENTS_PER_FRAME ||
 				axio.output2.fragmentCount >
@@ -760,7 +760,7 @@ static int vfe_config(struct msm_vfe_cfg_cmd *cmd, void *data)
 					__func__, __LINE__);
 			return -EFAULT;
 		}
-			/* Validate the data from user space */
+			/*                                   */
 			if (axio.output1.fragmentCount <
 				VFE_MIN_NUM_FRAGMENTS_PER_FRAME ||
 				axio.output1.fragmentCount >
@@ -785,7 +785,7 @@ static int vfe_config(struct msm_vfe_cfg_cmd *cmd, void *data)
 					__func__, __LINE__);
 			return -EFAULT;
 		}
-			/* Validate the data from user space */
+			/*                                   */
 			if (axio.output1.fragmentCount <
 				VFE_MIN_NUM_FRAGMENTS_PER_FRAME ||
 				axio.output1.fragmentCount >
@@ -804,7 +804,7 @@ static int vfe_config(struct msm_vfe_cfg_cmd *cmd, void *data)
 
 	default:
 		break;
-	} /* switch */
+	} /*        */
 
 	return rc;
 }
@@ -817,7 +817,7 @@ static int vfe_init(struct msm_vfe_callback *presp, struct platform_device *dev)
 	if (rc < 0)
 		return rc;
 
-	/* Bring up all the required GPIOs and Clocks */
+	/*                                            */
 	rc = msm_camio_enable(dev);
 
 	return rc;

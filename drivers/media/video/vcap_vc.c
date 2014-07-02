@@ -93,7 +93,7 @@ static void mov_buf_to_vp(struct work_struct *work)
 
 		p.type = V4L2_BUF_TYPE_INTERLACED_IN_DECODER;
 
-		/* This call should not fail */
+		/*                           */
 		rc = vcvp_qbuf(&vp_work->cd->vp_in_vidq, &p);
 		if (rc < 0) {
 			pr_err("%s: qbuf to vp_in failed\n", __func__);
@@ -165,7 +165,7 @@ irqreturn_t vc_handler(struct vcap_dev *dev)
 
 	spin_lock(&dev->vc_client->cap_slock);
 	if (list_empty(&dev->vc_client->vid_vc_action.active)) {
-		/* Just leave we have no new queued buffers */
+		/*                                          */
 		spin_unlock(&dev->vc_client->cap_slock);
 		writel_relaxed(irq, VCAP_VC_INT_CLEAR);
 		v4l2_evt.type = V4L2_EVENT_PRIVATE_START +
@@ -181,11 +181,11 @@ irqreturn_t vc_handler(struct vcap_dev *dev)
 	buf_ind = dev->vc_client->vid_vc_action.buf_ind;
 
 	if (vc_buf_status == VC_BUF1N2) {
-		/* There are 2 buffer ready */
+		/*                          */
 		writel_relaxed(irq, VCAP_VC_INT_CLEAR);
 		return IRQ_HANDLED;
 	} else if (buf_ind != vc_buf_status) {
-		/* buffer is out of sync */
+		/*                       */
 		writel_relaxed(irq, VCAP_VC_INT_CLEAR);
 		return IRQ_HANDLED;
 	}
@@ -206,7 +206,7 @@ irqreturn_t vc_handler(struct vcap_dev *dev)
 				struct vcap_buffer, list);
 		list_del(&buf->list);
 		spin_unlock(&dev->vc_client->cap_slock);
-		/* Config vc with this new buffer */
+		/*                                */
 		config_buffer(c_data, buf, VCAP_VC_Y_ADDR_1,
 				VCAP_VC_C_ADDR_1);
 
@@ -231,7 +231,7 @@ irqreturn_t vc_handler(struct vcap_dev *dev)
 						 struct vcap_buffer, list);
 		list_del(&buf->list);
 		spin_unlock(&dev->vc_client->cap_slock);
-		/* Config vc with this new buffer */
+		/*                                */
 		config_buffer(c_data, buf, VCAP_VC_Y_ADDR_2,
 				VCAP_VC_C_ADDR_2);
 
@@ -284,7 +284,7 @@ int vc_hw_kick_off(struct vcap_client_data *c_data)
 		counter++;
 
 	if (counter < 2) {
-		/* not enough buffers have been queued */
+		/*                                     */
 		spin_unlock_irqrestore(&dev->vc_client->cap_slock, flags);
 		return -EINVAL;
 	}
@@ -335,7 +335,7 @@ int config_vc_format(struct vcap_client_data *c_data)
 	struct v4l2_format_vc_ext *vc_format = &c_data->vc_format;
 	dev = c_data->dev;
 
-	/* restart VC */
+	/*            */
 	writel_relaxed(0x00000001, VCAP_SW_RESET_REQ);
 	timeout = 10000;
 	while (1) {

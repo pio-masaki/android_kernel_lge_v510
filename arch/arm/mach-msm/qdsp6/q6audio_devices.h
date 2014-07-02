@@ -68,7 +68,7 @@ struct q6_device_info {
 #define CAD_HW_DEVICE_ID_HANDSET_DUAL_MIC_BROADSIDE         0x2C
 #define CAD_HW_DEVICE_ID_HANDSET_DUAL_MIC_ENDFIRE           0x2E
 
-/* Logical Device to indicate A2DP routing */
+/*                                         */
 #define CAD_HW_DEVICE_ID_BT_A2DP_TX             0x10
 #define CAD_HW_DEVICE_ID_HEADSET_MONO_PLUS_SPKR_MONO_RX		0x11
 #define CAD_HW_DEVICE_ID_HEADSET_MONO_PLUS_SPKR_STEREO_RX	0x12
@@ -80,7 +80,7 @@ struct q6_device_info {
 #define CAD_HW_DEVICE_ID_I2S_RX                 0x20
 #define CAD_HW_DEVICE_ID_I2S_TX                 0x21
 
-/* AUXPGA */
+/*        */
 #define CAD_HW_DEVICE_ID_HEADSET_SPKR_STEREO_LB 0x22
 #define CAD_HW_DEVICE_ID_HEADSET_SPKR_MONO_LB   0x23
 #define CAD_HW_DEVICE_ID_SPEAKER_SPKR_STEREO_LB 0x24
@@ -261,7 +261,7 @@ static struct q6_device_info q6_audio_devices[] = {
 	{
 		.id	= ADSP_AUDIO_DEVICE_ID_BT_SCO_SPKR,
 		.cad_id	= CAD_HW_DEVICE_ID_BT_SCO_SPKR,
-		.path	= 0, /* XXX */
+		.path	= 0, /*     */
 		.rate   = 48000,
 		.dir	= Q6_RX,
 		.codec	= Q6_ECODEC_RX,
@@ -270,7 +270,7 @@ static struct q6_device_info q6_audio_devices[] = {
 	{
 		.id	= ADSP_AUDIO_DEVICE_ID_BT_A2DP_SPKR,
 		.cad_id	= CAD_HW_DEVICE_ID_BT_A2DP_SPKR,
-		.path	= 0, /* XXX */
+		.path	= 0, /*     */
 		.rate   = 48000,
 		.dir	= Q6_RX,
 		.codec	= Q6_ECODEC_RX,
@@ -279,7 +279,7 @@ static struct q6_device_info q6_audio_devices[] = {
 	{
 		.id	= ADSP_AUDIO_DEVICE_ID_BT_SCO_MIC,
 		.cad_id	= CAD_HW_DEVICE_ID_BT_SCO_MIC,
-		.path	= 0, /* XXX */
+		.path	= 0, /*     */
 		.rate   = 8000,
 		.dir	= Q6_TX,
 		.codec	= Q6_ECODEC_TX,
@@ -288,7 +288,7 @@ static struct q6_device_info q6_audio_devices[] = {
 	{
 		.id	= ADSP_AUDIO_DEVICE_ID_I2S_SPKR,
 		.cad_id	= CAD_HW_DEVICE_ID_I2S_RX,
-		.path	= 0, /* XXX */
+		.path	= 0, /*     */
 		.rate   = 48000,
 		.dir	= Q6_RX,
 		.codec	= Q6_SDAC_RX,
@@ -297,7 +297,7 @@ static struct q6_device_info q6_audio_devices[] = {
 	{
 		.id	= ADSP_AUDIO_DEVICE_ID_I2S_MIC,
 		.cad_id	= CAD_HW_DEVICE_ID_I2S_TX,
-		.path	= 0, /* XXX */
+		.path	= 0, /*     */
 		.rate   = 16000,
 		.dir	= Q6_TX,
 		.codec	= Q6_SDAC_TX,
@@ -306,7 +306,7 @@ static struct q6_device_info q6_audio_devices[] = {
 	{
 		.id	= ADSP_AUDIO_DEVICE_ID_AUXPCM_RX,
 		.cad_id	= CAD_HW_DEVICE_ID_BT_SCO_SPKR,
-		.path	= 0, /* XXX */
+		.path	= 0, /*     */
 		.rate   = 8000,
 		.dir	= Q6_RX,
 		.codec	= Q6_ECODEC_RX,
@@ -315,7 +315,7 @@ static struct q6_device_info q6_audio_devices[] = {
 	{
 		.id	= ADSP_AUDIO_DEVICE_ID_AUXPCM_TX,
 		.cad_id	= CAD_HW_DEVICE_ID_BT_SCO_MIC,
-		.path	= 0, /* XXX */
+		.path	= 0, /*     */
 		.rate   = 8000,
 		.dir	= Q6_TX,
 		.codec	= Q6_ECODEC_TX,

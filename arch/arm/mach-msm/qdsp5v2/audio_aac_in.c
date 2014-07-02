@@ -40,10 +40,10 @@
 #include <mach/debug_mm.h>
 #include <mach/socinfo.h>
 
-/* FRAME_NUM must be a power of two */
+/*                                  */
 #define FRAME_NUM		(8)
-#define FRAME_SIZE		(772 * 2) /* 1536 bytes data */
-#define NT_FRAME_SIZE	(780 * 2) /* 1536 bytes data  + 24 meta field*/
+#define FRAME_SIZE		(772 * 2) /*                 */
+#define NT_FRAME_SIZE	(780 * 2) /*                                 */
 #define AAC_FRAME_SIZE	1536
 #define DMASZ 			(FRAME_SIZE * FRAME_NUM)
 #define OUT_FRAME_NUM	(2)
@@ -52,10 +52,10 @@
 #define OUT_BUFFER_SIZE (32 * 1024 + META_OUT_SIZE)
 #define BUFFER_SIZE		(OUT_BUFFER_SIZE * OUT_FRAME_NUM)
 
-#define AUDPREPROC_AAC_EOS_FLG_OFFSET 0x0A /* Offset from beginning of buffer */
+#define AUDPREPROC_AAC_EOS_FLG_OFFSET 0x0A /*                                 */
 #define AUDPREPROC_AAC_EOS_FLG_MASK 0x01
-#define AUDPREPROC_AAC_EOS_NONE 0x0 /* No EOS detected */
-#define AUDPREPROC_AAC_EOS_SET 0x1 /* EOS set in meta field */
+#define AUDPREPROC_AAC_EOS_NONE 0x0 /*                 */
+#define AUDPREPROC_AAC_EOS_SET 0x1 /*                       */
 
 #define PCM_CONFIG_UPDATE_FLAG_ENABLE -1
 #define PCM_CONFIG_UPDATE_FLAG_DISABLE	0
@@ -84,40 +84,40 @@ struct audio_in {
 	struct mutex read_lock;
 	wait_queue_head_t wait;
 	wait_queue_head_t wait_enable;
-	/*write section*/
+	/*             */
 	struct buffer out[OUT_FRAME_NUM];
 
 	uint8_t out_head;
 	uint8_t out_tail;
-	uint8_t out_needed;	/* number of buffers the dsp is waiting for */
+	uint8_t out_needed;	/*                                          */
 	uint32_t out_count;
 
 	struct mutex write_lock;
 	wait_queue_head_t write_wait;
-	int32_t out_phys; /* physical address of write buffer */
+	int32_t out_phys; /*                                  */
 	char *out_data;
 	void *map_v_read;
 	void *map_v_write;
 
-	int mfield; /* meta field embedded in data */
-	int wflush; /*write flush */
-	int rflush; /*read flush*/
+	int mfield; /*                             */
+	int wflush; /*            */
+	int rflush; /*          */
 	int out_frame_cnt;
 
 	struct msm_adsp_module *audrec;
 
-	/* configuration to use on next enable */
-	uint32_t buffer_size; /* Frame size (36 bytes) */
+	/*                                     */
+	uint32_t buffer_size; /*                       */
 	uint32_t samp_rate;
 	uint32_t channel_mode;
-	uint32_t bit_rate; /* bit rate for AAC */
-	uint32_t record_quality; /* record quality (bits/sample/channel) */
+	uint32_t bit_rate; /*                  */
+	uint32_t record_quality; /*                                      */
 	uint32_t enc_type;
 
 	uint32_t dsp_cnt;
-	uint32_t in_head; /* next buffer dsp will write */
-	uint32_t in_tail; /* next buffer read() will read */
-	uint32_t in_count; /* number of buffers available to read() */
+	uint32_t in_head; /*                            */
+	uint32_t in_tail; /*                              */
+	uint32_t in_count; /*                                       */
 	uint32_t mode;
 	uint32_t eos_ack;
 	uint32_t flush_ack;
@@ -126,21 +126,21 @@ struct audio_in {
 	unsigned queue_ids;
 	uint16_t enc_id;
 
-	struct audrec_session_info session_info; /*audrec session info*/
-	uint16_t source; /* Encoding source bit mask */
-	uint32_t device_events; /* device events interested in */
+	struct audrec_session_info session_info; /*                   */
+	uint16_t source; /*                          */
+	uint32_t device_events; /*                             */
 	uint32_t dev_cnt;
 	spinlock_t dev_lock;
 
-	/* data allocated for various buffers */
+	/*                                    */
 	char *data;
 	dma_addr_t phys;
 
 	int opened;
 	int enabled;
 	int running;
-	int stopped; /* set when stopped, cleared on flush */
-	int abort; /* set when error, like sample rate mismatch */
+	int stopped; /*                                    */
+	int abort; /*                                           */
 	char *build_id;
 };
 
@@ -149,7 +149,7 @@ struct audio_frame {
 	uint16_t frame_count_msw;
 	uint16_t frame_length;
 	uint16_t erased_pcm;
-	unsigned char raw_bitstream[]; /* samples */
+	unsigned char raw_bitstream[]; /*         */
 } __attribute__((packed));
 
 struct audio_frame_nt {
@@ -165,7 +165,7 @@ struct audio_frame_nt {
 	uint16_t time_stamp_msw;
 	uint16_t nflag_lsw;
 	uint16_t nflag_msw;
-	unsigned char raw_bitstream[]; /* samples */
+	unsigned char raw_bitstream[]; /*         */
 } __attribute__((packed));
 
 struct aac_encoded_meta_in {
@@ -178,7 +178,7 @@ struct aac_encoded_meta_in {
 	uint16_t nflag_msw;
 };
 
-/* Audrec Queue command sent macro's */
+/*                                   */
 #define audrec_send_bitstreamqueue(audio, cmd, len) \
 	msm_adsp_write(audio->audrec, ((audio->queue_ids & 0xFFFF0000) >> 16),\
 			cmd, len)
@@ -187,7 +187,7 @@ struct aac_encoded_meta_in {
 	msm_adsp_write(audio->audrec, (audio->queue_ids & 0x0000FFFF),\
 			cmd, len)
 
-/* DSP command send functions */
+/*                            */
 static int audaac_in_enc_config(struct audio_in *audio, int enable);
 static int audaac_in_param_config(struct audio_in *audio);
 static int audaac_in_mem_config(struct audio_in *audio);
@@ -235,11 +235,11 @@ static void aac_in_listener(u32 evt_id, union auddev_evt_data *evt_payload,
 			break;
 
 		if (audio->mode == MSM_AUD_ENC_MODE_TUNNEL) {
-			/* Turn of as per source */
+			/*                       */
 			if (audio->source)
 				audaac_in_record_config(audio, 1);
 			else
-			/* Turn off all */
+			/*              */
 				audaac_in_record_config(audio, 0);
 		}
 		break;
@@ -250,8 +250,8 @@ static void aac_in_listener(u32 evt_id, union auddev_evt_data *evt_payload,
 		MM_DBG("dev_type %d\n", evt_payload->freq_info.dev_type);
 		MM_DBG("acdb_dev_id %d\n", evt_payload->freq_info.acdb_dev_id);
 		if ((audio->running == 1) && (audio->enabled == 1)) {
-			/* Stop Recording sample rate does not match
-			   with device sample rate */
+			/*                                          
+                              */
 			if (evt_payload->freq_info.sample_rate !=
 				audio->samp_rate) {
 				if (audio->mode == MSM_AUD_ENC_MODE_TUNNEL)
@@ -268,20 +268,20 @@ static void aac_in_listener(u32 evt_id, union auddev_evt_data *evt_payload,
 	}
 }
 
-/* Convert Bit Rate to Record Quality field of DSP */
+/*                                                 */
 static unsigned int bitrate_to_record_quality(unsigned int sample_rate,
 		unsigned int channel, unsigned int bit_rate) {
 	unsigned int temp;
 
 	temp = sample_rate * channel;
 	MM_DBG(" sample rate *  channel = %d \n", temp);
-	/* To represent in Q12 fixed format */
+	/*                                  */
 	temp = (bit_rate * 4096) / temp;
 	MM_DBG(" Record Quality = 0x%8x \n", temp);
 	return temp;
 }
 
-/* ------------------- dsp preproc event handler--------------------- */
+/*                                                                    */
 static void audpreproc_dsp_event(void *data, unsigned id,  void *msg)
 {
 	struct audio_in *audio = data;
@@ -292,7 +292,7 @@ static void audpreproc_dsp_event(void *data, unsigned id,  void *msg)
 
 		MM_ERR("ERROR_MSG: stream id %d err idx %d\n",
 		err_msg->stream_id, err_msg->aud_preproc_err_idx);
-		/* Error case */
+		/*            */
 		wake_up(&audio->wait_enable);
 		break;
 	}
@@ -306,7 +306,7 @@ static void audpreproc_dsp_event(void *data, unsigned id,  void *msg)
 		MM_DBG("CMD_ENC_CFG_DONE_MSG: stream id %d enc type \
 			0x%8x\n", enc_cfg_msg->stream_id,
 			enc_cfg_msg->rec_enc_type);
-		/* Encoder enable success */
+		/*                        */
 		if (enc_cfg_msg->rec_enc_type & ENCODE_ENABLE) {
 			if(audio->mode == MSM_AUD_ENC_MODE_NONTUNNEL) {
 				MM_DBG("routing command\n");
@@ -314,7 +314,7 @@ static void audpreproc_dsp_event(void *data, unsigned id,  void *msg)
 			} else {
 				audaac_in_param_config(audio);
 			}
-		} else { /* Encoder disable success */
+		} else { /*                         */
 			audio->running = 0;
 			if (audio->mode == MSM_AUD_ENC_MODE_TUNNEL)
 				audaac_in_record_config(audio, 0);
@@ -351,7 +351,7 @@ static void audpreproc_dsp_event(void *data, unsigned id,  void *msg)
 	}
 }
 
-/* ------------------- dsp audrec event handler--------------------- */
+/*                                                                   */
 static void audrec_dsp_event(void *data, unsigned id, size_t len,
 			    void (*getevent)(void *ptr, size_t len))
 {
@@ -376,7 +376,7 @@ static void audrec_dsp_event(void *data, unsigned id, size_t len,
 		getevent(&fatal_err_msg, AUDREC_FATAL_ERR_MSG_LEN);
 		MM_ERR("FATAL_ERR_MSG: err id %d\n",
 				fatal_err_msg.audrec_err_id);
-		/* Error stop the encoder */
+		/*                        */
 		audio->stopped = 1;
 		wake_up(&audio->wait);
 		if (audio->mode == MSM_AUD_ENC_MODE_NONTUNNEL)
@@ -457,13 +457,13 @@ static void audaac_in_get_dsp_frames(struct audio_in *audio)
 	spin_lock_irqsave(&audio->dsp_lock, flags);
 	audio->in[index].size = frame->frame_length;
 
-	/* statistics of read */
+	/*                    */
 	atomic_add(audio->in[index].size, &audio->in_bytes);
 	atomic_add(1, &audio->in_samples);
 
 	audio->in_head = (audio->in_head + 1) & (FRAME_NUM - 1);
 
-	/* If overflow, move the tail index foward. */
+	/*                                          */
 	if (audio->in_head == audio->in_tail) {
 		MM_ERR("Error! not able to keep up the read\n");
 		audio->in_tail = (audio->in_tail + 1) & (FRAME_NUM - 1);
@@ -487,13 +487,13 @@ static void audaac_nt_in_get_dsp_frames(struct audio_in *audio)
 				sizeof(struct audio_frame_nt));
 	spin_lock_irqsave(&audio->dsp_lock, flags);
 	audio->in[index].size = nt_frame->frame_length;
-	/* statistics of read */
+	/*                    */
 	atomic_add(audio->in[index].size, &audio->in_bytes);
 	atomic_add(1, &audio->in_samples);
 
 	audio->in_head = (audio->in_head + 1) & (FRAME_NUM - 1);
 
-	/* If overflow, move the tail index foward. */
+	/*                                          */
 	if (audio->in_head == audio->in_tail)
 		MM_DBG("Error! not able to keep up the read\n");
 	else
@@ -607,7 +607,7 @@ static int audaac_in_param_config(struct audio_in *audio)
 	return audpreproc_send_audreccmdqueue(&cmd, sizeof(cmd));
 }
 
-/* To Do: msm_snddev_route_enc(audio->enc_id); */
+/*                                             */
 static int audaac_in_record_config(struct audio_in *audio, int enable)
 {
 	struct audpreproc_afe_cmd_audio_record_cfg cmd;
@@ -647,9 +647,9 @@ static int audaac_in_mem_config(struct audio_in *audio)
 	cmd.audrec_ext_pkt_start_addr_lsw = audio->phys;
 	cmd.audrec_ext_pkt_buf_number = FRAME_NUM;
 	MM_DBG("audio->phys = %x\n", audio->phys);
-	/* prepare buffer pointers:
-	 * 1536 bytes aac packet + 4 halfword header
-	 */
+	/*                         
+                                             
+  */
 	for (n = 0; n < FRAME_NUM; n++) {
 		if (audio->mode == MSM_AUD_ENC_MODE_TUNNEL) {
 			audio->in[n].data = data + 4;
@@ -684,7 +684,7 @@ static int audaac_flush_command(struct audio_in *audio)
 	return audrec_send_audrecqueue(audio, &cmd, sizeof(cmd));
 }
 
-/* must be called with audio->lock held */
+/*                                      */
 static int audaac_in_enable(struct audio_in *audio)
 {
 	if (audio->enabled)
@@ -706,7 +706,7 @@ static int audaac_in_enable(struct audio_in *audio)
 	return 0;
 }
 
-/* must be called with audio->lock held */
+/*                                      */
 static int audaac_in_disable(struct audio_in *audio)
 {
 	if (audio->enabled) {
@@ -723,10 +723,10 @@ static int audaac_in_disable(struct audio_in *audio)
 
 static void audaac_ioport_reset(struct audio_in *audio)
 {
-	/* Make sure read/write thread are free from
-	 * sleep and knowing that system is not able
-	 * to process io request at the moment
-	 */
+	/*                                          
+                                             
+                                       
+  */
 	wake_up(&audio->write_wait);
 	mutex_lock(&audio->write_lock);
 	audaac_in_flush(audio);
@@ -770,7 +770,7 @@ static void audaac_out_flush(struct audio_in *audio)
 	}
 }
 
-/* ------------------- device --------------------- */
+/*                                                  */
 static long audaac_in_ioctl(struct file *file,
 				unsigned int cmd, unsigned long arg)
 {
@@ -790,7 +790,7 @@ static long audaac_in_ioctl(struct file *file,
 	switch (cmd) {
 	case AUDIO_START: {
 		uint32_t freq;
-		/* Poll at 48KHz always */
+		/*                      */
 		freq = 48000;
 		MM_DBG("AUDIO_START\n");
 		rc = msm_snddev_request_freq(&freq, audio->enc_id,
@@ -805,7 +805,7 @@ static long audaac_in_ioctl(struct file *file,
 			MM_DBG("msm_snddev_withdraw_freq\n");
 			break;
 		}
-		/*update aurec session info in audpreproc layer*/
+		/*                                             */
 		audio->session_info.session_id = audio->enc_id;
 		audio->session_info.sampling_freq = audio->samp_rate;
 		audpreproc_update_audrec_info(&audio->session_info);
@@ -868,7 +868,7 @@ static long audaac_in_ioctl(struct file *file,
 			rc = -EFAULT;
 			break;
 		}
-		/* Allow only single frame */
+		/*                         */
 		if (audio->mode == MSM_AUD_ENC_MODE_TUNNEL) {
 			if (cfg.buffer_size != (FRAME_SIZE - 8)) {
 				rc = -EINVAL;
@@ -919,7 +919,7 @@ static long audaac_in_ioctl(struct file *file,
 		}
 		record_quality = bitrate_to_record_quality(cfg.sample_rate,
 					cfg.channels, cfg.bit_rate);
-		/* Range of Record Quality Supported by DSP, Q12 format */
+		/*                                                      */
 		if ((record_quality < 0x800) || (record_quality > 0x4000)) {
 			MM_ERR("Unsupported bit rate \n");
 			rc = -EINVAL;
@@ -986,12 +986,12 @@ static ssize_t audaac_in_read(struct file *file,
 
 		if (audio->stopped && !audio->in_count) {
 			MM_DBG("Driver in stop state, No more buffer to read");
-			rc = 0;/* End of File */
+			rc = 0;/*             */
 			break;
 		}
 
 		if (audio->abort) {
-			rc = -EPERM; /* Not permitted due to abort */
+			rc = -EPERM; /*                            */
 			break;
 		}
 
@@ -1025,8 +1025,8 @@ static ssize_t audaac_in_read(struct file *file,
 			}
 			spin_lock_irqsave(&audio->dsp_lock, flags);
 			if (index != audio->in_tail) {
-				/* overrun -- data is
-				 * invalid and we need to retry */
+				/*                   
+                                    */
 				spin_unlock_irqrestore(&audio->dsp_lock, flags);
 				continue;
 			}
@@ -1068,12 +1068,12 @@ static void audpreproc_pcm_send_data(struct audio_in *audio, unsigned needed)
 		goto done;
 
 	if (needed && !audio->wflush) {
-		/* We were called from the callback because the DSP
-		 * requested more data.  Note that the DSP does want
-		 * more data, and if a buffer was in-flight, mark it
-		 * as available (since the DSP must now be done with
-		 * it).
-		 */
+		/*                                                 
+                                                      
+                                                      
+                                                      
+         
+   */
 		audio->out_needed = 1;
 		frame = audio->out + audio->out_tail;
 		if (frame->used == 0xffffffff) {
@@ -1085,12 +1085,12 @@ static void audpreproc_pcm_send_data(struct audio_in *audio, unsigned needed)
 	}
 
 	if (audio->out_needed) {
-		/* If the DSP currently wants data and we have a
-		 * buffer available, we will send it and reset
-		 * the needed flag.  We'll mark the buffer as in-flight
-		 * so that it won't be recycled until the next buffer
-		 * is requested
-		 */
+		/*                                              
+                                                
+                                                         
+                                                       
+                 
+   */
 
 		frame = audio->out + audio->out_tail;
 		if (frame->used) {
@@ -1114,7 +1114,7 @@ static int audaac_in_fsync(struct file *file, loff_t ppos1, loff_t ppos2, int da
 	struct audio_in *audio = file->private_data;
 	int rc = 0;
 
-	MM_DBG("\n"); /* Macro prints the file name and function */
+	MM_DBG("\n"); /*                                         */
 	if (!audio->running || (audio->mode == MSM_AUD_ENC_MODE_TUNNEL)) {
 		rc = -EINVAL;
 		goto done_nolock;
@@ -1206,7 +1206,7 @@ static ssize_t audaac_in_write(struct file *file,
 	}
 	if (audio->mfield) {
 		if (buf == start) {
-			/* Processing beginning of user buffer */
+			/*                                     */
 			if (__get_user(mfield_size,
 				(unsigned short __user *) buf)) {
 				rc = -EFAULT;
@@ -1220,9 +1220,9 @@ static ssize_t audaac_in_write(struct file *file,
 				rc = -EFAULT;
 				goto error;
 			}
-			/* Check if EOS flag is set and buffer has
-			 * contains just meta field
-			 */
+			/*                                        
+                              
+    */
 			if (cpy_ptr[AUDPREPROC_AAC_EOS_FLG_OFFSET] &
 					AUDPREPROC_AAC_EOS_FLG_MASK) {
 				MM_DBG("EOS SET\n");
@@ -1276,12 +1276,12 @@ static int audaac_in_release(struct inode *inode, struct file *file)
 	struct audio_in *audio = file->private_data;
 
 	mutex_lock(&audio->lock);
-	/* with draw frequency for session
-	   incase not stopped the driver */
+	/*                                
+                                  */
 	msm_snddev_withdraw_freq(audio->enc_id, SNDDEV_CAP_TX,
 					AUDDEV_CLNT_ENC);
 	auddev_unregister_evt_listner(AUDDEV_CLNT_ENC, audio->enc_id);
-	/*reset the sampling frequency information at audpreproc layer*/
+	/*                                                            */
 	audio->session_info.sampling_freq = 0;
 	audpreproc_update_audrec_info(&audio->session_info);
 	audaac_in_disable(audio);
@@ -1346,9 +1346,9 @@ static int audaac_in_open(struct inode *inode, struct file *file)
 		goto done;
 	}
 
-	/* Settings will be re-config at AUDIO_SET_CONFIG,
-	 * but at least we need to have initial config
-	 */
+	/*                                                
+                                               
+  */
 	 if (audio->mode == MSM_AUD_ENC_MODE_NONTUNNEL)
 			audio->buffer_size = (NT_FRAME_SIZE - 24);
 	else
@@ -1356,9 +1356,9 @@ static int audaac_in_open(struct inode *inode, struct file *file)
 	audio->enc_type = ENC_TYPE_AAC | audio->mode;
 	audio->samp_rate = 8000;
 	audio->channel_mode = AUDREC_CMD_MODE_MONO;
-	/* For AAC, bit rate hard coded, default settings is
-	 * sample rate (8000) x channel count (1) x recording quality (1.75)
-	 * = 14000 bps  */
+	/*                                                  
+                                                                     
+                 */
 	audio->bit_rate = 14000;
 	audio->record_quality = 0x1c00;
 	MM_DBG("enc_type = %x\n", audio->enc_type);
@@ -1410,7 +1410,7 @@ static int audaac_in_open(struct inode *inode, struct file *file)
 	audio->build_id = socinfo_get_build_id();
 	MM_DBG("Modem build id = %s\n", audio->build_id);
 
-		/* Initialize buffer */
+		/*                   */
 	audio->out[0].data = audio->out_data + 0;
 	audio->out[0].addr = audio->out_phys + 0;
 	audio->out[0].size = OUT_BUFFER_SIZE;

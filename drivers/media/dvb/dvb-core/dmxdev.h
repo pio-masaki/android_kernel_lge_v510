@@ -69,28 +69,28 @@ struct dmxdev_sec_feed {
 };
 
 struct dmxdev_events_queue {
-#define DMX_EVENT_QUEUE_SIZE	500 /* number of events */
+#define DMX_EVENT_QUEUE_SIZE	500 /*                  */
 	/*
-	 * indices used to manage events queue.
-	 * read_index advanced when relevent data is read
-	 * from the buffer.
-	 * notified_index is the index from which next events
-	 * are returned.
-	 * read_index <= notified_index <= write_index
-	 *
-	 * If user reads the data without getting the respective
-	 * event first, the read/notified indices are updated
-	 * automatically to reflect the actual data that exist
-	 * in the buffer.
-	 */
+                                        
+                                                  
+                    
+                                                      
+                 
+                                               
+   
+                                                         
+                                                      
+                                                       
+                  
+  */
 	u32 read_index;
 	u32 write_index;
 	u32 notified_index;
 
-	/* Bytes read by user without having respective event in the queue */
+	/*                                                                 */
 	u32 bytes_read_no_event;
 
-	/* internal tracking of PES and recording events */
+	/*                                               */
 	u32 current_event_data_size;
 	u32 current_event_start_offset;
 
@@ -103,7 +103,7 @@ struct dmxdev_filter {
 	} filter;
 
 	union {
-		/* list of TS and PES feeds (struct dmxdev_feed) */
+		/*                                               */
 		struct list_head ts;
 		struct dmxdev_sec_feed sec;
 	} feed;
@@ -124,16 +124,16 @@ struct dmxdev_filter {
 
 	struct mutex mutex;
 
-	/* for recording output */
+	/*                      */
 	enum dmx_tsp_format_t dmx_tsp_format;
 	u32 rec_chunk_size;
 
-	/* only for sections */
+	/*                   */
 	struct timer_list timer;
 	int todo;
 	u8 secheader[3];
 
-	/* Decoder buffer(s) related */
+	/*                           */
 	struct dmx_decoder_buffers decoder_buffers;
 };
 
@@ -182,4 +182,4 @@ struct dmxdev {
 int dvb_dmxdev_init(struct dmxdev *dmxdev, struct dvb_adapter *);
 void dvb_dmxdev_release(struct dmxdev *dmxdev);
 
-#endif /* _DMXDEV_H_ */
+#endif /*            */

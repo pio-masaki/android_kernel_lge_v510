@@ -15,12 +15,12 @@
 #define _MSM_STATS_BUF_H_
 
 enum msm_stats_buffer_state {
-	MSM_STATS_BUFFER_STATE_UNUSED,	  /* not used */
-	MSM_STATS_BUFFER_STATE_INITIALIZED,	   /* REQBUF done */
-	MSM_STATS_BUFFER_STATE_PREPARED,	/* BUF mapped */
-	MSM_STATS_BUFFER_STATE_QUEUED,	  /* buf queued */
-	MSM_STATS_BUFFER_STATE_DEQUEUED,	/* in use in VFE */
-	MSM_STATS_BUFFER_STATE_DISPATCHED,	  /* sent to userspace */
+	MSM_STATS_BUFFER_STATE_UNUSED,	  /*          */
+	MSM_STATS_BUFFER_STATE_INITIALIZED,	   /*             */
+	MSM_STATS_BUFFER_STATE_PREPARED,	/*            */
+	MSM_STATS_BUFFER_STATE_QUEUED,	  /*            */
+	MSM_STATS_BUFFER_STATE_DEQUEUED,	/*               */
+	MSM_STATS_BUFFER_STATE_DISPATCHED,	  /*                   */
 };
 
 struct msm_stats_meta_buf {
@@ -45,7 +45,7 @@ struct msm_stats_bufq {
 
 
 struct msm_stats_bufq_ctrl {
-	/* not use spin lock for now. Assume vfe holds spin lock */
+	/*                                                       */
 	spinlock_t lock;
 	int init_done;
 	struct msm_stats_bufq *bufq[MSM_STATS_TYPE_MAX];
@@ -90,4 +90,4 @@ struct msm_stats_ops {
 int msm_stats_buf_ops_init(struct msm_stats_bufq_ctrl *stats_ctrl,
 	struct ion_client *client, struct msm_stats_ops *ops);
 
-#endif /* _MSM_STATS_BUF_H_ */
+#endif /*                   */

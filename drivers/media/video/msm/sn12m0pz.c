@@ -33,23 +33,23 @@
 #define	MODE_SELECT_STANDBY_MODE		0x00
 #define	MODE_SELECT_STREAM			0x01
 
-/* Integration Time */
+/*                  */
 #define	REG_COARSE_INTEGRATION_TIME_MSB		0x0202
 #define	REG_COARSE_INTEGRATION_TIME_LSB		0x0203
 
-/* Gain */
+/*      */
 #define	REG_ANALOGUE_GAIN_CODE_GLOBAL_MSB	0x0204
 #define	REG_ANALOGUE_GAIN_CODE_GLOBAL_LSB	0x0205
 
-/* PLL Register Defines */
+/*                      */
 #define	REG_PLL_MULTIPLIER			0x0307
 #define	REG_0x302B				0x302B
 
-/* MIPI Enable Settings */
+/*                      */
 #define	REG_0x30E5				0x30E5
 #define	REG_0x3300				0x3300
 
-/* Global Setting */
+/*                */
 #define	REG_IMAGE_ORIENTATION			0x0101
 
 #define	REG_0x300A				0x300A
@@ -128,7 +128,7 @@
 #define	REG_0x330C			0x330C
 #define	REG_0x330D			0x330D
 
-/* Mode Setting */
+/*              */
 #define	REG_FRAME_LENGTH_LINES_MSB	0x0340
 #define	REG_FRAME_LENGTH_LINES_LSB	0x0341
 #define	REG_LINE_LENGTH_PCK_MSB		0x0342
@@ -144,7 +144,7 @@
 #define	REG_0x3016			0x3016
 #define	REG_0x30E8			0x30E8
 #define	REG_0x3301			0x3301
-/* for 120fps support */
+/*                    */
 #define	REG_0x0344			0x0344
 #define	REG_0x0345			0x0345
 #define	REG_0x0346			0x0346
@@ -154,11 +154,11 @@
 #define	REG_0x034A			0x034A
 #define	REG_0x034B			0x034B
 
-/* Test Pattern */
+/*              */
 #define	REG_0x30D8			0x30D8
 #define	REG_TEST_PATTERN_MODE		0x0601
 
-/* Solid Color Test Pattern */
+/*                          */
 #define	REG_TEST_DATA_RED_MSB		0x0603
 #define	REG_TEST_DATA_RED_LSB		0x0603
 #define	REG_TEST_DATA_GREENR_MSB	0x0604
@@ -172,7 +172,7 @@
 #define	SN12M0PZ_TOTAL_STEPS_NEAR_TO_FAR	42
 
 
-/* TYPE DECLARATIONS */
+/*                   */
 
 
 enum mipi_config_type {
@@ -201,19 +201,19 @@ enum sn12m0pz_setting {
 };
 
 enum mt9p012_reg_update {
-	/* Sensor egisters that need to be updated during initialization */
+	/*                                                               */
 	REG_INIT,
-	/* Sensor egisters that needs periodic I2C writes */
+	/*                                                */
 	UPDATE_PERIODIC,
-	/* All the sensor Registers will be updated */
+	/*                                          */
 	UPDATE_ALL,
-	/* Not valid update */
+	/*                  */
 	UPDATE_INVALID
 };
 
-/* 816x612, 24MHz MCLK 96MHz PCLK */
+/*                                */
 #define	IU060F_SN12M0PZ_OFFSET			3
-/* Time in milisecs for waiting for the sensor to reset.*/
+/*                                                      */
 #define	SN12M0PZ_RESET_DELAY_MSECS		66
 #define	SN12M0PZ_WIDTH				4032
 #define	SN12M0PZ_HEIGHT				3024
@@ -226,7 +226,7 @@ enum mt9p012_reg_update {
 #define	SN12M0PZ_HRZ_QTR_BLK_PIXELS		2192
 #define	SN12M0PZ_VER_QTR_BLK_LINES		26
 
-/* 120fps mode */
+/*             */
 #define	SN12M0PZ_QVGA_SIZE_WIDTH		4032
 #define	SN12M0PZ_QVGA_SIZE_HEIGHT		249
 #define	SN12M0PZ_HRZ_QVGA_BLK_PIXELS		176
@@ -235,7 +235,7 @@ enum mt9p012_reg_update {
 
 static uint32_t IU060F_SN12M0PZ_DELAY_MSECS = 30;
 static enum mipi_config_type mipi_config = IU060F_SN12M0PZ_STMIPID02;
-/* AF Tuning Parameters */
+/*                      */
 static int16_t enable_single_D02_lane;
 static int16_t fullsize_cropped_at_8mp;
 
@@ -249,8 +249,8 @@ static struct i2c_client *sn12m0pz_client;
 struct sn12m0pz_ctrl_t {
 	const struct msm_camera_sensor_info *sensordata;
 	uint32_t sensormode;
-	uint32_t fps_divider;/* init to 1 * 0x00000400 */
-	uint32_t pict_fps_divider;/* init to 1 * 0x00000400 */
+	uint32_t fps_divider;/*                        */
+	uint32_t pict_fps_divider;/*                        */
 	uint16_t fps;
 	int16_t curr_lens_pos;
 	uint16_t curr_step_pos;
@@ -403,32 +403,32 @@ static int32_t sn12m0pz_i2c_write_byte_bridge(unsigned short saddr,
 static int32_t sn12m0pz_stmipid01_config(void)
 {
 	int32_t rc = 0;
-	/* Initiate I2C for D01: */
-	/* MIPI Bridge configuration */
+	/*                       */
+	/*                           */
 	if (sn12m0pz_i2c_write_byte_bridge(0x28>>1, 0x0002, 0x19) < 0)
-		return rc; /* enable clock lane*/
+		return rc; /*                  */
 	if (sn12m0pz_i2c_write_byte_bridge(0x28>>1, 0x0003, 0x00) < 0)
 		return rc;
 	if (sn12m0pz_i2c_write_byte_bridge(0x28>>1, 0x0004, 0x3E) < 0)
-		return rc; /* mipi mode clock*/
+		return rc; /*                */
 	if (sn12m0pz_i2c_write_byte_bridge(0x28>>1, 0x0005, 0x01) < 0)
-		return rc; /* enable data line*/
+		return rc; /*                 */
 	if (sn12m0pz_i2c_write_byte_bridge(0x28>>1, 0x0006, 0x0F) < 0)
-		return rc; /* mipi mode data 0x01*/
+		return rc; /*                    */
 	if (sn12m0pz_i2c_write_byte_bridge(0x28>>1, 0x0009, 0x00) < 0)
-		return rc; /* Data_Lane1_Reg1*/
+		return rc; /*                */
 	if (sn12m0pz_i2c_write_byte_bridge(0x28>>1, 0x000D, 0x92) < 0)
-		return rc; /* CCPRxRegisters*/
+		return rc; /*               */
 	if (sn12m0pz_i2c_write_byte_bridge(0x28>>1, 0x000E, 0x28) < 0)
-		return rc; /* 10 bits for pixel width input for CCP rx.*/
+		return rc; /*                                          */
 	if (sn12m0pz_i2c_write_byte_bridge(0x28>>1, 0x0014, 0xC0) < 0)
-		return rc; /* no bypass, no decomp, 1Lane System,CSIstreaming*/
+		return rc; /*                                                */
 	if (sn12m0pz_i2c_write_byte_bridge(0x28>>1, 0x0015, 0x48) < 0)
-		return rc; /* ModeControlRegisters-- Don't reset error flag*/
+		return rc; /*                                              */
 	if (sn12m0pz_i2c_write_byte_bridge(0x28>>1, 0x0017, 0x2B) < 0)
-		return rc; /* Data_ID_Rreg*/
+		return rc; /*             */
 	if (sn12m0pz_i2c_write_byte_bridge(0x28>>1, 0x0018, 0x2B) < 0)
-		return rc; /* Data_ID_Rreg_emb*/
+		return rc; /*                 */
 	if (sn12m0pz_i2c_write_byte_bridge(0x28>>1, 0x0019, 0x0C) < 0)
 		return rc;
 	if (sn12m0pz_i2c_write_byte_bridge(0x28>>1, 0x001E, 0x0A) < 0)
@@ -442,21 +442,21 @@ static int32_t sn12m0pz_stmipid02_config(void)
 {
 	int32_t rc = 0;
 
-	/* Main Camera Clock Lane 1 (CLHP1, CLKN1)*/
-	/* Enable Clock Lane 1 (CLHP1, CLKN1), 0x15 for 400MHz */
+	/*                                        */
+	/*                                                     */
 	if (enable_single_D02_lane) {
 		if (sn12m0pz_i2c_write_byte_bridge(0x28>>1, 0x0002, 0x19) < 0)
 			return rc;
-		/* Main Camera Data Lane 1.1 (DATA2P1, DATA2N1) */
+		/*                                              */
 		if (sn12m0pz_i2c_write_byte_bridge(0x28>>1, 0x0009, 0x00) < 0)
-			return rc;/* Enable Data Lane 1.2 (DATA2P1, DATA2N1) */
+			return rc;/*                                         */
 		if (sn12m0pz_i2c_write_byte_bridge(0x28>>1, 0x000A, 0x00) < 0)
-			return rc; /*CSIMode on Data Lane1.2(DATA2P1,DATA2N1)*/
-		/* Mode Control */
-		/* Enable single lane for qtr preview */
+			return rc; /*                                        */
+		/*              */
+		/*                                    */
 		if (sn12m0pz_i2c_write_byte_bridge(0x28>>1, 0x0014, 0xC0) < 0)
-			return rc; /*set 0xC0 - left justified on upper bits)*/
-		/* bit 1 set to 0 i.e. 1 lane system for qtr size preview */
+			return rc; /*                                        */
+		/*                                                        */
 	} else {
 		if (sn12m0pz_ctrl->prev_res == QVGA_SIZE) {
 			if (sn12m0pz_i2c_write_byte_bridge(0x28>>1,
@@ -467,56 +467,56 @@ static int32_t sn12m0pz_stmipid02_config(void)
 				0x0002, 0x21) < 0)
 				return rc;
 		}
-		/* Main Camera Data Lane 1.1 (DATA2P1, DATA2N1) */
+		/*                                              */
 		if (sn12m0pz_i2c_write_byte_bridge(0x28>>1, 0x0009, 0x01) < 0)
-			return rc; /* Enable Data Lane 1.2 (DATA2P1, DATA2N1) */
+			return rc; /*                                         */
 		if (sn12m0pz_i2c_write_byte_bridge(0x28>>1, 0x000A, 0x01) < 0)
-			return rc; /* CSI Mode Data Lane1.2(DATA2P1, DATA2N1)*/
+			return rc; /*                                        */
 
-		/* Mode Control */
-		/* Enable two lanes for full size preview/ snapshot */
+		/*              */
+		/*                                                  */
 		if (sn12m0pz_i2c_write_byte_bridge(0x28>>1, 0x0014, 0xC2) < 0)
-			return rc; /* No decompression, CSI dual lane */
+			return rc; /*                                 */
 	}
 
 	if (sn12m0pz_i2c_write_byte_bridge(0x28>>1, 0x0004, 0x1E) < 0)
 		return rc;
 
-	/* Main Camera Data Lane 1.1 (DATA1P1, DATA1N1) */
+	/*                                              */
 	if (sn12m0pz_i2c_write_byte_bridge(0x28>>1, 0x0005, 0x03) < 0)
-		return rc; /* Enable Data Lane 1.1 (DATA1P1, DATA1N1) */
+		return rc; /*                                         */
 	if (sn12m0pz_i2c_write_byte_bridge(0x28>>1, 0x0006, 0x0f) < 0)
-		return rc; /* CSI Mode on Data Lane 1.1 (DATA1P1, DATA1N1) */
+		return rc; /*                                              */
 
-	/* Tristated Output, continuous clock, */
-	/*polarity of clock is inverted and sync signals not inverted*/
+	/*                                     */
+	/*                                                           */
 	if (sn12m0pz_i2c_write_byte_bridge(0x28>>1, 0x0015, 0x08) < 0)
 		return rc;
 	if (sn12m0pz_i2c_write_byte_bridge(0x28>>1, 0x0036, 0x20) < 0)
-		return rc; /* Enable compensation macro, main camera */
+		return rc; /*                                        */
 
-	/* Data type: 0x2B Raw 10 */
+	/*                        */
 	if (sn12m0pz_i2c_write_byte_bridge(0x28>>1, 0x0017, 0x2B) < 0)
 		return rc;
 	if (sn12m0pz_i2c_write_byte_bridge(0x28>>1, 0x0018, 0x2B) < 0)
-		return rc; /* Data type of embedded data: 0x2B Raw 10 */
+		return rc; /*                                         */
 	if (sn12m0pz_i2c_write_byte_bridge(0x28>>1, 0x0019, 0x0C) < 0)
-		return rc; /* Data type and pixel width programmed 0x0C*/
+		return rc; /*                                          */
 
-	/* Decompression Mode */
+	/*                    */
 
-	/* Pixel Width and Decompression ON/OFF */
+	/*                                      */
 	if (sn12m0pz_i2c_write_byte_bridge(0x28>>1, 0x001E, 0x0A) < 0)
-		return rc; /* Image data not compressed: 0x0A for 10 bits */
+		return rc; /*                                             */
 	if (sn12m0pz_i2c_write_byte_bridge(0x28>>1, 0x001F, 0x0A) < 0)
-		return rc; /* Embedded data not compressed: 0x0A for 10 bits */
+		return rc; /*                                                */
 	return rc;
 }
 
 static int16_t sn12m0pz_af_init(void)
 {
 	int16_t rc;
-	/* Initialize waveform */
+	/*                     */
 	rc = sn12m0pz_i2c_write_b_af(SN12M0PZ_AF_I2C_SLAVE_ID >> 1, 0x01, 0xA9);
 
 	rc = sn12m0pz_i2c_write_b_af(SN12M0PZ_AF_I2C_SLAVE_ID >> 1, 0x02, 0xD2);
@@ -574,7 +574,7 @@ static int32_t sn12m0pz_set_default_focus(uint8_t af_step)
 {
 	int32_t rc;
 
-	/* Initialize to infinity */
+	/*                        */
 
 	rc = sn12m0pz_i2c_write_b_af(SN12M0PZ_AF_I2C_SLAVE_ID >> 1, 0x00, 0x7F);
 
@@ -586,12 +586,12 @@ static int32_t sn12m0pz_set_default_focus(uint8_t af_step)
 }
 static void sn12m0pz_get_pict_fps(uint16_t fps, uint16_t *pfps)
 {
-	/* input fps is preview fps in Q8 format */
+	/*                                       */
 	uint16_t preview_frame_length_lines, snapshot_frame_length_lines;
 	uint16_t preview_line_length_pck, snapshot_line_length_pck;
 	uint32_t divider, pclk_mult, d1, d2;
 
-	/* Total frame_length_lines and line_length_pck for preview */
+	/*                                                          */
 	CDBG("sn12m0pz_get_pict_fps prev_res %d", sn12m0pz_ctrl->prev_res);
 	if (sn12m0pz_ctrl->prev_res == QVGA_SIZE) {
 		preview_frame_length_lines = SN12M0PZ_QVGA_SIZE_HEIGHT +
@@ -604,7 +604,7 @@ static void sn12m0pz_get_pict_fps(uint16_t fps, uint16_t *pfps)
 		preview_line_length_pck = SN12M0PZ_QTR_SIZE_WIDTH +
 			SN12M0PZ_HRZ_QTR_BLK_PIXELS;
 	}
-	/* Total frame_length_lines and line_length_pck for snapshot */
+	/*                                                           */
 	snapshot_frame_length_lines = SN12M0PZ_FULL_SIZE_HEIGHT
 				+ SN12M0PZ_HRZ_FULL_BLK_PIXELS;
 	snapshot_line_length_pck = SN12M0PZ_FULL_SIZE_WIDTH
@@ -751,10 +751,10 @@ static int32_t sn12m0pz_write_exp_gain(uint16_t gain, uint32_t line)
 		}
 	}
 	if (gain > max_legal_gain)
-		/* range: 0 to 224 */
+		/*                 */
 		gain = max_legal_gain;
 	temp_lines = line;
-	/* calculate line_length_ratio */
+	/*                             */
 	if (line > (frame_length_lines - IU060F_SN12M0PZ_OFFSET)) {
 		line_length_ratio = (line * Q8) / (frame_length_lines -
 					IU060F_SN12M0PZ_OFFSET);
@@ -766,16 +766,16 @@ static int32_t sn12m0pz_write_exp_gain(uint16_t gain, uint32_t line)
 
 	line = (uint32_t) (line * sn12m0pz_ctrl->fps_divider/0x400);
 
-	/* update gain registers */
+	/*                       */
 	gain_msb = (uint8_t) ((gain & 0xFF00) >> 8);
 	gain_lsb = (uint8_t) (gain & 0x00FF);
 
-	/* linear AFR horizontal stretch */
+	/*                               */
 	line_length_pck = (uint16_t) (line_length_pck * line_length_ratio / Q8);
 	line_length_pck_msb = (uint8_t) ((line_length_pck & 0xFF00) >> 8);
 	line_length_pck_lsb = (uint8_t) (line_length_pck & 0x00FF);
 
-	/* update line count registers */
+	/*                             */
 	intg_time_msb = (uint8_t) ((temp_lines & 0xFF00) >> 8);
 	intg_time_lsb = (uint8_t) (temp_lines & 0x00FF);
 
@@ -831,9 +831,9 @@ static int32_t sn12m0pz_test(enum sn12m0pz_test_mode_t mo)
 	if (mo == TEST_OFF)
 		return rc;
 	else {
-		/* REG_0x30D8[4] is TESBYPEN: 0: Normal Operation,
-		 1: Bypass Signal Processing. REG_0x30D8[5] is EBDMASK:
-		 0: Output Embedded data, 1: No output embedded data */
+		/*                                                
+                                                         
+                                                       */
 
 		if (sn12m0pz_i2c_write_b_sensor(REG_0x30D8, 0x10) < 0)
 			return rc;
@@ -842,7 +842,7 @@ static int32_t sn12m0pz_test(enum sn12m0pz_test_mode_t mo)
 			(uint8_t) mo) < 0)
 			return rc;
 
-		/* Solid Color Test Pattern */
+		/*                          */
 
 		if (mo == TEST_1) {
 			if (sn12m0pz_i2c_write_b_sensor(REG_TEST_DATA_RED_MSB,
@@ -883,7 +883,7 @@ static int32_t sn12m0pz_test(enum sn12m0pz_test_mode_t mo)
 static int32_t sn12m0pz_reset(void)
 {
 	int32_t rc = 0;
-	/* register 0x0002 is Port 2, CAM_XCLRO */
+	/*                                      */
 	gpio_direction_output(sn12m0pz_ctrl->
 		sensordata->sensor_reset,
 		0);
@@ -902,12 +902,12 @@ static int32_t sn12m0pz_sensor_setting(int update_type, int rt)
 
 	switch (update_type) {
 	case UPDATE_PERIODIC:
-		/* Put Sensor into sofware standby mode	*/
+		/*                                      */
 		if (sn12m0pz_i2c_write_b_sensor(REG_MODE_SELECT,
 				MODE_SELECT_STANDBY_MODE) <  0)
 			return rc;
 		msleep(5);
-		/* Hardware reset D02, lane config between full size/qtr size*/
+		/*                                                           */
 		rc = sn12m0pz_reset();
 		if (rc < 0)
 			return rc;
@@ -917,10 +917,10 @@ static int32_t sn12m0pz_sensor_setting(int update_type, int rt)
 	case REG_INIT:
 		if (rt == RES_PREVIEW || rt == RES_CAPTURE
 				|| rt == RES_VIDEO_120FPS) {
-			/* reset fps_divider */
+			/*                   */
 			sn12m0pz_ctrl->fps_divider = 1 * 0x400;
 
-			/* PLL settings */
+			/*              */
 			if (sn12m0pz_i2c_write_b_sensor(REG_PLL_MULTIPLIER,
 			sn12m0pz_regs.reg_pat[rt].pll_multiplier_lsb) < 0)
 				return rc;
@@ -928,7 +928,7 @@ static int32_t sn12m0pz_sensor_setting(int update_type, int rt)
 				sn12m0pz_regs.reg_pat_init[0].reg_0x302B) < 0)
 				return rc;
 
-			/* MIPI Enable Settings */
+			/*                      */
 			if (sn12m0pz_i2c_write_b_sensor(REG_0x30E5,
 				sn12m0pz_regs.reg_pat_init[0].reg_0x30E5) < 0)
 				return rc;
@@ -937,7 +937,7 @@ static int32_t sn12m0pz_sensor_setting(int update_type, int rt)
 				sn12m0pz_regs.reg_pat_init[0].reg_0x3300) < 0)
 				return rc;
 
-			/* Global Setting */
+			/*                */
 			if (
 				sn12m0pz_i2c_write_b_sensor(
 				REG_IMAGE_ORIENTATION,
@@ -1175,9 +1175,9 @@ static int32_t sn12m0pz_sensor_setting(int update_type, int rt)
 				sn12m0pz_regs.reg_pat_init[0].reg_0x330D) < 0)
 				return rc;
 
-			/* Mode setting */
-			/* Update registers with correct
-				 frame_length_line value for AFR */
+			/*              */
+			/*                              
+                                     */
 			total_lines_per_frame = (uint16_t)(
 			(sn12m0pz_regs.reg_pat[rt].frame_length_lines_msb << 8)
 			& 0xFF00) +
@@ -1267,14 +1267,14 @@ static int32_t sn12m0pz_sensor_setting(int update_type, int rt)
 				return rc;
 
 			if ((rt == RES_CAPTURE) && fullsize_cropped_at_8mp) {
-				/* x address end */
+				/*               */
 				if (sn12m0pz_i2c_write_b_sensor(0x0348,
 								0x0C) < 0)
 					return rc;
 				if (sn12m0pz_i2c_write_b_sensor(0x0349,
 								0x0CF) < 0)
 					return rc;
-				/* y address end */
+				/*               */
 				if (sn12m0pz_i2c_write_b_sensor(0x034A,
 								0x09) < 0)
 					return rc;
@@ -1326,15 +1326,15 @@ static int32_t sn12m0pz_video_config(int mode)
 	if (mode == SENSOR_HFR_120FPS_MODE)
 		sn12m0pz_ctrl->prev_res = QVGA_SIZE;
 
-	/* change sensor resolution if needed */
+	/*                                    */
 	if (sn12m0pz_ctrl->curr_res != sn12m0pz_ctrl->prev_res) {
 		if (sn12m0pz_ctrl->prev_res == QTR_SIZE) {
 			rt = RES_PREVIEW;
-			IU060F_SN12M0PZ_DELAY_MSECS = 35; /*measured on scope*/
+			IU060F_SN12M0PZ_DELAY_MSECS = 35; /*                 */
 			enable_single_D02_lane = 1;
 		} else if (sn12m0pz_ctrl->prev_res == QVGA_SIZE) {
 			rt = RES_VIDEO_120FPS;
-			IU060F_SN12M0PZ_DELAY_MSECS = 35; /*measured on scope*/
+			IU060F_SN12M0PZ_DELAY_MSECS = 35; /*                 */
 			enable_single_D02_lane = 0;
 		} else {
 			rt = RES_CAPTURE;
@@ -1354,14 +1354,14 @@ static int32_t sn12m0pz_snapshot_config(int mode)
 {
 	int32_t rc = 0;
 	int rt;
-	/* change sensor resolution if needed */
+	/*                                    */
 	if (sn12m0pz_ctrl->curr_res != sn12m0pz_ctrl->pict_res) {
 		if (sn12m0pz_ctrl->pict_res == QTR_SIZE) {
 			rt = RES_PREVIEW;
 			enable_single_D02_lane = 1;
 		} else {
 			rt = RES_CAPTURE;
-			IU060F_SN12M0PZ_DELAY_MSECS = 100;/*measured on scope*/
+			IU060F_SN12M0PZ_DELAY_MSECS = 100;/*                 */
 			enable_single_D02_lane = 0;
 		}
 
@@ -1378,14 +1378,14 @@ static int32_t sn12m0pz_raw_snapshot_config(int mode)
 {
 	int32_t rc = 0;
 	int rt;
-	/* change sensor resolution if needed */
+	/*                                    */
 	if (sn12m0pz_ctrl->curr_res != sn12m0pz_ctrl->pict_res) {
 		if (sn12m0pz_ctrl->pict_res == QTR_SIZE) {
 			rt = RES_PREVIEW;
 			enable_single_D02_lane = 1;
 		} else {
 			rt = RES_CAPTURE;
-			IU060F_SN12M0PZ_DELAY_MSECS = 100;/*measured on scope*/
+			IU060F_SN12M0PZ_DELAY_MSECS = 100;/*                 */
 			enable_single_D02_lane = 0;
 		}
 		if (sn12m0pz_sensor_setting(UPDATE_PERIODIC, rt) < 0)
@@ -1469,7 +1469,7 @@ static int sn12m0pz_probe_init_sensor(const struct msm_camera_sensor_info *data)
 
 	msleep(20);
 
-	/* 3. Read sensor Model ID: */
+	/*                          */
 	rc = sn12m0pz_i2c_read(0x0000, &chipidh, 1);
 	if (rc < 0) {
 		CDBG(" sn12m0pz_probe_init_sensor3");
@@ -1481,7 +1481,7 @@ static int sn12m0pz_probe_init_sensor(const struct msm_camera_sensor_info *data)
 		goto init_probe_fail;
 	}
 
-	/* 4. Compare sensor ID to SN12M0PZ ID: */
+	/*                                      */
 	if (chipidh != 0x00 || chipidl != 0x60) {
 		rc = -ENODEV;
 		CDBG("sn12m0pz_probe_init_sensor fail chip id doesnot match");
@@ -1525,7 +1525,7 @@ int sn12m0pz_sensor_open_init(const struct msm_camera_sensor_info *data)
 	if (rc < 0)
 		return rc;
 
-	/* enable mclk first */
+	/*                   */
 	msm_camio_clk_rate_set(SN12M0PZ_DEFAULT_CLOCK_RATE);
 	msleep(20);
 	msm_camio_camif_pad_reg_reset();
@@ -1535,7 +1535,7 @@ int sn12m0pz_sensor_open_init(const struct msm_camera_sensor_info *data)
 
 	if (rc < 0)
 		goto init_fail;
-	/* send reset signal */
+	/*                   */
 	if (mipi_config == IU060F_SN12M0PZ_STMIPID01) {
 		if (sn12m0pz_stmipid01_config() < 0) {
 			CDBG("Calling sn12m0pz_sensor_open_init fail");
@@ -1544,7 +1544,7 @@ int sn12m0pz_sensor_open_init(const struct msm_camera_sensor_info *data)
 	} else {
 		if (sn12m0pz_ctrl->prev_res  == QTR_SIZE)
 			enable_single_D02_lane = 1;
-		else /* FULL_SIZE */
+		else /*           */
 			enable_single_D02_lane = 0;
 
 		if (sn12m0pz_stmipid02_config() < 0) {
@@ -1582,7 +1582,7 @@ init_done:
 }
 static int __devinit sn12m0pz_init_client(struct i2c_client *client)
 {
-	/* Initialize the MSM_CAMI2C Chip */
+	/*                                */
 	init_waitqueue_head(&sn12m0pz_wait_queue);
 	return 0;
 }

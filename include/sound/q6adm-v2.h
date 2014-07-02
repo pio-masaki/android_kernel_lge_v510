@@ -20,7 +20,7 @@
 
 #define Q6_AFE_MAX_PORTS 32
 
-/* multiple copp per stream. */
+/*                           */
 struct route_payload {
 	unsigned int copp_ids[Q6_AFE_MAX_PORTS];
 	unsigned short num_copps;
@@ -47,4 +47,4 @@ int adm_connect_afe_port(int mode, int session_id, int port_id);
 
 int adm_get_copp_id(int port_id);
 
-#endif /* __Q6_ADM_V2_H__ */
+#endif /*                 */

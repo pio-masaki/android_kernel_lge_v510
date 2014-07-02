@@ -62,9 +62,9 @@ void mdp4_mddi_vsync_enable(struct msm_fb_data_type *mfd,
 		(mfd->panel_info.lcd.vsync_enable)) {
 
 		if (mdp_hw_revision < MDP4_REVISION_V2_1) {
-			/* need dmas dmap switch */
+			/*                       */
 			if (which == 0 && dmap_vsync_enable == 0 &&
-				mfd->panel_info.lcd.rev < 2) /* dma_p */
+				mfd->panel_info.lcd.rev < 2) /*       */
 				return;
 		}
 
@@ -74,9 +74,9 @@ void mdp4_mddi_vsync_enable(struct msm_fb_data_type *mfd,
 			start_y = (mfd->total_lcd_lines - 1) -
 				(vsync_start_y_adjust - pipe->dst_y);
 		if (which == 0)
-			MDP_OUTP(MDP_BASE + 0x210, start_y);	/* primary */
+			MDP_OUTP(MDP_BASE + 0x210, start_y);	/*         */
 		else
-			MDP_OUTP(MDP_BASE + 0x214, start_y);	/* secondary */
+			MDP_OUTP(MDP_BASE + 0x214, start_y);	/*           */
 
 		data = inpdw(MDP_BASE + 0x20c);
 		data |= tear_en;
@@ -103,9 +103,9 @@ void mdp4_overlay_update_lcd(struct msm_fb_data_type *mfd)
 	if (mfd->key != MFD_KEY)
 		return;
 
-	mddi_mfd = mfd;		/* keep it */
+	mddi_mfd = mfd;		/*         */
 
-	/* MDP cmd block enable */
+	/*                      */
 	mdp_pipe_ctrl(MDP_CMD_BLOCK, MDP_BLOCK_POWER_ON, FALSE);
 
 	if (mddi_pipe == NULL) {
@@ -123,7 +123,7 @@ void mdp4_overlay_update_lcd(struct msm_fb_data_type *mfd)
 		if (ret < 0)
 			printk(KERN_INFO "%s: format2type failed\n", __func__);
 
-		mddi_pipe = pipe; /* keep it */
+		mddi_pipe = pipe; /*         */
 		mddi_ld_param = 0;
 		mddi_vdo_packet_reg = mfd->panel_info.mddi.vdopkt;
 
@@ -131,8 +131,8 @@ void mdp4_overlay_update_lcd(struct msm_fb_data_type *mfd)
 			uint32	data;
 
 			data = inpdw(MDP_BASE + 0x0028);
-			data &= ~0x0300;	/* bit 8, 9, MASTER4 */
-			if (mfd->fbi->var.xres == 540) /* qHD, 540x960 */
+			data &= ~0x0300;	/*                   */
+			if (mfd->fbi->var.xres == 540) /*              */
 				data |= 0x0200;
 			else
 				data |= 0x0100;
@@ -169,7 +169,7 @@ void mdp4_overlay_update_lcd(struct msm_fb_data_type *mfd)
 		pipe = mddi_pipe;
 	}
 
-	/* 0 for dma_p, client_id = 0 */
+	/*                            */
 	MDP_OUTP(MDP_BASE + 0x00090, 0);
 
 
@@ -213,7 +213,7 @@ void mdp4_overlay_update_lcd(struct msm_fb_data_type *mfd)
 		pipe->srcp0_addr = (uint32) src;
 		pipe->srcp0_ystride = fbi->fix.line_length;
 	} else {
-		/* starting input address */
+		/*                        */
 		src += (iBuf->dma_x + iBuf->dma_y * iBuf->ibuf_width)
 					* iBuf->bpp;
 
@@ -246,7 +246,7 @@ void mdp4_overlay_update_lcd(struct msm_fb_data_type *mfd)
 	mdp4_mixer_stage_commit(pipe->mixer_num);
 	mdp4_mddi_vsync_enable(mfd, pipe, 0);
 
-	/* MDP cmd block disable */
+	/*                       */
 	mdp_pipe_ctrl(MDP_CMD_BLOCK, MDP_BLOCK_POWER_OFF, FALSE);
 }
 
@@ -291,7 +291,7 @@ int mdp4_mddi_overlay_blt_stop(struct msm_fb_data_type *mfd)
 
 	if ((mddi_pipe->blt_end == 0) && mddi_pipe->ov_blt_addr) {
 		spin_lock_irqsave(&mdp_spin_lock, flag);
-		mddi_pipe->blt_end = 1;	/* mark as end */
+		mddi_pipe->blt_end = 1;	/*             */
 		spin_unlock_irqrestore(&mdp_spin_lock, flag);
 		return 0;
 	}
@@ -331,9 +331,9 @@ void mdp4_blt_xy_update(struct mdp4_overlay_pipe *pipe)
 
 
 #ifdef BLT_RGB565
-	bpp = 2; /* overlay ouput is RGB565 */
+	bpp = 2; /*                         */
 #else
-	bpp = 3; /* overlay ouput is RGB888 */
+	bpp = 3; /*                         */
 #endif
 	off = 0;
 	if (pipe->dmap_cnt & 0x01)
@@ -341,15 +341,15 @@ void mdp4_blt_xy_update(struct mdp4_overlay_pipe *pipe)
 
 	addr = pipe->ov_blt_addr + off;
 
-	/* dmap */
+	/*      */
 	MDP_OUTP(MDP_BASE + 0x90008, addr);
 
 	off = 0;
 	if (pipe->ov_cnt & 0x01)
 		off = pipe->src_height * pipe->src_width * bpp;
 	addr2 = pipe->ov_blt_addr + off;
-	/* overlay 0 */
-	overlay_base = MDP_BASE + MDP4_OVERLAYPROC0_BASE;/* 0x10000 */
+	/*           */
+	overlay_base = MDP_BASE + MDP4_OVERLAYPROC0_BASE;/*         */
 	outpdw(overlay_base + 0x000c, addr2);
 	outpdw(overlay_base + 0x001c, addr2);
 }
@@ -359,7 +359,7 @@ void mdp4_primary_rdptr(void)
 }
 
 /*
- * mdp4_dmap_done_mddi: called from isr
+                                       
  */
 void mdp4_dma_p_done_mddi(struct mdp_dma_data *dma)
 {
@@ -387,7 +387,7 @@ void mdp4_dma_p_done_mddi(struct mdp_dma_data *dma)
 		}
 
 		mdp_pipe_ctrl(MDP_OVERLAY0_BLOCK, MDP_BLOCK_POWER_OFF, TRUE);
-		mdp_disable_irq_nosync(MDP_DMA2_TERM);  /* disable intr */
+		mdp_disable_irq_nosync(MDP_DMA2_TERM);  /*              */
 		return;
 	}
 
@@ -401,14 +401,14 @@ void mdp4_dma_p_done_mddi(struct mdp_dma_data *dma)
 	pr_debug("%s: kickoff dmap\n", __func__);
 
 	mdp4_blt_xy_update(mddi_pipe);
-	/* kick off dmap */
+	/*               */
 	outpdw(MDP_BASE + 0x000c, 0x0);
 	mdp4_stat.kickoff_dmap++;
 	mdp_pipe_ctrl(MDP_OVERLAY0_BLOCK, MDP_BLOCK_POWER_OFF, TRUE);
 }
 
 /*
- * mdp4_overlay0_done_mddi: called from isr
+                                           
  */
 void mdp4_overlay0_done_mddi(struct mdp_dma_data *dma)
 {
@@ -428,7 +428,7 @@ void mdp4_overlay0_done_mddi(struct mdp_dma_data *dma)
 		return;
 	}
 
-	/* blt enabled */
+	/*             */
 	if (mddi_pipe->blt_end == 0)
 		mddi_pipe->ov_cnt++;
 
@@ -436,7 +436,7 @@ void mdp4_overlay0_done_mddi(struct mdp_dma_data *dma)
 			__func__, mddi_pipe->ov_cnt, mddi_pipe->dmap_cnt);
 
 	if (mddi_pipe->blt_cnt == 0) {
-		/* first kickoff since blt enabled */
+		/*                                 */
 		mdp_intr_mask |= INTR_DMA_P_DONE;
 		outp32(MDP_INTR_ENABLE, mdp_intr_mask);
 	}
@@ -461,8 +461,8 @@ void mdp4_overlay0_done_mddi(struct mdp_dma_data *dma)
 	pr_debug("%s: kickoff dmap\n", __func__);
 
 	mdp4_blt_xy_update(mddi_pipe);
-	mdp_enable_irq(MDP_DMA2_TERM);	/* enable intr */
-	/* kick off dmap */
+	mdp_enable_irq(MDP_DMA2_TERM);	/*             */
+	/*               */
 	outpdw(MDP_BASE + 0x000c, 0x0);
 	mdp4_stat.kickoff_dmap++;
 	mdp_disable_irq_nosync(MDP_OVERLAY0_TERM);
@@ -486,7 +486,7 @@ void mdp4_mddi_overlay_restore(void)
 		mdp4_mddi_overlay_kickoff(mddi_mfd, mddi_pipe);
 		mddi_mfd->dma_update_flag = 1;
 	}
-	if (mdp_hw_revision < MDP4_REVISION_V2_1) /* need dmas dmap switch */
+	if (mdp_hw_revision < MDP4_REVISION_V2_1) /*                       */
 		mdp4_mddi_overlay_dmas_restore();
 }
 
@@ -503,16 +503,16 @@ void mdp4_mddi_blt_dmap_busy_wait(struct msm_fb_data_type *mfd)
 	spin_unlock_irqrestore(&mdp_spin_lock, flag);
 
 	if (need_wait) {
-		/* wait until DMA finishes the current job */
+		/*                                         */
 		wait_for_completion(&mfd->dma->dmap_comp);
 	}
 }
 
 /*
- * mdp4_mddi_cmd_dma_busy_wait: check mddi link activity
- * mddi link is a shared resource and it can only be used
- * while it is in idle state.
- * ov_mutex need to be acquired before call this function.
+                                                        
+                                                         
+                             
+                                                          
  */
 void mdp4_mddi_dma_busy_wait(struct msm_fb_data_type *mfd)
 {
@@ -531,7 +531,7 @@ void mdp4_mddi_dma_busy_wait(struct msm_fb_data_type *mfd)
 
 
 	if (need_wait) {
-		/* wait until DMA finishes the current job */
+		/*                                         */
 		pr_debug("%s: PENDING, pid=%d\n", __func__, current->pid);
 		wait_for_completion(&mfd->dma->comp);
 	}
@@ -542,15 +542,15 @@ void mdp4_mddi_kickoff_video(struct msm_fb_data_type *mfd,
 				struct mdp4_overlay_pipe *pipe)
 {
 	/*
-	 * a video kickoff may happen before UI kickoff after
-	 * blt enabled. mdp4_overlay_update_lcd() need
-	 * to be called before kickoff.
-	 * vice versa for blt disabled.
-	 */
+                                                      
+                                               
+                                
+                                
+  */
 	if (mddi_pipe->ov_blt_addr && mddi_pipe->blt_cnt == 0)
-		mdp4_overlay_update_lcd(mfd); /* first time */
+		mdp4_overlay_update_lcd(mfd); /*            */
 	else if (mddi_pipe->ov_blt_addr == 0  && mddi_pipe->blt_cnt) {
-		mdp4_overlay_update_lcd(mfd); /* last time */
+		mdp4_overlay_update_lcd(mfd); /*           */
 		mddi_pipe->blt_cnt = 0;
 	}
 
@@ -581,7 +581,7 @@ void mdp4_mddi_overlay_kickoff(struct msm_fb_data_type *mfd,
 	if (mddi_pipe->ov_blt_addr)
 		mfd->dma->dmap_busy = TRUE;
 	spin_unlock_irqrestore(&mdp_spin_lock, flag);
-	/* start OVERLAY pipe */
+	/*                    */
 	mdp_pipe_kickoff(MDP_OVERLAY0_TERM, mfd);
 	mdp4_stat.kickoff_ov0++;
 }
@@ -597,40 +597,40 @@ void mdp4_dma_s_update_lcd(struct msm_fb_data_type *mfd,
 	dma_s_cfg_reg = 0;
 
 	if (mfd->fb_imgType == MDP_RGBA_8888)
-		dma_s_cfg_reg |= DMA_PACK_PATTERN_BGR; /* on purpose */
+		dma_s_cfg_reg |= DMA_PACK_PATTERN_BGR; /*            */
 	else if (mfd->fb_imgType == MDP_BGR_565)
 		dma_s_cfg_reg |= DMA_PACK_PATTERN_BGR;
 	else
 		dma_s_cfg_reg |= DMA_PACK_PATTERN_RGB;
 
 	if (outBpp == 4)
-		dma_s_cfg_reg |= (1 << 26); /* xRGB8888 */
+		dma_s_cfg_reg |= (1 << 26); /*          */
 	else if (outBpp == 2)
 		dma_s_cfg_reg |= DMA_IBUF_FORMAT_RGB565;
 
 	dma_s_cfg_reg |= DMA_DITHER_EN;
 
-	/* MDP cmd block enable */
+	/*                      */
 	mdp_pipe_ctrl(MDP_CMD_BLOCK, MDP_BLOCK_POWER_ON, FALSE);
-	/* PIXELSIZE */
+	/*           */
 	MDP_OUTP(MDP_BASE + 0xa0004, (pipe->dst_h << 16 | pipe->dst_w));
-	MDP_OUTP(MDP_BASE + 0xa0008, pipe->srcp0_addr);	/* ibuf address */
-	MDP_OUTP(MDP_BASE + 0xa000c, pipe->srcp0_ystride);/* ystride */
+	MDP_OUTP(MDP_BASE + 0xa0008, pipe->srcp0_addr);	/*              */
+	MDP_OUTP(MDP_BASE + 0xa000c, pipe->srcp0_ystride);/*         */
 
 	if (mfd->panel_info.bpp == 24) {
-		dma_s_cfg_reg |= DMA_DSTC0G_8BITS |	/* 666 18BPP */
+		dma_s_cfg_reg |= DMA_DSTC0G_8BITS |	/*           */
 		    DMA_DSTC1B_8BITS | DMA_DSTC2R_8BITS;
 	} else if (mfd->panel_info.bpp == 18) {
-		dma_s_cfg_reg |= DMA_DSTC0G_6BITS |	/* 666 18BPP */
+		dma_s_cfg_reg |= DMA_DSTC0G_6BITS |	/*           */
 		    DMA_DSTC1B_6BITS | DMA_DSTC2R_6BITS;
 	} else {
-		dma_s_cfg_reg |= DMA_DSTC0G_6BITS |	/* 565 16BPP */
+		dma_s_cfg_reg |= DMA_DSTC0G_6BITS |	/*           */
 		    DMA_DSTC1B_5BITS | DMA_DSTC2R_5BITS;
 	}
 
 	MDP_OUTP(MDP_BASE + 0xa0010, (pipe->dst_y << 16) | pipe->dst_x);
 
-	/* 1 for dma_s, client_id = 0 */
+	/*                            */
 	MDP_OUTP(MDP_BASE + 0x00090, 1);
 
 	mddi_vdo_packet_reg = mfd->panel_info.mddi.vdopkt;
@@ -651,7 +651,7 @@ void mdp4_dma_s_update_lcd(struct msm_fb_data_type *mfd,
 
 	mdp4_mddi_vsync_enable(mfd, pipe, 1);
 
-	/* MDP cmd block disable */
+	/*                       */
 	mdp_pipe_ctrl(MDP_CMD_BLOCK, MDP_BLOCK_POWER_OFF, FALSE);
 }
 
@@ -664,18 +664,18 @@ void mdp4_mddi_dma_s_kickoff(struct msm_fb_data_type *mfd,
 		mfd->dma->busy = TRUE;
 
 	mfd->ibuf_flushed = TRUE;
-	/* start dma_s pipe */
+	/*                  */
 	mdp_pipe_kickoff(MDP_DMA_S_TERM, mfd);
 	mdp4_stat.kickoff_dmas++;
 
-	/* wait until DMA finishes the current job */
+	/*                                         */
 	wait_for_completion(&mfd->dma->comp);
 	mdp_disable_irq(MDP_DMA_S_TERM);
 }
 
 void mdp4_mddi_overlay_dmas_restore(void)
 {
-	/* mutex held by caller */
+	/*                      */
 	if (mddi_mfd && mddi_pipe) {
 		mdp4_mddi_dma_busy_wait(mddi_mfd);
 		mdp4_dma_s_update_lcd(mddi_mfd, mddi_pipe);
@@ -698,17 +698,17 @@ void mdp4_mddi_overlay(struct msm_fb_data_type *mfd)
 
 		mdp4_overlay_mdp_perf_upd(mfd, 1);
 		if (mdp_hw_revision < MDP4_REVISION_V2_1) {
-			/* dmas dmap switch */
+			/*                  */
 			if (mdp4_overlay_mixer_play(mddi_pipe->mixer_num)
 						== 0) {
 				mdp4_dma_s_update_lcd(mfd, mddi_pipe);
 				mdp4_mddi_dma_s_kickoff(mfd, mddi_pipe);
 			} else
 				mdp4_mddi_kickoff_ui(mfd, mddi_pipe);
-		} else	/* no dams dmap switch  */
+		} else	/*                      */
 			mdp4_mddi_kickoff_ui(mfd, mddi_pipe);
 
-	/* signal if pan function is waiting for the update completion */
+	/*                                                             */
 		if (mfd->pan_waiting) {
 			mfd->pan_waiting = FALSE;
 			complete(&mfd->pan_comp);

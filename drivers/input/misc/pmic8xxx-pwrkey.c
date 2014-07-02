@@ -27,10 +27,10 @@
 #define PON_CNTL_PULL_UP BIT(7)
 #define PON_CNTL_TRIG_DELAY_MASK (0x7)
 
-/**
- * struct pmic8xxx_pwrkey - pmic8xxx pwrkey information
- * @key_press_irq: key press irq number
- * @pdata: platform data
+/* 
+                                                       
+                                       
+                        
  */
 struct pmic8xxx_pwrkey {
 	struct input_dev *pwr;
@@ -121,7 +121,7 @@ static int __devinit pmic8xxx_pwrkey_probe(struct platform_device *pdev)
 		return -EINVAL;
 	}
 
-	/* Valid range of pwr key trigger delay is 1/64 sec to 2 seconds. */
+	/*                                                                */
 	if (pdata->kpd_trigger_delay_us > USEC_PER_SEC * 2 ||
 		pdata->kpd_trigger_delay_us < USEC_PER_SEC / 64) {
 		dev_err(&pdev->dev, "invalid power key trigger delay\n");
@@ -181,7 +181,7 @@ static int __devinit pmic8xxx_pwrkey_probe(struct platform_device *pdev)
 
 	platform_set_drvdata(pdev, pwrkey);
 
-	/* check power key status during boot */
+	/*                                    */
 	err = pm8xxx_read_irq_stat(pdev->dev.parent, key_press_irq);
 	if (err < 0) {
 		dev_err(&pdev->dev, "reading irq status failed\n");

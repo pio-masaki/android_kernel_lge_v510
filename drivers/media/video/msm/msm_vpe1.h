@@ -15,7 +15,7 @@
 
 #include <mach/camera.h>
 
-/***********  start of register offset *********************/
+/*                                                         */
 #define VPE_INTR_ENABLE_OFFSET                0x0020
 #define VPE_INTR_STATUS_OFFSET                0x0024
 #define VPE_INTR_CLEAR_OFFSET                 0x0028
@@ -65,11 +65,11 @@
 #define VPE_SCALE_COEFF_MSBn(n)	(0x50404 + 8 * (n))
 #define VPE_SCALE_COEFF_NUM			32
 
-/*********** end of register offset ********************/
+/*                                                     */
 
 
 #define VPE_HARDWARE_VERSION          0x00080308
-#define VPE_SW_RESET_VALUE            0x00000010  /* bit 4 for PPP*/
+#define VPE_SW_RESET_VALUE            0x00000010  /*              */
 #define VPE_AXI_RD_ARB_CONFIG_VALUE   0x124924
 #define VPE_CMD_MODE_VALUE        0x1
 #define VPE_DEFAULT_OP_MODE_VALUE     0x40FC0004
@@ -78,37 +78,37 @@
 
 #define VPE_NORMAL_MODE_CLOCK_RATE   150000000
 #define VPE_TURBO_MODE_CLOCK_RATE   200000000
-/**************************************************/
-/*********** Start of command id ******************/
-/**************************************************/
+/*                                                */
+/*                                                */
+/*                                                */
 enum VPE_CMD_ID_ENUM {
 	VPE_DUMMY_0 = 0,
 	VPE_SET_CLK,
 	VPE_RESET,
 	VPE_START,
 	VPE_ABORT,
-	VPE_OPERATION_MODE_CFG, /* 5 */
+	VPE_OPERATION_MODE_CFG, /*   */
 	VPE_INPUT_PLANE_CFG,
 	VPE_OUTPUT_PLANE_CFG,
 	VPE_INPUT_PLANE_UPDATE,
 	VPE_SCALE_CFG_TYPE,
-	VPE_ROTATION_CFG_TYPE, /* 10 */
+	VPE_ROTATION_CFG_TYPE, /*    */
 	VPE_AXI_OUT_CFG,
 	VPE_CMD_DIS_OFFSET_CFG,
 	VPE_ENABLE,
 	VPE_DISABLE,
 };
 
-/* Length of each command.  In bytes.  (payload only) */
+/*                                                    */
 #define VPE_OPERATION_MODE_CFG_LEN 8
 #define VPE_INPUT_PLANE_CFG_LEN    24
 #define VPE_OUTPUT_PLANE_CFG_LEN   20
 #define VPE_INPUT_PLANE_UPDATE_LEN 12
 #define VPE_SCALER_CONFIG_LEN      260
 #define VPE_DIS_OFFSET_CFG_LEN     12
-/**************************************************/
-/*********** End of command id ********************/
-/**************************************************/
+/*                                                */
+/*                                                */
+/*                                                */
 
 struct msm_vpe_cmd {
 	int32_t  id;
@@ -127,7 +127,7 @@ struct vpe_isr_queue_cmd_type {
 };
 
 enum VPE_MESSAGE_ID {
-	MSG_ID_VPE_OUTPUT_V = 7, /* To match with that of VFE */
+	MSG_ID_VPE_OUTPUT_V = 7, /*                           */
 	MSG_ID_VPE_OUTPUT_ST_L,
 	MSG_ID_VPE_OUTPUT_ST_R,
 };
@@ -139,7 +139,7 @@ enum vpe_state {
 };
 
 struct vpe_device_type {
-	/* device related. */
+	/*                 */
 	int   vpeirq;
 	void __iomem      *vpebase;
 	struct resource	  *vpemem;
@@ -165,8 +165,8 @@ struct vpe_ctrl_type {
 	uint32_t          extlen;
 	struct msm_vpe_callback *resp;
 	uint32_t          in_h_w;
-	uint32_t          out_h;  /* this is BEFORE rotation. */
-	uint32_t          out_w;  /* this is BEFORE rotation. */
+	uint32_t          out_h;  /*                          */
+	uint32_t          out_w;  /*                          */
 	uint32_t          dis_en;
 	struct timespec   ts;
 	struct dis_offset_type   dis_offset;
@@ -181,11 +181,11 @@ struct vpe_ctrl_type {
 };
 
 /*
-* vpe_input_update
-*
-* Define the parameters for output plane
+                  
+ 
+                                        
 */
-/* this is the dimension of ROI.  width / height. */
+/*                                                */
 struct vpe_src_size_packed {
 	uint32_t        src_w;
 	uint32_t        src_h;
@@ -198,9 +198,9 @@ struct vpe_src_xy_packed {
 
 struct vpe_input_plane_update_type {
 	struct vpe_src_size_packed             src_roi_size;
-	/* DIS updates this set. */
+	/*                       */
 	struct vpe_src_xy_packed               src_roi_offset;
-	/* input address*/
+	/*              */
 	uint8_t                         *src_p0_addr;
 	uint8_t                         *src_p1_addr;
 };
@@ -250,5 +250,5 @@ int msm_vpe_cfg_update(void *pinfo);
 void msm_vpe_offset_update(int frame_pack, uint32_t pyaddr, uint32_t pcbcraddr,
 	struct timespec *ts, int output_id, struct msm_st_half st_half,
 	int frameid);
-#endif /*_msm_vpe1_h_*/
+#endif /*            */
 

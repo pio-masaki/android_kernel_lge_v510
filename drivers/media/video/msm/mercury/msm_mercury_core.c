@@ -31,7 +31,7 @@ int mercury_core_reset(void)
 {
 	struct clk *clk = NULL;
 
-	/*Resettting MMSS Fabric*/
+	/*                      */
 
 	clk = clk_get(NULL, "jpegd_clk");
 
@@ -41,8 +41,8 @@ int mercury_core_reset(void)
 	msm_bus_axi_porthalt(MSM_BUS_MASTER_JPEG_DEC);
 	clk_reset(clk, CLK_RESET_ASSERT);
 
-	/*need to have some delay here, there is no
-	 other way to know if hardware reset is complete*/
+	/*                                         
+                                                 */
 	usleep_range(1000, 1200);
 
 	msm_bus_axi_portunhalt(MSM_BUS_MASTER_JPEG_DEC);
@@ -55,7 +55,7 @@ int msm_mercury_core_reset(void)
 {
 	unsigned long flags;
 	int rc = 0;
-	int tm = 500;/*500ms*/
+	int tm = 500;/*     */
 	MCR_DBG("\n%s\n(%d)%s()\n", __FILE__, __LINE__, __func__);
 
 	spin_lock_irqsave(&reset_lock, flags);

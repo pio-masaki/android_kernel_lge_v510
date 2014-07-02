@@ -39,10 +39,10 @@
 
 #include <linux/nfc/bcm2079x.h>
 
-/* do not change below */
+/*                     */
 #define MAX_BUFFER_SIZE		780
 
-/* Read data */
+/*           */
 #define PACKET_HEADER_SIZE_NCI	(4)
 #define PACKET_HEADER_SIZE_HCI	(3)
 #define PACKET_TYPE_NCI		(16)
@@ -90,14 +90,14 @@ static void bcm2079x_enable_irq(struct bcm2079x_dev *bcm2079x_dev)
 }
 
 /*
- The alias address 0x79, when sent as a 7-bit address from the host processor
- will match the first byte (highest 2 bits) of the default client address
- (0x1FA) that is programmed in bcm20791.
- When used together with the first byte (0xFA) of the byte sequence below,
- it can be used to address the bcm20791 in a system that does not support
- 10-bit address and change the default address to 0x38.
- the new address can be changed by changing the CLIENT_ADDRESS below if 0x38
- conflicts with other device on the same i2c bus.
+                                                                             
+                                                                         
+                                        
+                                                                          
+                                                                         
+                                                       
+                                                                            
+                                                 
  */
 #define ALIAS_ADDRESS	  0x79
 
@@ -190,13 +190,13 @@ static ssize_t bcm2079x_dev_read(struct file *filp, char __user *buf,
 
 	mutex_lock(&bcm2079x_dev->read_mutex);
 
-	/** Read the first 4 bytes to include the length of the NCI or HCI packet.
-	**/
+	/*                                                                        
+  */
 	ret = i2c_master_recv(bcm2079x_dev->client, tmp, 4);
 	if (ret == 4) {
 		total = ret;
-		/** First byte is the packet type
-		**/
+		/*                               
+   */
 		switch(tmp[0]) {
 			case PACKET_TYPE_NCI:
 				len = tmp[PACKET_HEADER_SIZE_NCI-1];
@@ -205,26 +205,26 @@ static ssize_t bcm2079x_dev_read(struct file *filp, char __user *buf,
 			case PACKET_TYPE_HCIEV:
 				len = tmp[PACKET_HEADER_SIZE_HCI-1];
 				if (len == 0)
-					total--;/*Since payload is 0, decrement total size (from 4 to 3) */
+					total--;/*                                                       */
 				else
-					len--;/*First byte of payload is in tmp[3] already */
+					len--;/*                                           */
 				break;
 
 			default:
-				len = 0;/*Unknown packet byte */
+				len = 0;/*                    */
 				break;
-		} /* switch*/
+		} /*       */
 
-		/** make sure full packet fits in the buffer
-		**/
+		/*                                          
+   */
 		if (len > 0 && (len + total) <= count) {
-			/** read the remainder of the packet.
-			**/
+			/*                                   
+    */
 			ret = i2c_master_recv(bcm2079x_dev->client, tmp+total, len);
 			if (ret == len)
 				total += len;
-		} /* if */
-	} /* if */
+		} /*    */
+	} /*    */
 
 	mutex_unlock(&bcm2079x_dev->read_mutex);
 
@@ -256,7 +256,7 @@ static ssize_t bcm2079x_dev_write(struct file *filp, const char __user *buf,
 	}
 
 	mutex_lock(&bcm2079x_dev->read_mutex);
-	/* Write data */
+	/*            */
 
 	ret = i2c_master_send(bcm2079x_dev->client, tmp, count);
 	if (ret != count) {
@@ -371,7 +371,7 @@ static int bcm2079x_probe(struct i2c_client *client,
 	bcm2079x_dev->en_gpio = platform_data->en_gpio;
 	bcm2079x_dev->client = client;
 
-	/* init mutex and queues */
+	/*                       */
 	init_waitqueue_head(&bcm2079x_dev->read_wq);
 	mutex_init(&bcm2079x_dev->read_mutex);
 	spin_lock_init(&bcm2079x_dev->irq_enabled_lock);
@@ -386,9 +386,9 @@ static int bcm2079x_probe(struct i2c_client *client,
 		goto err_misc_register;
 	}
 
-	/* request irq.  the irq is set whenever the chip has data available
-	 * for reading.  it is cleared when all data has been read.
-	 */
+	/*                                                                  
+                                                            
+  */
 	dev_info(&client->dev, "requesting IRQ %d\n", client->irq);
 	bcm2079x_dev->irq_enabled = true;
 	ret = request_irq(client->irq, bcm2079x_dev_irq_handler,
@@ -450,7 +450,7 @@ static struct i2c_driver bcm2079x_driver = {
 };
 
 /*
- * module load/unload record keeping
+                                    
  */
 
 static int __init bcm2079x_dev_init(void)

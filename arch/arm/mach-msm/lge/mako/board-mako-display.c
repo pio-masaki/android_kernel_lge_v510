@@ -39,34 +39,34 @@
 #include "board-mako.h"
 
 #ifdef CONFIG_FB_MSM_TRIPLE_BUFFER
-/* prim = 1366 x 768 x 3(bpp) x 3(pages) */
+/*                                       */
 #if defined(CONFIG_FB_MSM_MIPI_LGIT_VIDEO_WXGA_PT)
 #define MSM_FB_PRIM_BUF_SIZE roundup(768 * 1280 * 4 * 3, 0x10000)
 #else
 #define MSM_FB_PRIM_BUF_SIZE roundup(1920 * 1088 * 4 * 3, 0x10000)
 #endif
 #else
-/* prim = 1366 x 768 x 3(bpp) x 2(pages) */
+/*                                       */
 #if defined(CONFIG_FB_MSM_MIPI_LGIT_VIDEO_WXGA_PT)
 #define MSM_FB_PRIM_BUF_SIZE roundup(768 * 1280 * 4 * 2, 0x10000)
 #else
 #define MSM_FB_PRIM_BUF_SIZE roundup(1920 * 1088 * 4 * 2, 0x10000)
 #endif
-#endif /*CONFIG_FB_MSM_TRIPLE_BUFFER */
+#endif /*                            */
 
 #ifdef CONFIG_FB_MSM_HDMI_MSM_PANEL
 #define MSM_FB_EXT_BUF_SIZE \
-		(roundup((1920 * 1088 * 2), 4096) * 1) /* 2 bpp x 1 page */
+		(roundup((1920 * 1088 * 2), 4096) * 1) /*                */
 #elif defined(CONFIG_FB_MSM_TVOUT)
 #define MSM_FB_EXT_BUF_SIZE \
-		(roundup((720 * 576 * 2), 4096) * 2) /* 2 bpp x 2 pages */
+		(roundup((720 * 576 * 2), 4096) * 2) /*                 */
 #else
 #define MSM_FB_EXT_BUF_SIZE	0
-#endif /* CONFIG_FB_MSM_HDMI_MSM_PANEL */
+#endif /*                              */
 
 #ifdef CONFIG_FB_MSM_WRITEBACK_MSM_PANEL
 #define MSM_FB_WFD_BUF_SIZE \
-		(roundup((1280 * 736 * 2), 4096) * 3) /* 2 bpp x 3 page */
+		(roundup((1280 * 736 * 2), 4096) * 3) /*                */
 #else
 #define MSM_FB_WFD_BUF_SIZE     0
 #endif
@@ -83,13 +83,13 @@
 	#endif
 #else
 #define MSM_FB_OVERLAY0_WRITEBACK_SIZE (0)
-#endif  /* CONFIG_FB_MSM_OVERLAY0_WRITEBACK */
+#endif  /*                                  */
 
 #ifdef CONFIG_FB_MSM_OVERLAY1_WRITEBACK
 #define MSM_FB_OVERLAY1_WRITEBACK_SIZE roundup((1920 * 1088 * 3 * 2), 4096)
 #else
 #define MSM_FB_OVERLAY1_WRITEBACK_SIZE (0)
-#endif  /* CONFIG_FB_MSM_OVERLAY1_WRITEBACK */
+#endif  /*                                  */
 
 static struct resource msm_fb_resources[] = {
 	{
@@ -182,7 +182,7 @@ static struct msm_bus_vectors mdp_ui_vectors[] = {
 };
 
 static struct msm_bus_vectors mdp_vga_vectors[] = {
-	/* VGA and less video */
+	/*                    */
 	{
 		.src = MSM_BUS_MASTER_MDP_PORT0,
 		.dst = MSM_BUS_SLAVE_EBI_CH0,
@@ -192,7 +192,7 @@ static struct msm_bus_vectors mdp_vga_vectors[] = {
 };
 
 static struct msm_bus_vectors mdp_720p_vectors[] = {
-	/* 720p and less video */
+	/*                     */
 	{
 		.src = MSM_BUS_MASTER_MDP_PORT0,
 		.dst = MSM_BUS_SLAVE_EBI_CH0,
@@ -202,7 +202,7 @@ static struct msm_bus_vectors mdp_720p_vectors[] = {
 };
 
 static struct msm_bus_vectors mdp_1080p_vectors[] = {
-	/* 1080p and less video */
+	/*                      */
 	{
 		.src = MSM_BUS_MASTER_MDP_PORT0,
 		.dst = MSM_BUS_SLAVE_EBI_CH0,
@@ -247,6 +247,9 @@ static struct msm_bus_scale_pdata mdp_bus_scale_pdata = {
 static struct msm_panel_common_pdata mdp_pdata = {
 	.gpio = MDP_VSYNC_GPIO,
 	.mdp_max_clk = 266667000,
+	.mdp_max_bw = 3000000000u,
+	.mdp_bw_ab_factor = 115,
+	.mdp_bw_ib_factor = 125,
 	.mdp_bus_scale_table = &mdp_bus_scale_pdata,
 	.mdp_rev = MDP_REV_44,
 #ifdef CONFIG_MSM_MULTIMEDIA_USE_ION
@@ -254,7 +257,7 @@ static struct msm_panel_common_pdata mdp_pdata = {
 #else
 	.mem_hid = MEMTYPE_EBI1,
 #endif
-	/* for early backlight on for APQ8064 */
+	/*                                    */
 	.cont_splash_enabled = 0x01,
 	.mdp_iommu_split_domain = 1,
 };
@@ -374,7 +377,7 @@ static struct platform_device wfd_device = {
 };
 #endif
 
-/* HDMI related GPIOs */
+/*                    */
 #define HDMI_CEC_VAR_GPIO	69
 #define HDMI_DDC_CLK_GPIO	70
 #define HDMI_DDC_DATA_GPIO	71
@@ -479,7 +482,7 @@ static int mipi_dsi_panel_power(int on)
 		}
 
 #if defined(CONFIG_FB_MSM_MIPI_LGIT_VIDEO_WXGA_PT)
-		rc = regulator_enable(reg_l8);  // dsi_vci
+		rc = regulator_enable(reg_l8);  //        
 		if (rc) {
 			pr_err("enable l8 failed, rc=%d\n", rc);
 			return -ENODEV;
@@ -487,7 +490,7 @@ static int mipi_dsi_panel_power(int on)
 
 		udelay(100);
 
-		rc = regulator_enable(reg_lvs6); // IOVCC
+		rc = regulator_enable(reg_lvs6); //      
 		if (rc) {
 			pr_err("enable lvs6 failed, rc=%d\n", rc);
 			return -ENODEV;
@@ -496,14 +499,14 @@ static int mipi_dsi_panel_power(int on)
 		udelay(100);
 #endif
 
-		rc = regulator_enable(reg_l2);  // DSI
+		rc = regulator_enable(reg_l2);  //    
 		if (rc) {
 			pr_err("enable l2 failed, rc=%d\n", rc);
 			return -ENODEV;
 		}
 
 		printk(KERN_INFO " %s : reset start.", __func__);
-		/* LCD RESET HIGH */
+		/*                */
 		mdelay(2);
 		gpio42_param.output_value = 1;
 		rc = pm8xxx_gpio_config(gpio42,&gpio42_param);
@@ -514,7 +517,7 @@ static int mipi_dsi_panel_power(int on)
 		mdelay(5);
 
 	} else {
-		/* LCD RESET LOW */
+		/*               */
 		gpio42_param.output_value = 0;
 		rc = pm8xxx_gpio_config(gpio42,&gpio42_param);
 		if (rc) {
@@ -524,21 +527,21 @@ static int mipi_dsi_panel_power(int on)
 		udelay(100);
 
 #if defined(CONFIG_FB_MSM_MIPI_LGIT_VIDEO_WXGA_PT)
-		rc = regulator_disable(reg_lvs6); // IOVCC
+		rc = regulator_disable(reg_lvs6); //      
 		if (rc) {
 			pr_err("disable lvs6 failed, rc=%d\n", rc);
 			return -ENODEV;
 		}
 		udelay(100);
 
-		rc = regulator_disable(reg_l8);	//VCI
+		rc = regulator_disable(reg_l8);	//   
 		if (rc) {
 			pr_err("disable reg_l8  failed, rc=%d\n", rc);
 			return -ENODEV;
 		}
 		udelay(100);
 #endif
-		rc = regulator_disable(reg_l2);	//DSI
+		rc = regulator_disable(reg_l2);	//   
 		if (rc) {
 			pr_err("disable reg_l2  failed, rc=%d\n", rc);
 			return -ENODEV;
@@ -743,10 +746,10 @@ static int mipi_lgit_backlight_level(int level, int max, int min)
 	return 0;
 }
 
-/* for making one source of DSV feature. */
+/*                                       */
 char lcd_mirror [2] = {0x36, 0x02};
 
-// values of DSV setting START
+//                            
 static char panel_setting_1 [6] = {0xB0, 0x43, 0x00, 0x00, 0x00, 0x00};
 static char panel_setting_2 [3] = {0xB3, 0x0A, 0x9F};
 
@@ -782,10 +785,10 @@ static char power_setting5[4] =  {0xC5, 0x3B, 0x3B, 0x03};
 
 #ifdef CONFIG_LGIT_VIDEO_WXGA_CABC
 static char cabc_set0[2] = {0x51, 0xFF};
-static char cabc_set1[2] = {0x5E, 0x00}; // CABC MIN
+static char cabc_set1[2] = {0x5E, 0x00}; //         
 static char cabc_set2[2] = {0x53, 0x2C};
 static char cabc_set3[2] = {0x55, 0x02};
-static char cabc_set4[6] = {0xC8, 0x22, 0x22, 0x22, 0x33, 0x80};//A-CABC applied
+static char cabc_set4[6] = {0xC8, 0x22, 0x22, 0x22, 0x33, 0x80};//              
 #endif
 
 static char exit_sleep_power_control_2[2] =  {0xC2,0x06};
@@ -807,7 +810,7 @@ static char enter_sleep_power_control_2[2] = {0xC2,0x00};
 static char deep_standby[2] = {0xC1,0x02};
 
 static struct dsi_cmd_desc lgit_power_on_set_1[] = {
-	// Display Initial Set
+	//                    
 	{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(lcd_mirror), lcd_mirror},
 
 	{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(panel_setting_1), panel_setting_1},
@@ -815,7 +818,7 @@ static struct dsi_cmd_desc lgit_power_on_set_1[] = {
 	{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(display_mode1), display_mode1},
 	{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(display_mode2), display_mode2},
 
-	// Gamma Set
+	//          
 	{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(p_gamma_r_setting), p_gamma_r_setting},
 	{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(n_gamma_r_setting), n_gamma_r_setting},
 	{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(p_gamma_g_setting), p_gamma_g_setting},
@@ -823,7 +826,7 @@ static struct dsi_cmd_desc lgit_power_on_set_1[] = {
 	{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(p_gamma_b_setting), p_gamma_b_setting},
 	{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(n_gamma_b_setting), n_gamma_b_setting},
 
-	// IEF set
+	//        
 	{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(ief_on_set0), ief_on_set0},
 	{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(ief_set1), ief_set1},
 	{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(ief_set2), ief_set2},
@@ -838,7 +841,7 @@ static struct dsi_cmd_desc lgit_power_on_set_1[] = {
 	{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(ief_setB), ief_setB},
 	{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(ief_setC), ief_setC},
 
-	// Power Supply Set
+	//                 
 	{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(osc_setting), osc_setting},
 	{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(power_setting3), power_setting3},
 	{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(power_setting4), power_setting4},
@@ -859,7 +862,7 @@ static struct dsi_cmd_desc lgit_power_on_set_2[] = {
 };
 
 static struct dsi_cmd_desc lgit_power_on_set_3[] = {
-	// Power Supply Set
+	//                 
 	{DTYPE_GEN_LWRITE,  1, 0, 0, 0, sizeof(otp_protection), otp_protection},
 	{DTYPE_GEN_LWRITE,  1, 0, 0, 0, sizeof(sleep_out_for_cabc), sleep_out_for_cabc},
 	{DTYPE_GEN_LWRITE,  1, 0, 0, 0, sizeof(gate_output_enabled_by_manual), gate_output_enabled_by_manual},
@@ -981,7 +984,7 @@ void __init lge_add_backlight_devices(void)
 {
 	int i;
 
-	/* Run the array and install devices as appropriate */
+	/*                                                  */
 	for (i = 0; i < ARRAY_SIZE(apq8064_i2c_backlight_device); ++i) {
 		i2c_register_board_info(apq8064_i2c_backlight_device[i].bus,
 					apq8064_i2c_backlight_device[i].info,

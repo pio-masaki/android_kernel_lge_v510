@@ -32,7 +32,7 @@
 #include <linux/qpnp/qpnp-adc.h>
 #include <linux/platform_device.h>
 
-/* QPNP IADC register definition */
+/*                               */
 #define QPNP_IADC_REVISION1				0x0
 #define QPNP_IADC_REVISION2				0x1
 #define QPNP_IADC_REVISION3				0x2
@@ -178,7 +178,7 @@ static int32_t qpnp_iadc_configure_interrupt(void)
 	int rc = 0;
 	u8 data = 0;
 
-	/* Configure interrupt as an Edge trigger */
+	/*                                        */
 	rc = qpnp_iadc_write_reg(QPNP_INT_SET_TYPE,
 					QPNP_INT_CLR_MASK);
 	if (rc < 0) {
@@ -186,7 +186,7 @@ static int32_t qpnp_iadc_configure_interrupt(void)
 		return rc;
 	}
 
-	/* Configure interrupt for rising edge trigger */
+	/*                                             */
 	rc = qpnp_iadc_write_reg(QPNP_INT_POLARITY_HIGH,
 					QPNP_INT_CLR_MASK);
 	if (rc < 0) {
@@ -194,7 +194,7 @@ static int32_t qpnp_iadc_configure_interrupt(void)
 		return rc;
 	}
 
-	/* Disable low level interrupt triggering */
+	/*                                        */
 	data = QPNP_INT_CLR_MASK;
 	rc = qpnp_iadc_write_reg(QPNP_INT_POLARITY_LOW,
 					(~data & QPNP_INT_CLR_MASK));

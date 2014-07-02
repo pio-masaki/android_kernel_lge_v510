@@ -48,32 +48,32 @@ enum {
 } rmt_storage_event;
 
 struct shared_ramfs_entry {
-	uint32_t client_id;	/* Client id to uniquely identify a client */
-	uint32_t base_addr;	/* Base address of shared RAMFS memory */
-	uint32_t size;		/* Size of the shared RAMFS memory */
-	uint32_t client_sts;	/* This will be initialized to 1 when
-				   remote storage RPC client is ready
-				   to process requests */
+	uint32_t client_id;	/*                                         */
+	uint32_t base_addr;	/*                                     */
+	uint32_t size;		/*                                 */
+	uint32_t client_sts;	/*                                   
+                                         
+                           */
 };
 struct shared_ramfs_table {
-	uint32_t magic_id;	/* Identify RAMFS details in SMEM */
-	uint32_t version;	/* Version of shared_ramfs_table */
-	uint32_t entries;	/* Total number of valid entries   */
-	/* List all entries */
+	uint32_t magic_id;	/*                                */
+	uint32_t version;	/*                               */
+	uint32_t entries;	/*                                 */
+	/*                  */
 	struct shared_ramfs_entry ramfs_entry[MAX_RAMFS_TBL_ENTRIES];
 };
 
 struct rmt_storage_client_info {
 	unsigned long cids;
-	struct list_head shrd_mem_list; /* List of shared memory entries */
+	struct list_head shrd_mem_list; /*                               */
 	int open_excl;
 	atomic_t total_events;
 	wait_queue_head_t event_q;
 	struct list_head event_list;
-	struct list_head client_list;	/* List of remote storage clients */
-	/* Lock to protect lists */
+	struct list_head client_list;	/*                                */
+	/*                       */
 	spinlock_t lock;
-	/* Wakelock to be acquired when processing requests from modem */
+	/*                                                             */
 	struct wake_lock wlock;
 	atomic_t wcount;
 	struct workqueue_struct *workq;
@@ -84,7 +84,7 @@ struct rmt_storage_kevent {
 	struct rmt_storage_event event;
 };
 
-/* Remote storage server on modem */
+/*                                */
 struct rmt_storage_srv {
 	uint32_t prog;
 	int sync_token;
@@ -93,10 +93,10 @@ struct rmt_storage_srv {
 	struct delayed_work restart_work;
 };
 
-/* Remote storage client on modem */
+/*                                */
 struct rmt_storage_client {
 	uint32_t handle;
-	uint32_t sid;			/* Storage ID */
+	uint32_t sid;			/*            */
 	char path[MAX_PATH_NAME];
 	struct rmt_storage_srv *srv;
 	struct list_head list;
@@ -166,14 +166,14 @@ static struct dentry *stats_dentry;
 #define RAMFS_INFO_VERSION		0x00000001
 #define RAMFS_DEFAULT			0xFFFFFFFF
 
-/* MSM EFS*/
+/*        */
 #define RAMFS_MODEMSTORAGE_ID		0x4D454653
 #define RAMFS_SHARED_EFS_RAM_BASE	0x46100000
 #define RAMFS_SHARED_EFS_RAM_SIZE	(3 * 1024 * 1024)
 
-/* MDM EFS*/
+/*        */
 #define RAMFS_MDM_STORAGE_ID		0x4D4583A1
-/* SSD */
+/*     */
 #define RAMFS_SSD_STORAGE_ID		0x00535344
 #define RAMFS_SHARED_SSD_RAM_BASE	0x42E00000
 #define RAMFS_SHARED_SSD_RAM_SIZE	0x2000
@@ -574,7 +574,7 @@ static int rmt_storage_event_get_err_cb(struct rmt_storage_event *event_args,
 	get_err = &event->params.get_err;
 	event_args->handle = get_err->handle;
 	kfree(event);
-	/* Not implemented */
+	/*                 */
 	return -1;
 
 }
@@ -723,7 +723,7 @@ static int rmt_storage_sdio_smem_probe(struct platform_device *pdev)
 
 	sdio_smem = container_of(pdev, struct sdio_smem_client, plat_dev);
 
-	/* SDIO SMEM is supported only for MDM */
+	/*                                     */
 	shrd_mem = rmt_storage_get_shrd_mem(RAMFS_MDM_STORAGE_ID);
 	if (!shrd_mem) {
 		pr_err("%s: No shared mem entry for sid=0x%08x\n",
@@ -847,18 +847,18 @@ static int handle_rmt_storage_call(struct msm_rpc_client *client,
 
 	switch (req->procedure) {
 	case RMT_STORAGE_OPEN_CB_TYPE_PROC:
-		/* client created in cb needs a ref. to its server */
+		/*                                                 */
 		event_args->usr_data = client->prog;
-		/* fall through */
+		/*              */
 
 	case RMT_STORAGE_WRITE_IOVEC_CB_TYPE_PROC:
-		/* fall through */
+		/*              */
 
 	case RMT_STORAGE_READ_IOVEC_CB_TYPE_PROC:
-		/* fall through */
+		/*              */
 
 	case RMT_STORAGE_ALLOC_RMT_BUF_CB_TYPE_PROC:
-		/* fall through */
+		/*              */
 
 	case RMT_STORAGE_EVENT_CB_TYPE_PROC: {
 		uint32_t cb_id;
@@ -878,7 +878,7 @@ static int handle_rmt_storage_call(struct msm_rpc_client *client,
 		if (IS_ERR_VALUE(rc)) {
 			pr_err("%s: Invalid parameters received\n", __func__);
 			if (req->procedure == RMT_STORAGE_OPEN_CB_TYPE_PROC)
-				result = 0; /* bad handle to signify err */
+				result = 0; /*                           */
 			else
 				result = RMT_STORAGE_ERROR_PARAM;
 			kfree(kevent);
@@ -1325,9 +1325,9 @@ show_force_sync(struct device *dev, struct device_attribute *attr,
 	return rmt_storage_force_sync(srv->rpc_client);
 }
 
-/* Returns -EINVAL for invalid sync token and an error value for any failure
- * in RPC call. Upon success, it returns a sync status of 1 (sync done)
- * or 0 (sync still pending).
+/*                                                                          
+                                                                       
+                             
  */
 static ssize_t
 show_sync_sts(struct device *dev, struct device_attribute *attr, char *buf)
@@ -1536,7 +1536,7 @@ static int rmt_storage_probe(struct platform_device *pdev)
 
 	INIT_DELAYED_WORK(&srv->restart_work, rmt_storage_restart_work);
 
-	/* Client Registration */
+	/*                     */
 	srv->rpc_client = msm_rpc_register_client2("rmt_storage",
 						   dev->prog, dev->vers, 1,
 						   handle_rmt_storage_call);
@@ -1556,12 +1556,12 @@ static int rmt_storage_probe(struct platform_device *pdev)
 	pr_info("%s: Remote storage RPC client (0x%x)initialized\n",
 		__func__, dev->prog);
 
-	/* register server callbacks */
+	/*                           */
 	ret = rmt_storage_reg_callbacks(srv->rpc_client);
 	if (ret)
 		goto unregister_client;
 
-	/* For targets that poll SMEM, set status to ready */
+	/*                                                 */
 	rmt_storage_set_client_status(srv, 1);
 
 	ret = sysfs_create_group(&pdev->dev.kobj, &dev_attr_grp);
@@ -1592,15 +1592,15 @@ static void rmt_storage_destroy_rmc(void)
 
 static void __init rmt_storage_init_client_info(void)
 {
-	/* Initialization */
+	/*                */
 	init_waitqueue_head(&rmc->event_q);
 	spin_lock_init(&rmc->lock);
 	atomic_set(&rmc->total_events, 0);
 	INIT_LIST_HEAD(&rmc->event_list);
 	INIT_LIST_HEAD(&rmc->client_list);
 	INIT_LIST_HEAD(&rmc->shrd_mem_list);
-	/* The client expects a non-zero return value for
-	 * its open requests. Hence reserve 0 bit.  */
+	/*                                               
+                                             */
 	__set_bit(0, &rmc->cids);
 	atomic_set(&rmc->wcount, 0);
 	wake_lock_init(&rmc->wlock, WAKE_LOCK_SUSPEND, "rmt_storage");

@@ -21,8 +21,6 @@ struct clock_data {
 	u32 epoch_cyc_copy;
 	u32 mult;
 	u32 shift;
-	bool suspended;
-	bool needs_suspend;
 };
 
 static void sched_clock_poll(unsigned long wrap_ticks);
@@ -51,16 +49,13 @@ static unsigned long long cyc_to_sched_clock(u32 cyc, u32 mask)
 	u64 epoch_ns;
 	u32 epoch_cyc;
 
-	if (cd.suspended)
-		return cd.epoch_ns;
-
 	/*
-	 * Load the epoch_cyc and epoch_ns atomically.  We do this by
-	 * ensuring that we always write epoch_cyc, epoch_ns and
-	 * epoch_cyc_copy in strict order, and read them in strict order.
-	 * If epoch_cyc and epoch_cyc_copy are not equal, then we're in
-	 * the middle of an update, and we should repeat the load.
-	 */
+                                                              
+                                                         
+                                                                  
+                                                                
+                                                           
+  */
 	do {
 		epoch_cyc = cd.epoch_cyc;
 		smp_rmb();
@@ -68,13 +63,11 @@ static unsigned long long cyc_to_sched_clock(u32 cyc, u32 mask)
 		smp_rmb();
 	} while (epoch_cyc != cd.epoch_cyc_copy);
 
-	cyc = read_sched_clock();
-	cyc = (cyc - epoch_cyc) & sched_clock_mask;
-	return epoch_ns + cyc_to_ns(cyc, cd.mult, cd.shift);
+	return epoch_ns + cyc_to_ns((cyc - epoch_cyc) & mask, cd.mult, cd.shift);
 }
 
 /*
- * Atomically update the sched_clock epoch.
+                                           
  */
 static void notrace update_sched_clock(void)
 {
@@ -87,15 +80,15 @@ static void notrace update_sched_clock(void)
 		cyc_to_ns((cyc - cd.epoch_cyc) & sched_clock_mask,
 			  cd.mult, cd.shift);
 	/*
-	 * Write epoch_cyc and epoch_ns in a way that the update is
-	 * detectable in cyc_to_fixed_sched_clock().
-	 */
+                                                            
+                                             
+  */
 	raw_local_irq_save(flags);
-	cd.epoch_cyc_copy = cyc;
+	cd.epoch_cyc = cyc;
 	smp_wmb();
 	cd.epoch_ns = ns;
 	smp_wmb();
-	cd.epoch_cyc = cyc;
+	cd.epoch_cyc_copy = cyc;
 	raw_local_irq_restore(flags);
 }
 
@@ -117,7 +110,7 @@ void __init setup_sched_clock(u32 (*read)(void), int bits, unsigned long rate)
 	read_sched_clock = read;
 	sched_clock_mask = (1 << bits) - 1;
 
-	/* calculate the mult/shift to convert counter ticks to ns. */
+	/*                                                          */
 	clocks_calc_mult_shift(&cd.mult, &cd.shift, rate, NSEC_PER_SEC, 0);
 
 	r = rate;
@@ -130,26 +123,26 @@ void __init setup_sched_clock(u32 (*read)(void), int bits, unsigned long rate)
 	} else
 		r_unit = ' ';
 
-	/* calculate how many ns until we wrap */
+	/*                                     */
 	wrap = cyc_to_ns((1ULL << bits) - 1, cd.mult, cd.shift);
 	do_div(wrap, NSEC_PER_MSEC);
 	w = wrap;
 
-	/* calculate the ns resolution of this counter */
+	/*                                             */
 	res = cyc_to_ns(1ULL, cd.mult, cd.shift);
 	pr_info("sched_clock: %u bits at %lu%cHz, resolution %lluns, wraps every %lums\n",
 		bits, r, r_unit, res, w);
 
 	/*
-	 * Start the timer to keep sched_clock() properly updated and
-	 * sets the initial epoch.
-	 */
+                                                              
+                           
+  */
 	sched_clock_timer.data = msecs_to_jiffies(w - (w / 10));
 	update_sched_clock();
 
 	/*
-	 * Ensure that sched_clock() starts off at 0ns
-	 */
+                                               
+  */
 	cd.epoch_ns = 0;
 
 	pr_debug("Registered %pF as sched_clock source\n", read);
@@ -164,9 +157,9 @@ unsigned long long notrace sched_clock(void)
 void __init sched_clock_postinit(void)
 {
 	/*
-	 * If no sched_clock function has been provided at that point,
-	 * make it the final one one.
-	 */
+                                                               
+                              
+  */
 	if (read_sched_clock == jiffy_sched_clock_read)
 		setup_sched_clock(jiffy_sched_clock_read, 32, HZ);
 
@@ -176,20 +169,11 @@ void __init sched_clock_postinit(void)
 static int sched_clock_suspend(void)
 {
 	sched_clock_poll(sched_clock_timer.data);
-	cd.suspended = true;
 	return 0;
-}
-
-static void sched_clock_resume(void)
-{
-	cd.epoch_cyc = read_sched_clock();
-	cd.epoch_cyc_copy = cd.epoch_cyc;
-	cd.suspended = false;
 }
 
 static struct syscore_ops sched_clock_ops = {
 	.suspend = sched_clock_suspend,
-	.resume = sched_clock_resume,
 };
 
 static int __init sched_clock_syscore_init(void)

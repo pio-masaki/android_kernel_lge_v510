@@ -60,7 +60,7 @@
 #include "vos_trace.h"
 #ifndef MEMORY_DEBUG
 #include "vos_memory.h"
-#endif /* MEMORY_DEBUG */
+#endif /*              */
 #include "vos_api.h"
 
 #include "dma-mapping.h"
@@ -69,7 +69,7 @@
 
 typedef struct sPalStruct
 {
-   /*?must check the data type*/
+   /*                         */
    void* devHandle;
 } tPalContext;
 
@@ -77,32 +77,32 @@ typedef struct sPalStruct
 
 tPalContext gContext;
 
-//This structure need to be 4-byte aligned. No packing.
+//                                                     
 typedef struct
 {
    wpt_uint32 length;
-   //The offset from beginning of the buffer where it is allocated
+   //                                                             
    wpt_uint32 offset;   
    wpt_uint32 phyAddr;
 } tPalDmaMemInfo;
 
-/*===========================================================================
+/*                                                                           
 
-                            FUNCTIONS
+                                     
 
-===========================================================================*/
+                                                                           */
 
-/**
- * @brief Initialize PAL
- *        In case of QNP, this does nothing.
- * @param ppPalContext pointer to a caller allocated pointer. It 
- *                     is opaque to caller.
- *                    Caller save the returned pointer for future use when
- *                    calling PAL APIs.
- * @param pOSContext Pointer to a context that is OS specific. This is NULL is a 
-                     particular PAL doesn't use it for that OS.
- * 
- * @return wpt_status eWLAN_PAL_STATUS_SUCCESS - success. Otherwise fail.
+/* 
+                        
+                                            
+                                                                 
+                                           
+                                                                          
+                                       
+                                                                                 
+                                                               
+   
+                                                                         
  */
 wpt_status wpalOpen(void **ppPalContext, void *pOSContext)
 {
@@ -121,12 +121,12 @@ wpt_status wpalOpen(void **ppPalContext, void *pOSContext)
    return status;
 }
 
-/**
- * @brief wpalClose - Release PAL
- *                    In case of QNP, this does nothing.
- * @param pPalContext pointer returned from wpalOpen.
- * 
- * @return wpt_status eWLAN_PAL_STATUS_SUCCESS - success. Otherwise fail.
+/* 
+                                 
+                                                        
+                                                     
+   
+                                                                         
  */
 wpt_status wpalClose(void *pPalContext)
 {
@@ -137,36 +137,36 @@ wpt_status wpalClose(void *pPalContext)
 }
 
 #ifndef MEMORY_DEBUG
-/**
- * @brief wpalMemoryAllocate -  Allocate memory
- * @param size number of bytes to allocate
- * 
- * @return void* A pointer to the allocated memory.
- * NULL - fail to allocate memory 
+/* 
+                                               
+                                          
+   
+                                                   
+                                  
  */
 void *wpalMemoryAllocate(wpt_uint32 size)
 {
    return vos_mem_malloc( size );
 }
 
-/**
- * @brief wpalMemoryFree -  Free allocated memory
- * @param pv pointer to buffer to be freed
+/* 
+                                                 
+                                          
  */
 void wpalMemoryFree(void *pv)
 {
    vos_mem_free( pv );
 }
-#endif /* MEMORY_DEBUG */
-/**
- * @brief wpalMemoryCopy -  copy memory
- * @param dest address which data is copied to
- * @param src address which data is copied from
- * @param size number of bytes to copy
- * 
- * @return wpt_status
- *         eWLAN_PAL_STATUS_SUCCESS
- *         eWLAN_PAL_STATUS_INVALID_PARAM
+#endif /*              */
+/* 
+                                       
+                                              
+                                               
+                                      
+   
+                     
+                                   
+                                         
  */
 wpt_status wpalMemoryCopy(void * dest, void * src, wpt_uint32 size)
 {
@@ -175,15 +175,15 @@ wpt_status wpalMemoryCopy(void * dest, void * src, wpt_uint32 size)
    return eWLAN_PAL_STATUS_SUCCESS;
 }
 
-/**
- * @brief wpalMemoryCompare -  compare memory
- * @param buf1 address of buffer1
- * @param buf2 address of buffer2
- * @param size number of bytes to compare
- * 
- * @return wpt_boolean
- *        eWLAN_PAL_TRUE - if two buffers have same content
- *        eWLAN_PAL_FALSE - not match
+/* 
+                                             
+                                 
+                                 
+                                         
+   
+                      
+                                                           
+                                     
  */
 wpt_boolean wpalMemoryCompare(void * buf1, void * buf2, wpt_uint32 size)
 {
@@ -191,38 +191,38 @@ wpt_boolean wpalMemoryCompare(void * buf1, void * buf2, wpt_uint32 size)
 }
 
 
-/*---------------------------------------------------------------------------
-    wpalMemoryZero -  Zero memory
-    Param: 
-       buf - address of buffer to be zero
-       size - number of bytes to zero
-    Return:
-       None
----------------------------------------------------------------------------*/
+/*                                                                           
+                                 
+           
+                                         
+                                     
+           
+           
+                                                                           */
 void wpalMemoryZero(void *buf, wpt_uint32 size)
 {
    vos_mem_zero( buf, size );
 }
 
-/**
- * @brief wpalMemoryFill -  Fill memory with one pattern
- * @param buf address of buffer to be filled
- * @param size number of bytes to fill
- * @param bFill one byte of data to fill in (size) bytes from the start of the 
- * buffer
+/* 
+                                                        
+                                            
+                                      
+                                                                               
+         
  */
 void wpalMemoryFill(void *buf, wpt_uint32 size, wpt_byte bFill)
 {
    vos_mem_set( buf, size, bFill );
 }
 
-/**
- * @brief wpalDmaMemoryAllocate -  Allocate memory ready for DMA. Aligned at 4-byte
- * @param size number of bytes to allocate
- * @param ppPhysicalAddr Physical address of the buffer if allocation succeeds
- * 
- * @return void* A pointer to the allocated memory (virtual address). 
- *               NULL - fail to allocate memory
+/* 
+                                                                                   
+                                          
+                                                                              
+   
+                                                                      
+                                               
  */
 void *wpalDmaMemoryAllocate(wpt_uint32 size, void **ppPhysicalAddr)
 {
@@ -247,12 +247,12 @@ void *wpalDmaMemoryAllocate(wpt_uint32 size, void **ppPhysicalAddr)
 
 
    return (pv);
-}/*wpalDmaMemoryAllocate*/
+}/*                     */
 
 
-/**
- * @brief wpalDmaMemoryFree -  Free memory ready for DMA
- * @param pv address for the buffer to be freed
+/* 
+                                                        
+                                               
  */
 void wpalDmaMemoryFree(void *pv)
 {
@@ -264,15 +264,15 @@ void wpalDmaMemoryFree(void *pv)
         dma_free_coherent(NULL, pMemInfo->length, pv, pMemInfo->phyAddr);
     }
 
-}/*wpalDmaMemoryFree*/
+}/*                 */
 
-/**
- * @brief wpalDbgReadRegister -  Read register from the WiFi BB 
-              chip
- * @param regAddr - register address
- * @param  pregValue - return value from register if success
- * @return
-       eWLAN_PAL_STATUS_SUCCESS - when everything is OK
+/* 
+                                                                
+                  
+                                    
+                                                            
+          
+                                                       
  */
 wpt_status wpalDbgReadRegister(wpt_uint32 regAddr, wpt_uint32 *pregValue)
 {
@@ -284,58 +284,58 @@ wpt_status wpalDbgReadRegister(wpt_uint32 regAddr, wpt_uint32 *pregValue)
    return wpalReadRegister(regAddr, pregValue);
 }
 
-/** 
- * @brief wpalDbgWriteRegister -  Write a value to the register
- *  in the WiFi BB chip Param:
- * @param regAddr - register address
- * @param regValue - value to be written
- * @return
-       eWLAN_PAL_STATUS_SUCCESS - when everything is OK
+/*  
+                                                               
+                              
+                                    
+                                        
+          
+                                                       
 */
 wpt_status wpalDbgWriteRegister(wpt_uint32 regAddr, wpt_uint32 regValue)
 {
    return wpalWriteRegister(regAddr, regValue);
 }
 
-/** 
- * @brief 
-     wpalDbgReadMemory -  Read memory from WiFi BB chip space
- * @param memAddr - address of memory 
- * @param buf - output 
- * @param len - length to be read
- * @return
-       eWLAN_PAL_STATUS_SUCCESS - when everything is OK
+/*  
+          
+                                                             
+                                      
+                       
+                                 
+          
+                                                       
 */
 wpt_status wpalDbgReadMemory(wpt_uint32 memAddr, wpt_uint8 *buf, wpt_uint32 len)
 {
    return wpalReadDeviceMemory(memAddr, buf, len);
 }
 
-/** 
- * @brief 
-    wpalDbgWriteMemory -  Write a value to the memory in the WiFi BB chip space
- * @param memAddr - memory address 
- * @param buf - vlaue to be written
- * @param len - length of buf
- * @return
-       eWLAN_PAL_STATUS_SUCCESS - when everything is OK
+/*  
+          
+                                                                               
+                                   
+                                   
+                             
+          
+                                                       
 */
 wpt_status wpalDbgWriteMemory(wpt_uint32 memAddr, wpt_uint8 *buf, wpt_uint32 len)
 {
    return wpalWriteDeviceMemory(memAddr, buf, len);
 }
 
-/*---------------------------------------------------------------------------
-    wpalDriverShutdown -  Shutdown WLAN driver
+/*                                                                           
+                                              
 
-    This API is requied by SSR, call in to 'VOS shutdown' to shutdown WLAN 
-    driver when Riva crashes.
+                                                                           
+                             
 
-    Param: 
-       None
-    Return:
-       eWLAN_PAL_STATUS_SUCCESS - when everything is OK
----------------------------------------------------------------------------*/
+           
+           
+           
+                                                       
+                                                                           */
 wpt_status wpalDriverShutdown(void)
 {
     VOS_STATUS vosStatus;
@@ -347,17 +347,17 @@ wpt_status wpalDriverShutdown(void)
     return eWLAN_PAL_STATUS_E_FAILURE; 
 }
 
-/*---------------------------------------------------------------------------
-    wpalDriverShutdown -  Re-init WLAN driver
+/*                                                                           
+                                             
 
-    This API is requied by SSR, call in to 'VOS re-init' to re-init WLAN
-    driver.
+                                                                        
+           
 
-    Param: 
-       None
-    Return:
-       eWLAN_PAL_STATUS_SUCCESS - when everything is OK
----------------------------------------------------------------------------*/
+           
+           
+           
+                                                       
+                                                                           */
 wpt_status wpalDriverReInit(void)
 {
     VOS_STATUS vosStatus;
@@ -369,21 +369,21 @@ wpt_status wpalDriverReInit(void)
     return eWLAN_PAL_STATUS_E_FAILURE; 
 }
 
-/*---------------------------------------------------------------------------
-    wpalRivaSubystemRestart -  Initiate Riva SSR
+/*                                                                           
+                                                
 
-    This API is called by WLAN driver to initiate Riva SSR
+                                                          
 
-    Param:
-       None
-    Return:
-       eWLAN_PAL_STATUS_SUCCESS - when everything is OK
----------------------------------------------------------------------------*/
+          
+           
+           
+                                                       
+                                                                           */
 wpt_status wpalRivaSubystemRestart(void)
 {
-    /* call SSR only if driver is not in load/unload process.
-     * A WDI timeout during load/unload cannot be fixed thru
-     * SSR */
+    /*                                                       
+                                                            
+           */
     if (vos_is_load_unload_in_progress(VOS_MODULE_ID_WDI, NULL))
     {
          WPAL_TRACE(eWLAN_MODULE_PAL, eWLAN_PAL_TRACE_LEVEL_FATAL,
@@ -398,28 +398,28 @@ wpt_status wpalRivaSubystemRestart(void)
     return eWLAN_PAL_STATUS_E_FAILURE;
 }
 
-/*---------------------------------------------------------------------------
-    wpalWlanReload -  Initiate WLAN Driver reload
+/*                                                                           
+                                                 
 
-    Param:
-       None
-    Return:
-       NONE
----------------------------------------------------------------------------*/
+          
+           
+           
+           
+                                                                           */
 void wpalWlanReload(void)
 {
    vos_wlanRestart();
    return;
 }
 
-/*---------------------------------------------------------------------------
-    wpalWcnssResetIntr -  Trigger the reset FIQ to Riva
+/*                                                                           
+                                                       
 
-    Param:
-       None
-    Return:
-       NONE
----------------------------------------------------------------------------*/
+          
+           
+           
+           
+                                                                           */
 void wpalWcnssResetIntr(void)
 {
 #ifdef HAVE_WCNSS_RESET_INTR

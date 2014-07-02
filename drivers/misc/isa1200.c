@@ -80,8 +80,8 @@ static void isa1200_vib_set(struct isa1200_chip *haptic, int enable)
 	int rc = 0;
 
 	if (enable) {
-		/* if hen and len are seperate then enable hen
-		 * otherwise set normal mode bit */
+		/*                                            
+                                   */
 		if (haptic->is_len_gpio_valid == true)
 			gpio_set_value_cansleep(haptic->pdata->hap_en_gpio, 1);
 		else {
@@ -110,7 +110,7 @@ static void isa1200_vib_set(struct isa1200_chip *haptic, int enable)
 				goto chip_dwn;
 			}
 		} else if (haptic->pdata->mode_ctrl == PWM_GEN_MODE) {
-			/* check for board specific clk callback */
+			/*                                       */
 			if (haptic->pdata->clk_enable) {
 				rc = haptic->pdata->clk_enable(true);
 				if (rc < 0) {
@@ -120,7 +120,7 @@ static void isa1200_vib_set(struct isa1200_chip *haptic, int enable)
 				}
 			}
 
-			/* vote for clock */
+			/*                */
 			if (haptic->pdata->need_pwm_clk && !haptic->clk_on) {
 				rc = clk_prepare_enable(haptic->pwm_clk);
 				if (rc < 0) {
@@ -140,8 +140,8 @@ static void isa1200_vib_set(struct isa1200_chip *haptic, int enable)
 			}
 		}
 	} else {
-		/* if hen and len are seperate then pull down hen
-		 * otherwise set power down bit */
+		/*                                               
+                                  */
 		if (haptic->is_len_gpio_valid == true)
 			gpio_set_value_cansleep(haptic->pdata->hap_en_gpio, 0);
 		else {
@@ -162,12 +162,12 @@ static void isa1200_vib_set(struct isa1200_chip *haptic, int enable)
 			if (rc < 0)
 				pr_err("%s: stop vibartion fail\n", __func__);
 
-			/* de-vote clock */
+			/*               */
 			if (haptic->pdata->need_pwm_clk && haptic->clk_on) {
 				clk_disable_unprepare(haptic->pwm_clk);
 				haptic->clk_on = false;
 			}
-			/* check for board specific clk callback */
+			/*                                       */
 			if (haptic->pdata->clk_enable) {
 				rc = haptic->pdata->clk_enable(false);
 				if (rc < 0)
@@ -319,8 +319,8 @@ static int isa1200_setup(struct i2c_client *client)
 		goto reset_hctrl1;
 	}
 
-	/* if hen and len are seperate then pull down hen
-	 * otherwise set power down bit */
+	/*                                               
+                                 */
 	if (haptic->is_len_gpio_valid == true)
 		gpio_set_value_cansleep(haptic->pdata->hap_en_gpio, 0);
 	else {
@@ -392,7 +392,7 @@ static int isa1200_reg_setup(struct isa1200_chip *haptic, bool on)
 	u8 i, num_reg = haptic->pdata->num_regulators;
 	int rc = 0;
 
-	/* put regulators */
+	/*                */
 	if (on == false) {
 		i = num_reg;
 		goto put_regs;
@@ -655,7 +655,7 @@ static int __devinit isa1200_probe(struct i2c_client *client,
 	hrtimer_init(&haptic->timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
 	haptic->timer.function = isa1200_vib_timer_func;
 
-	/*register with timed output class*/
+	/*                                */
 	haptic->dev.name = pdata->name;
 	haptic->dev.get_time = isa1200_chip_get_time;
 	haptic->dev.enable = isa1200_chip_enable;
@@ -762,7 +762,7 @@ static int __devexit isa1200_remove(struct i2c_client *client)
 	hrtimer_cancel(&haptic->timer);
 	cancel_work_sync(&haptic->work);
 
-	/* turn-off current vibration */
+	/*                            */
 	isa1200_vib_set(haptic, 0);
 
 	if (haptic->pdata->mode_ctrl == PWM_INPUT_MODE)
@@ -778,17 +778,17 @@ static int __devexit isa1200_remove(struct i2c_client *client)
 	if (haptic->is_len_gpio_valid == true)
 		gpio_free(haptic->pdata->hap_len_gpio);
 
-	/* reset hardware registers */
+	/*                          */
 	i2c_smbus_write_byte_data(client, ISA1200_HCTRL0,
 				ISA1200_HCTRL0_RESET);
 	i2c_smbus_write_byte_data(client, ISA1200_HCTRL1,
 				ISA1200_HCTRL1_RESET);
 
 
-	/* destroy mutex */
+	/*               */
 	mutex_destroy(&haptic->lock);
 
-	/* power-off the chip */
+	/*                    */
 	if (haptic->pdata->regulator_info) {
 		isa1200_reg_power(haptic, false);
 		isa1200_reg_setup(haptic, false);
@@ -812,7 +812,7 @@ static int isa1200_suspend(struct i2c_client *client, pm_message_t mesg)
 
 	hrtimer_cancel(&haptic->timer);
 	cancel_work_sync(&haptic->work);
-	/* turn-off current vibration */
+	/*                            */
 	isa1200_vib_set(haptic, 0);
 
 	gpio_set_value_cansleep(haptic->pdata->hap_en_gpio, 0);

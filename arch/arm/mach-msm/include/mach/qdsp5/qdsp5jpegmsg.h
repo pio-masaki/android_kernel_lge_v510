@@ -27,27 +27,27 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 *====*====*====*====*====*====*====*====*====*====*====*====*====*====*====*/
-/*===========================================================================
+/*                                                                           
 
-                      EDIT HISTORY FOR FILE
+                                           
 
-This section contains comments describing changes made to this file.
-Notice that changes are listed in reverse chronological order.
+                                                                    
+                                                              
    
-$Header: //source/qcom/qct/multimedia2/AdspSvc/7XXX/qdsp5cmd/video/qdsp5jpegmsg.h#2 $ $DateTime: 2008/07/30 10:50:23 $ $Author: pavanr $                     
-Revision History:                                            
+                                                                                                                                                             
+                                                             
   
-when       who     what, where, why
---------   ---     ----------------------------------------------------------
-05/10/08   sv      initial version
-===========================================================================*/
+                                   
+                                                                             
+                                  
+                                                                           */
 
 /*
- * Messages from JPEG task to ARM through jpeguPMsgQueue
+                                                        
  */
 
 /*
- * Message is ACK for CMD_JPEGE_ENCODE cmd
+                                          
  */
 
 #define	JPEG_MSG_ENC_ENCODE_ACK	0x0000
@@ -59,8 +59,8 @@ typedef struct {
 
 
 /*
- * Message informs the up when op buffer is ready for consumption and
- * when encoding is complete or errors
+                                                                     
+                                      
  */
 
 #define	JPEG_MSG_ENC_OP_PRODUCED	0x0001
@@ -79,7 +79,7 @@ typedef struct {
 
 
 /*
- * Message to ack CMD_JPEGE_IDLE
+                                
  */
 
 #define	JPEG_MSG_ENC_IDLE_ACK	0x0002
@@ -91,7 +91,7 @@ typedef struct {
 
 
 /*
- * Message to indicate the illegal command
+                                          
  */
 
 #define	JPEG_MSG_ENC_ILLEGAL_COMMAND	0x0003
@@ -104,7 +104,7 @@ typedef struct {
 
 
 /*
- * Message to ACK CMD_JPEGD_DECODE
+                                  
  */
 
 #define	JPEG_MSG_DEC_DECODE_ACK		0x0004
@@ -117,8 +117,8 @@ typedef struct {
 
 
 /*
- * Message to inform up that an op buffer is ready for consumption and when
- * decoding is complete or an error occurs
+                                                                           
+                                          
  */
 
 #define	JPEG_MSG_DEC_OP_PRODUCED		0x0005
@@ -136,7 +136,7 @@ typedef struct {
 } __attribute__((packed)) jpeg_msg_dec_op_produced;
 
 /*
- * Message to ack CMD_JPEGD_IDLE cmd
+                                    
  */
 
 #define	JPEG_MSG_DEC_IDLE_ACK	0x0006
@@ -148,7 +148,7 @@ typedef struct {
 
 
 /*
- * Message to indicate illegal cmd was received
+                                               
  */
 
 #define	JPEG_MSG_DEC_ILLEGAL_COMMAND	0x0007
@@ -161,7 +161,7 @@ typedef struct {
 } __attribute__((packed)) jpeg_msg_dec_illegal_command;
 
 /*
- * Message to request up for the next segment of ip bit stream
+                                                              
  */
 
 #define	JPEG_MSG_DEC_IP_REQUEST		0x0008

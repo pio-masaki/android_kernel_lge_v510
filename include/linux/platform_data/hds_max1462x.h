@@ -16,25 +16,24 @@
 #define __HDS_MAX1462X_H__
 
 struct max1462x_platform_data {
-    /* mandotary */
-    const char *switch_name;    /* switch device name */
-    const char *keypad_name;    /* keypad device name */
+	const char *switch_name;	/*                    */
+	const char *keypad_name;	/*                    */
+	unsigned int key_code;		/*                                           */
+	unsigned int gpio_mic_en;	/*                          */
+	unsigned int gpio_key;		/*                                              */
+	unsigned int gpio_detect;	/*                                      */
 
-    unsigned int key_code;      /* key code for hook[KEY_MEDIA(226)], volume up[KEY_VOLUMEUP(115)], volume down[KEY_VOLUMEDOWN(114)] */
+	/*                                                      */
+	void (*set_headset_mic_bias)(int enable);
 
-    unsigned int gpio_mode;     /* MODE : high, low, high-z */
-    unsigned int gpio_det;      /* DET : to detect jack inserted or not */
-    unsigned int gpio_swd;      /* SWD : to detect 3 pole or 4 pole | to detect among hook, volum up or down key */
+	/*        */
+	unsigned int adc_mpp_num;   /*                                              */
+	unsigned int adc_channel;   /*                                           */
 
-    unsigned int latency_for_detection; /* latency for DETIN Debounce Time (in ms) */
-    unsigned int latency_for_key;       /* latency for SEND/END Debounce Time (in ms) */
-
-    /* optional */
-    unsigned int adc_mpp_num;   /* PMIC adc mpp number to read adc level on MIC */
-    unsigned int adc_channel;   /* PMIC adc channel to read adc level on MIC */
-
-    unsigned int external_ldo_mic_bias;         /* GPIO for an external LDO control */
-    void (*set_headset_mic_bias)(int enable);   /* callback function for an external LDO control */
+	unsigned int external_ldo_mic_bias;  /*                      */
+	/*                                            */
+	unsigned int latency_for_detection;
+	unsigned int latency_for_key;
 };
 
-#endif /* __HDS_MAX1462X_H__ */
+#endif /*                    */

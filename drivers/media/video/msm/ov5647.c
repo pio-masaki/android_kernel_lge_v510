@@ -24,7 +24,7 @@
 #include <media/msm_camera.h>
 #include "ov5647.h"
 
-/* 16bit address - 8 bit context register structure */
+/*                                                  */
 #define Q8	0x00000100
 #define Q10	0x00000400
 
@@ -34,10 +34,10 @@
 #define REG_OV5647_LINE_MSB           0x3501
 #define REG_OV5647_LINE_LSB           0x3502
 
-/* MCLK */
+/*      */
 #define OV5647_MASTER_CLK_RATE 24000000
 
-/* AF Total steps parameters */
+/*                           */
 #define OV5647_TOTAL_STEPS_NEAR_TO_FAR	32
 
 #define OV5647_REG_PREV_FRAME_LEN_1	31
@@ -52,7 +52,7 @@
 #define MSB                             1
 #define LSB                             0
 
-/* Debug switch */
+/*              */
 #ifdef CDBG
 #undef CDBG
 #endif
@@ -60,7 +60,7 @@
 #undef CDBG_HIGH
 #endif
 
-/*#define OV5647_VERBOSE_DGB*/
+/*                          */
 
 #ifdef OV5647_VERBOSE_DGB
 #define CDBG(fmt, args...) pr_debug(fmt, ##args)
@@ -70,7 +70,7 @@
 #define CDBG_HIGH(fmt, args...) pr_debug(fmt, ##args)
 #endif
 
-/*for debug*/
+/*         */
 #ifdef CDBG
 #undef CDBG
 #endif
@@ -90,8 +90,8 @@ struct ov5647_ctrl_t {
 	const struct  msm_camera_sensor_info *sensordata;
 
 	uint32_t sensormode;
-	uint32_t fps_divider;/* init to 1 * 0x00000400 */
-	uint32_t pict_fps_divider;/* init to 1 * 0x00000400 */
+	uint32_t fps_divider;/*                        */
+	uint32_t pict_fps_divider;/*                        */
 	uint16_t fps;
 
 	uint16_t curr_lens_pos;
@@ -258,13 +258,13 @@ static int32_t ov5647_af_i2c_write_b_sensor(uint8_t waddr, uint8_t bdata)
 static void ov5647_start_stream(void)
 {
 	CDBG("CAMERA_DBG: 0x4202 0x0, stream on...\r\n");
-	ov5647_i2c_write_b_sensor(0x4202, 0x00);/* streaming on */
+	ov5647_i2c_write_b_sensor(0x4202, 0x00);/*              */
 }
 
 static void ov5647_stop_stream(void)
 {
 	CDBG("CAMERA_DBG: 0x4202 0xf, stream off...\r\n");
-	ov5647_i2c_write_b_sensor(0x4202, 0x0f);/* streaming off */
+	ov5647_i2c_write_b_sensor(0x4202, 0x0f);/*               */
 }
 
 static void ov5647_group_hold_on(void)
@@ -279,7 +279,7 @@ static void ov5647_group_hold_off(void)
 
 static void ov5647_get_pict_fps(uint16_t fps, uint16_t *pfps)
 {
-	/* input fps is preview fps in Q8 format */
+	/*                                       */
 	uint32_t divider, d1, d2;
 	uint32_t preview_pclk = 0x37, snapshot_pclk = 0x4f;
 
@@ -287,7 +287,7 @@ static void ov5647_get_pict_fps(uint16_t fps, uint16_t *pfps)
 	d2 = (prev_line_length_pck * 0x00000400) / snap_line_length_pck;
 	divider = (d1 * d2*preview_pclk/snapshot_pclk) / 0x400;
 	CDBG(KERN_ERR "ov5647_get_pict_fps divider = %d", divider);
-	/*Verify PCLK settings and frame sizes.*/
+	/*                                     */
 	*pfps = (uint16_t) (fps * divider / 0x400);
 }
 
@@ -373,7 +373,7 @@ static int32_t ov5647_write_exp_gain(uint16_t gain, uint32_t line)
 
 	gain_lsb = (uint8_t) (ov5647_ctrl->my_reg_gain);
 	gain_hsb = (uint8_t)((ov5647_ctrl->my_reg_gain & 0x300)>>8);
-	/* adjust frame rate */
+	/*                   */
 	if (line > 980) {
 		rc = ov5647_i2c_write_b_sensor(0x380E,
 			 (uint8_t)((line+4) >> 8)) ;
@@ -389,7 +389,7 @@ static int32_t ov5647_write_exp_gain(uint16_t gain, uint32_t line)
 	}
 
 	line = line<<4;
-	/* ov5647 need this operation */
+	/*                            */
 	intg_time_hsb = (u8)(line>>16);
 	intg_time_msb = (u8) ((line & 0xFF00) >> 8);
 	intg_time_lsb = (u8) (line & 0x00FF);
@@ -437,12 +437,12 @@ static int32_t ov5647_set_pict_exp_gain(uint16_t gain, uint32_t line)
 		max_line = 1968;
 	}
 	line = line<<4;
-	/* ov5647 need this operation */
+	/*                            */
 	intg_time_hsb = (u8)(line>>16);
 	intg_time_msb = (u8) ((line & 0xFF00) >> 8);
 	intg_time_lsb = (u8) (line & 0x00FF);
 
-	/* FIXME for BLC trigger */
+	/*                       */
 	ov5647_group_hold_on();
 	rc = ov5647_i2c_write_b_sensor(REG_OV5647_LINE_HSB, intg_time_hsb) ;
 	rc = ov5647_i2c_write_b_sensor(REG_OV5647_LINE_MSB, intg_time_msb) ;
@@ -500,15 +500,15 @@ static int32_t ov5647_move_focus(int direction, int32_t num_steps)
 	code_val_lsb |= mode_mask;
 
 	rc = ov5647_af_i2c_write_b_sensor(code_val_msb, code_val_lsb);
-	/* DAC Setting */
+	/*             */
 	if (rc != 0) {
 		CDBG(KERN_ERR "%s: WRITE ERROR lsb = 0x%x, msb = 0x%x",
 			__func__, code_val_lsb, code_val_msb);
 	} else {
 		CDBG(KERN_ERR "%s: Successful lsb = 0x%x, msb = 0x%x",
 			__func__, code_val_lsb, code_val_msb);
-		/* delay may set based on the steps moved
-		when I2C write successful */
+		/*                                       
+                            */
 		msleep(100);
 	}
 	return 0;
@@ -530,7 +530,7 @@ static int32_t ov5647_set_default_focus(uint8_t af_step)
 	CDBG(KERN_ERR "ov5647_set_default_focus:lens pos = %d",
 		 ov5647_ctrl->curr_lens_pos);
 	rc = ov5647_af_i2c_write_b_sensor(code_val_msb, code_val_lsb);
-	/* DAC Setting */
+	/*             */
 	if (rc != 0)
 		CDBG(KERN_ERR "%s: WRITE ERROR lsb = 0x%x, msb = 0x%x",
 			__func__, code_val_lsb, code_val_msb);
@@ -566,14 +566,14 @@ static int32_t ov5647_sensor_setting(int update_type, int rt)
 
 	ov5647_stop_stream();
 
-	/* wait for clk/data really stop */
+	/*                               */
 	if ((rt == RES_CAPTURE) || (CSI_CONFIG == 0))
 		msleep(66);
 	else
 		msleep(266);
 
 	CDBG("CAMERA_DBG1: 0x4800 regVal:0x25\r\n");
-	ov5647_i2c_write_b_sensor(0x4800, 0x25);/* streaming off */
+	ov5647_i2c_write_b_sensor(0x4800, 0x25);/*               */
 
 	usleep_range(10000, 11000);
 
@@ -583,7 +583,7 @@ static int32_t ov5647_sensor_setting(int update_type, int rt)
 			ov5647_regs.rec_size);
 		CSI_CONFIG = 0;
 	} else if (update_type == UPDATE_PERIODIC) {
-			/* turn off flash when preview */
+			/*                             */
 
 			if (rt == RES_PREVIEW) {
 				ov5647_i2c_write_b_table(ov5647_regs.reg_prev,
@@ -606,11 +606,11 @@ static int32_t ov5647_sensor_setting(int update_type, int rt)
 				rc = msm_camio_csi_config(&ov5647_csi_params);
 				msleep(20);
 				CSI_CONFIG = 1;
-			/* exit powerdown state */
+			/*                      */
 				ov5647_i2c_write_b_sensor(0x0100, 0x01);
 			}
 			CDBG("CAMERA_DBG: 0x4800 regVal:0x04\r\n");
-			/* streaming on */
+			/*              */
 			ov5647_i2c_write_b_sensor(0x4800, 0x04);
 			msleep(266);
 			ov5647_start_stream();
@@ -624,7 +624,7 @@ static int32_t ov5647_video_config(int mode)
 	int32_t rc = 0;
 	int rt;
 	CDBG("video config\n");
-	/* change sensor resolution if needed */
+	/*                                    */
 	if (ov5647_ctrl->prev_res == QTR_SIZE)
 		rt = RES_PREVIEW;
 	else
@@ -646,7 +646,7 @@ static int32_t ov5647_snapshot_config(int mode)
 	int32_t rc = 0;
 	int rt;
 
-	/*change sensor resolution if needed */
+	/*                                   */
 	if (ov5647_ctrl->curr_res != ov5647_ctrl->pict_res) {
 		if (ov5647_ctrl->pict_res == QTR_SIZE)
 			rt = RES_PREVIEW;
@@ -666,7 +666,7 @@ static int32_t ov5647_raw_snapshot_config(int mode)
 	int32_t rc = 0;
 	int rt;
 
-	/* change sensor resolution if needed */
+	/*                                    */
 	if (ov5647_ctrl->curr_res != ov5647_ctrl->pict_res) {
 		if (ov5647_ctrl->pict_res == QTR_SIZE)
 			rt = RES_PREVIEW;
@@ -790,16 +790,16 @@ static int ov5647_sensor_open_init(const struct msm_camera_sensor_info *data)
 
 	snap_line_length_pck = 0xa8c;
 
-	/* enable mclk first */
+	/*                   */
 	msm_camio_clk_rate_set(OV5647_MASTER_CLK_RATE);
 
 	gpio_direction_output(data->sensor_pwd, 1);
 	gpio_direction_output(data->sensor_reset, 0);
 	usleep_range(10000, 11000);
-	/* power on camera ldo and vreg */
+	/*                              */
 	if (ov5647_ctrl->sensordata->pmic_gpio_enable)
 		lcd_camera_power_onoff(1);
-	usleep_range(10000, 11000); /*waiting for ldo stable*/
+	usleep_range(10000, 11000); /*                      */
 	gpio_direction_output(data->sensor_pwd, 0);
 	msleep(20);
 	gpio_direction_output(data->sensor_reset, 1);
@@ -812,7 +812,7 @@ static int ov5647_sensor_open_init(const struct msm_camera_sensor_info *data)
 		rc = ov5647_sensor_setting(REG_INIT, RES_CAPTURE);
 	ov5647_ctrl->fps = 30 * Q8;
 
-	/* enable AF actuator */
+	/*                    */
 	if (ov5647_ctrl->sensordata->vcm_enable) {
 		CDBG("enable AF actuator, gpio = %d\n",
 			 ov5647_ctrl->sensordata->vcm_pwd);
@@ -841,8 +841,8 @@ static int ov5647_sensor_open_init(const struct msm_camera_sensor_info *data)
 init_fail:
 	CDBG("init_fail\n");
 	ov5647_probe_init_done(data);
-	/* No need to power OFF camera ldo and vreg
-	affects Display while resume */
+	/*                                         
+                              */
 init_done:
 	CDBG("init_done\n");
 	return rc;
@@ -855,14 +855,14 @@ static int ov5647_i2c_remove(struct i2c_client *client)
 
 static int ov5647_init_client(struct i2c_client *client)
 {
-	/* Initialize the MSM_CAMI2C Chip */
+	/*                                */
 	init_waitqueue_head(&ov5647_wait_queue);
 	return 0;
 }
 
 static int ov5647_af_init_client(struct i2c_client *client)
 {
-	/* Initialize the MSM_CAMI2C Chip */
+	/*                                */
 	init_waitqueue_head(&ov5647_af_wait_queue);
 	return 0;
 }
@@ -1096,8 +1096,8 @@ static int ov5647_sensor_release(void)
 	ov5647_power_down();
 	msleep(20);
 	ov5647_i2c_read(0x3018, &rdata);
-	rdata |= 0x18; /*set bit 3 bit 4 to 1*/
-	ov5647_i2c_write_b_sensor(0x3018, rdata);/*write back*/
+	rdata |= 0x18; /*                    */
+	ov5647_i2c_write_b_sensor(0x3018, rdata);/*          */
 	msleep(20);
 
 	gpio_set_value(ov5647_ctrl->sensordata->sensor_pwd, 1);
@@ -1107,8 +1107,8 @@ static int ov5647_sensor_release(void)
 		gpio_free(ov5647_ctrl->sensordata->vcm_pwd);
 	}
 
-	/* No need to power OFF camera ldo and vreg
-	affects Display while resume */
+	/*                                         
+                              */
 
 	kfree(ov5647_ctrl);
 	ov5647_ctrl = NULL;
@@ -1128,7 +1128,7 @@ static int ov5647_sensor_probe(const struct msm_camera_sensor_info *info,
 	gpio_direction_output(info->sensor_pwd, 1);
 	gpio_direction_output(info->sensor_reset, 0);
 	usleep_range(1000, 1100);
-	/* turn on ldo and vreg */
+	/*                      */
 	if (info->pmic_gpio_enable)
 		lcd_camera_power_onoff(1);
 
@@ -1158,7 +1158,7 @@ static int ov5647_sensor_probe(const struct msm_camera_sensor_info *info,
 	s->s_mount_angle = info->sensor_platform_info->mount_angle;
 	gpio_set_value(info->sensor_pwd, 1);
 	ov5647_probe_init_done(info);
-	/* turn off ldo and vreg */
+	/*                       */
 	if (info->pmic_gpio_enable)
 		lcd_camera_power_onoff(0);
 
@@ -1170,7 +1170,7 @@ probe_fail_3:
 probe_fail_2:
 	i2c_del_driver(&ov5647_i2c_driver);
 probe_fail_1:
-	/* turn off ldo and vreg */
+	/*                       */
 	if (info->pmic_gpio_enable)
 		lcd_camera_power_onoff(0);
 	CDBG("ov5647_sensor_probe: SENSOR PROBE FAILS!\n");

@@ -13,9 +13,9 @@
 #ifndef _ARCH_ARM_MACH_MSM_OCMEM_CORE_H
 #define _ARCH_ARM_MACH_MSM_OCMEM_CORE_H
 
-/** All interfaces in this header should only be used by OCMEM driver
- *  Client drivers should use wrappers available in ocmem.h
- **/
+/*                                                                   
+                                                           
+  */
 #include <linux/platform_device.h>
 #include <linux/clk.h>
 #include <asm/io.h>
@@ -64,7 +64,7 @@ enum op_code {
 	SCHED_DUMP,
 };
 
-/* Operational modes of each region */
+/*                                  */
 enum region_mode {
 	MODE_NOT_SET = 0x0,
 	WIDE_MODE,
@@ -105,11 +105,11 @@ struct ocmem_eviction_data {
 
 struct ocmem_req {
 	struct rw_semaphore rw_sem;
-	/* Chain in sched queue */
+	/*                      */
 	struct list_head sched_list;
-	/* Chain in zone list */
+	/*                    */
 	struct list_head zone_list;
-	/* Chain in eviction list */
+	/*                        */
 	struct list_head eviction_list;
 	int owner;
 	int prio;
@@ -117,17 +117,17 @@ struct ocmem_req {
 	unsigned long req_min;
 	unsigned long req_max;
 	unsigned long req_step;
-	/* reverse pointers */
+	/*                  */
 	struct ocmem_zone *zone;
 	struct ocmem_buf *buffer;
 	struct ocmem_map_list *mlist;
 	enum op_code op;
 	unsigned long state;
-	/* Request assignments */
+	/*                     */
 	unsigned long req_start;
 	unsigned long req_end;
 	unsigned long req_sz;
-	/* Request Power State */
+	/*                     */
 	unsigned power_state;
 	struct ocmem_eviction_data *edata;
 };
@@ -170,7 +170,7 @@ static inline struct ocmem_handle *req_to_handle(struct ocmem_req *req)
 		return NULL;
 }
 
-/* Simple wrappers which will have debug features added later */
+/*                                                            */
 static inline int ocmem_read(void *at)
 {
 	return readl_relaxed(at);

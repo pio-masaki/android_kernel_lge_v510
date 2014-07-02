@@ -20,8 +20,8 @@
 	static struct regulator_consumer_supply vreg_consumers_##_id[]
 
 /*
- * Consumer specific regulator names:
- *			 regulator name		consumer dev_name
+                                     
+                                       
  */
 VREG_CONSUMERS(L1) = {
 	REGULATOR_SUPPLY("8921_l1",		NULL),
@@ -75,12 +75,12 @@ VREG_CONSUMERS(L10) = {
 VREG_CONSUMERS(L11) = {
 	REGULATOR_SUPPLY("8921_l11",		NULL),
 	REGULATOR_SUPPLY("dsi1_avdd",		"mipi_dsi.1"),
-	REGULATOR_SUPPLY("cam1_vana",		"4-000d"), /* GSBI4, Slave Addr: 0x0d, imx111 */
-	REGULATOR_SUPPLY("cam2_vana",		"4-006e"), /* GSBI4, Slave Addr: 0x6e, imx119 */
+	REGULATOR_SUPPLY("cam1_vana",		"4-000d"), /*                                 */
+	REGULATOR_SUPPLY("cam2_vana",		"4-006e"), /*                                 */
 };
 VREG_CONSUMERS(L12) = {
-	REGULATOR_SUPPLY("cam1_vdig",		"4-000d"), /* GSBI4, Slave Addr: 0x0d, imx111 */
-	REGULATOR_SUPPLY("cam2_vdig",		"4-006e"), /* GSBI4, Slave Addr: 0x6e, imx119 */
+	REGULATOR_SUPPLY("cam1_vdig",		"4-000d"), /*                                 */
+	REGULATOR_SUPPLY("cam2_vdig",		"4-006e"), /*                                 */
 	REGULATOR_SUPPLY("8921_l12",		NULL),
 };
 VREG_CONSUMERS(L14) = {
@@ -103,7 +103,7 @@ VREG_CONSUMERS(L16) = {
 VREG_CONSUMERS(L17) = {
 	REGULATOR_SUPPLY("8921_l17",		NULL),
 #if defined(CONFIG_IMX111)
-	REGULATOR_SUPPLY("cam1_vaf",	"4-000d"), /* GSBI4, Slave Addr: 0x0d, imx111 */
+	REGULATOR_SUPPLY("cam1_vaf",	"4-000d"), /*                                 */
 #endif
 };
 VREG_CONSUMERS(L18) = {
@@ -111,11 +111,11 @@ VREG_CONSUMERS(L18) = {
 	REGULATOR_SUPPLY("slimport_dvdd",		NULL),
 };
 
-/* Power setting for 13M AF */
+/*                          */
 #if defined(CONFIG_IMX091)
 VREG_CONSUMERS(L21) = {
 	REGULATOR_SUPPLY("8921_l21",		NULL),
-	REGULATOR_SUPPLY("cam1_vaf",	"4-000d"), /* GSBI4, Slave Addr: 0x0d, imx091 */
+	REGULATOR_SUPPLY("cam1_vaf",	"4-000d"), /*                                 */
 };
 #else
 VREG_CONSUMERS(L21) = {
@@ -233,8 +233,8 @@ VREG_CONSUMERS(LVS4) = {
 };
 VREG_CONSUMERS(LVS5) = {
 	REGULATOR_SUPPLY("8921_lvs5",		NULL),
-	REGULATOR_SUPPLY("cam1_vio",		"4-000d"), /* GSBI4, Slave Addr: 0x0d, imx111 */
-	REGULATOR_SUPPLY("cam2_vio",		"4-006e"), /* GSBI4, Slave Addr: 0x6e, imx119 */
+	REGULATOR_SUPPLY("cam1_vio",		"4-000d"), /*                                 */
+	REGULATOR_SUPPLY("cam2_vio",		"4-006e"), /*                                 */
 };
 VREG_CONSUMERS(LVS6) = {
 	REGULATOR_SUPPLY("8921_lvs6",		NULL),
@@ -338,7 +338,7 @@ VREG_CONSUMERS(EXT_DSV_LOAD) = {
 		REGULATOR_CHANGE_VOLTAGE | REGULATOR_CHANGE_STATUS, 0, 0, \
 		_always_on, _supply_regulator, 0, _enable_time, _reg_id)
 
-/* Pin control initialization */
+/*                            */
 #define PM8XXX_PC(_id, _name, _always_on, _pin_fn, _pin_ctrl, \
 		  _supply_regulator, _reg_id) \
 	{ \
@@ -378,8 +378,7 @@ VREG_CONSUMERS(EXT_DSV_LOAD) = {
 	{ \
 		.constraints = { \
 			.name		= _name, \
-			.valid_ops_mask	= REGULATOR_CHANGE_VOLTAGE, | \
-							  REGULATOR_CHANGE_STATUS, \
+			.valid_ops_mask	= REGULATOR_CHANGE_VOLTAGE, \
 			.min_uV		= _min_uV, \
 			.max_uV		= _max_uV, \
 		}, \
@@ -466,7 +465,7 @@ VREG_CONSUMERS(EXT_DSV_LOAD) = {
 		 RPM_VREG_STATE_OFF, _sleep_selectable, _always_on, \
 		 _supply_regulator, 0)
 
-/* Pin control initialization */
+/*                            */
 #define RPM_PC_INIT(_id, _always_on, _pin_fn, _pin_ctrl, _supply_regulator) \
 	{ \
 		.init_data = { \
@@ -484,40 +483,40 @@ VREG_CONSUMERS(EXT_DSV_LOAD) = {
 		.pin_ctrl = _pin_ctrl, \
 	}
 
-/* GPIO regulator constraints */
+/*                            */
 struct gpio_regulator_platform_data
 apq8064_gpio_regulator_pdata[] __devinitdata = {
-	/*	ID	vreg_name gpio_label	gpio		supply */
+	/*                                      */
 	GPIO_VREG(EXT_DSV_LOAD, "ext_dsv_load", "ext_dsv_load_en", APQ8064_EXT_DSV_LOAD_EN_GPIO, NULL),
 };
 
-/* SAW regulator constraints */
+/*                           */
 struct regulator_init_data msm8064_saw_regulator_pdata_8921_s5 =
-	/*	      ID  vreg_name	       min_uV   max_uV */
+	/*                                            */
 	SAW_VREG_INIT(S5, "8921_s5",	       850000, 1300000);
 struct regulator_init_data msm8064_saw_regulator_pdata_8921_s6 =
 	SAW_VREG_INIT(S6, "8921_s6",	       850000, 1300000);
 
 struct regulator_init_data msm8064_saw_regulator_pdata_8821_s0 =
-	/*	      ID       vreg_name	min_uV  max_uV */
+	/*                                         */
 	SAW_VREG_INIT(8821_S0, "8821_s0",       850000, 1300000);
 struct regulator_init_data msm8064_saw_regulator_pdata_8821_s1 =
 	SAW_VREG_INIT(8821_S1, "8821_s1",       850000, 1300000);
 
-/* PM8921 regulator constraints */
+/*                              */
 struct pm8xxx_regulator_platform_data
 msm8064_pm8921_regulator_pdata[] __devinitdata = {
 	/*
-	 *		ID   name always_on pd min_uV   max_uV   en_t supply
-	 *	system_uA reg_ID
-	 */
+                                                         
+                    
+  */
 	PM8XXX_NLDO1200(L26, "8921_l26", 0, 1, 375000, 1050000, 200, "8921_s7",
 		0, 1),
 };
 
 static struct rpm_regulator_init_data
 apq8064_rpm_regulator_init_data[] __devinitdata = {
-	/*	ID a_on pd ss min_uV   max_uV  supply sys_uA  freq  fm  ss_fm */
+	/*                                                               */
 	RPM_SMPS(S1, 1, 1, 0, 1225000, 1225000, NULL, 100000, 3p20, NONE, NONE),
 	RPM_SMPS(S2, 0, 1, 0, 1300000, 1300000, NULL,      0, 1p60, NONE, NONE),
 	RPM_SMPS(S3, 0, 1, 1,  500000, 1150000, NULL, 100000, 4p80, NONE, NONE),
@@ -528,10 +527,10 @@ apq8064_rpm_regulator_init_data[] __devinitdata = {
 #else
 	RPM_SMPS(S8, 0, 1, 0, 2200000, 2200000, NULL,      0, 1p60, NONE, NONE),
 #endif
-	/*	ID a_on pd ss min_uV   max_uV   supply    sys_uA init_ip */
+	/*                                                          */
 	RPM_LDO(L1,  1, 1, 0, 1100000, 1100000, "8921_s4",     0,  1000),
 	RPM_LDO(L2,  0, 1, 0, 1200000, 1200000, "8921_s4",     0,     0),
-	/* HSUSB 3p3: max 3.5v */
+	/*                     */
 	RPM_LDO(L3,  0, 1, 0, 3075000, 3500000, NULL,          0,     0),
 	RPM_LDO(L4,  1, 1, 0, 1800000, 1800000, NULL,          0, 10000),
 	RPM_LDO(L5,  0, 1, 0, 2950000, 2950000, NULL,          0,     0),
@@ -560,7 +559,7 @@ apq8064_rpm_regulator_init_data[] __devinitdata = {
 	RPM_LDO(L28, 0, 1, 0, 1050000, 1050000, "8921_s7",     0,     0),
 	RPM_LDO(L29, 0, 1, 0, 2500000, 2500000, NULL,          0,     0),
 
-	/*     ID  a_on pd ss                   supply */
+	/*                                             */
 	RPM_VS(LVS1, 0, 1, 0,                   "8921_s4"),
 	RPM_VS(LVS2, 0, 1, 0,                   "8921_s1"),
 	RPM_VS(LVS3, 0, 1, 0,                   "8921_s4"),
@@ -569,7 +568,7 @@ apq8064_rpm_regulator_init_data[] __devinitdata = {
 	RPM_VS(LVS6, 0, 1, 0,                   "8921_s4"),
 	RPM_VS(LVS7, 0, 1, 1,                   "8921_s4"),
 
-	/*	ID a_on    ss min_uV   max_uV   supply     freq */
+	/*                                                 */
 	RPM_NCP(NCP, 0,    0, 1800000, 1800000, "8921_l6", 1p60),
 };
 

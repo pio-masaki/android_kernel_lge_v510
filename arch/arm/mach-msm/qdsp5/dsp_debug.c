@@ -229,7 +229,7 @@ static int __init dsp_init(void)
 	return misc_register(&dsp_misc);
 #else
 	return 0;
-#endif /* CONFIG_DEBUG_FS */
+#endif /*                 */
 }
 
 device_initcall(dsp_init);

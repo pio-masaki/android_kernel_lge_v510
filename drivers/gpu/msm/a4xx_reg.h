@@ -14,10 +14,10 @@
 #ifndef _A4XX_REG_H
 #define _A4XX_REG_H
 
-/* RB registers */
+/*              */
 #define A4XX_RB_GMEM_BASE_ADDR		0xcc0
 
-/* RBBM registers */
+/*                */
 #define A4XX_RBBM_AHB_CMD		0x25
 #define A4XX_RBBM_SP_HYST_CNT		0x21
 #define A4XX_RBBM_AHB_CTL0		0x23
@@ -36,7 +36,7 @@
 #define A4XX_RBBM_GPU_BUSY_MASKED	0x17a
 #define A4XX_RBBM_PERFCTR_PWR_1_LO	0x168
 
-/* CP registers */
+/*              */
 #define A4XX_CP_SCRATCH_REG0		0x578
 #define A4XX_CP_SCRATCH_UMASK		0x228
 #define A4XX_CP_SCRATCH_ADDR		0x229
@@ -59,27 +59,27 @@
 #define A4XX_CP_PROTECT_CTRL		0x250
 #define A4XX_CP_DEBUG			0x22e
 
-/* SP registers */
+/*              */
 #define A4XX_SP_VS_OBJ_START		0x22e1
 #define A4XX_SP_VS_PVT_MEM_ADDR		0x22e3
 #define A4XX_SP_FS_OBJ_START		0x22eb
 #define A4XX_SP_FS_PVT_MEM_ADDR		0x22ed
 
-/* VPC registers */
+/*               */
 #define A4XX_VPC_DEBUG_RAM_SEL		0xe60
 #define A4XX_VPC_DEBUG_RAM_READ		0xe61
 
-/* VSC registers */
+/*               */
 #define A4XX_VSC_SIZE_ADDRESS		0xc01
 #define A4XX_VSC_PIPE_DATA_ADDRESS_0	0xc10
 #define A4XX_VSC_PIPE_DATA_LENGTH_7	0xc1f
 
-/* VFD registers */
+/*               */
 #define A4XX_VFD_CONTROL_0		0x2200
 #define A4XX_VFD_FETCH_INSTR_0_0	0x220a
 #define A4XX_VFD_FETCH_INSTR_1_31	0x2287
 
-/* VBIF */
+/*      */
 #define A4XX_VBIF_ABIT_SORT		0x301c
 #define A4XX_VBIF_ABIT_SORT_CONF	0x301d
 #define A4XX_VBIF_GATE_OFF_WRREQ_EN	0x302a
@@ -89,4 +89,4 @@
 #define A4XX_VBIF_IN_WR_LIM_CONF1	0x3031
 #define A4XX_VBIF_ROUND_ROBIN_QOS_ARB	0x3049
 
-#endif /* _A400_REG_H */
+#endif /*             */

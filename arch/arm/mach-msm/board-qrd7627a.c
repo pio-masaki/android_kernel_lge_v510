@@ -76,11 +76,11 @@
 #define I2C_NORMAL        0x40
 
 #define SNDDEV_CAP_NONE 0x0
-#define SNDDEV_CAP_RX 0x1 /* RX direction */
-#define SNDDEV_CAP_TX 0x2 /* TX direction */
-#define SNDDEV_CAP_VOICE 0x4 /* Support voice call */
-#define SNDDEV_CAP_FM 0x10 /* Support FM radio */
-#define SNDDEV_CAP_TTY 0x20 /* Support TTY */
+#define SNDDEV_CAP_RX 0x1 /*              */
+#define SNDDEV_CAP_TX 0x2 /*              */
+#define SNDDEV_CAP_VOICE 0x4 /*                    */
+#define SNDDEV_CAP_FM 0x10 /*                  */
+#define SNDDEV_CAP_TTY 0x20 /*             */
 
 static struct platform_device msm_wlan_ar6000_pm_device = {
 	.name           = "wlan_ar6000_pm_dev",
@@ -116,7 +116,7 @@ static void gsbi_qup_i2c_gpio_config(int adap_id, int config_type)
 	if (adap_id < 0 || adap_id > 1)
 		return;
 
-	/* Each adapter gets 2 lines from the table */
+	/*                                          */
 	if (config_type)
 		rc = msm_gpios_request_enable(&qup_i2c_gpios_hw[adap_id*2], 2);
 	else
@@ -222,7 +222,7 @@ static int msm_hsusb_ldo_init(int init)
 
 		return 0;
 	}
-	/* else fall through */
+	/*                   */
 reg_free:
 	regulator_put(reg_hsusb);
 out:
@@ -330,9 +330,9 @@ static struct msm_pm_boot_platform_data msm_pm_boot_pdata __initdata = {
 	.p_addr = 0,
 };
 
-/* 8625 PM platform data */
+/*                       */
 static struct msm_pm_platform_data msm8625_pm_data[MSM_PM_SLEEP_MODE_NR * 2] = {
-	/* CORE0 entries */
+	/*               */
 	[MSM_PM_MODE(0, MSM_PM_SLEEP_MODE_POWER_COLLAPSE)] = {
 					.idle_supported = 1,
 					.suspend_supported = 1,
@@ -351,7 +351,7 @@ static struct msm_pm_platform_data msm8625_pm_data[MSM_PM_SLEEP_MODE_NR * 2] = {
 					.residency = 20000,
 	},
 
-	/* picked latency & redisdency values from 7x30 */
+	/*                                              */
 	[MSM_PM_MODE(0, MSM_PM_SLEEP_MODE_POWER_COLLAPSE_STANDALONE)] = {
 					.idle_supported = 1,
 					.suspend_supported = 1,
@@ -370,7 +370,7 @@ static struct msm_pm_platform_data msm8625_pm_data[MSM_PM_SLEEP_MODE_NR * 2] = {
 					.residency = 10,
 	},
 
-	/* picked latency & redisdency values from 7x30 */
+	/*                                              */
 	[MSM_PM_MODE(1, MSM_PM_SLEEP_MODE_POWER_COLLAPSE_STANDALONE)] = {
 					.idle_supported = 1,
 					.suspend_supported = 1,
@@ -540,51 +540,51 @@ static struct platform_device msm_device_cad = {
 #define DEC4_FORMAT (1<<MSM_ADSP_CODEC_MIDI)
 
 static unsigned int dec_concurrency_table[] = {
-	/* Audio LP */
+	/*          */
 	(DEC0_FORMAT|(1<<MSM_ADSP_MODE_TUNNEL)|(1<<MSM_ADSP_OP_DMA)), 0,
 	0, 0, 0,
 
-	/* Concurrency 1 */
+	/*               */
 	(DEC0_FORMAT|(1<<MSM_ADSP_MODE_TUNNEL)|(1<<MSM_ADSP_OP_DM)),
 	(DEC1_FORMAT|(1<<MSM_ADSP_MODE_TUNNEL)|(1<<MSM_ADSP_OP_DM)),
 	(DEC2_FORMAT|(1<<MSM_ADSP_MODE_TUNNEL)|(1<<MSM_ADSP_OP_DM)),
 	(DEC3_FORMAT|(1<<MSM_ADSP_MODE_TUNNEL)|(1<<MSM_ADSP_OP_DM)),
 	(DEC4_FORMAT),
 
-	 /* Concurrency 2 */
+	 /*               */
 	(DEC0_FORMAT|(1<<MSM_ADSP_MODE_TUNNEL)|(1<<MSM_ADSP_OP_DM)),
 	(DEC1_FORMAT|(1<<MSM_ADSP_MODE_TUNNEL)|(1<<MSM_ADSP_OP_DM)),
 	(DEC2_FORMAT|(1<<MSM_ADSP_MODE_TUNNEL)|(1<<MSM_ADSP_OP_DM)),
 	(DEC3_FORMAT|(1<<MSM_ADSP_MODE_TUNNEL)|(1<<MSM_ADSP_OP_DM)),
 	(DEC4_FORMAT),
 
-	/* Concurrency 3 */
+	/*               */
 	(DEC0_FORMAT|(1<<MSM_ADSP_MODE_TUNNEL)|(1<<MSM_ADSP_OP_DM)),
 	(DEC1_FORMAT|(1<<MSM_ADSP_MODE_TUNNEL)|(1<<MSM_ADSP_OP_DM)),
 	(DEC2_FORMAT|(1<<MSM_ADSP_MODE_TUNNEL)|(1<<MSM_ADSP_OP_DM)),
 	(DEC3_FORMAT|(1<<MSM_ADSP_MODE_NONTUNNEL)|(1<<MSM_ADSP_OP_DM)),
 	(DEC4_FORMAT),
 
-	/* Concurrency 4 */
+	/*               */
 	(DEC0_FORMAT|(1<<MSM_ADSP_MODE_TUNNEL)|(1<<MSM_ADSP_OP_DM)),
 	(DEC1_FORMAT|(1<<MSM_ADSP_MODE_TUNNEL)|(1<<MSM_ADSP_OP_DM)),
 	(DEC2_FORMAT|(1<<MSM_ADSP_MODE_NONTUNNEL)|(1<<MSM_ADSP_OP_DM)),
 	(DEC3_FORMAT|(1<<MSM_ADSP_MODE_NONTUNNEL)|(1<<MSM_ADSP_OP_DM)),
 	(DEC4_FORMAT),
 
-	/* Concurrency 5 */
+	/*               */
 	(DEC0_FORMAT|(1<<MSM_ADSP_MODE_TUNNEL)|(1<<MSM_ADSP_OP_DM)),
 	(DEC1_FORMAT|(1<<MSM_ADSP_MODE_NONTUNNEL)|(1<<MSM_ADSP_OP_DM)),
 	(DEC2_FORMAT|(1<<MSM_ADSP_MODE_NONTUNNEL)|(1<<MSM_ADSP_OP_DM)),
 	(DEC3_FORMAT|(1<<MSM_ADSP_MODE_NONTUNNEL)|(1<<MSM_ADSP_OP_DM)),
 	(DEC4_FORMAT),
 
-	/* Concurrency 6 */
+	/*               */
 	(DEC0_FORMAT|(1<<MSM_ADSP_MODE_TUNNEL)|
 			(1<<MSM_ADSP_MODE_NONTUNNEL)|(1<<MSM_ADSP_OP_DM)),
 	0, 0, 0, 0,
 
-	/* Concurrency 7 */
+	/*               */
 	(DEC0_FORMAT|(1<<MSM_ADSP_MODE_NONTUNNEL)|(1<<MSM_ADSP_OP_DM)),
 	(DEC1_FORMAT|(1<<MSM_ADSP_MODE_NONTUNNEL)|(1<<MSM_ADSP_OP_DM)),
 	(DEC2_FORMAT|(1<<MSM_ADSP_MODE_NONTUNNEL)|(1<<MSM_ADSP_OP_DM)),
@@ -597,11 +597,11 @@ static unsigned int dec_concurrency_table[] = {
 	.nr_codec_support = nr_codec}
 
 static struct msm_adspdec_info dec_info_list[] = {
-	DEC_INFO("AUDPLAY0TASK", 13, 0, 11), /* AudPlay0BitStreamCtrlQueue */
-	DEC_INFO("AUDPLAY1TASK", 14, 1, 11),  /* AudPlay1BitStreamCtrlQueue */
-	DEC_INFO("AUDPLAY2TASK", 15, 2, 11),  /* AudPlay2BitStreamCtrlQueue */
-	DEC_INFO("AUDPLAY3TASK", 16, 3, 11),  /* AudPlay3BitStreamCtrlQueue */
-	DEC_INFO("AUDPLAY4TASK", 17, 4, 1),  /* AudPlay4BitStreamCtrlQueue */
+	DEC_INFO("AUDPLAY0TASK", 13, 0, 11), /*                            */
+	DEC_INFO("AUDPLAY1TASK", 14, 1, 11),  /*                            */
+	DEC_INFO("AUDPLAY2TASK", 15, 2, 11),  /*                            */
+	DEC_INFO("AUDPLAY3TASK", 16, 3, 11),  /*                            */
+	DEC_INFO("AUDPLAY4TASK", 17, 4, 1),  /*                            */
 };
 
 static struct msm_adspdec_database msm_device_adspdec_database = {
@@ -751,13 +751,13 @@ static struct regulator_consumer_supply vreg_consumers_EXT_1P8V[] = {
 	REGULATOR_SUPPLY("lcd_vddi", "mipi_dsi.1"),
 };
 
-/* GPIO regulator constraints */
+/*                            */
 static struct gpio_regulator_platform_data msm_gpio_regulator_pdata[] = {
 	GPIO_VREG_INIT(EXT_2P85V, "ext_2p85v", "ext_2p85v_en", 35, 0),
 	GPIO_VREG_INIT(EXT_1P8V, "ext_1p8v", "ext_1p8v_en", 40, 0),
 };
 
-/* GPIO regulator */
+/*                */
 static struct platform_device qrd_vreg_gpio_ext_2p85v __devinitdata = {
 	.name	= GPIO_REGULATOR_DEV_NAME,
 	.id	= 35,
@@ -864,9 +864,9 @@ static struct ion_co_heap_pdata co_ion_pdata = {
 };
 #endif
 
-/**
- * These heaps are listed in the order they will be allocated.
- * Don't swap the order unless you know what you are doing!
+/* 
+                                                              
+                                                           
  */
 struct ion_platform_heap qrd7627a_heaps[] = {
 		{
@@ -875,7 +875,7 @@ struct ion_platform_heap qrd7627a_heaps[] = {
 			.name	= ION_VMALLOC_HEAP_NAME,
 		},
 #ifdef CONFIG_MSM_MULTIMEDIA_USE_ION
-		/* PMEM_ADSP = CAMERA */
+		/*                    */
 		{
 			.id	= ION_CAMERA_HEAP_ID,
 			.type	= ION_HEAP_TYPE_CARVEOUT,
@@ -883,7 +883,7 @@ struct ion_platform_heap qrd7627a_heaps[] = {
 			.memory_type = ION_EBI_TYPE,
 			.extra_data = (void *)&co_ion_pdata,
 		},
-		/* PMEM_AUDIO */
+		/*            */
 		{
 			.id	= ION_AUDIO_HEAP_ID,
 			.type	= ION_HEAP_TYPE_CARVEOUT,
@@ -891,7 +891,7 @@ struct ion_platform_heap qrd7627a_heaps[] = {
 			.memory_type = ION_EBI_TYPE,
 			.extra_data = (void *)&co_ion_pdata,
 		},
-		/* PMEM_MDP = SF */
+		/*               */
 		{
 			.id	= ION_SF_HEAP_ID,
 			.type	= ION_HEAP_TYPE_CARVEOUT,
@@ -1174,15 +1174,15 @@ static void __init msm_qrd_init(void)
 	else
 		msm7627a_device_i2c_init();
 
-	/* uart1dm*/
+	/*        */
 	qrd7627a_uart1dm_config();
-	/*OTG gadget*/
+	/*          */
 	qrd7627a_otg_gadget();
 
 	msm_add_footswitch_devices();
 	add_platform_devices();
 
-	/* Ensure ar6000pm device is registered before MMC/SDC */
+	/*                                                     */
 	msm_qrd_init_ar6000pm();
 	msm7627a_init_mmc();
 

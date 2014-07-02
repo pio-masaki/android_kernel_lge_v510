@@ -122,7 +122,7 @@ void msm_camio_clk_rate_set(int rate)
 {
 	struct clk *clk = camio_vfe_mdc_clk;
 
-	/* TODO: check return */
+	/*                    */
 	clk_set_rate(clk, rate);
 }
 
@@ -210,7 +210,7 @@ void msm_camio_camif_pad_reg_reset(void)
 	uint32_t reg;
 	uint32_t mask, value;
 
-	/* select CLKRGM_VFE_SRC_CAM_VFE_SRC:  internal source */
+	/*                                                     */
 	msm_camio_clk_sel(MSM_CAMIO_CLK_SRC_INTERNAL);
 
 	reg = (msm_camera_io_r_mb(mdcbase)) & CAMIF_CFG_RMSK;
@@ -245,7 +245,7 @@ void msm_camio_camif_pad_reg_reset(void)
 
 	usleep_range(10000, 11000);
 
-	/* todo: check return */
+	/*                    */
 	if (camio_vfe_clk)
 		clk_set_rate(camio_vfe_clk, 96000000);
 }
@@ -308,7 +308,7 @@ void msm_camio_clk_sel(enum msm_camio_clk_src_type srctype)
 void msm_camio_clk_axi_rate_set(int rate)
 {
 	struct clk *clk = camio_vfe_axi_clk;
-	/* todo: check return */
+	/*                    */
 	clk_set_rate(clk, rate);
 }
 

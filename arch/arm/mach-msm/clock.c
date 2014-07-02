@@ -32,7 +32,7 @@ struct handoff_clk {
 };
 static LIST_HEAD(handoff_list);
 
-/* Find the voltage level required for a given rate. */
+/*                                                   */
 int find_vdd_level(struct clk *clk, unsigned long rate)
 {
 	int level;
@@ -50,7 +50,7 @@ int find_vdd_level(struct clk *clk, unsigned long rate)
 	return level;
 }
 
-/* Update voltage level given the current votes. */
+/*                                               */
 static int update_vdd(struct clk_vdd_class *vdd_class)
 {
 	int level, rc;
@@ -69,7 +69,7 @@ static int update_vdd(struct clk_vdd_class *vdd_class)
 	return rc;
 }
 
-/* Vote for a voltage level. */
+/*                           */
 int vote_vdd_level(struct clk_vdd_class *vdd_class, int level)
 {
 	int rc;
@@ -87,7 +87,7 @@ int vote_vdd_level(struct clk_vdd_class *vdd_class, int level)
 	return rc;
 }
 
-/* Remove vote for a voltage level. */
+/*                                  */
 int unvote_vdd_level(struct clk_vdd_class *vdd_class, int level)
 {
 	int rc = 0;
@@ -109,7 +109,7 @@ out:
 	return rc;
 }
 
-/* Vote for a voltage level corresponding to a clock's rate. */
+/*                                                           */
 static int vote_rate_vdd(struct clk *clk, unsigned long rate)
 {
 	int level;
@@ -124,7 +124,7 @@ static int vote_rate_vdd(struct clk *clk, unsigned long rate)
 	return vote_vdd_level(clk->vdd_class, level);
 }
 
-/* Remove vote for a voltage level corresponding to a clock's rate. */
+/*                                                                  */
 static void unvote_rate_vdd(struct clk *clk, unsigned long rate)
 {
 	int level;
@@ -139,7 +139,7 @@ static void unvote_rate_vdd(struct clk *clk, unsigned long rate)
 	unvote_vdd_level(clk->vdd_class, level);
 }
 
-/* Returns true if the rate is valid without voting for it */
+/*                                                         */
 static bool is_rate_valid(struct clk *clk, unsigned long rate)
 {
 	int level;
@@ -195,7 +195,7 @@ err_prepare_depends:
 EXPORT_SYMBOL(clk_prepare);
 
 /*
- * Standard clock functions defined in include/linux/clk.h
+                                                          
  */
 int clk_enable(struct clk *clk)
 {
@@ -339,21 +339,21 @@ int clk_set_rate(struct clk *clk, unsigned long rate)
 
 	mutex_lock(&clk->prepare_lock);
 
-	/* Return early if the rate isn't going to change */
+	/*                                                */
 	if (clk->rate == rate)
 		goto out;
 
 	trace_clock_set_rate(name, rate, raw_smp_processor_id());
 	if (clk->prepare_count) {
 		start_rate = clk->rate;
-		/* Enforce vdd requirements for target frequency. */
+		/*                                                */
 		rc = vote_rate_vdd(clk, rate);
 		if (rc)
 			goto out;
 		rc = clk->ops->set_rate(clk, rate);
 		if (rc)
 			goto err_set_rate;
-		/* Release vdd requirements for starting frequency. */
+		/*                                                  */
 		unvote_rate_vdd(clk, start_rate);
 	} else if (is_rate_valid(clk, rate)) {
 		rc = clk->ops->set_rate(clk, rate);
@@ -431,15 +431,15 @@ EXPORT_SYMBOL(clk_set_flags);
 
 static struct clock_init_data *clk_init_data;
 
-/**
- * msm_clock_register() - Register additional clock tables
- * @table: Table of clocks
- * @size: Size of @table
- *
- * Upon return, clock APIs may be used to control clocks registered using this
- * function. This API may only be used after msm_clock_init() has completed.
- * Unlike msm_clock_init(), this function may be called multiple times with
- * different clock lists and used after the kernel has finished booting.
+/* 
+                                                          
+                          
+                        
+  
+                                                                              
+                                                                            
+                                                                           
+                                                                        
  */
 int msm_clock_register(struct clk_lookup *table, size_t size)
 {
@@ -464,22 +464,22 @@ static enum handoff __init __handoff_clk(struct clk *clk)
 	int err = 0;
 
 	/*
-	 * Tree roots don't have parents, but need to be handed off. So,
-	 * terminate recursion by returning "enabled". Also return "enabled"
-	 * for clocks with non-zero enable counts since they must have already
-	 * been handed off.
-	 */
+                                                                 
+                                                                     
+                                                                       
+                    
+  */
 	if (clk == NULL || clk->count)
 		return HANDOFF_ENABLED_CLK;
 
-	/* Clocks without handoff functions are assumed to be disabled. */
+	/*                                                              */
 	if (!clk->ops->handoff || (clk->flags & CLKFLAG_SKIP_HANDOFF))
 		return HANDOFF_DISABLED_CLK;
 
 	/*
-	 * Handoff functions for children must be called before their parents'
-	 * so that the correct parent is returned by the clk_get_parent() below.
-	 */
+                                                                       
+                                                                         
+  */
 	ret = clk->ops->handoff(clk);
 	if (ret == HANDOFF_ENABLED_CLK) {
 		ret = __handoff_clk(clk_get_parent(clk));
@@ -508,12 +508,12 @@ out:
 	return ret;
 }
 
-/**
- * msm_clock_init() - Register and initialize a clock driver
- * @data: Driver-specific clock initialization data
- *
- * Upon return from this call, clock APIs may be used to control
- * clocks registered with this API.
+/* 
+                                                            
+                                                   
+  
+                                                                
+                                   
  */
 int __init msm_clock_init(struct clock_init_data *data)
 {
@@ -541,9 +541,9 @@ int __init msm_clock_init(struct clock_init_data *data)
 	}
 
 	/*
-	 * Detect and preserve initial clock state until clock_late_init() or
-	 * a driver explicitly changes it, whichever is first.
-	 */
+                                                                      
+                                                       
+  */
 	for (n = 0; n < num_clocks; n++)
 		__handoff_clk(clock_tbl[n].clk);
 

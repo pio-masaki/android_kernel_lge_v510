@@ -88,4 +88,4 @@ struct mdss_hw {
 void mdss_enable_irq(struct mdss_hw *hw);
 void mdss_disable_irq(struct mdss_hw *hw);
 void mdss_disable_irq_nosync(struct mdss_hw *hw);
-#endif /* MDSS_H */
+#endif /*        */

@@ -44,7 +44,7 @@ void diag_hdlc_encode(struct diag_send_desc_type *src_desc,
 
 	if (src_desc && enc) {
 
-		/* Copy parts to local variables. */
+		/*                                */
 		src = src_desc->pkt;
 		src_last = src_desc->last;
 		state = src_desc->state;
@@ -55,15 +55,15 @@ void diag_hdlc_encode(struct diag_send_desc_type *src_desc,
 			crc = CRC_16_L_SEED;
 			state++;
 		} else {
-			/* Get a local copy of the CRC */
+			/*                             */
 			crc = enc->crc;
 		}
 
-		/* dest or dest_last may be NULL to trigger a
-		   state transition only */
+		/*                                           
+                           */
 		if (dest && dest_last) {
-			/* This condition needs to include the possibility
-			   of 2 dest bytes for an escaped byte */
+			/*                                                
+                                          */
 			while (src <= src_last && dest <= dest_last) {
 
 				src_byte = *src++;
@@ -71,8 +71,8 @@ void diag_hdlc_encode(struct diag_send_desc_type *src_desc,
 				if ((src_byte == CONTROL_CHAR) ||
 				    (src_byte == ESC_CHAR)) {
 
-					/* If the escape character is not the
-					   last byte */
+					/*                                   
+                  */
 					if (dest != dest_last) {
 						crc = CRC_16_L_STEP(crc,
 								    src_byte);
@@ -103,7 +103,7 @@ void diag_hdlc_encode(struct diag_send_desc_type *src_desc,
 						crc = ~crc;
 						state++;
 					} else {
-						/* Done with fragment */
+						/*                    */
 						state = DIAG_STATE_COMPLETE;
 					}
 				}
@@ -111,7 +111,7 @@ void diag_hdlc_encode(struct diag_send_desc_type *src_desc,
 				while (dest <= dest_last &&
 				       state >= DIAG_STATE_CRC1 &&
 				       state < DIAG_STATE_TERM) {
-					/* Encode a byte of the CRC next */
+					/*                               */
 					src_byte = crc & 0xFF;
 
 					if ((src_byte == CONTROL_CHAR)
@@ -144,12 +144,12 @@ void diag_hdlc_encode(struct diag_send_desc_type *src_desc,
 					if (dest_last >= dest) {
 						*dest++ = CONTROL_CHAR;
 						used++;
-						state++;	/* Complete */
+						state++;	/*          */
 					}
 				}
 			}
 		}
-		/* Copy local variables back into the encode structure. */
+		/*                                                      */
 
 		enc->dest = dest;
 		enc->dest_last = dest_last;
@@ -173,13 +173,10 @@ int diag_hdlc_decode(struct diag_hdlc_decode_type *hdlc)
 	uint8_t src_byte;
 
 	int pkt_bnd = 0;
-	int msg_start;
 
 	if (hdlc && hdlc->src_ptr && hdlc->dest_ptr &&
 	    (hdlc->src_size - hdlc->src_idx > 0) &&
 	    (hdlc->dest_size - hdlc->dest_idx > 0)) {
-
-		msg_start = (hdlc->src_idx == 0) ? 1 : 0;
 
 		src_ptr = hdlc->src_ptr;
 		src_ptr = &src_ptr[hdlc->src_idx];
@@ -206,20 +203,9 @@ int diag_hdlc_decode(struct diag_hdlc_decode_type *hdlc)
 							  ^ ESC_MASK;
 				}
 			} else if (src_byte == CONTROL_CHAR) {
-				if(len == 0){
-					continue;
-				}
 				dest_ptr[len++] = src_byte;
-				/*
-				 * If this is the first byte in the message,
-				 * then it is part of the command. Otherwise,
-				 * consider it as the last byte of the
-				 * message.
-				 */
-				if (msg_start && i == 0 && src_length > 1)
-					continue;
-				i++;
 				pkt_bnd = 1;
+				i++;
 				break;
 			} else {
 				dest_ptr[len++] = src_byte;

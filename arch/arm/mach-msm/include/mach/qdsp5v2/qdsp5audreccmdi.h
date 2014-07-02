@@ -15,24 +15,24 @@
 #define QDSP5AUDRECCMDI_H
 
 /*
- * AUDRECTASK COMMANDS
- * ARM uses 2 queues to communicate with the AUDRECTASK
- * 1.uPAudRec[i]CmdQueue, where i=0,1,2
- * Location :MEMC
- * Buffer Size : 5
- * No of Buffers in a queue : 2
- * 2.uPAudRec[i]BitstreamQueue, where i=0,1,2
- * Location : MEMC
- * Buffer Size : 5
- * No of buffers in a queue : 3
+                      
+                                                       
+                                       
+                 
+                  
+                               
+                                             
+                  
+                  
+                               
  */
 
 /*
- * Commands on uPAudRec[i]CmdQueue, where i=0,1,2
+                                                 
  */
 
 /*
- * Command to configure memory for enabled encoder
+                                                  
  */
 
 #define AUDREC_CMD_MEM_CFG_CMD 0x0000
@@ -48,7 +48,7 @@ struct audrec_cmd_arecmem_cfg {
 } __attribute__((packed));
 
 /*
- * Command to configure pcm input memory
+                                        
  */
 
 #define AUDREC_CMD_PCM_CFG_ARM_TO_ENC 0x0001
@@ -72,7 +72,7 @@ struct audrec_cmd_pcm_cfg_arm_to_enc {
 #define AUDREC_DISABLE_FLAG_VALUE 0
 
 /*
- * Command to intimate available pcm buffer
+                                           
  */
 
 #define AUDREC_CMD_PCM_BUFFER_PTR_REFRESH_ARM_TO_ENC 0x0002
@@ -84,13 +84,13 @@ struct audrec_cmd_pcm_buffer_ptr_refresh_arm_enc {
 	unsigned short num_buffers;
 	unsigned short buffer_write_cnt_msw;
 	unsigned short buffer_write_cnt_lsw;
-	unsigned short buf_address_length[8];/*this array holds address
-						and length details of
-						two buffers*/
+	unsigned short buf_address_length[8];/*                        
+                           
+                 */
 } __attribute__((packed));
 
 /*
- * Command to flush
+                   
  */
 
 #define AUDREC_CMD_FLUSH 0x0003
@@ -102,11 +102,11 @@ struct audrec_cmd_flush {
 } __attribute__((packed));
 
 /*
- * Commands on uPAudRec[i]BitstreamQueue, where i=0,1,2
+                                                       
  */
 
 /*
- * Command to indicate current packet read count
+                                                
  */
 
 #define UP_AUDREC_PACKET_EXT_PTR 0x0000
@@ -119,4 +119,4 @@ struct up_audrec_packet_ext_ptr {
 	unsigned short audrec_up_curr_read_count_msw;
 } __attribute__((packed));
 
-#endif /* QDSP5AUDRECCMDI_H */
+#endif /*                   */

@@ -17,13 +17,13 @@
 #include <linux/seq_file.h>
 #include "pinctrl-state.h"
 
-/* This struct is private to the core and should be regarded as a cookie */
+/*                                                                       */
 struct pinctrl;
 struct pinctrl_state;
 
 #ifdef CONFIG_PINCTRL
 
-/* External interface to pin control */
+/*                                   */
 extern int pinctrl_request_gpio(unsigned gpio);
 extern void pinctrl_free_gpio(unsigned gpio);
 extern int pinctrl_gpio_direction_input(unsigned gpio);
@@ -36,7 +36,7 @@ extern struct pinctrl_state * __must_check pinctrl_lookup_state(
 							const char *name);
 extern int pinctrl_select_state(struct pinctrl *p, struct pinctrl_state *s);
 
-#else /* !CONFIG_PINCTRL */
+#else /*                 */
 
 static inline int pinctrl_request_gpio(unsigned gpio)
 {
@@ -79,7 +79,7 @@ static inline int pinctrl_select_state(struct pinctrl *p,
 	return 0;
 }
 
-#endif /* CONFIG_PINCTRL */
+#endif /*                */
 
 static inline struct pinctrl * __must_check pinctrl_get_select(
 					struct device *dev, const char *name)
@@ -156,4 +156,4 @@ static inline int pin_config_group_set(const char *dev_name,
 
 #endif
 
-#endif /* __LINUX_PINCTRL_CONSUMER_H */
+#endif /*                            */

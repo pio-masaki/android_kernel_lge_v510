@@ -39,8 +39,8 @@
 
 #define MSM_DEVICE(name) MSM_CHIP_DEVICE(name, MSM)
 
-/* msm_shared_ram_phys default value of 0x00100000 is the most common value
- * and should work as-is for any target without stacked memory.
+/*                                                                         
+                                                               
  */
 unsigned int msm_shared_ram_phys = 0x00100000;
 
@@ -88,14 +88,14 @@ static struct map_desc msm_io_desc[] __initdata = {
 
 void __init msm_map_common_io(void)
 {
-	/*Peripheral port memory remap, nothing looks to be there for
-	 * cortex a5.
-	 */
+	/*                                                           
+              
+  */
 #ifndef CONFIG_ARCH_MSM_CORTEX_A5
-	/* Make sure the peripheral register window is closed, since
-	 * we will use PTE flags (TEX[1]=1,B=0,C=1) to determine which
-	 * pages are peripheral interface or not.
-	 */
+	/*                                                          
+                                                               
+                                          
+  */
 	asm("mcr p15, 0, %0, c15, c2, 4" : : "r" (0));
 #endif
 	msm_map_io(msm_io_desc, ARRAY_SIZE(msm_io_desc));
@@ -130,7 +130,7 @@ void __init msm_map_qsd8x50_io(void)
 {
 	msm_map_io(qsd8x50_io_desc, ARRAY_SIZE(qsd8x50_io_desc));
 }
-#endif /* CONFIG_ARCH_QSD8X50 */
+#endif /*                     */
 
 #ifdef CONFIG_ARCH_MSM8X60
 static struct map_desc msm8x60_io_desc[] __initdata = {
@@ -171,7 +171,7 @@ void __init msm_map_msm8x60_io(void)
 	msm_map_io(msm8x60_io_desc, ARRAY_SIZE(msm8x60_io_desc));
 	init_consistent_dma_size(14*SZ_1M);
 }
-#endif /* CONFIG_ARCH_MSM8X60 */
+#endif /*                     */
 
 #ifdef CONFIG_ARCH_MSM8960
 static struct map_desc msm8960_io_desc[] __initdata = {
@@ -210,7 +210,7 @@ void __init msm_map_msm8960_io(void)
 {
 	msm_map_io(msm8960_io_desc, ARRAY_SIZE(msm8960_io_desc));
 }
-#endif /* CONFIG_ARCH_MSM8960 */
+#endif /*                     */
 
 #ifdef CONFIG_ARCH_MSM8930
 static struct map_desc msm8930_io_desc[] __initdata = {
@@ -249,7 +249,7 @@ void __init msm_map_msm8930_io(void)
 {
 	msm_map_io(msm8930_io_desc, ARRAY_SIZE(msm8930_io_desc));
 }
-#endif /* CONFIG_ARCH_MSM8930 */
+#endif /*                     */
 
 #ifdef CONFIG_ARCH_APQ8064
 static struct map_desc apq8064_io_desc[] __initdata = {
@@ -292,7 +292,7 @@ void __init msm_map_apq8064_io(void)
 {
 	msm_map_io(apq8064_io_desc, ARRAY_SIZE(apq8064_io_desc));
 }
-#endif /* CONFIG_ARCH_APQ8064 */
+#endif /*                     */
 
 #ifdef CONFIG_ARCH_MSM8974
 static struct map_desc msm_8974_io_desc[] __initdata = {
@@ -316,7 +316,7 @@ void __init msm_map_8974_io(void)
 	msm_shared_ram_phys = MSM8974_MSM_SHARED_RAM_PHYS;
 	msm_map_io(msm_8974_io_desc, ARRAY_SIZE(msm_8974_io_desc));
 }
-#endif /* CONFIG_ARCH_MSM8974 */
+#endif /*                     */
 
 #ifdef CONFIG_ARCH_MSM7X30
 static struct map_desc msm7x30_io_desc[] __initdata = {
@@ -348,7 +348,7 @@ void __init msm_map_msm7x30_io(void)
 {
 	msm_map_io(msm7x30_io_desc, ARRAY_SIZE(msm7x30_io_desc));
 }
-#endif /* CONFIG_ARCH_MSM7X30 */
+#endif /*                     */
 
 #ifdef CONFIG_ARCH_FSM9XXX
 static struct map_desc fsm9xxx_io_desc[] __initdata = {
@@ -379,7 +379,7 @@ void __init msm_map_fsm9xxx_io(void)
 {
 	msm_map_io(fsm9xxx_io_desc, ARRAY_SIZE(fsm9xxx_io_desc));
 }
-#endif /* CONFIG_ARCH_FSM9XXX */
+#endif /*                     */
 
 #ifdef CONFIG_ARCH_MSM9615
 static struct map_desc msm9615_io_desc[] __initdata = {
@@ -410,7 +410,7 @@ void __init msm_map_msm9615_io(void)
 {
 	msm_map_io(msm9615_io_desc, ARRAY_SIZE(msm9615_io_desc));
 }
-#endif /* CONFIG_ARCH_MSM9615 */
+#endif /*                     */
 
 #ifdef CONFIG_ARCH_MSM8625
 static struct map_desc msm8625_io_desc[] __initdata = {
@@ -453,7 +453,7 @@ void __init msm_map_msm8625_io(void)
 }
 #else
 void __init msm_map_msm8625_io(void) { return; }
-#endif /* CONFIG_ARCH_MSM8625 */
+#endif /*                     */
 
 #ifdef CONFIG_ARCH_MSM9625
 static struct map_desc msm9625_io_desc[] __initdata = {
@@ -475,4 +475,4 @@ void __init msm_map_msm9625_io(void)
 	msm_shared_ram_phys = MSM9625_SHARED_RAM_PHYS;
 	msm_map_io(msm9625_io_desc, ARRAY_SIZE(msm9625_io_desc));
 }
-#endif /* CONFIG_ARCH_MSM9625 */
+#endif /*                     */

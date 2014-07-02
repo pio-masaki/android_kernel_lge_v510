@@ -15,7 +15,7 @@
 #include "msm_ispif.h"
 #include "msm_camera_i2c_mux.h"
 #include "msm_camera_i2c.h"
-/*=============================================================*/
+/*                                                             */
 
 long msm_sensor_bayer_subdev_ioctl(struct v4l2_subdev *sd,
 			unsigned int cmd, void *arg)

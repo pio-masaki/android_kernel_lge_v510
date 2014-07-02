@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2013, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2011-2012, The Linux Foundation. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -21,7 +21,7 @@
 #include "acpuclock.h"
 #include "acpuclock-krait.h"
 
-/* Corner type vreg VDD values */
+/*                             */
 #define LVL_NONE	RPM_VREG_CORNER_NONE
 #define LVL_LOW		RPM_VREG_CORNER_LOW
 #define LVL_NOM		RPM_VREG_CORNER_NOMINAL
@@ -115,12 +115,12 @@ static struct scalable scalable[] __initdata = {
 };
 
 static struct msm_bus_paths bw_level_tbl[] __initdata = {
-	[0] =  BW_MBPS(640), /* At least  80 MHz on bus. */
-	[1] = BW_MBPS(1064), /* At least 133 MHz on bus. */
-	[2] = BW_MBPS(1600), /* At least 200 MHz on bus. */
-	[3] = BW_MBPS(2128), /* At least 266 MHz on bus. */
-	[4] = BW_MBPS(3200), /* At least 400 MHz on bus. */
-	[5] = BW_MBPS(4800), /* At least 600 MHz on bus. */
+	[0] =  BW_MBPS(640), /*                          */
+	[1] = BW_MBPS(1064), /*                          */
+	[2] = BW_MBPS(1600), /*                          */
+	[3] = BW_MBPS(2128), /*                          */
+	[4] = BW_MBPS(3200), /*                          */
+	[5] = BW_MBPS(4800), /*                          */
 };
 
 static struct msm_bus_scale_pdata bus_scale_data __initdata = {
@@ -295,7 +295,6 @@ static struct acpuclk_krait_params acpuclk_8930ab_params __initdata = {
 	.l2_freq_tbl_size = sizeof(l2_freq_tbl),
 	.bus_scale = &bus_scale_data,
 	.pte_efuse_phys = 0x007000C0,
-	.get_bin_info = get_krait_bin_format_a,
 	.stby_khz = 384000,
 };
 

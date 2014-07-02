@@ -16,4 +16,4 @@
 long pcm_ioctl(struct file *file, unsigned int cmd, unsigned long arg);
 void audpp_cmd_cfg_pcm_params(struct audio *audio);
 
-#endif /* !PCM_FUNCS_H */
+#endif /*              */

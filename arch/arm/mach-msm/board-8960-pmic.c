@@ -1,4 +1,4 @@
-/* Copyright (c) 2011-2013, The Linux Foundation. All rights reserved.
+/* Copyright (c) 2011-2012, The Linux Foundation. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -94,27 +94,27 @@ struct pm8xxx_mpp_init {
 			_out_strength, \
 			PM_GPIO_FUNC_NORMAL, 0, 0)
 
-/* Initial PM8921 GPIO configurations */
+/*                                    */
 static struct pm8xxx_gpio_init pm8921_gpios[] __initdata = {
-	PM8XXX_GPIO_OUTPUT_VIN(6, 1, PM_GPIO_VIN_VPH),	 /* MHL power EN_N */
-	PM8XXX_GPIO_DISABLE(7),				 /* Disable NFC */
-	PM8XXX_GPIO_INPUT(16,	    PM_GPIO_PULL_UP_30), /* SD_CARD_WP */
-    /* External regulator shared by display and touchscreen on LiQUID */
-	PM8XXX_GPIO_OUTPUT(17,	    0),			 /* DISP 3.3 V Boost */
-	PM8XXX_GPIO_OUTPUT(18,	0),	/* TABLA SPKR_LEFT_EN=off */
-	PM8XXX_GPIO_OUTPUT(19,	0),	/* TABLA SPKR_RIGHT_EN=off */
-	PM8XXX_GPIO_DISABLE(22),			 /* Disable NFC */
-	PM8XXX_GPIO_OUTPUT_FUNC(25, 0, PM_GPIO_FUNC_2),	 /* TN_CLK */
-	PM8XXX_GPIO_INPUT(26,	    PM_GPIO_PULL_UP_30), /* SD_CARD_DET_N */
-	PM8XXX_GPIO_OUTPUT(43, 1),                       /* DISP_RESET_N */
-	PM8XXX_GPIO_OUTPUT(42, 0),                      /* USB 5V reg enable */
-	/* TABLA CODEC RESET */
+	PM8XXX_GPIO_OUTPUT_VIN(6, 1, PM_GPIO_VIN_VPH),	 /*                */
+	PM8XXX_GPIO_DISABLE(7),				 /*             */
+	PM8XXX_GPIO_INPUT(16,	    PM_GPIO_PULL_UP_30), /*            */
+    /*                                                                */
+	PM8XXX_GPIO_OUTPUT(17,	    0),			 /*                  */
+	PM8XXX_GPIO_OUTPUT(18,	0),	/*                        */
+	PM8XXX_GPIO_OUTPUT(19,	0),	/*                         */
+	PM8XXX_GPIO_DISABLE(22),			 /*             */
+	PM8XXX_GPIO_OUTPUT_FUNC(25, 0, PM_GPIO_FUNC_2),	 /*        */
+	PM8XXX_GPIO_INPUT(26,	    PM_GPIO_PULL_UP_30), /*               */
+	PM8XXX_GPIO_OUTPUT(43, 1),                       /*              */
+	PM8XXX_GPIO_OUTPUT(42, 0),                      /*                   */
+	/*                   */
 	PM8XXX_GPIO_OUTPUT_STRENGTH(34, 0, PM_GPIO_STRENGTH_MED)
 };
 
-/* Initial PM8921 MPP configurations */
+/*                                   */
 static struct pm8xxx_mpp_init pm8921_mpps[] __initdata = {
-	/* External 5V regulator enable; shared by HDMI and USB_OTG switches. */
+	/*                                                                    */
 	PM8XXX_MPP_INIT(7, D_INPUT, PM8921_MPP_DIG_LEVEL_VPH, DIN_TO_INT),
 	PM8XXX_MPP_INIT(PM8XXX_AMUX_MPP_8, A_INPUT, PM8XXX_MPP_AIN_AMUX_CH8,
 								DOUT_CTRL_LOW),
@@ -179,7 +179,7 @@ static struct pm8xxx_adc_amux pm8xxx_adc_channels_data[] = {
 };
 
 static struct pm8xxx_adc_properties pm8xxx_adc_data = {
-	.adc_vdd_reference	= 1800, /* milli-voltage for this adc */
+	.adc_vdd_reference	= 1800, /*                            */
 	.bitresolution		= 15,
 	.bipolar                = 0,
 };
@@ -216,7 +216,7 @@ static struct pm8xxx_pwrkey_platform_data pm8xxx_pwrkey_pdata = {
 	.wakeup			= 1,
 };
 
-/* Rotate lock key is not available so use F1 */
+/*                                            */
 #define KEY_ROTATE_LOCK KEY_F1
 
 static const unsigned int keymap_liquid[] = {
@@ -249,8 +249,8 @@ static struct pm8xxx_keypad_platform_data keypad_data_liquid = {
 static const unsigned int keymap[] = {
 	KEY(0, 0, KEY_VOLUMEUP),
 	KEY(0, 1, KEY_VOLUMEDOWN),
-	KEY(0, 2, KEY_CAMERA_FOCUS),
-	KEY(0, 3, KEY_CAMERA_SNAPSHOT),
+	KEY(0, 2, KEY_CAMERA_SNAPSHOT),
+	KEY(0, 3, KEY_CAMERA_FOCUS),
 };
 
 static struct matrix_keymap_data keymap_data = {
@@ -396,17 +396,16 @@ static int pm8921_therm_mitigation[] = {
 #define MAX_VOLTAGE_MV		4200
 #define CHG_TERM_MA		100
 static struct pm8921_charger_platform_data pm8921_chg_pdata __devinitdata = {
+	.safety_time		= 180,
 	.update_time		= 60000,
 	.max_voltage		= MAX_VOLTAGE_MV,
 	.min_voltage		= 3200,
 	.uvd_thresh_voltage	= 4050,
-	.alarm_low_mv		= 3400,
-	.alarm_high_mv		= 4000,
-	.resume_voltage_delta	= 60,
-	.resume_charge_percent	= 99,
+	.alarm_voltage		= 3400,
+	.resume_voltage_delta	= 100,
 	.term_current		= CHG_TERM_MA,
 	.cool_temp		= 10,
-	.warm_temp		= 45,
+	.warm_temp		= 40,
 	.temp_check_period	= 1,
 	.max_bat_chg_current	= 1100,
 	.cool_bat_chg_current	= 350,
@@ -424,29 +423,22 @@ static struct pm8xxx_misc_platform_data pm8xxx_misc_pdata = {
 
 static struct pm8921_bms_platform_data pm8921_bms_pdata __devinitdata = {
 	.battery_type			= BATT_UNKNOWN,
-	.r_sense_uohm			= 10000,
+	.r_sense			= 10,
 	.v_cutoff			= 3400,
 	.max_voltage_uv			= MAX_VOLTAGE_MV * 1000,
 	.rconn_mohm			= 18,
 	.shutdown_soc_valid_limit	= 20,
 	.adjust_soc_low_threshold	= 25,
 	.chg_term_ua			= CHG_TERM_MA * 1000,
-	.normal_voltage_calc_ms		= 20000,
-	.low_voltage_calc_ms		= 1000,
-	.alarm_low_mv			= 3400,
-	.alarm_high_mv			= 4000,
-	.high_ocv_correction_limit_uv	= 50,
-	.low_ocv_correction_limit_uv	= 100,
-	.hold_soc_est			= 3,
 };
 
-#define	PM8921_LC_LED_MAX_CURRENT	4	/* I = 4mA */
-#define	PM8921_LC_LED_LOW_CURRENT	1	/* I = 1mA */
+#define	PM8921_LC_LED_MAX_CURRENT	4	/*         */
+#define	PM8921_LC_LED_LOW_CURRENT	1	/*         */
 #define PM8XXX_LED_PWM_PERIOD		1000
 #define PM8XXX_LED_PWM_DUTY_MS		20
-/**
- * PM8XXX_PWM_CHANNEL_NONE shall be used when LED shall not be
- * driven using PWM feature.
+/* 
+                                                              
+                            
  */
 #define PM8XXX_PWM_CHANNEL_NONE		-1
 
@@ -523,9 +515,9 @@ static int pm8921_led0_pwm_duty_pcts[56] = {
 };
 
 /*
- * Note: There is a bug in LPG module that results in incorrect
- * behavior of pattern when LUT index 0 is used. So effectively
- * there are 63 usable LUT entries.
+                                                               
+                                                               
+                                   
  */
 static struct pm8xxx_pwm_duty_cycles pm8921_led0_pwm_duty_cycles = {
 	.duty_pcts = (int *)&pm8921_led0_pwm_duty_pcts,
@@ -559,13 +551,13 @@ static struct pm8xxx_led_platform_data pm8xxx_leds_pdata = {
 };
 
 static struct pm8xxx_ccadc_platform_data pm8xxx_ccadc_pdata = {
-	.r_sense_uohm		= 10000,
+	.r_sense		= 10,
 	.calib_delay_ms		= 600000,
 };
 
-/**
- * PM8XXX_PWM_DTEST_CHANNEL_NONE shall be used when no LPG
- * channel should be in DTEST mode.
+/* 
+                                                          
+                                   
  */
 
 #define PM8XXX_PWM_DTEST_CHANNEL_NONE   (-1)
@@ -618,8 +610,4 @@ void __init msm8960_init_pmic(void)
 
 	if (machine_is_msm8960_fluid())
 		pm8921_bms_pdata.rconn_mohm = 20;
-
-	if (!machine_is_msm8960_fluid() && !machine_is_msm8960_liquid()
-			&& !machine_is_msm8960_mtp())
-		pm8921_chg_pdata.battery_less_hardware = 1;
 }

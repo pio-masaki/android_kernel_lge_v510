@@ -33,24 +33,24 @@ struct tz_priv {
 };
 spinlock_t tz_lock;
 
-/* FLOOR is 5msec to capture up to 3 re-draws
- * per frame for 60fps content.
+/*                                           
+                               
  */
 #define FLOOR			5000
-/* CEILING is 50msec, larger than any standard
- * frame length, but less than the idle timer.
+/*                                            
+                                              
  */
 #define CEILING			50000
 #define TZ_RESET_ID		0x3
 #define TZ_UPDATE_ID		0x4
 #define TZ_INIT_ID		0x6
 
-/* Trap into the TrustZone, and call funcs there. */
+/*                                                */
 static int __secure_tz_entry2(u32 cmd, u32 val1, u32 val2)
 {
 	int ret;
 	spin_lock(&tz_lock);
-	/* sync memory before sending the commands to tz*/
+	/*                                              */
 	__iowmb();
 	ret = scm_call_atomic2(SCM_SVC_IO, cmd, val1, val2);
 	spin_unlock(&tz_lock);
@@ -62,7 +62,7 @@ static int __secure_tz_entry3(u32 cmd, u32 val1, u32 val2,
 {
 	int ret;
 	spin_lock(&tz_lock);
-	/* sync memory before sending the commands to tz*/
+	/*                                              */
 	__iowmb();
 	ret = scm_call_atomic3(SCM_SVC_IO, cmd, val1, val2,
 				val3);
@@ -143,25 +143,25 @@ static void tz_idle(struct kgsl_device *device, struct kgsl_pwrscale *pwrscale)
 	struct kgsl_power_stats stats;
 	int val, idle;
 
-	/* In "performance" mode the clock speed always stays
-	   the same */
+	/*                                                   
+             */
 	if (priv->governor == TZ_GOVERNOR_PERFORMANCE)
 		return;
 
 	device->ftbl->power_stats(device, &stats);
 	priv->bin.total_time += stats.total_time;
 	priv->bin.busy_time += stats.busy_time;
-	/* Do not waste CPU cycles running this algorithm if
-	 * the GPU just started, or if less than FLOOR time
-	 * has passed since the last run.
-	 */
+	/*                                                  
+                                                    
+                                  
+  */
 	if ((stats.total_time == 0) ||
 		(priv->bin.total_time < FLOOR))
 		return;
 
-	/* If there is an extended block of busy processing,
-	 * increase frequency.  Otherwise run the normal algorithm.
-	 */
+	/*                                                  
+                                                            
+  */
 	if (priv->bin.busy_time > CEILING) {
 		val = -1;
 	} else if (priv->idle_dcvs) {
@@ -182,9 +182,9 @@ static void tz_idle(struct kgsl_device *device, struct kgsl_pwrscale *pwrscale)
 	priv->bin.total_time = 0;
 	priv->bin.busy_time = 0;
 
-	/* If the decision is to move to a lower level, make sure the GPU
-	 * frequency drops.
-	 */
+	/*                                                               
+                    
+  */
 	if (val > 0)
 		val *= pwr->step_mul;
 	if (val)
@@ -244,7 +244,7 @@ static int tz_init(struct kgsl_device *device, struct kgsl_pwrscale *pwrscale)
 {
 	return -EINVAL;
 }
-#endif /* CONFIG_MSM_SCM */
+#endif /*                */
 
 static void tz_close(struct kgsl_device *device, struct kgsl_pwrscale *pwrscale)
 {

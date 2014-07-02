@@ -21,12 +21,12 @@ struct platform_device;
 
 struct q6v5_data {
 	void __iomem *reg_base;
-	struct clk *xo;		/* XO clock source */
-	struct clk *ahb_clk;	/* PIL access to registers */
-	struct clk *axi_clk;	/* CPU access to memory */
-	struct clk *core_clk;	/* CPU core */
-	struct clk *reg_clk;	/* CPU access registers */
-	struct clk *rom_clk;	/* Boot ROM */
+	struct clk *xo;		/*                 */
+	struct clk *ahb_clk;	/*                         */
+	struct clk *axi_clk;	/*                      */
+	struct clk *core_clk;	/*          */
+	struct clk *reg_clk;	/*                      */
+	struct clk *rom_clk;	/*          */
 	void __iomem *axi_halt_base;
 	void __iomem *rmb_base;
 	void __iomem *restart_reg;

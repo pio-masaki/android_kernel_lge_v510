@@ -190,16 +190,16 @@ msm_v4l2_overlay_vidioc_dqbuf(struct file *file,
 		for (i = 0; i < vout->numbufs; i++) {
 			if (vout->bufs[i].queued == 1)  {
 				vout->bufs[i].queued = 0;
-				/* Call into fb to remove this buffer? */
+				/*                                     */
 				break;
 			}
 		}
 
 		/*
-		 * This should actually block, unless O_NONBLOCK was
-		 *  specified in open, but fine for now, especially
-		 *  since this is not a capturing device
-		 */
+                                                      
+                                                     
+                                          
+   */
 		if (i == vout->numbufs)
 			return -EAGAIN;
 	}
@@ -229,7 +229,7 @@ msm_v4l2_overlay_vidioc_qbuf(struct file *file, struct msm_v4l2_overlay_fh* fh,
 	if (!buffer || buffer->type != V4L2_BUF_TYPE_VIDEO_OUTPUT)
 		return -EINVAL;
 
-	/* maybe allow only one qbuf at a time? */
+	/*                                      */
 	ret =  msm_v4l2_overlay_fb_update(vout, buffer);
 
 	return 0;
@@ -264,7 +264,7 @@ msm_v4l2_overlay_vidioc_fbuf(struct file *file,
 		memcpy(&fb->fmt, &vout->pix, sizeof(struct v4l2_pix_format));
 		mutex_unlock(&vout->update_lock);
 	}
-	/* The S_FBUF request does not store anything right now */
+	/*                                                      */
 	return 0;
 }
 
@@ -317,22 +317,22 @@ msm_v4l2_overlay_vidioc_reqbufs(struct file *file,
 
 	if (rqb->memory == V4L2_MEMORY_MMAP) {
 		if (rqb->count == 0) {
-			/* Deallocate allocated buffers */
+			/*                              */
 			mutex_lock(&vout->update_lock);
 			vout->numbufs = 0;
 			kfree(vout->bufs);
 			/*
-			 * There should be a way to look at bufs[i]->mapped,
-			 * and prevent userspace from mmaping and directly
-			 * calling this ioctl without unmapping. Maybe kernel
-			 * handles for us, but needs to be checked out
-			 */
+                                                       
+                                                     
+                                                        
+                                                 
+    */
 			mutex_unlock(&vout->update_lock);
 		} else {
 			/*
-			 * Keep it simple for now - need to deallocate
-			 * before reallocate
-			 */
+                                                 
+                       
+    */
 			if (vout->bufs)
 				return -EINVAL;
 
@@ -351,11 +351,11 @@ msm_v4l2_overlay_vidioc_reqbufs(struct file *file,
 			}
 
 			/*
-			 * We don't support multiple open of one vout,
-			 * but there are probably still some MT problems here,
-			 * (what if same fh is shared between two userspace
-			 * threads and they both call REQBUFS etc)
-			 */
+                                                 
+                                                         
+                                                      
+                                             
+    */
 
 			mutex_lock(&vout->update_lock);
 			vout->numbufs = rqb->count;
@@ -589,12 +589,12 @@ msm_v4l2_overlay_do_ioctl(struct file *file,
 			}
 
 			mutex_lock(&vout->update_lock);
-			/* Clear the rotation flags */
+			/*                          */
 			vout->req.flags &= ~MDP_ROT_NOP;
 			vout->req.flags &= ~MDP_ROT_90;
 			vout->req.flags &= ~MDP_ROT_180;
 			vout->req.flags &= ~MDP_ROT_270;
-			/* Set the new rotation flag */
+			/*                           */
 			vout->req.flags |= rotflag;
 			mutex_unlock(&vout->update_lock);
 
@@ -602,7 +602,7 @@ msm_v4l2_overlay_do_ioctl(struct file *file,
 
 		case V4L2_CID_HFLIP:
 			mutex_lock(&vout->update_lock);
-			/* Clear the flip flag */
+			/*                     */
 			vout->req.flags &= ~MDP_FLIP_LR;
 			if (true == ctrl->value)
 				vout->req.flags |= MDP_FLIP_LR;
@@ -612,7 +612,7 @@ msm_v4l2_overlay_do_ioctl(struct file *file,
 
 		case V4L2_CID_VFLIP:
 			mutex_lock(&vout->update_lock);
-			/* Clear the flip flag */
+			/*                     */
 			vout->req.flags &= ~MDP_FLIP_UD;
 			if (true == ctrl->value)
 				vout->req.flags |= MDP_FLIP_UD;
@@ -697,7 +697,7 @@ msm_v4l2_overlay_do_ioctl(struct file *file,
 	default:
 		return -ENOIOCTLCMD;
 
-	} /* switch */
+	} /*        */
 
 	return 0;
 }
@@ -715,19 +715,19 @@ msm_v4l2_overlay_mmap(struct file *filp, struct vm_area_struct * vma)
 	unsigned long start = (unsigned long)v4l2_ram_phys;
 
 	/*
-	 * vm_pgoff is the offset (>>PAGE_SHIFT) that we provided
-	 * during REQBUFS. off therefore should equal the offset we
-	 * provided in REQBUFS, since last (PAGE_SHIFT) bits of off
-	 * should be 0
-	 */
+                                                          
+                                                            
+                                                            
+               
+  */
 	unsigned long off = vma->vm_pgoff << PAGE_SHIFT;
 	u32 len = PAGE_ALIGN((start & ~PAGE_MASK) + v4l2_ram_size);
 
 	/*
-	 * This is probably unnecessary now - the last PAGE_SHIFT
-	 * bits of start should be 0 now, since we are page aligning
-	 * v4l2_ram_phys
-	 */
+                                                          
+                                                             
+                 
+  */
 	start &= PAGE_MASK;
 
 	pr_debug("v4l2 map req for phys(%p,%p) offset %u to virt (%p,%p)\n",
@@ -741,12 +741,12 @@ msm_v4l2_overlay_mmap(struct file *filp, struct vm_area_struct * vma)
 
 	start += off;
 	vma->vm_pgoff = start >> PAGE_SHIFT;
-	/* This is an IO map - tell maydump to skip this VMA */
+	/*                                                   */
 	vma->vm_flags |= VM_IO | VM_RESERVED;
 
 	vma->vm_page_prot = pgprot_noncached(vma->vm_page_prot);
 
-	/* Remap the frame buffer I/O range */
+	/*                                  */
 	if (io_remap_pfn_range(vma, vma->vm_start, start >> PAGE_SHIFT,
 				vma->vm_end - vma->vm_start,
 				vma->vm_page_prot))
@@ -791,7 +791,7 @@ msm_v4l2_overlay_open(struct file *file)
 
 	vout->ref_count++;
 
-	/* allocate per-filehandle data */
+	/*                              */
 	fh = kmalloc(sizeof(struct msm_v4l2_overlay_fh), GFP_KERNEL);
 	if (NULL == fh)
 		return -ENOMEM;
@@ -847,9 +847,9 @@ msm_v4l2_overlay_probe(struct platform_device *pdev)
 		v4l2_ram_phys =
 		(char *)PAGE_ALIGN((unsigned int)v4l2_ram_phys_unaligned);
 		/*
-		 * We are (fwd) page aligning the start of v4l2 memory.
-		 * Therefore we have that much less physical memory available
-		 */
+                                                         
+                                                               
+   */
 		v4l2_ram_size -= (unsigned int)v4l2_ram_phys
 			- (unsigned int)v4l2_ram_phys_unaligned;
 
@@ -908,9 +908,9 @@ static int __init msm_v4l2_overlay_init(void)
 		goto end;
 
 	/*
-	 * Register the device with videodev.
-	 * Videodev will make IOCTL calls on application requests
-	 */
+                                      
+                                                          
+  */
 	ret = video_register_device(&msm_v4l2_overlay_vid_device0,
 		VFL_TYPE_GRABBER, MSM_VIDEO);
 

@@ -38,61 +38,61 @@ static struct platform_device msm_bt_power_device = {
 };
 
 static unsigned bt_config_power_on[] = {
-	/*RFR*/
+	/*   */
 	GPIO_CFG(43, 2, GPIO_CFG_OUTPUT, GPIO_CFG_NO_PULL, GPIO_CFG_2MA),
-	/*CTS*/
+	/*   */
 	GPIO_CFG(44, 2, GPIO_CFG_INPUT,  GPIO_CFG_NO_PULL, GPIO_CFG_2MA),
-	/*RX*/
+	/*  */
 	GPIO_CFG(45, 2, GPIO_CFG_INPUT,  GPIO_CFG_NO_PULL, GPIO_CFG_2MA),
-	/*TX*/
+	/*  */
 	GPIO_CFG(46, 2, GPIO_CFG_OUTPUT, GPIO_CFG_NO_PULL, GPIO_CFG_2MA),
 };
 static unsigned bt_config_pcm_on[] = {
-	/*PCM_DOUT*/
+	/*        */
 	GPIO_CFG(68, 1, GPIO_CFG_OUTPUT, GPIO_CFG_NO_PULL, GPIO_CFG_2MA),
-	/*PCM_DIN*/
+	/*       */
 	GPIO_CFG(69, 1, GPIO_CFG_INPUT,  GPIO_CFG_NO_PULL, GPIO_CFG_2MA),
-	/*PCM_SYNC*/
+	/*        */
 	GPIO_CFG(70, 1, GPIO_CFG_OUTPUT, GPIO_CFG_NO_PULL, GPIO_CFG_2MA),
-	/*PCM_CLK*/
+	/*       */
 	GPIO_CFG(71, 1, GPIO_CFG_OUTPUT, GPIO_CFG_NO_PULL, GPIO_CFG_2MA),
 };
 static unsigned bt_config_power_off[] = {
-	/*RFR*/
+	/*   */
 	GPIO_CFG(43, 0, GPIO_CFG_INPUT, GPIO_CFG_PULL_DOWN, GPIO_CFG_2MA),
-	/*CTS*/
+	/*   */
 	GPIO_CFG(44, 0, GPIO_CFG_INPUT, GPIO_CFG_PULL_DOWN, GPIO_CFG_2MA),
-	/*RX*/
+	/*  */
 	GPIO_CFG(45, 0, GPIO_CFG_INPUT, GPIO_CFG_PULL_DOWN, GPIO_CFG_2MA),
-	/*TX*/
+	/*  */
 	GPIO_CFG(46, 0, GPIO_CFG_INPUT, GPIO_CFG_PULL_DOWN, GPIO_CFG_2MA),
 };
 static unsigned bt_config_pcm_off[] = {
-	/*PCM_DOUT*/
+	/*        */
 	GPIO_CFG(68, 0, GPIO_CFG_INPUT, GPIO_CFG_PULL_DOWN, GPIO_CFG_2MA),
-	/*PCM_DIN*/
+	/*       */
 	GPIO_CFG(69, 0, GPIO_CFG_INPUT, GPIO_CFG_PULL_DOWN, GPIO_CFG_2MA),
-	/*PCM_SYNC*/
+	/*        */
 	GPIO_CFG(70, 0, GPIO_CFG_INPUT, GPIO_CFG_PULL_DOWN, GPIO_CFG_2MA),
-	/*PCM_CLK*/
+	/*       */
 	GPIO_CFG(71, 0, GPIO_CFG_INPUT, GPIO_CFG_PULL_DOWN, GPIO_CFG_2MA),
 };
 
 static unsigned fm_i2s_config_power_on[] = {
-	/*FM_I2S_SD*/
+	/*         */
 	GPIO_CFG(68, 1, GPIO_CFG_INPUT, GPIO_CFG_NO_PULL, GPIO_CFG_2MA),
-	/*FM_I2S_WS*/
+	/*         */
 	GPIO_CFG(70, 1, GPIO_CFG_INPUT, GPIO_CFG_NO_PULL, GPIO_CFG_2MA),
-	/*FM_I2S_SCK*/
+	/*          */
 	GPIO_CFG(71, 1, GPIO_CFG_INPUT, GPIO_CFG_NO_PULL, GPIO_CFG_2MA),
 };
 
 static unsigned fm_i2s_config_power_off[] = {
-	/*FM_I2S_SD*/
+	/*         */
 	GPIO_CFG(68, 0, GPIO_CFG_INPUT, GPIO_CFG_PULL_DOWN, GPIO_CFG_2MA),
-	/*FM_I2S_WS*/
+	/*         */
 	GPIO_CFG(70, 0, GPIO_CFG_INPUT, GPIO_CFG_PULL_DOWN, GPIO_CFG_2MA),
-	/*FM_I2S_SCK*/
+	/*          */
 	GPIO_CFG(71, 0, GPIO_CFG_INPUT, GPIO_CFG_PULL_DOWN, GPIO_CFG_2MA),
 };
 
@@ -169,7 +169,7 @@ static int fm_radio_setup(struct marimba_fm_platform_data *pdata)
 	struct marimba config = { .mod_id =  SLAVE_ID_BAHAMA};
 	u8 value;
 
-	/* Voting for 1.8V Regulator */
+	/*                           */
 	fm_regulator = regulator_get(NULL , "msme1");
 	if (IS_ERR(fm_regulator)) {
 		rc = PTR_ERR(fm_regulator);
@@ -177,21 +177,21 @@ static int fm_radio_setup(struct marimba_fm_platform_data *pdata)
 		goto out;
 	}
 
-	/* Set the voltage level to 1.8V */
+	/*                               */
 	rc = regulator_set_voltage(fm_regulator, 1800000, 1800000);
 	if (rc < 0) {
 		pr_err("%s: could not set voltage: %d\n", __func__, rc);
 		goto reg_free;
 	}
 
-	/* Enabling the 1.8V regulator */
+	/*                             */
 	rc = regulator_enable(fm_regulator);
 	if (rc) {
 		pr_err("%s: could not enable regulator: %d\n", __func__, rc);
 		goto reg_free;
 	}
 
-	/* Voting for 19.2MHz clock */
+	/*                          */
 	rc = pmapp_clock_vote(id, PMAPP_CLOCK_ID_D1,
 			PMAPP_CLOCK_VOTE_ON);
 	if (rc < 0) {
@@ -205,7 +205,7 @@ static int fm_radio_setup(struct marimba_fm_platform_data *pdata)
 		pr_err("%s: bt_set_gpio = %d", __func__, rc);
 		goto gpio_deconfig;
 	}
-	/*re-write FM Slave Id, after reset*/
+	/*                                 */
 	value = BAHAMA_SLAVE_ID_FM_ADDR;
 	rc = marimba_write_bit_mask(&config,
 			BAHAMA_SLAVE_ID_FM_REG, &value, 1, 0xFF);
@@ -213,7 +213,7 @@ static int fm_radio_setup(struct marimba_fm_platform_data *pdata)
 		pr_err("%s: FM Slave ID rewrite Failed = %d", __func__, rc);
 		goto gpio_deconfig;
 	}
-	/* Configuring the FM GPIO */
+	/*                         */
 	irqcfg = GPIO_CFG(FM_GPIO, 0, GPIO_CFG_INPUT, GPIO_CFG_NO_PULL,
 			GPIO_CFG_2MA);
 
@@ -244,7 +244,7 @@ static void fm_radio_shutdown(struct marimba_fm_platform_data *pdata)
 	int rc;
 	const char *id = "FMPW";
 
-	/* Releasing the GPIO line used by FM */
+	/*                                    */
 	uint32_t irqcfg = GPIO_CFG(FM_GPIO, 0, GPIO_CFG_INPUT,
 		GPIO_CFG_PULL_UP, GPIO_CFG_2MA);
 
@@ -253,7 +253,7 @@ static void fm_radio_shutdown(struct marimba_fm_platform_data *pdata)
 		pr_err("%s: gpio_tlmm_config(%#x)=%d\n",
 			 __func__, irqcfg, rc);
 
-	/* Releasing the 1.8V Regulator */
+	/*                              */
 	if (!IS_ERR_OR_NULL(fm_regulator)) {
 		rc = regulator_disable(fm_regulator);
 		if (rc)
@@ -263,7 +263,7 @@ static void fm_radio_shutdown(struct marimba_fm_platform_data *pdata)
 		fm_regulator = NULL;
 	}
 
-	/* Voting off the clock */
+	/*                      */
 	rc = pmapp_clock_vote(id, PMAPP_CLOCK_ID_D1,
 		PMAPP_CLOCK_VOTE_OFF);
 	if (rc < 0)
@@ -277,14 +277,14 @@ static int switch_pcm_i2s_reg_mode(int mode)
 {
 	unsigned char reg = 0;
 	int rc = -1;
-	unsigned char set = I2C_PIN_CTL; /*SET PIN CTL mode*/
-	unsigned char unset = I2C_NORMAL; /* UNSET PIN CTL MODE*/
+	unsigned char set = I2C_PIN_CTL; /*                */
+	unsigned char unset = I2C_NORMAL; /*                   */
 	struct marimba config = { .mod_id =  SLAVE_ID_BAHAMA};
 
 	if (mode == 0) {
-		/* as we need to switch path to FM we need to move
-		BT AUX PCM lines to PIN CONTROL mode then move
-		FM to normal mode.*/
+		/*                                                
+                                                
+                    */
 		for (reg = BT_PCM_BCLK_MODE; reg <= BT_PCM_SYNC_MODE; reg++) {
 			rc = marimba_write(&config, reg, &set, 1);
 			if (rc < 0) {
@@ -300,9 +300,9 @@ static int switch_pcm_i2s_reg_mode(int mode)
 			}
 		}
 	} else {
-		/* as we need to switch path to AUXPCM we need to move
-		FM I2S lines to PIN CONTROL mode then move
-		BT AUX_PCM to normal mode.*/
+		/*                                                    
+                                            
+                            */
 		for (reg = FM_I2S_SD_MODE; reg <= FM_I2S_SCK_MODE; reg++) {
 			rc = marimba_write(&config, reg, &set, 1);
 			if (rc < 0) {
@@ -336,14 +336,14 @@ static void config_pcm_i2s_mode(int mode)
 	if (!cfg_ptr)
 		return;
 	if (mode) {
-		/*enable the pcm mode in FPGA*/
+		/*                           */
 		reg2 = readb_relaxed(cfg_ptr);
 		if (reg2 == 0) {
 			reg2 = 1;
 			writeb_relaxed(reg2, cfg_ptr);
 		}
 	} else {
-		/*enable i2s mode in FPGA*/
+		/*                       */
 		reg2 = readb_relaxed(cfg_ptr);
 		if (reg2 == 1) {
 			reg2 = 0;
@@ -562,7 +562,7 @@ static int bahama_bt(int on)
 	}
 	};
 
-	u8 offset = 0; /* index into bahama configs */
+	u8 offset = 0; /*                           */
 	on = on ? 1 : 0;
 	version = marimba_read_bahama_ver(&config);
 	if ((int)version < 0 || version == BAHAMA_VER_UNSUPPORTED) {
@@ -612,7 +612,7 @@ static int bahama_bt(int on)
 				__func__, (p+i)->reg,
 				value, (p+i)->mask);
 	}
-	/* Update BT Status */
+	/*                  */
 	if (on)
 		marimba_set_bt_status(&config, true);
 	else
@@ -723,7 +723,7 @@ static unsigned int msm_bahama_setup_power(void)
 				GPIO_CFG_OUTPUT, GPIO_CFG_NO_PULL,
 				GPIO_CFG_2MA), GPIO_CFG_ENABLE);
 
-	/*setup Bahama_sys_reset_n*/
+	/*                        */
 	rc = gpio_request(gpio_bt_sys_rest_en, "bahama sys_rst_n");
 	if (rc < 0) {
 		pr_err("%s: gpio_request %d = %d\n", __func__,
@@ -795,9 +795,9 @@ static unsigned int msm_bahama_core_config(int type)
 		int i;
 		struct marimba config = { .mod_id =  SLAVE_ID_BAHAMA};
 		const struct bahama_config_register v20_init[] = {
-			/* reg, value, mask */
-			{ 0xF4, 0x84, 0xFF }, /* AREG */
-			{ 0xF0, 0x04, 0xFF } /* DREG */
+			/*                  */
+			{ 0xF4, 0x84, 0xFF }, /*      */
+			{ 0xF0, 0x04, 0xFF } /*      */
 		};
 		if (marimba_read_bahama_ver(&config) == BAHAMA_VER_2_0) {
 			for (i = 0; i < ARRAY_SIZE(v20_init); i++) {
@@ -841,7 +841,7 @@ static int bluetooth_power(int on)
 		return -ENODEV;
 	}
 	if (on) {
-		/*setup power for BT SOC*/
+		/*                      */
 		rc = bt_set_gpio(on);
 		if (rc) {
 			pr_err("%s: bt_set_gpio = %d\n",
@@ -854,7 +854,7 @@ static int bluetooth_power(int on)
 					__func__, rc);
 			goto exit;
 		}
-		/*setup BT GPIO lines*/
+		/*                   */
 		for (pin = 0; pin < ARRAY_SIZE(bt_config_power_on);
 			pin++) {
 			rc = gpio_tlmm_config(bt_config_power_on[pin],
@@ -867,7 +867,7 @@ static int bluetooth_power(int on)
 				goto fail_power;
 			}
 		}
-		/*Setup BT clocks*/
+		/*               */
 		rc = pmapp_clock_vote(id, PMAPP_CLOCK_ID_D1,
 			PMAPP_CLOCK_VOTE_ON);
 		if (rc < 0) {
@@ -876,7 +876,7 @@ static int bluetooth_power(int on)
 		}
 		msleep(20);
 
-		/*I2C config for Bahama*/
+		/*                     */
 		rc = bahama_bt(1);
 		if (rc < 0) {
 			pr_err("%s: bahama_bt rc = %d", __func__, rc);
@@ -884,7 +884,7 @@ static int bluetooth_power(int on)
 		}
 		msleep(20);
 
-		/*setup BT PCM lines*/
+		/*                  */
 		rc = msm_bahama_setup_pcm_i2s(BT_PCM_ON);
 		if (rc < 0) {
 			pr_err("%s: msm_bahama_setup_pcm_i2s , rc =%d\n",
@@ -949,7 +949,7 @@ static struct marimba_fm_platform_data marimba_fm_pdata = {
 	.irq = MSM_GPIO_TO_INT(FM_GPIO),
 	.vreg_s2 = NULL,
 	.vreg_xo_out = NULL,
-	/* Configuring the FM SoC as I2S Master */
+	/*                                      */
 	.is_fm_soc_i2s_master = true,
 	.config_i2s_gpio = msm_bahama_setup_pcm_i2s,
 };

@@ -26,8 +26,10 @@
 #define V4L2_IDENT_CCI 50005
 #define CCI_I2C_QUEUE_0_SIZE 64
 #define CCI_I2C_QUEUE_1_SIZE 16
-
 #define CCI_TIMEOUT msecs_to_jiffies(100)
+
+#undef CDBG
+#define CDBG pr_debug
 
 static void msm_cci_set_clk_param(struct cci_device *cci_dev)
 {
@@ -38,11 +40,11 @@ static void msm_cci_set_clk_param(struct cci_device *cci_dev)
 	uint16_t THDDAT = 10;
 	uint16_t THDSTA = 77;
 	uint16_t TBUF = 118;
-	uint8_t HW_SCL_STRETCH_EN = 0; /*enable or disable SCL clock
-					* stretching */
-	uint8_t HW_RDHLD = 6; /* internal hold time 1-6 cycles of SDA to bridge
-			       * undefined falling SCL region */
-	uint8_t HW_TSP = 1; /* glitch filter 1-3 cycles */
+	uint8_t HW_SCL_STRETCH_EN = 0; /*                           
+                  */
+	uint8_t HW_RDHLD = 6; /*                                               
+                                         */
+	uint8_t HW_TSP = 1; /*                          */
 
 	msm_camera_io_w(THIGH << 16 | TLOW, cci_dev->base +
 		CCI_I2C_M0_SCL_CTL_ADDR);
@@ -150,21 +152,21 @@ static int32_t msm_cci_data_queue(struct cci_device *cci_dev,
 	enum cci_i2c_master_t master = c_ctrl->cci_info->cci_i2c_master;
 	CDBG("%s addr type %d data type %d\n", __func__,
 		i2c_msg->addr_type, i2c_msg->data_type);
-	/* assume total size within the max queue */
+	/*                                        */
 	while (cmd_size) {
 		CDBG("%s cmd_size %d addr 0x%x data 0x%x", __func__,
 			cmd_size, i2c_cmd->reg_addr, i2c_cmd->reg_data);
 		data[i++] = CCI_I2C_WRITE_CMD;
 		if (i2c_cmd->reg_addr)
 			reg_addr = i2c_cmd->reg_addr;
-		/* either byte or word addr */
+		/*                          */
 		if (i2c_msg->addr_type == MSM_CAMERA_I2C_BYTE_ADDR)
 			data[i++] = reg_addr;
 		else {
 			data[i++] = (reg_addr & 0xFF00) >> 8;
 			data[i++] = reg_addr & 0x00FF;
 		}
-		/* max of 10 data bytes */
+		/*                      */
 		do {
 			if (i2c_msg->data_type == MSM_CAMERA_I2C_BYTE_DATA) {
 				data[i++] = i2c_cmd->reg_data;
@@ -172,9 +174,9 @@ static int32_t msm_cci_data_queue(struct cci_device *cci_dev,
 			} else {
 				if ((i + 1) <= 10) {
 					data[i++] = (i2c_cmd->reg_data &
-						0xFF00) >> 8; /* MSB */
+						0xFF00) >> 8; /*     */
 					data[i++] = i2c_cmd->reg_data &
-						0x00FF; /* LSB */
+						0x00FF; /*     */
 					reg_addr += 2;
 				} else
 					break;
@@ -694,8 +696,8 @@ static int __devinit msm_cci_probe(struct platform_device *pdev)
 	irq_req.data             = (void *)new_cci_dev;
 	rc = msm_cam_server_request_irq(&irq_req);
 	if (rc == -ENXIO) {
-		/* IRQ Router hardware is not present on this hardware.
-		 * Request for the IRQ and register the interrupt handler. */
+		/*                                                     
+                                                             */
 		rc = request_irq(new_cci_dev->irq->start, msm_cci_irq,
 			IRQF_TRIGGER_RISING, "cci", new_cci_dev);
 		if (rc < 0) {

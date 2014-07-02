@@ -45,8 +45,8 @@
 #define FM_ENABLE	0xFFFF
 #define FM_DISABLE	0x0
 #define FM_COPP		0x2
-/* Macro specifies maximum FM routing
-	possible */
+/*                                   
+          */
 #define FM_MAX_RX_ROUTE	0x2
 
 struct fm_rx_calib_gain {
@@ -73,7 +73,7 @@ struct audio {
 
 static struct audio fm_audio;
 
-/* must be called with audio->lock held */
+/*                                      */
 static int audio_enable(struct audio *audio)
 {
 	int rc = 0;
@@ -86,14 +86,14 @@ static int audio_enable(struct audio *audio)
 		rc = afe_config_fm_codec(FM_ENABLE, audio->fm_mask);
 		if (!rc)
 			audio->running = 1;
-		/* Routed to icodec rx path */
+		/*                          */
 		if ((audio->fm_mask & AFE_HW_PATH_CODEC_RX) ==
 				AFE_HW_PATH_CODEC_RX) {
 			afe_config_fm_calibration_gain(
 			audio->fm_calibration_rx[0].device_id,
 			audio->fm_calibration_rx[0].calib_rx.audppcalgain);
 		}
-		/* Routed to aux codec rx path */
+		/*                             */
 		if ((audio->fm_mask & AFE_HW_PATH_AUXPCM_RX) ==
 				AFE_HW_PATH_AUXPCM_RX){
 			afe_config_fm_calibration_gain(
@@ -167,12 +167,12 @@ static void fm_listner(u32 evt_id, union auddev_evt_data *evt_payload,
 		MM_DBG(":AUDDEV_EVT_DEVICE_INFO\n");
 		MM_DBG("sample_rate = %d\n", devinfo->sample_rate);
 		MM_DBG("acdb_id = %d\n", devinfo->acdb_id);
-		/* Applucable only for icodec rx and aux codec rx path
-			and fm stream routed to it */
+		/*                                                    
+                              */
 		if (((devinfo->dev_id == 0x00) || (devinfo->dev_id == 0x01)) &&
 			(devinfo->sessions && (1 << audio->dec_id))) {
-			/* Query ACDB driver for calib gain, only if difference
-				in device */
+			/*                                                     
+              */
 			if ((audio->fm_calibration_rx[devinfo->dev_id].
 				dev_details.acdb_id != devinfo->acdb_id) ||
 				(audio->fm_calibration_rx[devinfo->dev_id].
@@ -189,7 +189,7 @@ static void fm_listner(u32 evt_id, union auddev_evt_data *evt_payload,
 				audio->fm_calibration_rx[devinfo->dev_id].
 					dev_details.sessions =
 						devinfo->sessions;
-				/* Query ACDB driver for calibration gain */
+				/*                                        */
 				get_block.acdb_id = devinfo->acdb_id;
 				get_block.sample_rate_id = devinfo->sample_rate;
 				get_block.interface_id =
@@ -206,7 +206,7 @@ static void fm_listner(u32 evt_id, union auddev_evt_data *evt_payload,
 				if (rc < 0) {
 					MM_ERR("Unable to get calibration"\
 						"gain\n");
-					/* Set to unity incase of error */
+					/*                              */
 					audio->\
 					fm_calibration_rx[devinfo->dev_id].
 					calib_rx.audppcalgain = 0x2000;
@@ -229,10 +229,10 @@ static void fm_listner(u32 evt_id, union auddev_evt_data *evt_payload,
 		break;
 	}
 }
-/* must be called with audio->lock held */
+/*                                      */
 static int audio_disable(struct audio *audio)
 {
-	MM_DBG("\n"); /* Macro prints the file name and function */
+	MM_DBG("\n"); /*                                         */
 	return afe_config_fm_codec(FM_DISABLE, audio->source);
 }
 
@@ -293,14 +293,14 @@ static int audio_open(struct inode *inode, struct file *file)
 	if (audio->opened)
 		return -EPERM;
 
-	/* Allocate the decoder */
+	/*                      */
 	audio->dec_id = SESSION_ID_FM;
 
 	audio->running = 0;
 	audio->fm_source = 0;
 	audio->fm_mask = 0;
 
-	/* Initialize the calibration gain structure */
+	/*                                           */
 	audio->fm_calibration_rx[0].device_id = AFE_HW_PATH_CODEC_RX;
 	audio->fm_calibration_rx[1].device_id = AFE_HW_PATH_AUXPCM_RX;
 	audio->fm_calibration_rx[0].calib_rx.audppcalgain = 0x2000;

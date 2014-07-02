@@ -31,13 +31,13 @@ enum discovery_result_enum {
 	MHL_DISCOVERY_RESULT_MHL,
 };
 
-/* USB driver interface  */
+/*                       */
 
 #ifdef CONFIG_FB_MSM_HDMI_MHL_8334
- /*  mhl_device_discovery */
+ /*                       */
 extern int mhl_device_discovery(const char *name, int *result);
 
-/* - register|unregister MHL cable plug callback. */
+/*                                                */
 extern int mhl_register_callback
 	(const char *name, void (*callback)(int online));
 extern int mhl_unregister_callback(const char *name);
@@ -65,7 +65,7 @@ struct mhl_msm_state_t {
 	uint8_t      cur_state;
 	uint8_t chip_rev_id;
 	struct msm_mhl_platform_data *mhl_data;
-	/* Device Discovery stuff */
+	/*                        */
 	int mhl_mode;
 	struct completion rgnd_done;
 };
@@ -103,4 +103,4 @@ enum {
 	DEV_PAGE_DDC_SEGM   = (0x60),
 };
 
-#endif /* __MHL_MSM_H__ */
+#endif /*               */

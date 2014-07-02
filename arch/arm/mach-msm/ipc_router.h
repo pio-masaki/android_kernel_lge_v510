@@ -1,4 +1,4 @@
-/* Copyright (c) 2011-2013, The Linux Foundation. All rights reserved.
+/* Copyright (c) 2011-2012, The Linux Foundation. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -25,7 +25,7 @@
 
 #include <net/sock.h>
 
-/* definitions for the R2R wire protcol */
+/*                                      */
 #define IPC_ROUTER_VERSION			1
 #define IPC_ROUTER_PROCESSORS_MAX		4
 
@@ -58,19 +58,9 @@
 
 #define ALIGN_SIZE(x) ((4 - ((x) & 3)) & 3)
 
-#define ALL_SERVICE 0xFFFFFFFF
-#define ALL_INSTANCE 0xFFFFFFFF
-
 enum {
 	MSM_IPC_ROUTER_READ_CB = 0,
 	MSM_IPC_ROUTER_WRITE_DONE,
-};
-
-enum {
-	CLIENT_PORT,
-	SERVER_PORT,
-	CONTROL_PORT,
-	IRSC_PORT,
 };
 
 union rr_control_msg {
@@ -102,7 +92,7 @@ struct rr_header {
 
 #define IPC_ROUTER_HDR_SIZE sizeof(struct rr_header)
 #define MAX_IPC_PKT_SIZE 66000
-/* internals */
+/*           */
 
 #define IPC_ROUTER_MAX_REMOTE_SERVERS		100
 #define MAX_WAKELOCK_NAME_SZ 32
@@ -137,7 +127,6 @@ struct msm_ipc_port {
 
 	void *endpoint;
 	void (*notify)(unsigned event, void *data, void *addr, void *priv);
-	int (*check_send_permissions)(void *data);
 
 	uint32_t num_tx;
 	uint32_t num_rx;
@@ -216,10 +205,6 @@ int msm_ipc_router_unregister_server(struct msm_ipc_port *server_port);
 
 int msm_ipc_router_init_sockets(void);
 void msm_ipc_router_exit_sockets(void);
-
-void msm_ipc_sync_sec_rule(uint32_t service, uint32_t instance, void *rule);
-
-void msm_ipc_sync_default_sec_rule(void *rule);
 
 #if defined CONFIG_MSM_IPC_ROUTER_SMD_XPRT
 extern void *msm_ipc_load_default_node(void);

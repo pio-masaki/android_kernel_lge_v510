@@ -10,7 +10,7 @@
  * GNU General Public License for more details.
  */
 
-/* #define DEBUG */
+/*               */
 
 #include <linux/delay.h>
 #include <linux/types.h>
@@ -34,8 +34,8 @@ struct ov5640_work {
 struct __ov5640_ctrl {
 	const struct msm_camera_sensor_info *sensordata;
 	int sensormode;
-	uint fps_divider; /* init to 1 * 0x00000400 */
-	uint pict_fps_divider; /* init to 1 * 0x00000400 */
+	uint fps_divider; /*                        */
+	uint pict_fps_divider; /*                        */
 	u16 curr_step_pos;
 	u16 curr_lens_pos;
 	u16 init_curr_lens_pos;
@@ -213,7 +213,7 @@ static void ov5640_power_on(void)
 static void ov5640_power_reset(void)
 {
 	CDBG("--CAMERA-- %s ... (Start...)\n", __func__);
-	gpio_set_value(ov5640_reset_gpio, 1);   /* reset camera reset pin */
+	gpio_set_value(ov5640_reset_gpio, 1);   /*                        */
 	msleep(20);
 	gpio_set_value(ov5640_reset_gpio, 0);
 	msleep(20);
@@ -232,7 +232,7 @@ static int ov5640_probe_readID(const struct msm_camera_sensor_info *data)
 	CDBG("--CAMERA-- %s (Start...)\n", __func__);
 	CDBG("--CAMERA-- %s sensor poweron,begin to read ID!\n", __func__);
 
-	/* 0x300A ,sensor ID register */
+	/*                            */
 	rc = ov5640_i2c_read_byte(ov5640_client->addr, 0x300A,
 			&device_id_high);
 
@@ -244,7 +244,7 @@ static int ov5640_probe_readID(const struct msm_camera_sensor_info *data)
 	CDBG("--CAMERA-- %s  readID high byte, data = 0x%x\r\n",
 			__func__, device_id_high);
 
-	/* 0x300B ,sensor ID register */
+	/*                            */
 	rc = ov5640_i2c_read_byte(ov5640_client->addr, 0x300B,
 			&device_id_low);
 	if (rc < 0) {
@@ -258,7 +258,7 @@ static int ov5640_probe_readID(const struct msm_camera_sensor_info *data)
 	CDBG("--CAMERA-- %s return ID :0x%x\n", __func__,
 			(device_id_high << 8) + device_id_low);
 
-	/* 0x5640, ov5640 chip id */
+	/*                        */
 	if ((device_id_high << 8) + device_id_low != OV5640_SENSOR_ID) {
 		CDBG("--CAMERA-- %s ok , device id error, should be 0x%x\r\n",
 				__func__, OV5640_SENSOR_ID);
@@ -328,11 +328,11 @@ static int ov5640_video_config(void)
 	CDBG("--CAMERA-- ov5640_video_config\n");
 	CDBG("--CAMERA-- preview in, is_autoflash - 0x%x\n", is_autoflash);
 
-	/* autoflash setting */
+	/*                   */
 	if (is_autoflash == 1)
 		ov5640_set_flash_light(LED_OFF);
 
-	/* preview setting */
+	/*                 */
 	rc = OV5640CORE_WRITEPREG(ov5640_preview_tbl);
 	return rc;
 }
@@ -371,7 +371,7 @@ static int ov5640_setting(enum msm_s_reg_update rupdate,
 	switch (rupdate) {
 	case S_UPDATE_PERIODIC:
 		if (!OV5640_CSI_CONFIG) {
-			camera_sw_power_onoff(0); /* standby */
+			camera_sw_power_onoff(0); /*         */
 			msleep(20);
 
 			ov5640_csi_params.lane_cnt = 2;
@@ -384,7 +384,7 @@ static int ov5640_setting(enum msm_s_reg_update rupdate,
 
 			rc = msm_camio_csi_config(&ov5640_csi_params);
 			msleep(20);
-			camera_sw_power_onoff(1); /* on */
+			camera_sw_power_onoff(1); /*    */
 			msleep(20);
 
 			OV5640_CSI_CONFIG = 1;
@@ -398,7 +398,7 @@ static int ov5640_setting(enum msm_s_reg_update rupdate,
 		else if (S_RES_CAPTURE == rt)
 			rc = ov5640_snapshot_config();
 
-		break; /* UPDATE_PERIODIC */
+		break; /*                 */
 
 	case S_REG_INIT:
 		CDBG("--CAMERA-- S_REG_INIT (Start)\n");
@@ -407,7 +407,7 @@ static int ov5640_setting(enum msm_s_reg_update rupdate,
 		rc = ov5640_i2c_write(ov5640_client->addr, 0x3008, 0x82, 10);
 		msleep(20);
 
-		/* set sensor init setting */
+		/*                         */
 		CDBG("set sensor init setting\n");
 		rc = OV5640CORE_WRITEPREG(ov5640_init_tbl);
 		if (rc < 0) {
@@ -415,7 +415,7 @@ static int ov5640_setting(enum msm_s_reg_update rupdate,
 			break;
 		}
 
-		/* set image quality setting */
+		/*                           */
 		rc = OV5640CORE_WRITEPREG(ov5640_init_iq_tbl);
 		rc = ov5640_i2c_read_byte(ov5640_client->addr, 0x4740, &tmp);
 		CDBG("--CAMERA-- init 0x4740 value=0x%x\n", tmp);
@@ -440,14 +440,14 @@ static int ov5640_setting(enum msm_s_reg_update rupdate,
 			ov5640_afinit = 0;
 		}
 
-		/* reset fps_divider */
+		/*                   */
 		ov5640_ctrl->fps_divider = 1 * 0x0400;
 		CDBG("--CAMERA-- S_REG_INIT (End)\n");
-		break; /* case REG_INIT: */
+		break; /*                */
 
 	default:
 		break;
-	} /* switch (rupdate) */
+	} /*                  */
 
 	CDBG("--CAMERA-- %s (End), rupdate=%d\n", __func__, rupdate);
 
@@ -533,7 +533,7 @@ static int ov5640_i2c_remove(struct i2c_client *client)
 
 static int ov5640_init_client(struct i2c_client *client)
 {
-	/* Initialize the MSM_CAMI2C Chip */
+	/*                                */
 	init_waitqueue_head(&ov5640_wait_queue);
 	return 0;
 }
@@ -546,12 +546,12 @@ static long ov5640_set_effect(int mode, int effect)
 
 	switch (mode) {
 	case SENSOR_PREVIEW_MODE:
-		/* Context A Special Effects */
+		/*                           */
 		CDBG("--CAMERA-- %s ...SENSOR_PREVIEW_MODE\n", __func__);
 		break;
 
 	case SENSOR_SNAPSHOT_MODE:
-		/* Context B Special Effects */
+		/*                           */
 		CDBG("--CAMERA-- %s ...SENSOR_SNAPSHOT_MODE\n", __func__);
 		break;
 
@@ -565,10 +565,10 @@ static long ov5640_set_effect(int mode, int effect)
 	case CAMERA_EFFECT_OFF:
 		CDBG("--CAMERA-- %s ...CAMERA_EFFECT_OFF\n", __func__);
 		rc = OV5640CORE_WRITEPREG(ov5640_effect_normal_tbl);
-		/* for recover saturation level when change special effect */
+		/*                                                         */
 		ov5640_i2c_write(ov5640_client->addr, 0x5583, ov5640_SAT_U,
 				10);
-		/* for recover saturation level when change special effect */
+		/*                                                         */
 		ov5640_i2c_write(ov5640_client->addr, 0x5584, ov5640_SAT_V,
 				10);
 		break;
@@ -618,7 +618,7 @@ static long ov5640_set_effect(int mode, int effect)
 	}
 
 	ov5640_effect = effect;
-	/* Refresh Sequencer */
+	/*                   */
 	CDBG("--CAMERA-- %s ...(End)\n", __func__);
 	return rc;
 }
@@ -876,7 +876,7 @@ static int ov5640_set_saturation(int saturation)
 		}
 	}
 
-	/* for recover saturation level when change special effect */
+	/*                                                         */
 	switch (saturation) {
 	case CAMERA_SATURATION_LV0:
 		CDBG("--CAMERA--CAMERA_SATURATION_LV0\n");
@@ -1234,12 +1234,12 @@ static int ov5640_sensor_config(void __user *argp)
 
 	case CFG_START:
 		CDBG("--CAMERA-- CFG_START (Not Support) !!\n");
-		/* Not Support */
+		/*             */
 		break;
 
 	case CFG_PWR_UP:
 		CDBG("--CAMERA-- CFG_PWR_UP (Not Support) !!\n");
-		/* Not Support */
+		/*             */
 		break;
 
 	case CFG_PWR_DOWN:
@@ -1397,7 +1397,7 @@ static int ov5640_sensor_probe(const struct msm_camera_sensor_info *info,
 
 	ov5640_power_off();
 
-	/* SENSOR NEED MCLK TO DO I2C COMMUNICTION, OPEN CLK FIRST*/
+	/*                                                        */
 	msm_camio_clk_rate_set(24000000);
 
 	msleep(20);

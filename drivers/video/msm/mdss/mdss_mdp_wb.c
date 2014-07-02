@@ -60,7 +60,7 @@ static DEFINE_MUTEX(mdss_mdp_wb_buf_lock);
 static struct mdss_mdp_wb mdss_mdp_wb_info;
 
 #ifdef DEBUG_WRITEBACK
-/* for debugging: writeback output buffer to allocated memory */
+/*                                                            */
 static inline
 struct mdss_mdp_data *mdss_mdp_wb_debug_buffer(struct msm_fb_data_type *mfd)
 {
@@ -238,7 +238,7 @@ static struct mdss_mdp_wb_data *get_local_node(struct mdss_mdp_wb *wb,
 	node->buf_info = *data;
 	buf = &node->buf_data.p[0];
 	buf->addr = (u32) (data->iova + data->offset);
-	buf->len = UINT_MAX; /* trusted source */
+	buf->len = UINT_MAX; /*                */
 	ret = mdss_mdp_wb_register_node(wb, node);
 	if (IS_ERR_VALUE(ret)) {
 		pr_err("error registering wb node\n");

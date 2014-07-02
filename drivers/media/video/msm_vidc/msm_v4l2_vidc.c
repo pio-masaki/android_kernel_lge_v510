@@ -644,9 +644,9 @@ static int register_iommu_domains(struct platform_device *pdev,
 			break;
 		}
 	}
-	/* There is no api provided as msm_unregister_domain, so
-	 * we are not able to unregister the previously
-	 * registered domains if any domain registration fails.*/
+	/*                                                      
+                                                
+                                                        */
 	BUG_ON(i < MAX_MAP);
 	return rc;
 }

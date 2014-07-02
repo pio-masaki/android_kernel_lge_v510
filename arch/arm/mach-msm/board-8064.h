@@ -22,7 +22,7 @@
 #include <mach/msm_rtb.h>
 #include <mach/msm_cache_dump.h>
 
-/* Macros assume PMIC GPIOs and MPPs start at 1 */
+/*                                              */
 #define PM8921_GPIO_BASE		NR_GPIO_IRQS
 #define PM8921_GPIO_PM_TO_SYS(pm_gpio)	(pm_gpio - 1 + PM8921_GPIO_BASE)
 #define PM8921_MPP_BASE			(PM8921_GPIO_BASE + PM8921_NR_GPIOS)

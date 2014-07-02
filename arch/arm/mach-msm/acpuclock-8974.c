@@ -22,7 +22,7 @@
 #include "acpuclock.h"
 #include "acpuclock-krait.h"
 
-/* Corner type vreg VDD values */
+/*                             */
 #define LVL_NONE	RPM_REGULATOR_CORNER_NONE
 #define LVL_LOW		RPM_REGULATOR_CORNER_SVS_SOC
 #define LVL_NOM		RPM_REGULATOR_CORNER_NORMAL
@@ -36,7 +36,7 @@ static struct hfpll_data hfpll_data __initdata = {
 	.has_user_reg = true,
 	.user_offset = 0x10,
 	.config_offset = 0x14,
-	/* TODO: Verify magic numbers when final values are available. */
+	/*                                                             */
 	.user_val = 0x8,
 	.config_val = 0x04D0405D,
 	.low_vco_l_max = 65,
@@ -99,10 +99,10 @@ static struct scalable scalable[] __initdata = {
 };
 
 static struct msm_bus_paths bw_level_tbl[] __initdata = {
-	[0] =  BW_MBPS(552), /* At least  69 MHz on bus. */
-	[1] = BW_MBPS(1112), /* At least 139 MHz on bus. */
-	[2] = BW_MBPS(2224), /* At least 278 MHz on bus. */
-	[3] = BW_MBPS(4448), /* At least 556 MHz on bus. */
+	[0] =  BW_MBPS(552), /*                          */
+	[1] = BW_MBPS(1112), /*                          */
+	[2] = BW_MBPS(2224), /*                          */
+	[3] = BW_MBPS(4448), /*                          */
 };
 
 static struct msm_bus_scale_pdata bus_scale_data __initdata = {
@@ -185,7 +185,6 @@ static struct acpuclk_krait_params acpuclk_8974_params __initdata = {
 	.l2_freq_tbl_size = sizeof(l2_freq_tbl),
 	.bus_scale = &bus_scale_data,
 	.pte_efuse_phys = 0xFC4B80B0,
-	.get_bin_info = get_krait_bin_format_b,
 	.stby_khz = 300000,
 };
 

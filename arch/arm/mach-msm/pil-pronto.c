@@ -117,43 +117,43 @@ static int pil_pronto_reset(struct pil_desc *pil)
 	void __iomem *base = drv->base;
 	unsigned long start_addr = drv->start_addr;
 
-	/* Deassert reset to subsystem and wait for propagation */
+	/*                                                      */
 	reg = readl_relaxed(drv->reset_base);
 	reg &= ~CLK_CTL_WCNSS_RESTART_BIT;
 	writel_relaxed(reg, drv->reset_base);
 	mb();
 	udelay(2);
 
-	/* Configure boot address */
+	/*                        */
 	writel_relaxed(start_addr >> 16, base +
 			PRONTO_PMU_CCPU_BOOT_REMAP_ADDR);
 
-	/* Use the high vector table */
+	/*                           */
 	reg = readl_relaxed(base + PRONTO_PMU_CCPU_CTL);
 	reg |= PRONTO_PMU_CCPU_CTL_REMAP_EN | PRONTO_PMU_CCPU_CTL_HIGH_IVT;
 	writel_relaxed(reg, base + PRONTO_PMU_CCPU_CTL);
 
-	/* Turn on AHB clock of common_ss */
+	/*                                */
 	reg = readl_relaxed(base + PRONTO_PMU_COMMON_AHB_CBCR);
 	reg |= PRONTO_PMU_COMMON_AHB_CBCR_CLK_EN;
 	writel_relaxed(reg, base + PRONTO_PMU_COMMON_AHB_CBCR);
 
-	/* Turn on CPU clock of common_ss */
+	/*                                */
 	reg = readl_relaxed(base + PRONTO_PMU_COMMON_CPU_CBCR);
 	reg |= PRONTO_PMU_COMMON_CPU_CBCR_CLK_EN;
 	writel_relaxed(reg, base + PRONTO_PMU_COMMON_CPU_CBCR);
 
-	/* Enable A2XB bridge */
+	/*                    */
 	reg = readl_relaxed(base + PRONTO_PMU_COMMON_CSR);
 	reg |= PRONTO_PMU_COMMON_CSR_A2XB_CFG_EN;
 	writel_relaxed(reg, base + PRONTO_PMU_COMMON_CSR);
 
-	/* Enable common_ss power */
+	/*                        */
 	reg = readl_relaxed(base + PRONTO_PMU_COMMON_GDSCR);
 	reg &= ~PRONTO_PMU_COMMON_GDSCR_SW_COLLAPSE;
 	writel_relaxed(reg, base + PRONTO_PMU_COMMON_GDSCR);
 
-	/* Wait for AHB clock to be on */
+	/*                             */
 	rc = readl_tight_poll_timeout(base + PRONTO_PMU_COMMON_AHB_CBCR,
 				      reg,
 				      !(reg & PRONTO_PMU_COMMON_AHB_CLK_OFF),
@@ -163,7 +163,7 @@ static int pil_pronto_reset(struct pil_desc *pil)
 		return rc;
 	}
 
-	/* Wait for CPU clock to be on */
+	/*                             */
 	rc = readl_tight_poll_timeout(base + PRONTO_PMU_COMMON_CPU_CBCR,
 				      reg,
 				      !(reg & PRONTO_PMU_COMMON_CPU_CLK_OFF),
@@ -173,7 +173,7 @@ static int pil_pronto_reset(struct pil_desc *pil)
 		return rc;
 	}
 
-	/* Deassert ARM9 software reset */
+	/*                              */
 	reg = readl_relaxed(base + PRONTO_PMU_SOFT_RESET);
 	reg &= ~PRONTO_PMU_SOFT_RESET_CRCM_CCPU_SOFT_RESET;
 	writel_relaxed(reg, base + PRONTO_PMU_SOFT_RESET);
@@ -187,7 +187,7 @@ static int pil_pronto_shutdown(struct pil_desc *pil)
 	int ret;
 	u32 reg, status;
 
-	/* Halt A2XB */
+	/*           */
 	writel_relaxed(1, drv->axi_halt_base + AXI_HALTREQ);
 	ret = readl_poll_timeout(drv->axi_halt_base + AXI_HALTACK,
 				status, status, 50, HALT_ACK_TIMEOUT_US);
@@ -198,16 +198,16 @@ static int pil_pronto_shutdown(struct pil_desc *pil)
 
 	writel_relaxed(0, drv->axi_halt_base + AXI_HALTREQ);
 
-	/* Assert reset to Pronto */
+	/*                        */
 	reg = readl_relaxed(drv->reset_base);
 	reg |= CLK_CTL_WCNSS_RESTART_BIT;
 	writel_relaxed(reg, drv->reset_base);
 
-	/* Wait for reset to complete */
+	/*                            */
 	mb();
 	usleep_range(1000, 2000);
 
-	/* Deassert reset to subsystem and wait for propagation */
+	/*                                                      */
 	reg = readl_relaxed(drv->reset_base);
 	reg &= ~CLK_CTL_WCNSS_RESTART_BIT;
 	writel_relaxed(reg, drv->reset_base);
@@ -273,7 +273,7 @@ static int __devinit pil_pronto_probe(struct platform_device *pdev)
 	desc->owner = THIS_MODULE;
 	desc->proxy_timeout = 10000;
 
-	/* TODO: need to add secure boot when the support is available */
+	/*                                                             */
 	desc->ops = &pil_pronto_ops;
 	dev_info(&pdev->dev, "using non-secure boot\n");
 
@@ -303,7 +303,7 @@ static int __devinit pil_pronto_probe(struct platform_device *pdev)
 	if (IS_ERR(drv->pil))
 		return PTR_ERR(drv->pil);
 
-	/* Initialize common_ss GDSCR to wait 4 cycles between states */
+	/*                                                            */
 	regval = readl_relaxed(drv->base + PRONTO_PMU_COMMON_GDSCR)
 		& PRONTO_PMU_COMMON_GDSCR_SW_COLLAPSE;
 	regval |= (2 << EN_REST_WAIT) | (2 << EN_FEW_WAIT)

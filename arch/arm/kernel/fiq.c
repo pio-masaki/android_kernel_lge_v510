@@ -39,7 +39,6 @@
 #include <linux/kernel.h>
 #include <linux/init.h>
 #include <linux/interrupt.h>
-#include <linux/irq.h>
 #include <linux/seq_file.h>
 
 #include <asm/cacheflush.h>
@@ -50,9 +49,9 @@
 
 static unsigned long no_fiq_insn;
 
-/* Default reacquire function
- * - we always relinquish FIQ control
- * - we always reacquire FIQ control
+/*                           
+                                     
+                                    
  */
 static int fiq_def_op(void *ref, int relinquish)
 {
@@ -133,19 +132,13 @@ void disable_fiq(int fiq)
 	disable_irq(fiq + FIQ_START);
 }
 
-void fiq_set_type(int fiq, unsigned int type)
-{
-	irq_set_irq_type(fiq + FIQ_START, type);
-}
-
 EXPORT_SYMBOL(set_fiq_handler);
-EXPORT_SYMBOL(__set_fiq_regs);	/* defined in fiqasm.S */
-EXPORT_SYMBOL(__get_fiq_regs);	/* defined in fiqasm.S */
+EXPORT_SYMBOL(__set_fiq_regs);	/*                     */
+EXPORT_SYMBOL(__get_fiq_regs);	/*                     */
 EXPORT_SYMBOL(claim_fiq);
 EXPORT_SYMBOL(release_fiq);
 EXPORT_SYMBOL(enable_fiq);
 EXPORT_SYMBOL(disable_fiq);
-EXPORT_SYMBOL(fiq_set_type);
 
 void __init init_FIQ(void)
 {

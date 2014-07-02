@@ -40,15 +40,15 @@
  */
 
 /*
- *
- * Airgo Networks, Inc proprietary. All rights reserved.
- * This file contains CFG functions for processing host messages.
- *
- * Author:      Kevin Nguyen
- * Date:        04/09/02
- * History:-
- * 04/09/02        Created.
- * --------------------------------------------------------------------
+  
+                                                        
+                                                                 
+  
+                            
+                        
+            
+                           
+                                                                       
  */
 #include "palTypes.h"
 #include "aniGlobal.h"
@@ -57,9 +57,9 @@
 #include "wlan_qct_wda.h"
 
 
-/*--------------------------------------------------------------------*/
-/* Static function prototypes                                         */
-/*--------------------------------------------------------------------*/
+/*                                                                    */
+/*                                                                    */
+/*                                                                    */
 static void ProcDnldRsp        (tpAniSirGlobal, tANI_U16, tANI_U32*);
 static void ProcGetReq         (tpAniSirGlobal, tANI_U16, tANI_U32*);
 static void ProcSetReq         (tpAniSirGlobal, tANI_U16, tANI_U32*);
@@ -69,11 +69,11 @@ static tANI_U8 CheckParam(tpAniSirGlobal, tANI_U16, tANI_U32, tANI_U32, tANI_U32
 static void GetStrValue(tANI_U8*, tANI_U8*, tANI_U32);
 
 
-/*--------------------------------------------------------------------*/
-/* Module global variables                                            */
-/*--------------------------------------------------------------------*/
+/*                                                                    */
+/*                                                                    */
+/*                                                                    */
 
-// CFG function table
+//                   
 void    (*gCfgFunc[])(tpAniSirGlobal, tANI_U16, tANI_U32*) =
 { ProcDnldRsp,
     ProcGetReq,
@@ -81,23 +81,23 @@ void    (*gCfgFunc[])(tpAniSirGlobal, tANI_U16, tANI_U32*) =
     ProcSetReqNoRsp
 };
 
-/**---------------------------------------------------------------------
- * cfgProcessMbMsg()
- *
- *FUNCTION:
- * CFG mailbox message processing function.
- *
- *LOGIC:
- *
- *ASSUMPTIONS:
- * None.
- *
- *NOTE:
- *
- * @param pMsg    Message pointer
- *
- * @return None.
- *
+/*                                                                      
+                    
+  
+           
+                                           
+  
+        
+  
+              
+        
+  
+       
+  
+                                 
+  
+                
+  
  */
 void
 cfgProcessMbMsg(tpAniSirGlobal pMac, tSirMbMsg *pMsg)
@@ -106,7 +106,7 @@ cfgProcessMbMsg(tpAniSirGlobal pMac, tSirMbMsg *pMsg)
     tANI_U16    len;
     tANI_U32   *pParam;
 
-    // Use type[7:0] as index to function table
+    //                                         
     index = CFG_GET_FUNC_INDX(pMsg->type);
 
     if (index >= (sizeof(gCfgFunc) / sizeof(gCfgFunc[0])))
@@ -114,31 +114,31 @@ cfgProcessMbMsg(tpAniSirGlobal pMac, tSirMbMsg *pMsg)
     len    = pMsg->msgLen - WNI_CFG_MB_HDR_LEN;
     pParam = ((tANI_U32*)pMsg) + 1;
 
-    // Call processing function
+    //                         
     gCfgFunc[index](pMac, len, pParam);
 
-    // Free up buffer
+    //               
     palFreeMemory( pMac->hHdd, (void*)pMsg);
 
-} /*** end cfgProcessMbMsg() ***/
+} /*                           */
 
-/**---------------------------------------------------------------------
- * ProcDnldRsp()
- *
- * FUNCTION:
- * This function processes CFG_DNLD_RSP message from host.
- *
- * LOGIC:
- *
- * ASSUMPTIONS:
- *
- * NOTE:
- *
- * @param length:  message length
- * @param pParam:  parameter list pointer
- *
- * @return None
- *
+/*                                                                      
+                
+  
+            
+                                                          
+  
+         
+  
+               
+  
+        
+  
+                                 
+                                         
+  
+               
+  
  */
 static void
 ProcDnldRsp(tpAniSirGlobal pMac, tANI_U16 length, tANI_U32 *pParam)
@@ -153,11 +153,11 @@ ProcDnldRsp(tpAniSirGlobal pMac, tANI_U16 length, tANI_U32 *pParam)
     tANI_U32    logLevel;
     tSirMsgQ    mmhMsg;
 
-    // First Dword must contain the AP or STA magic dword
+    //                                                   
     PELOGW(cfgLog(pMac, LOGW, FL("CFG size %d bytes MAGIC dword is 0x%x"),
            length, sirReadU32N((tANI_U8*)pParam) );)
 
-    // if the string is not correct, return failure
+    //                                             
         if (*pParam == CFG_STA_MAGIC_DWORD) {}
 
 
@@ -173,13 +173,13 @@ ProcDnldRsp(tpAniSirGlobal pMac, tANI_U16 length, tANI_U32 *pParam)
     pParam++;
     length -= 4;
 
-    // Verify message length
+    //                      
     {
         pMac->cfg.gCfgMaxIBufSize = CFG_STA_IBUF_MAX_SIZE;
         pMac->cfg.gCfgMaxSBufSize = CFG_STA_SBUF_MAX_SIZE;
     }
 
-    // Parse the Cfg header
+    //                     
     pHdr = (tpCfgBinHdr) pParam;
     pParam += (sizeof(tCfgBinHdr) >> 2);
     PELOGW(cfgLog(pMac, LOGW, FL("CFG hdr totParams %d intParams %d strBufSize %d/%d"),
@@ -211,7 +211,7 @@ ProcDnldRsp(tpAniSirGlobal pMac, tANI_U16 length, tANI_U32 *pParam)
         goto end;
     }
 
-    // Copy control array
+    //                   
     pDst = (tANI_U32*)pMac->cfg.gCfgEntry;
     pDstEnd = pDst + CFG_PARAM_MAX_NUM;
     pSrc = pParam;
@@ -219,7 +219,7 @@ ProcDnldRsp(tpAniSirGlobal pMac, tANI_U16 length, tANI_U32 *pParam)
     {
         *pDst++ = *pSrc++;
     }
-    // Copy default values
+    //                    
     pDst = pMac->cfg.gCfgIBuf;
     pDstEnd = pDst + pMac->cfg.gCfgMaxIBufSize;
     while (pDst < pDstEnd)
@@ -227,7 +227,7 @@ ProcDnldRsp(tpAniSirGlobal pMac, tANI_U16 length, tANI_U32 *pParam)
         *pDst++ = *pSrc++;
     }
 
-    // Copy min values
+    //                
     pDst = pMac->cfg.gCfgIBufMin;
     pDstEnd = pDst + pMac->cfg.gCfgMaxIBufSize;
     while (pDst < pDstEnd)
@@ -235,7 +235,7 @@ ProcDnldRsp(tpAniSirGlobal pMac, tANI_U16 length, tANI_U32 *pParam)
         *pDst++ = *pSrc++;
     }
 
-    // Copy max values
+    //                
     pDst = pMac->cfg.gCfgIBufMax;
     pDstEnd = pDst + pMac->cfg.gCfgMaxIBufSize;
     while (pDst < pDstEnd)
@@ -253,7 +253,7 @@ ProcDnldRsp(tpAniSirGlobal pMac, tANI_U16 length, tANI_U32 *pParam)
                    pMac->cfg.gCfgIBufMax[i]);)
         }
 
-    // Calculate max string buffer lengths for all string parameters
+    //                                                              
     bufEnd = pMac->cfg.gCfgMaxSBufSize;
     for (i = CFG_PARAM_MAX_NUM - 1; i >= 0; i--)
     {
@@ -272,7 +272,7 @@ ProcDnldRsp(tpAniSirGlobal pMac, tANI_U16 length, tANI_U32 *pParam)
         bufEnd = bufStart;
     }
 
-    // Initialize string defaults
+    //                           
     strSize = pHdr->sBufSize;
     while (strSize)
     {
@@ -318,12 +318,12 @@ ProcDnldRsp(tpAniSirGlobal pMac, tANI_U16 length, tANI_U32 *pParam)
         }
     }
 
-    // Set the default log level based on config
+    //                                          
     wlan_cfgGetInt(pMac, WNI_CFG_LOG_LEVEL, &logLevel);
     for (i = 0; i < LOG_ENTRY_NUM; i++)
         pMac->utils.gLogEvtLevel[i] = pMac->utils.gLogDbgLevel[i] = logLevel;
 
-    // Set status to READY
+    //                    
     pMac->cfg.gCfgStatus = CFG_SUCCESS;
     retVal = WNI_CFG_SUCCESS;
     PELOG1(cfgLog(pMac, LOG1, "<CFG> Completed successfully");)
@@ -333,12 +333,12 @@ ProcDnldRsp(tpAniSirGlobal pMac, tANI_U16 length, tANI_U32 *pParam)
     if ( retVal != WNI_CFG_SUCCESS )
         pMac->cfg.gCfgStatus = CFG_FAILURE;
 
-    // Send response message to host
+    //                              
     pMac->cfg.gParamList[WNI_CFG_DNLD_CNF_RES] = retVal;
     cfgSendHostMsg(pMac, WNI_CFG_DNLD_CNF, WNI_CFG_DNLD_CNF_LEN,
                    WNI_CFG_DNLD_CNF_NUM, pMac->cfg.gParamList, 0, 0);
 
-    // Notify WDA that the config has downloaded
+    //                                          
     mmhMsg.type = SIR_CFG_DOWNLOAD_COMPLETE_IND;
     mmhMsg.bodyptr = NULL;
     mmhMsg.bodyval = 0;
@@ -349,28 +349,28 @@ ProcDnldRsp(tpAniSirGlobal pMac, tANI_U16 length, tANI_U32 *pParam)
         PELOGE(cfgLog(pMac, LOGE, FL("WDAPostMsgApi failed!"));)
     }
 
-} /*** end procDnldRsp() ***/
+} /*                       */
 
 
-/**---------------------------------------------------------------------
- * ProcGetReq()
- *
- * FUNCTION:
- * This function processes CFG_GET_REQ message from host.
- *
- * LOGIC:
- *
- * ASSUMPTIONS:
- *
- * NOTE:
- * For every parameter ID specified on the list, CFG will send a separate
- * CFG_GET_RSP back to host.
- *
- * @param length:  message length
- * @param pParam:  parameter list pointer
- *
- * @return None
- *
+/*                                                                      
+               
+  
+            
+                                                         
+  
+         
+  
+               
+  
+        
+                                                                         
+                            
+  
+                                 
+                                         
+  
+               
+  
  */
 static void
 ProcGetReq(tpAniSirGlobal pMac, tANI_U16 length, tANI_U32 *pParam)
@@ -395,7 +395,7 @@ ProcGetReq(tpAniSirGlobal pMac, tANI_U16 length, tANI_U32 *pParam)
     }
     else
     {
-        // Process all parameter ID's on the list
+        //                                       
         while (length >= sizeof(tANI_U32))
         {
             cfgId = (tANI_U16)*pParam++;
@@ -404,12 +404,12 @@ ProcGetReq(tpAniSirGlobal pMac, tANI_U16 length, tANI_U32 *pParam)
 
             PELOG1(cfgLog(pMac, LOG1, FL("Cfg get param %d"), cfgId);)
 
-            // Check for valid parameter ID, etc...
+            //                                     
             if (CheckParam(pMac, cfgId, CFG_CTL_RE, WNI_CFG_WO_PARAM, &result))
             {
                 if ((pMac->cfg.gCfgEntry[cfgId].control & CFG_CTL_INT) != 0)
                 {
-                    // Get integer parameter
+                    //                      
                     result = (wlan_cfgGetInt(pMac, cfgId, &value) == eSIR_SUCCESS ?
                               WNI_CFG_SUCCESS : WNI_CFG_OTHER_ERROR);
                     pValue   = &value;
@@ -417,7 +417,7 @@ ProcGetReq(tpAniSirGlobal pMac, tANI_U16 length, tANI_U32 *pParam)
                 }
                 else
                 {
-                    // Get string parameter
+                    //                     
                     valueLen = sizeof(pMac->cfg.gSBuffer);
                     result = (wlan_cfgGetStr(pMac, cfgId, pMac->cfg.gSBuffer, &valueLen)
                               == eSIR_SUCCESS ?
@@ -431,48 +431,48 @@ ProcGetReq(tpAniSirGlobal pMac, tANI_U16 length, tANI_U32 *pParam)
                 result = WNI_CFG_INVALID_LEN;
             }
 
-            // Send response message to host
+            //                              
             pMac->cfg.gParamList[WNI_CFG_GET_RSP_RES]  = result;
             pMac->cfg.gParamList[WNI_CFG_GET_RSP_PID]  = cfgId;
             pMac->cfg.gParamList[WNI_CFG_GET_RSP_PLEN] = valueLen;
 
-            // We need to round up buffer length to word-increment
+            //                                                    
             valueLen = (((valueLen + 3) >> 2) << 2);
             cfgSendHostMsg(pMac, WNI_CFG_GET_RSP,
                            WNI_CFG_GET_RSP_PARTIAL_LEN + valueLen,
                            WNI_CFG_GET_RSP_NUM, pMac->cfg.gParamList, valueLen, pValue);
 
-            // Decrement length
+            //                 
             length -= sizeof(tANI_U32);
         }
     }
 
-} /*** end procGetReq() ***/
+} /*                      */
 
 
 
-/**---------------------------------------------------------------------
- * ProcSetReqInternal()
- *
- * FUNCTION:
- * This function processes CFG_SET_REQ message from host.
- *
- * LOGIC:
- *
- * ASSUMPTIONS:
- * - The message content is coded in TLV format.
- * - For string parameter, the length field is byte accurate.  However,
- *   the next TLV set will begin on the next word boundary.
- *
- * NOTE:
- * - For every parameter ID specified on the list, CFG will send a separate
- * CFG_SET_RSP back to host.
- *
- * @param length:  message length
- * @param pParam:  parameter list pointer
- * @param fRsp: whether to send response to host. TRUE means sending.
- * @return None
- *
+/*                                                                      
+                       
+  
+            
+                                                         
+  
+         
+  
+               
+                                                
+                                                                       
+                                                           
+  
+        
+                                                                           
+                            
+  
+                                 
+                                         
+                                                                     
+               
+  
  */
 static void
 ProcSetReqInternal(tpAniSirGlobal pMac, tANI_U16 length, tANI_U32 *pParam, tANI_BOOLEAN fRsp)
@@ -481,8 +481,8 @@ ProcSetReqInternal(tpAniSirGlobal pMac, tANI_U16 length, tANI_U32 *pParam, tANI_
     tANI_U32    value, result;
 
     PELOG1(cfgLog(pMac, LOGW, FL("Rcvd cfg set request %d bytes"), length);)
-    //for (i=0; i<length/4; i++)
-      //  PELOG2(cfgLog(pMac, LOG2, FL("[%2d] 0x%08x"), i, pParam[i]);)
+    //                          
+      //                                                               
 
     if (!pMac->cfg.gCfgStatus)
     {
@@ -498,23 +498,23 @@ ProcSetReqInternal(tpAniSirGlobal pMac, tANI_U16 length, tANI_U32 *pParam, tANI_
     }
     else
     {
-        // Process all TLVs in buffer
+        //                           
         while (length >= (sizeof(tANI_U32) * 2))
         {
             cfgId    = (tANI_U16) *pParam++;
             valueLen = (tANI_U16) *pParam++;
             length -= (sizeof(tANI_U32) * 2);
-            // value length rounded up to a 4 byte multiple
+            //                                             
             valueLenRoundedUp4 = (((valueLen + 3) >> 2) << 2);
 
-            // Check for valid request before proceeding
+            //                                          
             if (CheckParam(pMac, cfgId, CFG_CTL_WE, WNI_CFG_RO_PARAM, &result))
             {
                 PELOG1(cfgLog(pMac, LOGW, (char *) gCfgParamName[cfgId]);)
-                // Process integer parameter
+                //                          
                 if ((pMac->cfg.gCfgEntry[cfgId].control & CFG_CTL_INT) != 0)
                 {
-                    // Set VALUE
+                    //          
                     if (valueLen != sizeof(tANI_U32))
                     {
                         PELOGE(cfgLog(pMac, LOGE, FL("Invalid value length %d in set param %d (tot %d)"),
@@ -542,7 +542,7 @@ ProcSetReqInternal(tpAniSirGlobal pMac, tANI_U16 length, tANI_U32 *pParam, tANI_
                         }
                     }
                 }
-                // Process string parameter
+                //                         
                 else
                 {
                     if (valueLenRoundedUp4 > length)
@@ -579,7 +579,7 @@ ProcSetReqInternal(tpAniSirGlobal pMac, tANI_U16 length, tANI_U32 *pParam, tANI_
                 result = WNI_CFG_INVALID_LEN;
             }
 
-            // Send confirm message to host
+            //                             
             pMac->cfg.gParamList[WNI_CFG_SET_CNF_RES] = result;
             pMac->cfg.gParamList[WNI_CFG_SET_CNF_PID] = cfgId;
             if( fRsp )
@@ -619,35 +619,35 @@ ProcSetReqNoRsp(tpAniSirGlobal pMac, tANI_U16 length, tANI_U32 *pParam)
 
 
 
-/**---------------------------------------------------------------------
- * CheckParam()
- *
- * FUNCTION:
- * This function is called to perform various check on a parameter.
- *
- * LOGIC:
- * -  If cfgId is out of bound or parameter is not valid, result
- *    WNI_CFG_INVALID_PID is returned at address specified in pResult.
- *
- * -  If specified 'flag' is not set in the parameter control entry,
- *    'failedResult' is returned at address specified in pResult.
- *
- * ASSUMPTIONS:
- * Since this function is used internally, 'pResult' is always valid.
- *
- * NOTE:
- *
- * @param None
- *
- * @return true:   Parameter is valid and matches checked condition \n
- * @return false:  Parameter either is not valid or does not match
- *                 checked condition.
- *
+/*                                                                      
+               
+  
+            
+                                                                   
+  
+         
+                                                                
+                                                                      
+  
+                                                                    
+                                                                 
+  
+               
+                                                                     
+  
+        
+  
+              
+  
+                                                                      
+                                                                  
+                                     
+  
  */
 static tANI_U8
 CheckParam(tpAniSirGlobal pMac, tANI_U16 cfgId, tANI_U32 flag, tANI_U32 failedResult, tANI_U32 *pResult)
 {
-    // Check if parameter ID is out of bound
+    //                                      
     if (cfgId >= CFG_PARAM_MAX_NUM)
     {
         PELOGE(cfgLog(pMac, LOGE, FL("Invalid param id %d"), cfgId);)
@@ -655,7 +655,7 @@ CheckParam(tpAniSirGlobal pMac, tANI_U16 cfgId, tANI_U32 flag, tANI_U32 failedRe
     }
     else
     {
-        // Check if parameter is valid
+        //                            
         if ((pMac->cfg.gCfgEntry[cfgId].control & CFG_CTL_VALID) == 0)
         {
             PELOGE(cfgLog(pMac, LOGE, FL("Param id %d not valid"), cfgId);)
@@ -663,7 +663,7 @@ CheckParam(tpAniSirGlobal pMac, tANI_U16 cfgId, tANI_U32 flag, tANI_U32 failedRe
         }
         else
         {
-            // Check control field against flag
+            //                                 
             if ((pMac->cfg.gCfgEntry[cfgId].control & flag) == 0)
             {
                 PELOGE(cfgLog(pMac, LOGE, FL("Param id %d wrong permissions %x"),
@@ -676,27 +676,27 @@ CheckParam(tpAniSirGlobal pMac, tANI_U16 cfgId, tANI_U32 flag, tANI_U32 failedRe
     }
     return(false);
 
-} /*** cfgParamCheck() ***/
+} /*                     */
 
 
-/**---------------------------------------------------------------------
- * GetStrValue()
- *
- * FUNCTION:
- * This function copies a string value from the specified buffer.
- *
- * LOGIC:
- *
- * ASSUMPTIONS:
- *
- * NOTE:
- *
- * @param pBuf:    input data buffer
- * @param pValue:  address where data is returned
- * @param length:  number of bytes to copy
- *
- * @return None
- *
+/*                                                                      
+                
+  
+            
+                                                                 
+  
+         
+  
+               
+  
+        
+  
+                                    
+                                                 
+                                          
+  
+               
+  
  */
 static void
 GetStrValue(tANI_U8 *pBuf, tANI_U8 *pValue, tANI_U32 length)
@@ -706,27 +706,27 @@ GetStrValue(tANI_U8 *pBuf, tANI_U8 *pValue, tANI_U32 length)
     pEnd = pValue + length;
     while (pValue < pEnd)
         *pValue++ = *pBuf++;
-} /*** end GetStrValue() ***/
+} /*                       */
 
 
-/**---------------------------------------------------------------------
- * processCfgDownloadReq()
- *
- * FUNCTION: This function does the Cfg Download and is invoked
- *           only in the case of Prima or the Integrated SOC
- *           solutions. Not applicable to Volans or Libra
- *
- * LOGIC:
- *
- * ASSUMPTIONS:
- *
- * NOTE:
- *
- * @param length:  message length
- * @param pConfig:  parameter list pointer
- *
- * @return None
- *
+/*                                                                      
+                          
+  
+                                                               
+                                                            
+                                                         
+  
+         
+  
+               
+  
+        
+  
+                                 
+                                          
+  
+               
+  
  */
 
 void
@@ -742,11 +742,11 @@ processCfgDownloadReq(tpAniSirGlobal pMac, tANI_U16 length,
     tpCfgBinHdr pHdr;
     tANI_U32    logLevel;
 
-    // First Dword must contain the AP or STA magic dword
+    //                                                   
     PELOGW(cfgLog(pMac, LOGW, FL("CFG size %d bytes MAGIC dword is 0x%x"),
            length, sirReadU32N((tANI_U8*)pConfig) );)
 
-    // if the string is not correct, return failure
+    //                                             
     if (CFG_STA_MAGIC_DWORD != *pConfig)
     {
         PELOGE(cfgLog(pMac, LOGE, FL("Invalid magic dword 0x%x"),
@@ -758,11 +758,11 @@ processCfgDownloadReq(tpAniSirGlobal pMac, tANI_U16 length,
     pConfig++;
     length -= 4;
 
-    // Verify message length
+    //                      
     pMac->cfg.gCfgMaxIBufSize = CFG_STA_IBUF_MAX_SIZE;
     pMac->cfg.gCfgMaxSBufSize = CFG_STA_SBUF_MAX_SIZE;
 
-    // Parse the Cfg header
+    //                     
     pHdr = (tpCfgBinHdr) pConfig;
     pConfig += (sizeof(tCfgBinHdr) >> 2);
 
@@ -796,7 +796,7 @@ processCfgDownloadReq(tpAniSirGlobal pMac, tANI_U16 length,
         goto end;
     }
 
-    // Copy control array
+    //                   
     pDst = (tANI_U32*)pMac->cfg.gCfgEntry;
     pDstEnd = pDst + CFG_PARAM_MAX_NUM;
     pSrc = pConfig;
@@ -805,7 +805,7 @@ processCfgDownloadReq(tpAniSirGlobal pMac, tANI_U16 length,
         *pDst++ = *pSrc++;
     }
 
-    // Copy default values
+    //                    
     pDst = pMac->cfg.gCfgIBuf;
     pDstEnd = pDst + pMac->cfg.gCfgMaxIBufSize;
     while (pDst < pDstEnd)
@@ -813,7 +813,7 @@ processCfgDownloadReq(tpAniSirGlobal pMac, tANI_U16 length,
         *pDst++ = *pSrc++;
     }
 
-    // Copy min values
+    //                
     pDst = pMac->cfg.gCfgIBufMin;
     pDstEnd = pDst + pMac->cfg.gCfgMaxIBufSize;
     while (pDst < pDstEnd)
@@ -821,7 +821,7 @@ processCfgDownloadReq(tpAniSirGlobal pMac, tANI_U16 length,
         *pDst++ = *pSrc++;
     }
 
-    // Copy max values
+    //                
     pDst = pMac->cfg.gCfgIBufMax;
     pDstEnd = pDst + pMac->cfg.gCfgMaxIBufSize;
     while (pDst < pDstEnd)
@@ -841,7 +841,7 @@ processCfgDownloadReq(tpAniSirGlobal pMac, tANI_U16 length,
         }
     }
 
-    // Calculate max string buffer lengths for all string parameters
+    //                                                              
     bufEnd = pMac->cfg.gCfgMaxSBufSize;
     for (i = CFG_PARAM_MAX_NUM - 1; i >= 0; i--)
     {
@@ -860,7 +860,7 @@ processCfgDownloadReq(tpAniSirGlobal pMac, tANI_U16 length,
         bufEnd = bufStart;
     }
 
-    // Initialize string defaults
+    //                           
     strSize = pHdr->sBufSize;
     while (strSize)
     {
@@ -912,12 +912,12 @@ processCfgDownloadReq(tpAniSirGlobal pMac, tANI_U16 length,
         }
     }
 
-    // Set the default log level based on config
+    //                                          
     wlan_cfgGetInt(pMac, WNI_CFG_LOG_LEVEL, &logLevel);
     for (i = 0; i < LOG_ENTRY_NUM; i++)
         pMac->utils.gLogEvtLevel[i] = pMac->utils.gLogDbgLevel[i] = logLevel;
 
-    // Set status to READY
+    //                    
     pMac->cfg.gCfgStatus = CFG_SUCCESS;
     retVal = WNI_CFG_SUCCESS;
     PELOG1(cfgLog(pMac, LOG1, "<CFG> Completed successfully");)
@@ -929,7 +929,7 @@ end:
 
     pMac->cfg.gParamList[WNI_CFG_DNLD_CNF_RES] = retVal;
 
-} /*** end ProcessDownloadReq() ***/
+} /*                              */
 
 
 

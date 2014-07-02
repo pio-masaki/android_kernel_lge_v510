@@ -59,7 +59,7 @@ static int32_t afe_callback(struct apr_client_data *data, void *priv)
 			atomic_set(&this_afe.state, 0);
 			this_afe.apr = NULL;
 		}
-		/* send info to user */
+		/*                   */
 		pr_debug("task_name = %s pid = %d\n",
 			this_afe.task->comm, this_afe.task->pid);
 		return 0;
@@ -75,7 +75,7 @@ static int32_t afe_callback(struct apr_client_data *data, void *priv)
 		pr_debug("%s:opcode = 0x%x cmd = 0x%x status = 0x%x token=%d\n",
 					__func__, data->opcode,
 					payload[0], payload[1], data->token);
-		/* payload[1] contains the error status for response */
+		/*                                                   */
 		if (payload[1] != 0) {
 			atomic_set(&this_afe.status, -1);
 			pr_err("%s: cmd = 0x%x returned error = 0x%x\n",
@@ -239,7 +239,7 @@ int afe_q6_interface_prepare(void)
 }
 static void afe_send_cal_block(int32_t path, u16 port_id)
 {
-	/* To come back */
+	/*              */
 }
 
 void afe_send_cal(u16 port_id)
@@ -253,7 +253,7 @@ void afe_send_cal(u16 port_id)
 }
 
 int afe_port_start(u16 port_id, union afe_port_config *afe_config,
-	u32 rate) /* This function is no blocking */
+	u32 rate) /*                              */
 {
 	struct afe_port_cmd_device_start start;
 	struct afe_audioif_config_command config;
@@ -366,7 +366,7 @@ int afe_port_start(u16 port_id, union afe_port_config *afe_config,
 		ret = -EINVAL;
 		goto fail_cmd;
 	}
-	/* send AFE cal */
+	/*              */
 	afe_send_cal(port_id);
 
 	start.hdr.hdr_field = APR_HDR_FIELD(APR_MSG_TYPE_SEQ_CMD,
@@ -686,7 +686,7 @@ int afe_loopback_gain(u16 port_id, u16 volume)
 	if (q6audio_validate_port(port_id) < 0)
 		return -EINVAL;
 
-	/* RX ports numbers are even .TX ports numbers are odd. */
+	/*                                                      */
 	if (port_id % 2 == 0) {
 		pr_err("%s: Failed : afe loopback gain only for TX ports. port_id %d\n",
 				__func__, port_id);
@@ -904,7 +904,7 @@ int afe_stop_pseudo_port(u16 port_id)
 	return 0;
 }
 
-/*bharath, memory map handle needs to be stored by AFE client */
+/*                                                            */
 int afe_cmd_memory_map(u32 dma_addr_p, u32 dma_buf_sz)
 {
 	int ret = 0;
@@ -949,7 +949,7 @@ int afe_cmd_memory_map(u32 dma_addr_p, u32 dma_buf_sz)
 	mregion->mem_pool_id = ADSP_MEMORY_MAP_SHMEM8_4K_POOL;
 	mregion->num_regions = 1;
 	mregion->property_flag = 0x00;
-	/* Todo */
+	/*      */
 	index = mregion->hdr.token = IDX_RSVD_2;
 
 	payload = ((u8 *) mmap_region_cmd +
@@ -1076,7 +1076,7 @@ int afe_cmd_memory_unmap(u32 mem_map_handle)
 	mregion.hdr.opcode = AFE_SERVICE_CMD_SHARED_MEM_UNMAP_REGIONS;
 	mregion.mem_map_handle = mem_map_handle;
 
-	/* Todo */
+	/*      */
 	index = mregion.hdr.token = IDX_RSVD_2;
 
 	atomic_set(&this_afe.state, 1);
@@ -1504,9 +1504,9 @@ int afe_sidetone(u16 tx_port_id, u16 rx_port_id, u16 enable, uint16_t gain)
 	cmd_sidetone.hdr.dest_port = 0;
 	cmd_sidetone.hdr.token = 0;
 	cmd_sidetone.hdr.opcode = AFE_PORT_CMD_SET_PARAM_V2;
-	/* should it be rx or tx port id ?? , bharath*/
+	/*                                           */
 	cmd_sidetone.param.port_id = tx_port_id;
-	/* size of data param & payload */
+	/*                              */
 	cmd_sidetone.param.payload_size = (sizeof(cmd_sidetone) -
 			sizeof(struct apr_hdr) -
 			sizeof(struct afe_port_cmd_set_param_v2));
@@ -1515,7 +1515,7 @@ int afe_sidetone(u16 tx_port_id, u16 rx_port_id, u16 enable, uint16_t gain)
 	cmd_sidetone.param.mem_map_handle = 0x00;
 	cmd_sidetone.pdata.module_id = AFE_MODULE_LOOPBACK;
 	cmd_sidetone.pdata.param_id = AFE_PARAM_ID_LOOPBACK_CONFIG;
-	/* size of actual payload only */
+	/*                             */
 	cmd_sidetone.pdata.param_size =  cmd_sidetone.param.payload_size -
 				sizeof(struct afe_port_param_data_v2);
 
@@ -1600,9 +1600,9 @@ int afe_convert_virtual_to_portid(u16 port_id)
 	int ret;
 
 	/*
-	 * if port_id is virtual, convert to physical..
-	 * if port_id is already physical, return physical
-	 */
+                                                
+                                                   
+  */
 	if (afe_validate_port(port_id) < 0) {
 		if (port_id == RT_PROXY_DAI_001_RX ||
 		    port_id == RT_PROXY_DAI_001_TX ||

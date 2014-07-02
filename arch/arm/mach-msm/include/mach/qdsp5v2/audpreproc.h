@@ -39,7 +39,7 @@
 #define SOURCE_PIPE_1	0x0001
 #define SOURCE_PIPE_0	0x0000
 
-/* event callback routine prototype*/
+/*                                 */
 typedef void (*audpreproc_event_func)(void *private, unsigned id, void *msg);
 
 struct audpreproc_event_callback {
@@ -47,13 +47,13 @@ struct audpreproc_event_callback {
 	void *private;
 };
 
-/*holds audrec information*/
+/*                        */
 struct audrec_session_info {
 	int session_id;
 	int sampling_freq;
 };
 
-/* Exported common api's from audpreproc layer */
+/*                                             */
 int audpreproc_aenc_alloc(unsigned enc_type, const char **module_name,
 		unsigned *queue_id);
 void audpreproc_aenc_free(int enc_id);
@@ -93,4 +93,4 @@ void get_audrec_session_info(int id, struct audrec_session_info *info);
 
 int audpreproc_dsp_set_lvnv(
 	struct audpreproc_cmd_cfg_lvnv_param *preproc_lvnv, unsigned len);
-#endif /* _MACH_QDSP5_V2_AUDPREPROC_H */
+#endif /*                             */

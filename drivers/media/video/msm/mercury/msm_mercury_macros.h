@@ -59,7 +59,7 @@
 #define in_dword_masked(addr, mask)	(inpdw(addr) & mask)
 #define out_dword(addr, val)			 outpdw(addr, val)
 
-/* shadowed, masked output for write-only registers */
+/*                                                  */
 #define out_byte_masked(io, mask, val, shadow)  \
 	do { \
 		shadow = (shadow & (word)(~(mask))) | \

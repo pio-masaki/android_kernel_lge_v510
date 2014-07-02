@@ -24,10 +24,11 @@
 #include "msm_mercury_macros.h"
 #include "msm_mercury_hw_reg.h"
 
+#define UINT32_MAX    (4294967295U)
 static struct msm_mercury_core_buf out_buf_local;
 static struct msm_mercury_core_buf in_buf_local;
 
-/*************** queue helper ****************/
+/*                                           */
 inline void msm_mercury_q_init(char const *name, struct msm_mercury_q *q_p)
 {
 	MCR_DBG("%s:%d] %s\n", __func__, __LINE__, name);
@@ -106,7 +107,7 @@ inline int msm_mercury_q_in_buf(struct msm_mercury_q *q_p,
 
 inline int msm_mercury_q_wait(struct msm_mercury_q *q_p)
 {
-	int tm = MAX_SCHEDULE_TIMEOUT; /* 500ms */
+	int tm = MAX_SCHEDULE_TIMEOUT; /*       */
 	int rc;
 
 	MCR_DBG("%s:%d %s wait\n", __func__, __LINE__, q_p->name);
@@ -179,7 +180,7 @@ inline void msm_mercury_q_cleanup(struct msm_mercury_q *q_p)
 	q_p->unblck = 0;
 }
 
-/*************** event queue ****************/
+/*                                          */
 int msm_mercury_framedone_irq(struct msm_mercury_device *pmercury_dev)
 {
 	MCR_DBG("%s:%d] Enter\n", __func__, __LINE__);
@@ -353,13 +354,13 @@ int msm_mercury_irq(int event, void *context, void *data)
 
 	switch (event) {
 	case MSM_MERCURY_HW_IRQ_SW_RESET_ACK:
-		/* wake up evt_q*/
+		/*              */
 		MCR_DBG("(%d)%s Wake up event q from Reset IRQ\n", __LINE__,
 			__func__);
 		msm_mercury_q_wakeup(&pmercury_dev->evt_q);
 		break;
 	case MSM_MERCURY_HW_IRQ_WR_EOI_ACK:
-		/*wake up evt_q*/
+		/*             */
 		MCR_DBG("%d%s Wake up eventq from WR_EOI IRQ\n", __LINE__,
 			__func__);
 		msm_mercury_q_wr_eoi(&pmercury_dev->evt_q);
@@ -383,7 +384,7 @@ int __msm_mercury_open(struct msm_mercury_device *pmercury_dev)
 
 	mutex_lock(&pmercury_dev->lock);
 	if (pmercury_dev->open_count) {
-		/* only open once */
+		/*                */
 		MCR_PR_ERR("%s:%d] busy\n", __func__, __LINE__);
 		mutex_unlock(&pmercury_dev->lock);
 		return -EBUSY;
@@ -470,7 +471,7 @@ int msm_mercury_ioctl_hw_cmds(struct msm_mercury_device *pmercury_dev,
 	void * __user arg)
 {
 	int is_copy_to_user;
-	int len;
+	uint32_t len;
 	uint32_t m;
 	struct msm_mercury_hw_cmds *hw_cmds_p;
 	struct msm_mercury_hw_cmd *hw_cmd_p;
@@ -479,6 +480,13 @@ int msm_mercury_ioctl_hw_cmds(struct msm_mercury_device *pmercury_dev,
 		MCR_PR_ERR("%s:%d] failed\n", __func__, __LINE__);
 		return -EFAULT;
 	}
+
+    if ((m == 0) || (m > ((UINT32_MAX-sizeof(struct msm_mercury_hw_cmds))/
+        sizeof(struct msm_mercury_hw_cmd)))) {
+        MCR_PR_ERR("%s:%d] outof range of hwcmds\n",
+        __func__, __LINE__);
+        return -EINVAL;
+    }
 
 	len = sizeof(struct msm_mercury_hw_cmds) +
 		sizeof(struct msm_mercury_hw_cmd) * (m - 1);

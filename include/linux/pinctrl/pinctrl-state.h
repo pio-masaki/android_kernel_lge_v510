@@ -1,5 +1,5 @@
 /*
- * Standard pin control state definitions
+                                         
  */
 
 #define PINCTRL_STATE_DEFAULT "default"

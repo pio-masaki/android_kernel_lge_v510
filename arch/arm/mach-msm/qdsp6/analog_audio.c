@@ -25,7 +25,7 @@
 
 void analog_init(void)
 {
-	/* stereo pmic init */
+	/*                  */
 	pmic_spkr_set_gain(LEFT_SPKR, SPKR_GAIN_PLUS12DB);
 	pmic_spkr_set_gain(RIGHT_SPKR, SPKR_GAIN_PLUS12DB);
 	pmic_mic_set_volt(MIC_VOLT_1_80V);
@@ -36,7 +36,7 @@ void analog_init(void)
 void analog_headset_enable(int en)
 {
 	pr_debug("[%s:%s] en = %d\n", __MM_FILE__, __func__, en);
-	/* enable audio amp */
+	/*                  */
 	gpio_set_value(GPIO_HEADSET_AMP, !!en);
 }
 
@@ -57,7 +57,7 @@ void analog_speaker_enable(int en)
 		pmic_spkr_en(LEFT_SPKR, 1);
 		pmic_spkr_en(RIGHT_SPKR, 1);
 		
-		/* unmute */
+		/*        */
 		pmic_spkr_en_mute(LEFT_SPKR, 1);
 		pmic_spkr_en_mute(RIGHT_SPKR, 1);
 	} else {

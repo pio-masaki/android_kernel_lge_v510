@@ -42,11 +42,11 @@
 #include <mach/msm_memtypes.h>
 
 #define META_OUT_SIZE	24
-/* FRAME_NUM must be a power of two */
+/*                                  */
 #define FRAME_NUM	8
-#define QCELP_FRAME_SIZE	36 /* 36 bytes data */
-#define FRAME_SIZE	(22 * 2) /* 36 bytes data */
- /* 36 bytes data  + 24 meta field*/
+#define QCELP_FRAME_SIZE	36 /*               */
+#define FRAME_SIZE	(22 * 2) /*               */
+ /*                               */
 #define NT_FRAME_SIZE	(QCELP_FRAME_SIZE + META_OUT_SIZE)
 #define DMASZ		(NT_FRAME_SIZE * FRAME_NUM)
 #define OUT_FRAME_NUM	(2)
@@ -56,8 +56,8 @@
 
 #define AUDPREPROC_QCELP_EOS_FLG_OFFSET 0x0A
 #define AUDPREPROC_QCELP_EOS_FLG_MASK 0x01
-#define AUDPREPROC_QCELP_EOS_NONE 0x0 /* No EOS detected */
-#define AUDPREPROC_QCELP_EOS_SET 0x1 /* EOS set in meta field */
+#define AUDPREPROC_QCELP_EOS_NONE 0x0 /*                 */
+#define AUDPREPROC_QCELP_EOS_SET 0x1 /*                       */
 
 struct buffer {
 	void *data;
@@ -80,29 +80,29 @@ struct audio_in {
 	struct mutex read_lock;
 	wait_queue_head_t wait;
 	wait_queue_head_t wait_enable;
-	/*write section*/
+	/*             */
 	struct buffer out[OUT_FRAME_NUM];
 
 	uint8_t out_head;
 	uint8_t out_tail;
-	uint8_t out_needed;	/* number of buffers the dsp is waiting for */
+	uint8_t out_needed;	/*                                          */
 	uint32_t out_count;
 
 	struct mutex write_lock;
 	wait_queue_head_t write_wait;
-	int32_t out_phys; /* physical address of write buffer */
+	int32_t out_phys; /*                                  */
 	char *out_data;
-	int mfield; /* meta field embedded in data */
-	int wflush; /*write flush */
-	int rflush; /*read flush*/
+	int mfield; /*                             */
+	int wflush; /*            */
+	int rflush; /*          */
 	int out_frame_cnt;
 
 	struct msm_adsp_module *audrec;
 
-	struct audrec_session_info session_info; /*audrec session info*/
+	struct audrec_session_info session_info; /*                   */
 
-	/* configuration to use on next enable */
-	uint32_t buffer_size; /* Frame size (36 bytes) */
+	/*                                     */
+	uint32_t buffer_size; /*                       */
 	uint32_t samp_rate;
 	uint32_t channel_mode;
 	uint32_t enc_type;
@@ -111,9 +111,9 @@ struct audio_in {
 	uint32_t rec_mode;
 
 	uint32_t dsp_cnt;
-	uint32_t in_head; /* next buffer dsp will write */
-	uint32_t in_tail; /* next buffer read() will read */
-	uint32_t in_count; /* number of buffers available to read() */
+	uint32_t in_head; /*                            */
+	uint32_t in_tail; /*                              */
+	uint32_t in_count; /*                                       */
 	uint32_t mode;
 	uint32_t eos_ack;
 	uint32_t flush_ack;
@@ -122,14 +122,14 @@ struct audio_in {
 	unsigned queue_ids;
 	uint16_t enc_id;
 
-	uint16_t source; /* Encoding source bit mask */
+	uint16_t source; /*                          */
 	uint32_t device_events;
 	uint32_t in_call;
 	uint32_t dev_cnt;
 	int voice_state;
 	spinlock_t dev_lock;
 
-	/* data allocated for various buffers */
+	/*                                    */
 	char *data;
 	dma_addr_t phys;
 	void *map_v_read;
@@ -138,7 +138,7 @@ struct audio_in {
 	int opened;
 	int enabled;
 	int running;
-	int stopped; /* set when stopped, cleared on flush */
+	int stopped; /*                                    */
 	char *build_id;
 };
 
@@ -147,7 +147,7 @@ struct audio_frame {
 	uint16_t frame_count_msw;
 	uint16_t frame_length;
 	uint16_t erased_pcm;
-	unsigned char raw_bitstream[]; /* samples */
+	unsigned char raw_bitstream[]; /*         */
 } __attribute__((packed));
 
 struct audio_frame_nt {
@@ -163,7 +163,7 @@ struct audio_frame_nt {
 	uint16_t time_stamp_msw;
 	uint16_t nflag_lsw;
 	uint16_t nflag_msw;
-	unsigned char raw_bitstream[]; /* samples */
+	unsigned char raw_bitstream[]; /*         */
 } __attribute__((packed));
 
 struct qcelp_encoded_meta_out {
@@ -176,7 +176,7 @@ struct qcelp_encoded_meta_out {
 	uint16_t nflag_msw;
 };
 
-/* Audrec Queue command sent macro's */
+/*                                   */
 #define audrec_send_bitstreamqueue(audio, cmd, len) \
 	msm_adsp_write(audio->audrec, ((audio->queue_ids & 0xFFFF0000) >> 16),\
 			cmd, len)
@@ -185,7 +185,7 @@ struct qcelp_encoded_meta_out {
 	msm_adsp_write(audio->audrec, (audio->queue_ids & 0x0000FFFF),\
 			cmd, len)
 
-/* DSP command send functions */
+/*                            */
 static int audqcelp_in_enc_config(struct audio_in *audio, int enable);
 static int audqcelp_in_param_config(struct audio_in *audio);
 static int audqcelp_in_mem_config(struct audio_in *audio);
@@ -234,11 +234,11 @@ static void qcelp_in_listener(u32 evt_id, union auddev_evt_data *evt_payload,
 			break;
 
 		if (audio->mode == MSM_AUD_ENC_MODE_TUNNEL) {
-			/* Turn of as per source */
+			/*                       */
 			if (audio->source)
 				audqcelp_in_record_config(audio, 1);
 			else
-				/* Turn off all */
+				/*              */
 				audqcelp_in_record_config(audio, 0);
 		}
 	}
@@ -265,7 +265,7 @@ static void qcelp_in_listener(u32 evt_id, union auddev_evt_data *evt_payload,
 	}
 }
 
-/* ------------------- dsp preproc event handler--------------------- */
+/*                                                                    */
 static void audpreproc_dsp_event(void *data, unsigned id,  void *msg)
 {
 	struct audio_in *audio = data;
@@ -276,7 +276,7 @@ static void audpreproc_dsp_event(void *data, unsigned id,  void *msg)
 
 		MM_ERR("ERROR_MSG: stream id %d err idx %d\n",
 		err_msg->stream_id, err_msg->aud_preproc_err_idx);
-		/* Error case */
+		/*            */
 		wake_up(&audio->wait_enable);
 		break;
 	}
@@ -290,7 +290,7 @@ static void audpreproc_dsp_event(void *data, unsigned id,  void *msg)
 		MM_DBG("CMD_ENC_CFG_DONE_MSG: stream id %d enc type \
 			0x%8x\n", enc_cfg_msg->stream_id,
 			enc_cfg_msg->rec_enc_type);
-		/* Encoder enable success */
+		/*                        */
 		if (enc_cfg_msg->rec_enc_type & ENCODE_ENABLE) {
 			if(audio->mode == MSM_AUD_ENC_MODE_NONTUNNEL) {
 				MM_DBG("routing command\n");
@@ -298,7 +298,7 @@ static void audpreproc_dsp_event(void *data, unsigned id,  void *msg)
 			} else {
 				audqcelp_in_param_config(audio);
 			}
-		} else { /* Encoder disable success */
+		} else { /*                         */
 			audio->running = 0;
 			if (audio->mode == MSM_AUD_ENC_MODE_TUNNEL)
 				audqcelp_in_record_config(audio, 0);
@@ -335,7 +335,7 @@ static void audpreproc_dsp_event(void *data, unsigned id,  void *msg)
 	}
 }
 
-/* ------------------- dsp audrec event handler--------------------- */
+/*                                                                   */
 static void audrec_dsp_event(void *data, unsigned id, size_t len,
 			    void (*getevent)(void *ptr, size_t len))
 {
@@ -363,7 +363,7 @@ static void audrec_dsp_event(void *data, unsigned id, size_t len,
 		getevent(&fatal_err_msg, AUDREC_FATAL_ERR_MSG_LEN);
 		MM_ERR("FATAL_ERR_MSG: err id %d\n",
 				fatal_err_msg.audrec_err_id);
-		/* Error stop the encoder */
+		/*                        */
 		audio->stopped = 1;
 		wake_up(&audio->wait);
 		if (audio->mode == MSM_AUD_ENC_MODE_NONTUNNEL)
@@ -444,13 +444,13 @@ static void audqcelp_in_get_dsp_frames(struct audio_in *audio)
 	spin_lock_irqsave(&audio->dsp_lock, flags);
 	audio->in[index].size = frame->frame_length;
 
-	/* statistics of read */
+	/*                    */
 	atomic_add(audio->in[index].size, &audio->in_bytes);
 	atomic_add(1, &audio->in_samples);
 
 	audio->in_head = (audio->in_head + 1) & (FRAME_NUM - 1);
 
-	/* If overflow, move the tail index foward. */
+	/*                                          */
 	if (audio->in_head == audio->in_tail) {
 		MM_ERR("Error! not able to keep up the read\n");
 		audio->in_tail = (audio->in_tail + 1) & (FRAME_NUM - 1);
@@ -475,13 +475,13 @@ static void audqcelp_nt_in_get_dsp_frames(struct audio_in *audio)
 				sizeof(struct audio_frame_nt));
 	spin_lock_irqsave(&audio->dsp_lock, flags);
 	audio->in[index].size = nt_frame->frame_length;
-	/* statistics of read */
+	/*                    */
 	atomic_add(audio->in[index].size, &audio->in_bytes);
 	atomic_add(1, &audio->in_samples);
 
 	audio->in_head = (audio->in_head + 1) & (FRAME_NUM - 1);
 
-	/* If overflow, move the tail index foward. */
+	/*                                          */
 	if (audio->in_head == audio->in_tail)
 		MM_DBG("Error! not able to keep up the read\n");
 	else
@@ -590,13 +590,13 @@ static int audqcelp_in_param_config(struct audio_in *audio)
 
 	cmd.enc_min_rate = audio->cfg.min_bit_rate;
 	cmd.enc_max_rate = audio->cfg.max_bit_rate;
-	cmd.rate_modulation_cmd = 0;  /* Default set to 0 */
-	cmd.reduced_rate_level = 0;  /* Default set to 0 */
+	cmd.rate_modulation_cmd = 0;  /*                  */
+	cmd.reduced_rate_level = 0;  /*                  */
 
 	return audpreproc_send_audreccmdqueue(&cmd, sizeof(cmd));
 }
 
-/* To Do: msm_snddev_route_enc(audio->enc_id); */
+/*                                             */
 static int audqcelp_in_record_config(struct audio_in *audio, int enable)
 {
 	struct audpreproc_afe_cmd_audio_record_cfg cmd;
@@ -641,10 +641,10 @@ static int audqcelp_in_mem_config(struct audio_in *audio)
 	cmd.audrec_ext_pkt_start_addr_lsw = audio->phys;
 	cmd.audrec_ext_pkt_buf_number = FRAME_NUM;
 	MM_DBG("audio->phys = %x\n", audio->phys);
-	/* prepare buffer pointers:
-	 * T:36 bytes qcelp ppacket + 4 halfword header
-	 * NT:36 bytes qcelp packet + 12 halfword header
-	 */
+	/*                         
+                                                
+                                                 
+  */
 	for (n = 0; n < FRAME_NUM; n++) {
 		if (audio->mode == MSM_AUD_ENC_MODE_TUNNEL) {
 			audio->in[n].data = data + 4;
@@ -679,7 +679,7 @@ static int audqcelp_flush_command(struct audio_in *audio)
 	return audrec_send_audrecqueue(audio, &cmd, sizeof(cmd));
 }
 
-/* must be called with audio->lock held */
+/*                                      */
 static int audqcelp_in_enable(struct audio_in *audio)
 {
 	if (audio->enabled)
@@ -701,7 +701,7 @@ static int audqcelp_in_enable(struct audio_in *audio)
 	return 0;
 }
 
-/* must be called with audio->lock held */
+/*                                      */
 static int audqcelp_in_disable(struct audio_in *audio)
 {
 	if (audio->enabled) {
@@ -718,10 +718,10 @@ static int audqcelp_in_disable(struct audio_in *audio)
 
 static void audqcelp_ioport_reset(struct audio_in *audio)
 {
-	/* Make sure read/write thread are free from
-	 * sleep and knowing that system is not able
-	 * to process io request at the moment
-	 */
+	/*                                          
+                                             
+                                       
+  */
 	wake_up(&audio->write_wait);
 	mutex_lock(&audio->write_lock);
 	audqcelp_in_flush(audio);
@@ -765,7 +765,7 @@ static void audqcelp_out_flush(struct audio_in *audio)
 	}
 }
 
-/* ------------------- device --------------------- */
+/*                                                  */
 static long audqcelp_in_ioctl(struct file *file,
 				unsigned int cmd, unsigned long arg)
 {
@@ -804,7 +804,7 @@ static long audqcelp_in_ioctl(struct file *file,
 			MM_DBG("msm_snddev_withdraw_freq\n");
 			break;
 		}
-		/*update aurec session info in audpreproc layer*/
+		/*                                             */
 		audio->session_info.session_id = audio->enc_id;
 		audio->session_info.sampling_freq = audio->samp_rate;
 		audpreproc_update_audrec_info(&audio->session_info);
@@ -824,7 +824,7 @@ static long audqcelp_in_ioctl(struct file *file,
 		break;
 	}
 	case AUDIO_STOP: {
-		/*reset the sampling frequency information at audpreproc layer*/
+		/*                                                            */
 		audio->session_info.sampling_freq = 0;
 		audpreproc_update_audrec_info(&audio->session_info);
 		rc = audqcelp_in_disable(audio);
@@ -859,7 +859,7 @@ static long audqcelp_in_ioctl(struct file *file,
 			rc = -EFAULT;
 			break;
 		}
-		/* Allow only single frame */
+		/*                         */
 		if (audio->mode == MSM_AUD_ENC_MODE_TUNNEL) {
 			if (cfg.buffer_size != (FRAME_SIZE - 8)) {
 				rc = -EINVAL;
@@ -908,7 +908,7 @@ static long audqcelp_in_ioctl(struct file *file,
 			rc = -EFAULT;
 			break;
 		}
-		/* Recording Does not support Erase and Blank */
+		/*                                            */
 		if (cfg.cdma_rate > CDMA_RATE_FULL ||
 			cfg.cdma_rate < CDMA_RATE_EIGHTH) {
 			MM_ERR("invalid qcelp cdma rate\n");
@@ -1006,14 +1006,14 @@ static ssize_t audqcelp_in_read(struct file *file,
 		}
 		if (audio->stopped && !audio->in_count) {
 			MM_DBG("Driver in stop state, No more buffer to read");
-			rc = 0;/* End of File */
+			rc = 0;/*             */
 			break;
 			} else if ((audio->mode == MSM_AUD_ENC_MODE_TUNNEL) &&
 					audio->in_call && audio->running &&
 					(audio->voice_state \
 						== VOICE_STATE_OFFCALL)) {
 				MM_DBG("Not Permitted Voice Terminated\n");
-				rc = -EPERM; /* Voice Call stopped */
+				rc = -EPERM; /*                    */
 				break;
 		}
 
@@ -1050,8 +1050,8 @@ static ssize_t audqcelp_in_read(struct file *file,
 			}
 			spin_lock_irqsave(&audio->dsp_lock, flags);
 			if (index != audio->in_tail) {
-				/* overrun -- data is
-				 * invalid and we need to retry */
+				/*                   
+                                    */
 				spin_unlock_irqrestore(&audio->dsp_lock, flags);
 				continue;
 			}
@@ -1095,12 +1095,12 @@ static void audpreproc_pcm_send_data(struct audio_in *audio, unsigned needed)
 		goto done;
 
 	if (needed && !audio->wflush) {
-		/* We were called from the callback because the DSP
-		 * requested more data.  Note that the DSP does want
-		 * more data, and if a buffer was in-flight, mark it
-		 * as available (since the DSP must now be done with
-		 * it).
-		 */
+		/*                                                 
+                                                      
+                                                      
+                                                      
+         
+   */
 		audio->out_needed = 1;
 		frame = audio->out + audio->out_tail;
 		if (frame->used == 0xffffffff) {
@@ -1112,12 +1112,12 @@ static void audpreproc_pcm_send_data(struct audio_in *audio, unsigned needed)
 	}
 
 	if (audio->out_needed) {
-		/* If the DSP currently wants data and we have a
-		 * buffer available, we will send it and reset
-		 * the needed flag.  We'll mark the buffer as in-flight
-		 * so that it won't be recycled until the next buffer
-		 * is requested
-		 */
+		/*                                              
+                                                
+                                                         
+                                                       
+                 
+   */
 
 		frame = audio->out + audio->out_tail;
 		if (frame->used) {
@@ -1140,7 +1140,7 @@ static int audqcelp_in_fsync(struct file *file, loff_t ppos1, loff_t ppos2, int 
 	struct audio_in *audio = file->private_data;
 	int rc = 0;
 
-	MM_DBG("\n"); /* Macro prints the file name and function */
+	MM_DBG("\n"); /*                                         */
 	if (!audio->running || (audio->mode == MSM_AUD_ENC_MODE_TUNNEL)) {
 		rc = -EINVAL;
 		goto done_nolock;
@@ -1221,9 +1221,9 @@ static ssize_t audqcelp_in_write(struct file *file,
 
 	mutex_lock(&audio->write_lock);
 	frame = audio->out + audio->out_head;
-	/* if supplied count is more than driver buffer size
-	 * then only copy driver buffer size
-	 */
+	/*                                                  
+                                     
+  */
 	if (count > frame->size)
 		count = frame->size;
 
@@ -1242,7 +1242,7 @@ static ssize_t audqcelp_in_write(struct file *file,
 	}
 	if (audio->mfield) {
 		if (buf == start) {
-			/* Processing beginning of user buffer */
+			/*                                     */
 			if (__get_user(mfield_size,
 				(unsigned short __user *) buf)) {
 				rc = -EFAULT;
@@ -1256,9 +1256,9 @@ static ssize_t audqcelp_in_write(struct file *file,
 				rc = -EFAULT;
 				goto error;
 			}
-			/* Check if EOS flag is set and buffer has
-			 * contains just meta field
-			 */
+			/*                                        
+                              
+    */
 			if (cpy_ptr[AUDPREPROC_QCELP_EOS_FLG_OFFSET] &
 					AUDPREPROC_QCELP_EOS_FLG_MASK) {
 				eos_condition = AUDPREPROC_QCELP_EOS_SET;
@@ -1309,12 +1309,12 @@ static int audqcelp_in_release(struct inode *inode, struct file *file)
 
 	mutex_lock(&audio->lock);
 	audio->in_call = 0;
-	/* with draw frequency for session
-	   incase not stopped the driver */
+	/*                                
+                                  */
 	msm_snddev_withdraw_freq(audio->enc_id, SNDDEV_CAP_TX,
 					AUDDEV_CLNT_ENC);
 	auddev_unregister_evt_listner(AUDDEV_CLNT_ENC, audio->enc_id);
-	/*reset the sampling frequency information at audpreproc layer*/
+	/*                                                            */
 	audio->session_info.sampling_freq = 0;
 	audpreproc_update_audrec_info(&audio->session_info);
 	audqcelp_in_disable(audio);
@@ -1380,9 +1380,9 @@ static int audqcelp_in_open(struct inode *inode, struct file *file)
 		goto done;
 	}
 
-	/* Settings will be re-config at AUDIO_SET_CONFIG,
-	 * but at least we need to have initial config
-	 */
+	/*                                                
+                                               
+  */
 	if (audio->mode == MSM_AUD_ENC_MODE_NONTUNNEL)
 			audio->buffer_size = (QCELP_FRAME_SIZE + 14);
 	else
@@ -1440,7 +1440,7 @@ static int audqcelp_in_open(struct inode *inode, struct file *file)
 				audio->out_phys, (int)audio->out_data);
 	}
 
-		/* Initialize buffer */
+		/*                   */
 	audio->out[0].data = audio->out_data + 0;
 	audio->out[0].addr = audio->out_phys + 0;
 	audio->out[0].size = OUT_BUFFER_SIZE;

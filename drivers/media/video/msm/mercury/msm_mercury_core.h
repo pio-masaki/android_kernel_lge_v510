@@ -26,4 +26,4 @@ void msm_mercury_core_irq_remove(void);
 int msm_mercury_core_reset(void);
 void msm_mercury_core_init(void);
 
-#endif /* MSM_MERCURY_CORE_H */
+#endif /*                    */

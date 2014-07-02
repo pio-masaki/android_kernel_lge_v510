@@ -72,7 +72,7 @@ struct media_entity_desc {
 	__u32 reserved[4];
 
 	union {
-		/* Node specifications */
+		/*                     */
 		struct {
 			__u32 major;
 			__u32 minor;
@@ -88,8 +88,8 @@ struct media_entity_desc {
 		} alsa;
 		int dvb;
 
-		/* Sub-device specifications */
-		/* Nothing needed yet */
+		/*                           */
+		/*                    */
 		__u8 raw[184];
 	};
 };
@@ -98,9 +98,9 @@ struct media_entity_desc {
 #define MEDIA_PAD_FL_SOURCE		(1 << 1)
 
 struct media_pad_desc {
-	__u32 entity;		/* entity ID */
-	__u16 index;		/* pad index */
-	__u32 flags;		/* pad flags */
+	__u32 entity;		/*           */
+	__u16 index;		/*           */
+	__u32 flags;		/*           */
 	__u32 reserved[2];
 };
 
@@ -117,9 +117,9 @@ struct media_link_desc {
 
 struct media_links_enum {
 	__u32 entity;
-	/* Should have enough room for pads elements */
+	/*                                           */
 	struct media_pad_desc __user *pads;
-	/* Should have enough room for links elements */
+	/*                                            */
 	struct media_link_desc __user *links;
 	__u32 reserved[4];
 };
@@ -128,8 +128,5 @@ struct media_links_enum {
 #define MEDIA_IOC_ENUM_ENTITIES		_IOWR('|', 0x01, struct media_entity_desc)
 #define MEDIA_IOC_ENUM_LINKS		_IOWR('|', 0x02, struct media_links_enum)
 #define MEDIA_IOC_SETUP_LINK		_IOWR('|', 0x03, struct media_link_desc)
-    /* LGE_CHANGE_S, soojung.lim@lge.com, 2012-10-31, Wise screen / Because of the display engine  */
-#define MEDIA_IOC_SUB_CAM_ID		_IOWR('|', 0x04, int)
-    /* LGE_CHANGE_E, soojung.lim@lge.com, 2012-10-31, Wise screen / Because of the display engine  */
 
-#endif /* __LINUX_MEDIA_H */
+#endif /*                 */

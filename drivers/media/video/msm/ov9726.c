@@ -21,39 +21,39 @@
 #include <mach/camera.h>
 #include "ov9726.h"
 
-/*=============================================================
-	SENSOR REGISTER DEFINES
-==============================================================*/
+/*                                                             
+                        
+                                                              */
 #define OV9726_Q8				0x00000100
 #define OV9726_Q8Shift				8
 #define OV9726_Q10				0x00000400
 #define OV9726_Q10Shift				10
 
-/* Omnivision8810 product ID register address */
+/*                                            */
 #define	OV9726_PIDH_REG				0x0000
 #define	OV9726_PIDL_REG				0x0001
-/* Omnivision8810 product ID */
+/*                           */
 #define	OV9726_PID				0x97
-/* Omnivision8810 version */
+/*                        */
 #define	OV9726_VER				0x26
-/* Time in milisecs for waiting for the sensor to reset */
+/*                                                      */
 #define	OV9726_RESET_DELAY_MSECS		66
 #define	OV9726_DEFAULT_CLOCK_RATE		24000000
-/* Registers*/
+/*          */
 #define	OV9726_GAIN				0x3000
 #define	OV9726_AEC_MSB				0x3002
 #define	OV9726_AEC_LSB				0x3003
 
-/* Color bar pattern selection */
+/*                             */
 #define OV9726_COLOR_BAR_PATTERN_SEL_REG	0x600
-/* Color bar enabling control */
+/*                            */
 #define OV9726_COLOR_BAR_ENABLE_REG		0x601
-/* Time in milisecs for waiting for the sensor to reset*/
+/*                                                     */
 #define OV9726_RESET_DELAY_MSECS		66
-/* I2C Address of the Sensor */
-/*============================================================================
-		DATA DECLARATIONS
-============================================================================*/
+/*                           */
+/*                                                                            
+                   
+                                                                            */
 #define OV9726_FULL_SIZE_DUMMY_PIXELS		0
 #define OV9726_FULL_SIZE_DUMMY_LINES		0
 #define OV9726_QTR_SIZE_DUMMY_PIXELS		0
@@ -81,8 +81,8 @@ static struct i2c_client *ov9726_client;
 struct ov9726_ctrl_t {
 	const struct  msm_camera_sensor_info *sensordata;
 	uint32_t sensormode;
-	uint32_t fps_divider;		/* init to 1 * 0x00000400 */
-	uint32_t pict_fps_divider;	/* init to 1 * 0x00000400 */
+	uint32_t fps_divider;		/*                        */
+	uint32_t pict_fps_divider;	/*                        */
 	uint16_t fps;
 	int16_t curr_lens_pos;
 	uint16_t curr_step_pos;
@@ -100,7 +100,7 @@ static int8_t config_not_set = 1;
 static DECLARE_WAIT_QUEUE_HEAD(ov9726_wait_queue);
 DEFINE_MUTEX(ov9726_mut);
 
-/*=============================================================*/
+/*                                                             */
 static int ov9726_i2c_rxdata(unsigned short saddr,
 	unsigned char *rxdata, int length)
 {
@@ -193,7 +193,7 @@ static int32_t ov9726_i2c_write_b(unsigned short saddr,
 
 static void ov9726_get_pict_fps(uint16_t fps, uint16_t *pfps)
 {
-	uint32_t divider;	/*Q10 */
+	uint32_t divider;	/*    */
 	uint32_t d1;
 	uint32_t d2;
 	uint16_t snapshot_height, preview_height, preview_width, snapshot_width;
@@ -203,7 +203,7 @@ static void ov9726_get_pict_fps(uint16_t fps, uint16_t *pfps)
 		preview_height = OV9726_QTR_SIZE_HEIGHT +
 			OV9726_VER_QTR_BLK_LINES ;
 	} else {
-		/* full size resolution used for preview. */
+		/*                                        */
 		preview_width = OV9726_FULL_SIZE_WIDTH +
 			OV9726_HRZ_FULL_BLK_PIXELS ;
 		preview_height = OV9726_FULL_SIZE_HEIGHT +
@@ -277,8 +277,8 @@ static int32_t ov9726_set_fps(struct fps_cfg	*fps)
 {
 	int32_t rc = 0;
 	CDBG("%s: fps->fps_div = %d\n", __func__, fps->fps_div);
-	/* TODO: Passing of fps_divider from user space has issues. */
-	/* ov9726_ctrl->fps_divider = fps->fps_div; */
+	/*                                                          */
+	/*                                          */
 	ov9726_ctrl->fps_divider = 1 * 0x400;
 	CDBG("%s: ov9726_ctrl->fps_divider = %d\n", __func__,
 		ov9726_ctrl->fps_divider);
@@ -333,7 +333,7 @@ static int32_t ov9726_write_exp_gain(uint16_t gain, uint32_t line)
 			OV9726_Q10Shift;
 	}
 
-	/* calculate line_length_ratio */
+	/*                             */
 	if (line > (frame_length_lines - ov9726_offset)) {
 		line_length_ratio = (line << OV9726_Q8Shift) /
 			(frame_length_lines - ov9726_offset);
@@ -342,18 +342,18 @@ static int32_t ov9726_write_exp_gain(uint16_t gain, uint32_t line)
 		line_length_ratio = (uint32_t)1 << OV9726_Q8Shift;
 
 	if (gain > max_legal_gain) {
-		/* range:	0	to 224 */
+		/*                 */
 		gain = max_legal_gain;
 	}
-	/* update	gain registers */
+	/*                       */
 	gain_msb = (uint8_t) ((gain & 0xFF00) >> 8);
 	gain_lsb = (uint8_t) (gain & 0x00FF);
-	/* linear	AFR	horizontal stretch */
+	/*                               */
 	line_length_pck = (uint16_t) ((line_length_pck *
 		line_length_ratio) >> OV9726_Q8Shift);
 	line_length_pck_msb = (uint8_t) ((line_length_pck & 0xFF00) >> 8);
 	line_length_pck_lsb = (uint8_t) (line_length_pck & 0x00FF);
-	/* update	line count registers */
+	/*                             */
 	intg_time_msb = (uint8_t) ((line & 0xFF00) >> 8);
 	intg_time_lsb = (uint8_t) (line	& 0x00FF);
 
@@ -406,7 +406,7 @@ static int32_t initialize_ov9726_registers(void)
 	int32_t i;
 	int32_t rc = 0;
 	ov9726_ctrl->sensormode = SENSOR_PREVIEW_MODE ;
-	/* Configure sensor for Preview mode and Snapshot mode */
+	/*                                                     */
 	CDBG("Initialize_ov9726_registers\n");
 	for (i = 0; i < ov9726_array_length; i++) {
 		rc = ov9726_i2c_write_b(ov9726_client->addr,
@@ -427,10 +427,10 @@ static int32_t ov9726_video_config(int mode)
 	if (config_not_set) {
 		struct msm_camera_csi_params ov9726_csi_params;
 
-		/* sensor in standby */
+		/*                   */
 		ov9726_i2c_write_b(ov9726_client->addr, 0x100, 0);
 		msleep(5);
-		/* Initialize Sensor registers */
+		/*                             */
 		ov9726_csi_params.data_format = CSI_10BIT;
 		ov9726_csi_params.lane_cnt = 1;
 		ov9726_csi_params.lane_assign = 0xe4;
@@ -493,7 +493,7 @@ static int ov9726_probe_init_sensor(const struct msm_camera_sensor_info *data)
 		} else
 			goto init_probe_done;
 	}
-	/* 3. Read sensor Model ID: */
+	/*                          */
 	rc = ov9726_i2c_read(OV9726_PIDH_REG, &chipidh, 1);
 	if (rc < 0)
 		goto init_probe_fail;
@@ -501,7 +501,7 @@ static int ov9726_probe_init_sensor(const struct msm_camera_sensor_info *data)
 	if (rc < 0)
 		goto init_probe_fail;
 	CDBG("kov9726 model_id = 0x%x  0x%x\n", chipidh, chipidl);
-	/* 4. Compare sensor ID to OV9726 ID: */
+	/*                                    */
 	if (chipidh != OV9726_PID) {
 		rc = -ENODEV;
 		printk(KERN_INFO "Probeinit fail\n");
@@ -543,7 +543,7 @@ int ov9726_sensor_open_init(const struct msm_camera_sensor_info *data)
 	config_not_set = 1;
 	if (data)
 		ov9726_ctrl->sensordata = data;
-	/* enable mclk first */
+	/*                   */
 	msm_camio_clk_rate_set(OV9726_DEFAULT_CLOCK_RATE);
 	msleep(20);
 	rc = ov9726_probe_init_sensor(data);
@@ -551,12 +551,12 @@ int ov9726_sensor_open_init(const struct msm_camera_sensor_info *data)
 		goto init_fail;
 
 	ov9726_ctrl->fps = (uint16_t)(30 << OV9726_Q8Shift);
-	/* generate test pattern */
+	/*                       */
 	if (rc < 0)
 		goto init_fail;
 	else
 		goto init_done;
-	/* reset the driver state */
+	/*                        */
 init_fail:
 	CDBG(" init_fail\n");
 	kfree(ov9726_ctrl);
@@ -567,7 +567,7 @@ init_done:
 
 static int ov9726_init_client(struct i2c_client *client)
 {
-	/* Initialize the MSM_CAMI2C Chip */
+	/*                                */
 	init_waitqueue_head(&ov9726_wait_queue);
 	return 0;
 }

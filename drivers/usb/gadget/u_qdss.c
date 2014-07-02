@@ -15,7 +15,7 @@
 #include <linux/usb/msm_hsusb.h>
 #include <mach/usb_bam.h>
 
-#define BAM_CONNC_IDX 0 /* USB bam connection index */
+#define BAM_CONNC_IDX 0 /*                          */
 
 struct  usb_qdss_bam_connect_info {
 	u32 usb_bam_pipe_idx;
@@ -46,7 +46,7 @@ int send_sps_req(struct usb_ep *data_ep)
 		sps_params = MSM_SPS_MODE | MSM_DISABLE_WB | MSM_INTERNAL_MEM |
 			bam_info.usb_bam_pipe_idx;
 	} else {
-		/* non DWC3 BAM requires req->length to be 0 */
+		/*                                           */
 		req->length = 0;
 		sps_params = (MSM_SPS_MODE | bam_info.usb_bam_pipe_idx |
 				MSM_VENDOR_ID) & ~MSM_IS_FINITE_TRANSFER;

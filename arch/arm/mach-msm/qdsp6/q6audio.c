@@ -48,7 +48,7 @@ struct q6_hw_info {
 	int max_gain;
 };
 
-/* TODO: provide mechanism to configure from board file */
+/*                                                      */
 
 static struct q6_hw_info q6_audio_hw[Q6_HW_COUNT] = {
 	[Q6_HW_HANDSET] = {
@@ -261,8 +261,8 @@ static int adie_disable(void)
 	return 0;
 }
 
-/* 4k PMEM used for exchanging acdb device config tables
- * and stream format descriptions with the DSP.
+/*                                                      
+                                               
  */
 static char *audio_data;
 static int32_t audio_phys;
@@ -561,19 +561,19 @@ static int audio_aac_open(struct audio_client *ac, uint32_t bufsz,
 	memset(&rpc, 0, sizeof(rpc));
 
 	rpc.format.binary.format = ADSP_AUDIO_FORMAT_MPEG4_AAC;
-	/* only 48k sample rate is supported */
+	/*                                   */
 	sample_rate = 3;
-	/* AAC OBJECT LC */
+	/*               */
 	audio_object_type = 2;
 
 	aac_type = (u32 *)rpc.format.binary.data;
 	switch (stream_format) {
 	case AUDIO_AAC_FORMAT_ADTS:
-		/* AAC Encoder expect MPEG4_ADTS media type */
+		/*                                          */
 		*aac_type = ADSP_AUDIO_AAC_MPEG4_ADTS;
 	break;
 	case AUDIO_AAC_FORMAT_RAW:
-		/* for ADIF recording */
+		/*                    */
 		*aac_type = ADSP_AUDIO_AAC_RAW;
 	break;
 	}
@@ -1333,7 +1333,7 @@ static void _audio_tx_clk_enable(void)
 		ecodec_clk_enable();
 		break;
 	case Q6_SDAC_TX:
-		/* TODO: In QCT BSP, clk rate was set to 20480000 */
+		/*                                                */
 		sdac_clk_refcount++;
 		if (sdac_clk_refcount == 1) {
 			clk_set_rate(sdac_clk, 12288000);
@@ -1527,9 +1527,9 @@ int q6audio_set_tx_mute(int mute)
 	adev = audio_tx_device_id;
 	rc = audio_tx_mute(ac_control, adev, mute);
 
-	/* DSP caches the requested MUTE state when it cannot apply the state
-	  immediately. In that case, it returns EUNSUPPORTED and applies the
-	  cached state later */
+	/*                                                                   
+                                                                     
+                      */
 	if ((rc == ADSP_AUDIO_STATUS_SUCCESS) ||
 			(rc == ADSP_AUDIO_STATUS_EUNSUPPORTED)) {
 		pr_debug("[%s:%s] return status = %d\n",
@@ -1823,7 +1823,7 @@ struct audio_client *q6audio_open_pcm(uint32_t bufsz, uint32_t rate,
 			adie_rx_path_enable(acdb_id);
 		}
 	} else {
-		/* TODO: consider concurrency with voice call */
+		/*                                            */
 		audio_tx_path_refcount++;
 		if (audio_tx_path_refcount == 1) {
 			tx_clk_freq = rate;

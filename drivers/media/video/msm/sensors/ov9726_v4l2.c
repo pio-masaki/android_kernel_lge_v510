@@ -39,12 +39,12 @@ static struct msm_camera_i2c_reg_conf ov9726_prev_settings[] = {
 };
 
 static struct msm_camera_i2c_reg_conf ov9726_recommend_settings[] = {
-	{0x0103, 0x01}, /* SOFTWARE_RESET */
-	{0x3026, 0x00}, /* OUTPUT_SELECT01 */
-	{0x3027, 0x00}, /* OUTPUT_SELECT02 */
-	{0x3002, 0xe8}, /* IO_CTRL00 */
-	{0x3004, 0x03}, /* IO_CTRL01 */
-	{0x3005, 0xff}, /* IO_CTRL02 */
+	{0x0103, 0x01}, /*                */
+	{0x3026, 0x00}, /*                 */
+	{0x3027, 0x00}, /*                 */
+	{0x3002, 0xe8}, /*           */
+	{0x3004, 0x03}, /*           */
+	{0x3005, 0xff}, /*           */
 	{0x3703, 0x42},
 	{0x3704, 0x10},
 	{0x3705, 0x45},
@@ -52,22 +52,22 @@ static struct msm_camera_i2c_reg_conf ov9726_recommend_settings[] = {
 	{0x3632, 0x2f},
 	{0x3620, 0x66},
 	{0x3621, 0xc0},
-	{0x0340, 0x03}, /* FRAME_LENGTH_LINES_HI */
-	{0x0341, 0xC1}, /* FRAME_LENGTH_LINES_LO */
-	{0x0342, 0x06}, /* LINE_LENGTH_PCK_HI */
-	{0x0343, 0x80}, /* LINE_LENGTH_PCK_LO */
-	{0x0202, 0x03}, /* COARSE_INTEGRATION_TIME_HI */
-	{0x0203, 0x43}, /* COARSE_INTEGRATION_TIME_LO */
+	{0x0340, 0x03}, /*                       */
+	{0x0341, 0xC1}, /*                       */
+	{0x0342, 0x06}, /*                    */
+	{0x0343, 0x80}, /*                    */
+	{0x0202, 0x03}, /*                            */
+	{0x0203, 0x43}, /*                            */
 	{0x3833, 0x04},
 	{0x3835, 0x02},
 	{0x4702, 0x04},
-	{0x4704, 0x00}, /* DVP_CTRL01 */
+	{0x4704, 0x00}, /*            */
 	{0x4706, 0x08},
 	{0x5052, 0x01},
 	{0x3819, 0x6e},
 	{0x3817, 0x94},
-	{0x3a18, 0x00}, /* AEC_GAIN_CEILING_HI */
-	{0x3a19, 0x7f}, /* AEC_GAIN_CEILING_LO */
+	{0x3a18, 0x00}, /*                     */
+	{0x3a19, 0x7f}, /*                     */
 	{0x404e, 0x7e},
 	{0x3631, 0x52},
 	{0x3633, 0x50},
@@ -77,50 +77,50 @@ static struct msm_camera_i2c_reg_conf ov9726_recommend_settings[] = {
 	{0x3602, 0x14},
 	{0x3610, 0xa0},
 	{0x3612, 0x20},
-	{0x034c, 0x05}, /* X_OUTPUT_SIZE_HI */
-	{0x034d, 0x10}, /* X_OUTPUT_SIZE_LO */
-	{0x034e, 0x03}, /* Y_OUTPUT_SIZE_HI */
-	{0x034f, 0x28}, /* Y_OUTPUT_SIZE_LO */
-	{0x0340, 0x03}, /* FRAME_LENGTH_LINES_HI */
-	{0x0341, 0xC1}, /* FRAME_LENGTH_LINES_LO */
-	{0x0342, 0x06}, /* LINE_LENGTH_PCK_HI */
-	{0x0343, 0x80}, /* LINE_LENGTH_PCK_LO */
-	{0x0202, 0x03}, /* COARSE_INTEGRATION_TIME_HI */
-	{0x0203, 0x43}, /* COARSE_INTEGRATION_TIME_LO */
-	{0x0303, 0x01}, /* VT_SYS_CLK_DIV_LO */
-	{0x3002, 0x00}, /* IO_CTRL00 */
-	{0x3004, 0x00}, /* IO_CTRL01 */
-	{0x3005, 0x00}, /* IO_CTRL02 */
-	{0x4801, 0x0f}, /* MIPI_CTRL01 */
-	{0x4803, 0x05}, /* MIPI_CTRL03 */
-	{0x4601, 0x16}, /* VFIFO_READ_CONTROL */
-	{0x3014, 0x05}, /* SC_CMMN_MIPI / SC_CTRL00 */
+	{0x034c, 0x05}, /*                  */
+	{0x034d, 0x10}, /*                  */
+	{0x034e, 0x03}, /*                  */
+	{0x034f, 0x28}, /*                  */
+	{0x0340, 0x03}, /*                       */
+	{0x0341, 0xC1}, /*                       */
+	{0x0342, 0x06}, /*                    */
+	{0x0343, 0x80}, /*                    */
+	{0x0202, 0x03}, /*                            */
+	{0x0203, 0x43}, /*                            */
+	{0x0303, 0x01}, /*                   */
+	{0x3002, 0x00}, /*           */
+	{0x3004, 0x00}, /*           */
+	{0x3005, 0x00}, /*           */
+	{0x4801, 0x0f}, /*             */
+	{0x4803, 0x05}, /*             */
+	{0x4601, 0x16}, /*                    */
+	{0x3014, 0x05}, /*                          */
 	{0x3104, 0x80},
-	{0x0305, 0x04}, /* PRE_PLL_CLK_DIV_LO */
-	{0x0307, 0x64}, /* PLL_MULTIPLIER_LO */
+	{0x0305, 0x04}, /*                    */
+	{0x0307, 0x64}, /*                   */
 	{0x300c, 0x02},
 	{0x300d, 0x20},
 	{0x300e, 0x01},
 	{0x3010, 0x01},
-	{0x460e, 0x81}, /* VFIFO_CONTROL00 */
-	{0x0101, 0x01}, /* IMAGE_ORIENTATION */
+	{0x460e, 0x81}, /*                 */
+	{0x0101, 0x01}, /*                   */
 	{0x3707, 0x14},
 	{0x3622, 0x9f},
-	{0x5047, 0x3D}, /* ISP_CTRL47 */
-	{0x4002, 0x45}, /* BLC_CTRL02 */
-	{0x5000, 0x06}, /* ISP_CTRL0 */
-	{0x5001, 0x00}, /* ISP_CTRL1 */
-	{0x3406, 0x00}, /* AWB_MANUAL_CTRL */
-	{0x3503, 0x13}, /* AEC_ENABLE */
-	{0x4005, 0x18}, /* BLC_CTRL05 */
+	{0x5047, 0x3D}, /*            */
+	{0x4002, 0x45}, /*            */
+	{0x5000, 0x06}, /*           */
+	{0x5001, 0x00}, /*           */
+	{0x3406, 0x00}, /*                 */
+	{0x3503, 0x13}, /*            */
+	{0x4005, 0x18}, /*            */
 	{0x4837, 0x21},
-	{0x0100, 0x01}, /* MODE_SELECT */
-	{0x3a0f, 0x64}, /* AEC_CTRL0F */
-	{0x3a10, 0x54}, /* AEC_CTRL10 */
-	{0x3a11, 0xc2}, /* AEC_CTRL11 */
-	{0x3a1b, 0x64}, /* AEC_CTRL1B */
-	{0x3a1e, 0x54}, /* AEC_CTRL1E */
-	{0x3a1a, 0x05}, /* AEC_DIFF_MAX */
+	{0x0100, 0x01}, /*             */
+	{0x3a0f, 0x64}, /*            */
+	{0x3a10, 0x54}, /*            */
+	{0x3a11, 0xc2}, /*            */
+	{0x3a1b, 0x64}, /*            */
+	{0x3a1e, 0x54}, /*            */
+	{0x3a1a, 0x05}, /*              */
 };
 
 static struct v4l2_subdev_info ov9726_subdev_info[] = {
@@ -130,7 +130,7 @@ static struct v4l2_subdev_info ov9726_subdev_info[] = {
 	.fmt    = 1,
 	.order    = 0,
 	},
-	/* more can be supported, to be added later */
+	/*                                          */
 };
 
 static struct msm_camera_i2c_conf_array ov9726_init_conf[] = {
@@ -145,14 +145,26 @@ static struct msm_camera_i2c_conf_array ov9726_confs[] = {
 
 static struct msm_sensor_output_info_t ov9726_dimensions[] = {
 	{
-		.x_output = 0x510, /* 1296 */
-		.y_output = 0x328, /* 808 */
-		.line_length_pclk = 0x680, /* 1664 */
-		.frame_length_lines = 0x3C1, /* 961 */
+		.x_output = 0x510, /*      */
+		.y_output = 0x328, /*     */
+		.line_length_pclk = 0x680, /*      */
+		.frame_length_lines = 0x3C1, /*     */
 		.vt_pixel_clk = 320000000,
 		.op_pixel_clk = 320000000,
 		.binning_factor = 1,
 	},
+};
+
+static struct msm_camera_csi_params ov9726_csi_params = {
+	       .data_format = CSI_10BIT,
+	       .lane_cnt    = 1,
+	       .lane_assign = 0xe4,
+	       .dpcm_scheme = 0,
+	       .settle_cnt  = 7,
+};
+
+static struct msm_camera_csi_params *ov9726_csi_params_array[] = {
+	&ov9726_csi_params,
 };
 
 static struct msm_sensor_output_reg_addr_t ov9726_reg_addr = {
@@ -224,6 +236,7 @@ static struct msm_sensor_fn_t ov9726_func_tbl = {
 	.sensor_config = msm_sensor_config,
 	.sensor_power_up = msm_sensor_power_up,
 	.sensor_power_down = msm_sensor_power_down,
+	.sensor_get_csi_params = msm_sensor_get_csi_params,
 };
 
 static struct msm_sensor_reg_t ov9726_regs = {
@@ -252,6 +265,7 @@ static struct msm_sensor_ctrl_t ov9726_s_ctrl = {
 	.sensor_id_info = &ov9726_id_info,
 	.sensor_exp_gain_info = &ov9726_exp_gain_info,
 	.cam_mode = MSM_SENSOR_MODE_INVALID,
+	.csic_params = &ov9726_csi_params_array[0],
 	.msm_sensor_mutex = &ov9726_mut,
 	.sensor_i2c_driver = &ov9726_i2c_driver,
 	.sensor_v4l2_subdev_info = ov9726_subdev_info,

@@ -60,20 +60,20 @@ void pinconf_generic_dump_pin(struct pinctrl_dev *pctldev,
 		unsigned long config;
 		int ret;
 
-		/* We want to check out this parameter */
+		/*                                     */
 		config = pinconf_to_config_packed(conf_items[i].param, 0);
 		ret = pin_config_get_for_pin(pctldev, pin, &config);
-		/* These are legal errors */
+		/*                        */
 		if (ret == -EINVAL || ret == -ENOTSUPP)
 			continue;
 		if (ret) {
 			seq_printf(s, "ERROR READING CONFIG SETTING %d ", i);
 			continue;
 		}
-		/* Space between multiple configs */
+		/*                                */
 		seq_puts(s, " ");
 		seq_puts(s, conf_items[i].display);
-		/* Print unit if available */
+		/*                         */
 		if (conf_items[i].format &&
 		    pinconf_to_config_argument(config) != 0)
 			seq_printf(s, " (%u %s)",
@@ -95,21 +95,21 @@ void pinconf_generic_dump_group(struct pinctrl_dev *pctldev,
 		unsigned long config;
 		int ret;
 
-		/* We want to check out this parameter */
+		/*                                     */
 		config = pinconf_to_config_packed(conf_items[i].param, 0);
 		ret = pin_config_group_get(dev_name(pctldev->dev), gname,
 					   &config);
-		/* These are legal errors */
+		/*                        */
 		if (ret == -EINVAL || ret == -ENOTSUPP)
 			continue;
 		if (ret) {
 			seq_printf(s, "ERROR READING CONFIG SETTING %d ", i);
 			continue;
 		}
-		/* Space between multiple configs */
+		/*                                */
 		seq_puts(s, " ");
 		seq_puts(s, conf_items[i].display);
-		/* Print unit if available */
+		/*                         */
 		if (conf_items[i].format && config != 0)
 			seq_printf(s, " (%u %s)",
 				   pinconf_to_config_argument(config),

@@ -130,7 +130,7 @@ struct audio {
 
 	uint8_t out_head;
 	uint8_t out_tail;
-	uint8_t out_needed; /* number of buffers the dsp is waiting for */
+	uint8_t out_needed; /*                                          */
 
 	atomic_t out_bytes;
 
@@ -138,7 +138,7 @@ struct audio {
 	struct mutex write_lock;
 	wait_queue_head_t wait;
 
-	/* configuration to use on next enable */
+	/*                                     */
 	uint32_t out_sample_rate;
 	uint32_t out_channel_mode;
 	uint32_t out_weight;
@@ -146,15 +146,15 @@ struct audio {
 
 	struct audmgr audmgr;
 
-	/* data allocated for various buffers */
+	/*                                    */
 	char *data;
 	dma_addr_t phys;
 
-	int teos; /* valid only if tunnel mode & no data left for decoder */
+	int teos; /*                                                      */
 	int opened;
 	int enabled;
 	int running;
-	int stopped; /* set when stopped, cleared on flush */
+	int stopped; /*                                    */
 
 	struct wake_lock wakelock;
 	struct pm_qos_request pm_qos_req;
@@ -204,7 +204,7 @@ struct audio_copp {
 
 static void audio_prevent_sleep(struct audio *audio)
 {
-	MM_DBG("\n"); /* Macro prints the file name and function */
+	MM_DBG("\n"); /*                                         */
 	wake_lock(&audio->wakelock);
 	pm_qos_update_request(&audio->pm_qos_req,
 			      msm_cpuidle_get_deep_idle_latency());
@@ -214,7 +214,7 @@ static void audio_allow_sleep(struct audio *audio)
 {
 	pm_qos_update_request(&audio->pm_qos_req, PM_QOS_DEFAULT_VALUE);
 	wake_unlock(&audio->wakelock);
-	MM_DBG("\n"); /* Macro prints the file name and function */
+	MM_DBG("\n"); /*                                         */
 }
 
 static int audio_dsp_out_enable(struct audio *audio, int yes);
@@ -222,24 +222,24 @@ static int audio_dsp_send_buffer(struct audio *audio, unsigned id, unsigned len)
 
 static void audio_dsp_event(void *private, unsigned id, uint16_t *msg);
 static int audio_enable_srs_trumedia(struct audio_copp *audio_copp, int enable);
-/* must be called with audio->lock held */
+/*                                      */
 static int audio_enable(struct audio *audio)
 {
 	struct audmgr_config cfg;
 	int rc;
 
-	MM_DBG("\n"); /* Macro prints the file name and function */
+	MM_DBG("\n"); /*                                         */
 
 	if (audio->enabled)
 		return 0;	
 
-	/* refuse to start if we're not ready */
+	/*                                    */
 	if (!audio->out[0].used || !audio->out[1].used)
 		return -EIO;
 
-	/* we start buffers 0 and 1, so buffer 0 will be the
-	 * next one the dsp will want
-	 */
+	/*                                                  
+                              
+  */
 	audio->out_tail = 0;
 	audio->out_needed = 0;
 
@@ -268,10 +268,10 @@ static int audio_enable(struct audio *audio)
 	return 0;
 }
 
-/* must be called with audio->lock held */
+/*                                      */
 static int audio_disable(struct audio *audio)
 {
-	MM_DBG("\n"); /* Macro prints the file name and function */
+	MM_DBG("\n"); /*                                         */
 	if (audio->enabled) {
 		audio->enabled = 0;
 		audio_dsp_out_enable(audio, 0);
@@ -314,7 +314,7 @@ void audio_commit_pending_pp_params(void *priv, unsigned id, uint16_t *msg)
 }
 EXPORT_SYMBOL(audio_commit_pending_pp_params);
 
-/* ------------------- dsp --------------------- */
+/*                                               */
 static void audio_dsp_event(void *private, unsigned id, uint16_t *msg)
 {
 	struct audio *audio = private;
@@ -327,7 +327,7 @@ static void audio_dsp_event(void *private, unsigned id, uint16_t *msg)
 		unsigned id = msg[2];
 		unsigned idx = msg[3] - 1;
 
-		/* MM_INFO("HOST_PCM id %d idx %d\n", id, idx); */
+		/*                                              */
 		if (id != AUDPP_MSG_HOSTPCM_ID_ARM_RX) {
 			MM_ERR("bogus id\n");
 			break;
@@ -432,7 +432,7 @@ static int audio_dsp_send_buffer(struct audio *audio, unsigned idx, unsigned len
 	return audpp_send_queue2(&cmd, sizeof(cmd));
 }
 
-/* ------------------- device --------------------- */
+/*                                                  */
 
 static int audio_enable_mbadrc(struct audio_copp *audio_copp, int enable)
 {
@@ -586,11 +586,11 @@ static long audio_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 		break;
 	case AUDIO_FLUSH:
 		if (audio->stopped) {
-			/* Make sure we're stopped and we wake any threads
-			 * that might be blocked holding the write_lock.
-			 * While audio->stopped write threads will always
-			 * exit immediately.
-			 */
+			/*                                                
+                                                   
+                                                    
+                       
+    */
 			wake_up(&audio->wait);
 			mutex_lock(&audio->write_lock);
 			audio_flush(audio);
@@ -643,7 +643,7 @@ static long audio_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 	return rc;
 }
 
-/* Only useful in tunnel-mode */
+/*                            */
 static int audio_fsync(struct file *file, loff_t a, loff_t b, int datasync)
 {
 	struct audio *audio = file->private_data;
@@ -661,9 +661,9 @@ static int audio_fsync(struct file *file, loff_t a, loff_t b, int datasync)
 	if (rc < 0)
 		goto done;
 
-	/* pcm dmamiss message is sent continously when
-	 * decoder is starved so no race condition concern
-	 */
+	/*                                             
+                                                   
+  */
 
 	audio->teos = 0;
 
@@ -708,7 +708,7 @@ static ssize_t audio_write(struct file *file, const char __user *buf,
 
 	LOG(EV_WRITE, count | (audio->running << 28) | (audio->stopped << 24));
 
-	/* just for this write, set us real-time */
+	/*                                       */
 	if (!task_has_rt_policy(current)) {
 		struct cred *new = prepare_creds();
 		cap_raise(new->cap_effective, CAP_SYS_NICE);
@@ -755,7 +755,7 @@ static ssize_t audio_write(struct file *file, const char __user *buf,
 
 	mutex_unlock(&audio->write_lock);
 
-	/* restore scheduling policy and priority */
+	/*                                        */
 	if (!rt_policy(old_policy)) {
 		struct sched_param v = { .sched_priority = old_prio };
 		if ((sched_setscheduler(current, old_policy, &v)) < 0)

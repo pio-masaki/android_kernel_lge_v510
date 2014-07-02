@@ -17,7 +17,7 @@
 #define NUM_SL_PTE      256
 #define NUM_TEX_CLASS   8
 
-/* First-level page table bits */
+/*                             */
 #define FL_BASE_MASK            0xFFFFFC00
 #define FL_TYPE_TABLE           (1 << 0)
 #define FL_TYPE_SECT            (2 << 0)
@@ -32,7 +32,7 @@
 #define FL_OFFSET(va)           (((va) & 0xFFF00000) >> 20)
 #define FL_NG                   (1 << 17)
 
-/* Second-level page table bits */
+/*                              */
 #define SL_BASE_MASK_LARGE      0xFFFF0000
 #define SL_BASE_MASK_SMALL      0xFFFFF000
 #define SL_TYPE_LARGE           (1 << 0)
@@ -47,7 +47,7 @@
 #define SL_OFFSET(va)           (((va) & 0xFF000) >> 12)
 #define SL_NG                   (1 << 11)
 
-/* Memory type and cache policy attributes */
+/*                                         */
 #define MT_SO                   0
 #define MT_DEV                  1
 #define MT_NORMAL               2
@@ -56,7 +56,7 @@
 #define CP_WT                   2
 #define CP_WB_NWA               3
 
-/* TEX Remap Registers */
+/*                     */
 #define NMRR_ICP(nmrr, n) (((nmrr) & (3 << ((n) * 2))) >> ((n) * 2))
 #define NMRR_OCP(nmrr, n) (((nmrr) & (3 << ((n) * 2 + 16))) >> ((n) * 2 + 16))
 

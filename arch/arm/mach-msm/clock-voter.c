@@ -19,7 +19,7 @@
 
 static DEFINE_MUTEX(voter_clk_lock);
 
-/* Aggregate the rate of clocks that are currently on. */
+/*                                                     */
 static unsigned long voter_clk_aggregate_rate(const struct clk *parent)
 {
 	struct clk *clk;
@@ -46,9 +46,9 @@ static int voter_clk_set_rate(struct clk *clk, unsigned long rate)
 		struct clk *parent = v->parent;
 
 		/*
-		 * Get the aggregate rate without this clock's vote and update
-		 * if the new rate is different than the current rate
-		 */
+                                                                
+                                                       
+   */
 		list_for_each_entry(clkp, &parent->children, siblings) {
 			clkh = to_clk_voter(clkp);
 			if (clkh->enabled && clkh != v)
@@ -82,9 +82,9 @@ static int voter_clk_prepare(struct clk *clk)
 	parent = v->parent;
 
 	/*
-	 * Increase the rate if this clock is voting for a higher rate
-	 * than the current rate.
-	 */
+                                                               
+                          
+  */
 	cur_rate = voter_clk_aggregate_rate(parent);
 	if (clk->rate > cur_rate) {
 		ret = clk_set_rate(parent, clk->rate);
@@ -108,9 +108,9 @@ static void voter_clk_unprepare(struct clk *clk)
 	parent = v->parent;
 
 	/*
-	 * Decrease the rate if this clock was the only one voting for
-	 * the highest rate.
-	 */
+                                                               
+                     
+  */
 	v->enabled = false;
 	new_rate = voter_clk_aggregate_rate(parent);
 	cur_rate = max(new_rate, clk->rate);
@@ -146,7 +146,7 @@ static bool voter_clk_is_local(struct clk *clk)
 
 static enum handoff voter_clk_handoff(struct clk *clk)
 {
-	/* Apply default rate vote */
+	/*                         */
 	if (clk->rate)
 		return HANDOFF_ENABLED_CLK;
 

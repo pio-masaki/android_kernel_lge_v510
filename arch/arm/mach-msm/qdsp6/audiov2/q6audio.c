@@ -42,7 +42,7 @@ struct q6_hw_info {
 	int max_gain;
 };
 
-/* TODO: provide mechanism to configure from board file */
+/*                                                      */
 
 static struct q6_hw_info q6_audio_hw[Q6_HW_COUNT] = {
 	[Q6_HW_HANDSET] = {
@@ -210,8 +210,8 @@ static int adie_disable(void)
 	return 0;
 }
 
-/* 4k DMA scratch page used for exchanging acdb device config tables
- * and stream format descriptions with the DSP.
+/*                                                                  
+                                               
  */
 char *audio_data;
 int32_t audio_phys;
@@ -769,7 +769,7 @@ static void _audio_rx_path_enable(void)
 	adie_params[2] = ADIE_PATH_RX;
 	adie_params[3] = 48000;
 	adie_params[4] = 256;
-	/*check for errors here*/
+	/*                     */
 	if (!adie_set_path(adie, adie_params, sizeof(adie_params)))
 		pr_err("adie set rx path failed\n");
 
@@ -906,7 +906,7 @@ static void _audio_tx_clk_enable(void)
 		}
 		break;
 	case Q6_SDAC_TX:
-		/* TODO: In QCT BSP, clk rate was set to 20480000 */
+		/*                                                */
 		sdac_clk_refcount++;
 		if (sdac_clk_refcount == 1) {
 			clk_set_rate(sdac_clk, 12288000);

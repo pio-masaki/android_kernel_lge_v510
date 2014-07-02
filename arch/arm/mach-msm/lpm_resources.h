@@ -52,52 +52,52 @@ struct msm_rpmrs_level {
 
 #ifdef CONFIG_MSM_RPM_SMD
 
-/**
- * msm_lpm_level_beyond_limit() - Check if the resources in a low power level
- * is beyond the limits of the driver votes received for those resources.This
- * function is used by lpm_levels to eliminate any low power level that cannot
- * be entered.
- *
- * @limits: pointer to the resource limits of a low power level.
- *
- * returns true if the resource limits are beyond driver resource votes.
- * false otherwise.
+/* 
+                                                                             
+                                                                             
+                                                                              
+              
+  
+                                                                
+  
+                                                                        
+                   
  */
 bool msm_lpm_level_beyond_limit(struct msm_rpmrs_limits *limits);
 
-/**
- * msm_lpmrs_enter_sleep() - Enter sleep flushes the sleep votes of low power
- * resources to the RPM driver, also configure the MPM if needed depending
- * on the low power mode being entered. L2 low power mode is also set in
- * this function.
+/* 
+                                                                             
+                                                                          
+                                                                        
+                 
 
- * @sclk_count: wakeup counter for RPM.
- * @limits: pointer to the resource limits of the low power mode being entered.
- * @from_idle: bool to determine if this call being made as a part of
- *             idle power collapse.
- * @notify_rpm: bool that informs if this is an RPM notified power collapse.
- *
- * returns 0 on success.
+                                       
+                                                                               
+                                                                     
+                                   
+                                                                            
+  
+                        
  */
 int msm_lpmrs_enter_sleep(uint32_t sclk_count, struct msm_rpmrs_limits *limits,
 	bool from_idle, bool notify_rpm);
 
-/**
- * msm_lpmrs_exit_sleep() - Exit sleep, reset the MPM and L2 mode.
- * @ limits: pointer to resource limits of the most recent low power mode.
- * @from_idle: bool to determine if this call being made as a part of
- *             idle power collapse.
- * @notify_rpm: bool that informs if this is an RPM notified power collapse.
- * @collapsed: bool that informs if the Krait was power collapsed.
+/* 
+                                                                  
+                                                                          
+                                                                     
+                                   
+                                                                            
+                                                                  
  */
 void msm_lpmrs_exit_sleep(struct msm_rpmrs_limits *limits,
 	bool from_idle, bool notify_rpm, bool collapsed);
-/**
- * msm_lpmrs_module_init() - Init function that parses the device tree to
- * get the low power resource attributes and registers with RPM driver for
- * callback notification.
- *
- * returns 0 on success.
+/* 
+                                                                         
+                                                                          
+                         
+  
+                        
  */
 int __init msm_lpmrs_module_init(void);
 
@@ -123,6 +123,6 @@ static inline int __init msm_lpmrs_module_init(void)
 {
 	return 0;
 }
-#endif /* CONFIG_MSM_RPM_SMD */
+#endif /*                    */
 
 #endif

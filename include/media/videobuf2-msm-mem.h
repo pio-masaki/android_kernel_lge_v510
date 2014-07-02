@@ -46,12 +46,12 @@ struct videobuf2_contig_pmem {
 	int phyaddr;
 	unsigned long size;
 	int is_userptr;
-	/* Offset of the plane inside the buffer */
+	/*                                       */
 	struct videobuf2_msm_offset offset;
 	enum videobuf2_buffer_type buffer_type;
 	int path;
 	struct file *file;
-	/* Offset of the buffer */
+	/*                      */
 	uint32_t addr_offset;
 	int dirty;
 	unsigned int count;
@@ -74,16 +74,9 @@ int videobuf2_pmem_contig_user_get(struct videobuf2_contig_pmem *mem,
 					uint32_t addr_offset, int path,
 					struct ion_client *client,
 					int domain_num);
-/* LGE_CHANGE_S, ion leakage patch, 2013.1.23, jungki.kim[Start] */
-#if defined(CONFIG_MACH_APQ8064_GVAR_CMCC)
-void videobuf2_pmem_contig_user_put(struct videobuf2_contig_pmem *mem,
-				struct ion_client *client, int domain_num, int is_closing);
-#else
 void videobuf2_pmem_contig_user_put(struct videobuf2_contig_pmem *mem,
 				struct ion_client *client, int domain_num);
-#endif
-/* LGE_CHANGE_E, ion leakage patch, 2013.1.23, jungki.kim[End] */
 unsigned long videobuf2_to_pmem_contig(struct vb2_buffer *buf,
 					unsigned int plane_no);
 
-#endif /* _VIDEOBUF2_PMEM_CONTIG_H */
+#endif /*                          */

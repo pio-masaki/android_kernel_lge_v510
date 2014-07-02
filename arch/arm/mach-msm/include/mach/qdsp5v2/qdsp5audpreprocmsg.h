@@ -17,15 +17,15 @@
 #define AUDPREPROC_MSG_FEAT_QUERY_DM_DONE 0x0006
 
 /*
- * ADSPREPROCTASK Messages
- * AUDPREPROCTASK uses audPreProcUpRlist to communicate with ARM
- * Location	: MEMB
- * Buffer size :  6
- * No of buffers in queue : 4
+                          
+                                                                
+                  
+                   
+                             
  */
 
 /*
- * Message to indicate Pre processing config command is done
+                                                            
  */
 
 #define AUDPREPROC_CMD_CFG_DONE_MSG 0x0001
@@ -46,7 +46,7 @@ struct audpreproc_cmd_cfg_done_msg {
 } __attribute__((packed));
 
 /*
- * Message to indicate Pre processing error messages
+                                                    
  */
 
 #define AUDPREPROC_ERROR_MSG 0x0002
@@ -62,7 +62,7 @@ struct audpreproc_err_msg {
 } __attribute__((packed));
 
 /*
- * Message to indicate encoder config command
+                                             
  */
 
 #define AUDPREPROC_CMD_ENC_CFG_DONE_MSG	0x0003
@@ -75,7 +75,7 @@ struct audpreproc_cmd_enc_cfg_done_msg {
 } __attribute__((packed));
 
 /*
- * Message to indicate encoder param config command
+                                                   
  */
 
 #define AUDPREPROC_CMD_ENC_PARAM_CFG_DONE_MSG	0x0004
@@ -88,8 +88,8 @@ struct audpreproc_cmd_enc_param_cfg_done_msg {
 
 
 /*
- * Message to indicate AFE config cmd for
- * audio recording is successfully recieved
+                                         
+                                           
  */
 
 #define AUDPREPROC_AFE_CMD_AUDIO_RECORD_CFG_DONE_MSG  0x0005
@@ -101,8 +101,8 @@ struct audpreproc_afe_cmd_audio_record_cfg_done {
 } __attribute__((packed));
 
 /*
- * Message to indicate Routing mode
- * configuration success or failure
+                                   
+                                   
  */
 
 #define AUDPREPROC_CMD_ROUTING_MODE_DONE_MSG  0x0007
@@ -124,4 +124,4 @@ struct audreproc_cmd_pcm_cfg_arm_to_preproc_done {
 	unsigned short configuration;
 } __attribute__((packed));
 
-#endif /* QDSP5AUDPREPROCMSG_H */
+#endif /*                      */

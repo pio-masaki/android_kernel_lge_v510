@@ -46,6 +46,6 @@ static inline int stm_trace(uint32_t options, uint8_t entity_id,
 	return 0;
 }
 #endif
-#endif /* __KERNEL__ */
+#endif /*            */
 
 #endif

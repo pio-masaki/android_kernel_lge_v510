@@ -27,23 +27,23 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 *====*====*====*====*====*====*====*====*====*====*====*====*====*====*====*/
-/*===========================================================================
+/*                                                                           
 
-                      EDIT HISTORY FOR FILE
+                                           
 
-This section contains comments describing changes made to this file.
-Notice that changes are listed in reverse chronological order.
+                                                                    
+                                                              
    
-$Header: //source/qcom/qct/multimedia2/AdspSvc/7XXX/qdsp5cmd/video/qdsp5lpmmsg.h#2 $ $DateTime: 2008/07/30 10:50:23 $ $Author: pavanr $                     
-Revision History:                                              
+                                                                                                                                                            
+                                                               
   
-when       who     what, where, why
---------   ---     ----------------------------------------------------------
-06/12/08   sv      initial version
-===========================================================================*/
+                                   
+                                                                             
+                                  
+                                                                           */
 
 /*
- * Message to acknowledge CMD_LPM_IDLE command
+                                              
  */
 
 #define	LPM_MSG_IDLE_ACK	0x0000
@@ -54,7 +54,7 @@ typedef struct {
 
 
 /*
- * Message to acknowledge CMD_LPM_START command
+                                               
  */
 
 
@@ -67,7 +67,7 @@ typedef struct {
 
 
 /*
- * Message to notify the ARM that LPM processing is complete
+                                                            
  */
 
 #define	LPM_MSG_DONE		0x0002

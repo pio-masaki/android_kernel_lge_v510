@@ -13,7 +13,7 @@
 #ifndef _MACH_QDSP5_V2_AUDIO_ACDB_DEF_H
 #define _MACH_QDSP5_V2_AUDIO_ACDB_DEF_H
 
-/* Define ACDB device ID */
+/*                       */
 #define ACDB_ID_HANDSET_SPKR				1
 #define ACDB_ID_HANDSET_MIC				2
 #define ACDB_ID_HEADSET_MIC				3
@@ -42,10 +42,10 @@
 #define ACDB_ID_I2S_TX					0x30
 #define ACDB_ID_HDMI					0x40
 #define ACDB_ID_FM_RX					0x4F
-/*Replace the max device ID,if any new device is added Specific to RTC only*/
+/*                                                                         */
 #define ACDB_ID_MAX                                 ACDB_ID_FM_RX
 
-/* ID used for virtual devices */
+/*                             */
 #define PSEUDO_ACDB_ID 					0xFFFF
 
-#endif /* _MACH_QDSP5_V2_AUDIO_ACDB_DEF_H */
+#endif /*                                 */

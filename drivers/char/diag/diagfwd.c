@@ -46,32 +46,10 @@
 #define MODE_CMD		41
 #define RESET_ID		2
 
-//2012-03-06 seongmook.yim(seongmook.yim@lge.com) [P6/MDMBSP] ADD LGODL [START]
-#ifdef CONFIG_LGE_DM_DEV
-#include "lg_dm_dev_tty.h"
-#endif /*CONFIG_LGE_DM_DEV*/
-//2012-03-06 seongmook.yim(seongmook.yim@lge.com) [P6/MDMBSP] ADD LGODL [END]
-#ifdef CONFIG_LGE_DM_APP
-#include "lg_dm_tty.h"
-#endif
-
 int diag_debug_buf_idx;
 unsigned char diag_debug_buf[1024];
-static unsigned int buf_tbl_size = 8; /*Number of entries in table of buffers */
+static unsigned int buf_tbl_size = 8; /*                                      */
 struct diag_master_table entry;
-#ifdef CONFIG_LGE_USB_DIAG_DISABLE
-#include "diag_lock.h"
-#ifdef CONFIG_LGE_USB_DIAG_DISABLE_ONLY_MDM
-static int diag_enable = DIAG_ENABLE;
-#else
-static int diag_enable = DIAG_DISABLE;
-#endif
-void diagfwd_enable(int enable)
-{
-    diag_enable = enable;
-}
-EXPORT_SYMBOL(diagfwd_enable);
-#endif
 struct diag_send_desc_type send = { NULL, NULL, DIAG_STATE_START, 0 };
 struct diag_hdlc_dest_type enc = { NULL, NULL, 0 };
 int wrap_enabled;
@@ -98,7 +76,7 @@ void encode_rsp_and_send(int buf_length)
 	}
 }
 
-/* Determine if this device uses a device tree */
+/*                                             */
 #ifdef CONFIG_OF
 static int has_device_tree(void)
 {
@@ -120,7 +98,7 @@ static int has_device_tree(void)
 
 int chk_config_get_id(void)
 {
-	/* For all Fusion targets,  Modem will always be present */
+	/*                                                       */
 	if (machine_is_msm8x60_fusion() || machine_is_msm8x60_fusn_ffa())
 		return 0;
 
@@ -155,8 +133,8 @@ int chk_config_get_id(void)
 }
 
 /*
- * This will return TRUE for targets which support apps only mode and hence SSR.
- * This applies to 8960 and newer targets.
+                                                                                
+                                          
  */
 int chk_apps_only(void)
 {
@@ -182,9 +160,9 @@ int chk_apps_only(void)
 }
 
 /*
- * This will return TRUE for targets which support apps as master.
- * Thus, SW DLOAD and Mode Reset are supported on apps processor.
- * This applies to 8960 and newer targets.
+                                                                  
+                                                                 
+                                          
  */
 int chk_apps_master(void)
 {
@@ -201,46 +179,46 @@ int chk_polling_response(void)
 {
 	if (!(driver->polling_reg_flag) && chk_apps_master())
 		/*
-		 * If the apps processor is master and no other processor
-		 * has registered to respond for polling
-		 */
+                                                           
+                                          
+   */
 		return 1;
 	else if (!(driver->smd_data[MODEM_DATA].ch) &&
 					!(chk_apps_master()))
 		/*
-		 * If the apps processor is not the master and the modem
-		 * is not up
-		 */
+                                                          
+              
+   */
 		return 1;
 	else
 		return 0;
 }
 
 /*
- * This function should be called if you feel that the logging process may
- * need to be woken up. For instance, if the logging mode is MEMORY_DEVICE MODE
- * and while trying to read data from a SMD data channel there are no buffers
- * available to read the data into, then this function should be called to
- * determine if the logging process needs to be woken up.
+                                                                          
+                                                                               
+                                                                             
+                                                                          
+                                                         
  */
 void chk_logging_wakeup(void)
 {
 	int i;
 
-	/* Find the index of the logging process */
+	/*                                       */
 	for (i = 0; i < driver->num_clients; i++)
 		if (driver->client_map[i].pid ==
 			driver->logging_process_id)
 			break;
 
 	if (i < driver->num_clients) {
-		/* At very high logging rates a race condition can
-		 * occur where the buffers containing the data from
-		 * an smd channel are all in use, but the data_ready
-		 * flag is cleared. In this case, the buffers never
-		 * have their data read/logged.  Detect and remedy this
-		 * situation.
-		 */
+		/*                                                
+                                                     
+                                                      
+                                                     
+                                                         
+               
+   */
 		if ((driver->data_ready[i] & USER_SPACE_DATA_TYPE) == 0) {
 			driver->data_ready[i] |= USER_SPACE_DATA_TYPE;
 			pr_debug("diag: Force wakeup of logging process\n");
@@ -249,94 +227,7 @@ void chk_logging_wakeup(void)
 	}
 }
 
-void process_lock_enabling(struct diag_nrt_wake_lock *lock, int real_time)
-{
-	unsigned long read_lock_flags;
-
-	spin_lock_irqsave(&lock->read_spinlock, read_lock_flags);
-	if (real_time)
-		lock->enabled = 0;
-	else
-		lock->enabled = 1;
-	lock->ref_count = 0;
-	lock->copy_count = 0;
-	wake_unlock(&lock->read_lock);
-	spin_unlock_irqrestore(&lock->read_spinlock, read_lock_flags);
-}
-
-void process_lock_on_notify(struct diag_nrt_wake_lock *lock)
-{
-	unsigned long read_lock_flags;
-
-	spin_lock_irqsave(&lock->read_spinlock, read_lock_flags);
-	/*
-	 * Do not work with ref_count here in case
-	 * of spurious interrupt
-	 */
-	if (lock->enabled)
-		wake_lock(&lock->read_lock);
-	spin_unlock_irqrestore(&lock->read_spinlock, read_lock_flags);
-}
-
-void process_lock_on_read(struct diag_nrt_wake_lock *lock, int pkt_len)
-{
-	unsigned long read_lock_flags;
-
-	spin_lock_irqsave(&lock->read_spinlock, read_lock_flags);
-	if (lock->enabled) {
-		if (pkt_len > 0) {
-			/*
-			 * We have an data that is read that
-			 * needs to be processed, make sure the
-			 * processor does not go to sleep
-			 */
-			lock->ref_count++;
-			if (!wake_lock_active(&lock->read_lock))
-				wake_lock(&lock->read_lock);
-		} else {
-			/*
-			 * There was no data associated with the
-			 * read from the smd, unlock the wake lock
-			 * if it is not needed.
-			 */
-			if (lock->ref_count < 1) {
-				if (wake_lock_active(&lock->read_lock))
-					wake_unlock(&lock->read_lock);
-				lock->ref_count = 0;
-				lock->copy_count = 0;
-			}
-		}
-	}
-	spin_unlock_irqrestore(&lock->read_spinlock, read_lock_flags);
-}
-
-void process_lock_on_copy(struct diag_nrt_wake_lock *lock)
-{
-	unsigned long read_lock_flags;
-
-	spin_lock_irqsave(&lock->read_spinlock, read_lock_flags);
-	if (lock->enabled)
-		lock->copy_count++;
-	spin_unlock_irqrestore(&lock->read_spinlock, read_lock_flags);
-}
-
-void process_lock_on_copy_complete(struct diag_nrt_wake_lock *lock)
-{
-	unsigned long read_lock_flags;
-
-	spin_lock_irqsave(&lock->read_spinlock, read_lock_flags);
-	if (lock->enabled) {
-		lock->ref_count -= lock->copy_count;
-		if (lock->ref_count < 1) {
-			wake_unlock(&lock->read_lock);
-			lock->ref_count = 0;
-		}
-		lock->copy_count = 0;
-	}
-	spin_unlock_irqrestore(&lock->read_spinlock, read_lock_flags);
-}
-
-/* Process the data read from the smd data channel */
+/*                                                 */
 int diag_process_smd_read_data(struct diag_smd_info *smd_info, void *buf,
 								int total_recd)
 {
@@ -390,11 +281,11 @@ void diag_smd_send_req(struct diag_smd_info *smd_info)
 			pr_debug("diag: In %s, received pkt %d %d\n",
 				__func__, r, total_recd);
 			if (!r) {
-				/* Nothing to read from SMD */
+				/*                          */
 				wait_event(driver->smd_wait_q,
 					((smd_info->ch == 0) ||
 					smd_read_avail(smd_info->ch)));
-				/* If the smd channel is open */
+				/*                            */
 				if (smd_info->ch) {
 					pr_debug("diag: In %s, return from wait_event\n",
 						__func__);
@@ -429,12 +320,10 @@ void diag_smd_send_req(struct diag_smd_info *smd_info)
 				smd_info->peripheral, smd_info->type);
 			}
 
-			/* keep reading for complete packet */
+			/*                                  */
 			smd_read(smd_info->ch, temp_buf, r);
 			temp_buf += r;
 		}
-		if (!driver->real_time_mode && smd_info->type == SMD_DATA_TYPE)
-			process_lock_on_read(&smd_info->nrt_lock, pkt_len);
 
 		if (total_recd > 0) {
 			if (!buf) {
@@ -442,7 +331,7 @@ void diag_smd_send_req(struct diag_smd_info *smd_info)
 			} else if (smd_info->process_smd_read_data) {
 				notify = smd_info->process_smd_read_data(
 						smd_info, buf, total_recd);
-				/* Poll SMD channels to check for data */
+				/*                                     */
 				if (notify)
 					diag_smd_notify(smd_info,
 							SMD_EVENT_DATA);
@@ -497,8 +386,8 @@ int diag_device_write(void *buf, int data_type, struct diag_request *write_ptr)
 #ifdef DIAG_DEBUG
 					pr_debug("diag: ENQUEUE buf ptr"
 						   " and length is %x , %d\n",
-						   (unsigned int)(driver->buf_tbl[i].buf),
-						   driver->buf_tbl[i].length);
+						   (unsigned int)(driver->buf_
+				tbl[i].buf), driver->buf_tbl[i].length);
 #endif
 					break;
 				}
@@ -594,7 +483,7 @@ int diag_device_write(void *buf, int data_type, struct diag_request *write_ptr)
 			print_hex_dump(KERN_DEBUG, "Written Packet Data to"
 					   " USB: ", 16, 1, DUMP_PREFIX_ADDRESS,
 					    buf, write_ptr->length, 1);
-#endif /* DIAG DEBUG */
+#endif /*            */
 			err = usb_diag_write(driver->legacy_ch, write_ptr);
 		}
 #ifdef CONFIG_DIAG_SDIO_PIPE
@@ -625,7 +514,7 @@ int diag_device_write(void *buf, int data_type, struct diag_request *write_ptr)
 					write_ptr_mdm->context = (void *)index;
 					err = usb_diag_write(
 					diag_bridge[index].ch, write_ptr_mdm);
-					/* Return to the pool immediately */
+					/*                                */
 					if (err) {
 						diagmem_free(driver,
 							write_ptr_mdm,
@@ -653,115 +542,7 @@ int diag_device_write(void *buf, int data_type, struct diag_request *write_ptr)
 #endif
 		APPEND_DEBUG('d');
 	}
-#endif /* DIAG OVER USB */
-
-//2012-03-06 seongmook.yim(seongmook.yim@lge.com) [P6/MDMBSP] ADD LGODL [START]
-#ifdef CONFIG_LGE_DM_DEV
-		if (driver->logging_mode == DM_DEV_MODE) {
-			/* only diag cmd #250 for supporting testmode tool */
-			if (data_type == APPS_DATA) {
-				driver->write_ptr_svc = (struct diag_request *)
-				(diagmem_alloc(driver, sizeof(struct diag_request),
-					 POOL_TYPE_WRITE_STRUCT));
-				if (driver->write_ptr_svc) {
-					driver->write_ptr_svc->length = driver->used;
-					driver->write_ptr_svc->buf = buf;
-					queue_work(lge_dm_dev_tty->dm_dev_wq,
-						&(lge_dm_dev_tty->dm_dev_usb_work));
-					flush_work(&(lge_dm_dev_tty->dm_dev_usb_work));
-	
-				} else {
-					err = -1;
-				}
-				return err;
-			}
-#ifdef CONFIG_DIAGFWD_BRIDGE_CODE
-		else if (data_type == HSIC_DATA) {
-			unsigned long flags;
-			int foundIndex = -1;
-			spin_lock_irqsave(&diag_hsic[index].hsic_spinlock,flags);
-			for (i = 0; i < diag_hsic[index].poolsize_hsic_write; i++) {
-				if (diag_hsic[index].hsic_buf_tbl[i].length == 0) {
-					diag_hsic[index].hsic_buf_tbl[i].buf = buf;
-					diag_hsic[index].hsic_buf_tbl[i].length = diag_bridge[index].write_len;
-					diag_hsic[index].num_hsic_buf_tbl_entries++;
-					foundIndex = i;
-					break;
-				}
-			}
-			spin_unlock_irqrestore(&diag_hsic[index].hsic_spinlock,flags);
-			if (foundIndex == -1)
-				err = -1;
-			else
-			{
-				pr_info("diag: ENQUEUE HSIC buf ptr and length is %x , %d\n",
-					(unsigned int)buf,
-					diag_bridge[index].write_len);
-			}
-			}
-#endif /*CONFIG_DIAGFWD_BRIDGE_CODE*/
-		
-		lge_dm_dev_tty->set_logging = 1;
-		wake_up_interruptible(&lge_dm_dev_tty->waitq);
-
-	}
-#endif /*CONFIG_LGE_DM_DEV*/
-//2012-03-06 seongmook.yim(seongmook.yim@lge.com) [P6/MDMBSP] ADD LGODL [END]
-
-#ifdef CONFIG_LGE_DM_APP
-	if (driver->logging_mode == DM_APP_MODE) {
-		/* only diag cmd #250 for supporting testmode tool */
-		if (data_type == APPS_DATA) {
-			driver->write_ptr_svc = (struct diag_request *)
-			(diagmem_alloc(driver, sizeof(struct diag_request),
-				 POOL_TYPE_WRITE_STRUCT));
-			if (driver->write_ptr_svc) {
-				driver->write_ptr_svc->length = driver->used;
-				driver->write_ptr_svc->buf = buf;
-
-				queue_work(lge_dm_tty->dm_wq,
-					&(lge_dm_tty->dm_usb_work));
-				flush_work(&(lge_dm_tty->dm_usb_work));
-
-			} else {
-				err = -1;
-			}
-
-			return err;
-
-		}
-#ifdef CONFIG_DIAGFWD_BRIDGE_CODE
-		else if (data_type == HSIC_DATA) {
-			unsigned long flags;
-			int foundIndex = -1;
-
-			spin_lock_irqsave(&diag_hsic[index].hsic_spinlock,flags);
-			for (i = 0; i < diag_hsic[index].poolsize_hsic_write; i++) {
-				if (diag_hsic[index].hsic_buf_tbl[i].length == 0) {
-					diag_hsic[index].hsic_buf_tbl[i].buf = buf;
-					diag_hsic[index].hsic_buf_tbl[i].length = diag_bridge[index].write_len;
-					diag_hsic[index].num_hsic_buf_tbl_entries++;
-					foundIndex = i;
-					break;
-				}
-			}
-			spin_unlock_irqrestore(&diag_hsic[index].hsic_spinlock,flags);
-			if (foundIndex == -1)
-				err = -1;
-			else
-			{
-				pr_info("diag: ENQUEUE HSIC buf ptr and length is %x , %d\n",
-					(unsigned int)buf,
-					diag_bridge[index].write_len);
-			}
-		}
-#endif  /*CONFIG_DIAGFWD_BRIDGE_CODE*/
-
-		lge_dm_tty->set_logging = 1;
-		wake_up_interruptible(&lge_dm_tty->waitq);
-
-	}
-#endif /*CONFIG_LGE_DM_APP */
+#endif /*               */
     return err;
 }
 
@@ -771,10 +552,9 @@ static void diag_update_pkt_buffer(unsigned char *buf)
 	unsigned char *temp = buf;
 
 	mutex_lock(&driver->diagchar_mutex);
-	if (CHK_OVERFLOW(ptr, ptr, ptr + PKT_SIZE, driver->pkt_length)) {
+	if (CHK_OVERFLOW(ptr, ptr, ptr + PKT_SIZE, driver->pkt_length))
 		memcpy(ptr, temp , driver->pkt_length);
-		driver->in_busy_pktdata = 1;
-	} else
+	else
 		printk(KERN_CRIT " Not enough buffer space for PKT_RESP\n");
 	mutex_unlock(&driver->diagchar_mutex);
 }
@@ -808,17 +588,9 @@ void diag_update_sleeping_process(int process_id, int data_type)
 static int diag_check_mode_reset(unsigned char *buf)
 {
 	int is_mode_reset = 0;
-
-#ifndef CONFIG_MACH_APQ8064_AWIFI
 	if (chk_apps_master() && (int)(*(char *)buf) == MODE_CMD)
 		if ((int)(*(char *)(buf+1)) == RESET_ID)
 			is_mode_reset = 1;
-#else		// [AWIFI] Without modem configuration,  2013-07-09, Kyungtaeg.kim@lge.com
-	if (chk_apps_master() && (int)(*(char *)buf) == MODE_CMD){
-
-		is_mode_reset = 1;
-	}
-#endif
 	return is_mode_reset;
 }
 
@@ -839,12 +611,8 @@ void diag_send_data(struct diag_master_table entry, unsigned char *buf,
 						diag_check_mode_reset(buf)) {
 						return;
 					}
-					mutex_lock(&driver->smd_data[index].
-								smd_ch_mutex);
 					smd_write(driver->smd_data[index].ch,
 							buf, len);
-					mutex_unlock(&driver->smd_data[index].
-								smd_ch_mutex);
 				} else {
 					pr_err("diag: In %s, smd channel %d not open\n",
 						__func__, index);
@@ -857,7 +625,7 @@ void diag_send_data(struct diag_master_table entry, unsigned char *buf,
 	}
 }
 
-int diag_process_apps_pkt(unsigned char *buf, int len)
+static int diag_process_apps_pkt(unsigned char *buf, int len)
 {
 	uint16_t subsys_cmd_code;
 	int subsys_id, ssid_first, ssid_last, ssid_range;
@@ -869,17 +637,12 @@ int diag_process_apps_pkt(unsigned char *buf, int len)
 	unsigned char *ptr;
 #endif
 
-#ifdef CONFIG_LGE_USB_DIAG_DISABLE
-    /* 0xA1(161) is portlock command */
-	if (buf[0] != 0xA1 && diag_enable == 0)
-		return 0;
-#endif
-	/* Check if the command is a supported mask command */
+	/*                                                  */
 	mask_ret = diag_process_apps_masks(buf, len);
 	if (mask_ret <= 0)
 		return mask_ret;
 
-	/* Check for registered clients and forward packet to apropriate proc */
+	/*                                                                    */
 	cmd_code = (int)(*(char *)buf);
 	temp++;
 	subsys_id = (int)(*(char *)temp);
@@ -887,14 +650,12 @@ int diag_process_apps_pkt(unsigned char *buf, int len)
 	subsys_cmd_code = *(uint16_t *)temp;
 	temp += 2;
 	data_type = APPS_DATA;
-	/* Dont send any command other than mode reset */
-/*	2012/10/05  bk.choi@lge.com ======== For sending RESET CMD to ATD in FRST 20121005 
-
+	/*                                             */
 	if (chk_apps_master() && cmd_code == MODE_CMD) {
 		if (subsys_id != RESET_ID)
 			data_type = MODEM_DATA;
 	}
-*/
+
 	pr_debug("diag: %d %d %d", cmd_code, subsys_id, subsys_cmd_code);
 	for (i = 0; i < diag_max_reg; i++) {
 		entry = driver->table[i];
@@ -931,7 +692,7 @@ int diag_process_apps_pkt(unsigned char *buf, int len)
 		}
 	}
 #if defined(CONFIG_DIAG_OVER_USB)
-	/* Check for the command/respond msg for the maximum packet length */
+	/*                                                                 */
 	if ((*buf == 0x4b) && (*(buf+1) == 0x12) &&
 		(*(uint16_t *)(buf+2) == 0x0055)) {
 		for (i = 0; i < 4; i++)
@@ -940,7 +701,7 @@ int diag_process_apps_pkt(unsigned char *buf, int len)
 		encode_rsp_and_send(7);
 		return 0;
 	}
-	/* Check for Apps Only & get event mask request */
+	/*                                              */
 	else if (!(driver->smd_data[MODEM_DATA].ch) && chk_apps_only() &&
 								*buf == 0x81) {
 		driver->apps_rsp_buf[0] = 0x81;
@@ -952,12 +713,12 @@ int diag_process_apps_pkt(unsigned char *buf, int len)
 		encode_rsp_and_send(6 + EVENT_LAST_ID/8);
 		return 0;
 	}
-	/* Get log ID range & Check for Apps Only */
+	/*                                        */
 	else if (!(driver->smd_data[MODEM_DATA].ch) && chk_apps_only()
 			  && (*buf == 0x73) && *(int *)(buf+4) == 1) {
 		driver->apps_rsp_buf[0] = 0x73;
-		*(int *)(driver->apps_rsp_buf + 4) = 0x1; /* operation ID */
-		*(int *)(driver->apps_rsp_buf + 8) = 0x0; /* success code */
+		*(int *)(driver->apps_rsp_buf + 4) = 0x1; /*              */
+		*(int *)(driver->apps_rsp_buf + 8) = 0x0; /*              */
 		*(int *)(driver->apps_rsp_buf + 12) = LOG_GET_ITEM_NUM(LOG_0);
 		*(int *)(driver->apps_rsp_buf + 16) = LOG_GET_ITEM_NUM(LOG_1);
 		*(int *)(driver->apps_rsp_buf + 20) = LOG_GET_ITEM_NUM(LOG_2);
@@ -977,14 +738,14 @@ int diag_process_apps_pkt(unsigned char *buf, int len)
 		encode_rsp_and_send(75);
 		return 0;
 	}
-	/* Respond to Get SSID Range request message */
+	/*                                           */
 	else if (!(driver->smd_data[MODEM_DATA].ch) && chk_apps_only()
 			 && (*buf == 0x7d) && (*(buf+1) == 0x1)) {
 		driver->apps_rsp_buf[0] = 0x7d;
 		driver->apps_rsp_buf[1] = 0x1;
 		driver->apps_rsp_buf[2] = 0x1;
 		driver->apps_rsp_buf[3] = 0x0;
-		/* -1 to un-account for OEM SSID range */
+		/*                                     */
 		*(int *)(driver->apps_rsp_buf + 4) = MSG_MASK_TBL_CNT - 1;
 		*(uint16_t *)(driver->apps_rsp_buf + 8) = MSG_SSID_0;
 		*(uint16_t *)(driver->apps_rsp_buf + 10) = MSG_SSID_0_LAST;
@@ -1035,13 +796,13 @@ int diag_process_apps_pkt(unsigned char *buf, int len)
 		encode_rsp_and_send(99);
 		return 0;
 	}
-	/* Check for Apps Only Respond to Get Subsys Build mask */
+	/*                                                      */
 	else if (!(driver->smd_data[MODEM_DATA].ch) && chk_apps_only()
 			 && (*buf == 0x7d) && (*(buf+1) == 0x2)) {
 		ssid_first = *(uint16_t *)(buf + 2);
 		ssid_last = *(uint16_t *)(buf + 4);
 		ssid_range = 4 * (ssid_last - ssid_first + 1);
-		/* frame response */
+		/*                */
 		driver->apps_rsp_buf[0] = 0x7d;
 		driver->apps_rsp_buf[1] = 0x2;
 		*(uint16_t *)(driver->apps_rsp_buf + 2) = ssid_first;
@@ -1049,7 +810,7 @@ int diag_process_apps_pkt(unsigned char *buf, int len)
 		driver->apps_rsp_buf[6] = 0x1;
 		driver->apps_rsp_buf[7] = 0x0;
 		ptr = driver->apps_rsp_buf + 8;
-		/* bld time masks */
+		/*                */
 		switch (ssid_first) {
 		case MSG_SSID_0:
 			for (i = 0; i < ssid_range; i += 4)
@@ -1147,25 +908,25 @@ int diag_process_apps_pkt(unsigned char *buf, int len)
 		encode_rsp_and_send(8 + ssid_range - 1);
 		return 0;
 	}
-	/* Check for download command */
+	/*                            */
 	else if ((cpu_is_msm8x60() || chk_apps_master()) && (*buf == 0x3A)) {
-		/* send response back */
+		/*                    */
 		driver->apps_rsp_buf[0] = *buf;
 		encode_rsp_and_send(0);
 		msleep(5000);
-		/* call download API */
+		/*                   */
 		msm_set_restart_mode(RESTART_DLOAD);
 		printk(KERN_CRIT "diag: download mode set, Rebooting SoC..\n");
 		kernel_restart(NULL);
-		/* Not required, represents that command isnt sent to modem */
+		/*                                                          */
 		return 0;
 	}
-	/* Check for polling for Apps only DIAG */
+	/*                                      */
 	else if ((*buf == 0x4b) && (*(buf+1) == 0x32) &&
 		(*(buf+2) == 0x03)) {
-		/* If no one has registered for polling */
+		/*                                      */
 		if (chk_polling_response()) {
-			/* Respond to polling for Apps only DIAG */
+			/*                                       */
 			for (i = 0; i < 3; i++)
 				driver->apps_rsp_buf[i] = *(buf+i);
 			for (i = 0; i < 13; i++)
@@ -1175,7 +936,7 @@ int diag_process_apps_pkt(unsigned char *buf, int len)
 			return 0;
 		}
 	}
-	/* Return the Delayed Response Wrap Status */
+	/*                                         */
 	else if ((*buf == 0x4b) && (*(buf+1) == 0x32) &&
 		(*(buf+2) == 0x04) && (*(buf+3) == 0x0)) {
 		memcpy(driver->apps_rsp_buf, buf, 4);
@@ -1183,7 +944,7 @@ int diag_process_apps_pkt(unsigned char *buf, int len)
 		encode_rsp_and_send(4);
 		return 0;
 	}
-	/* Wrap the Delayed Rsp ID */
+	/*                         */
 	else if ((*buf == 0x4b) && (*(buf+1) == 0x32) &&
 		(*(buf+2) == 0x05) && (*(buf+3) == 0x0)) {
 		wrap_enabled = true;
@@ -1192,11 +953,9 @@ int diag_process_apps_pkt(unsigned char *buf, int len)
 		encode_rsp_and_send(5);
 		return 0;
 	}
-	 /* Check for ID for NO MODEM present */
+	 /*                                   */
 	else if (chk_polling_response()) {
-		/* respond to 0x0 command */
-		//LGE_CHANGE_S, dong.kim@lge.com 20120414 VERNO cmd redefine
-		#if 0
+		/*                        */
 		if (*buf == 0x00) {
 			for (i = 0; i < 55; i++)
 				driver->apps_rsp_buf[i] = 0;
@@ -1204,16 +963,12 @@ int diag_process_apps_pkt(unsigned char *buf, int len)
 			encode_rsp_and_send(54);
 			return 0;
 		}
-		/* respond to 0x7c command */
+		/*                         */
 		else if (*buf == 0x7c) {
-		#endif
-		/* respond to 0x7c command */
-		if (*buf == 0x7c) {
-		//LGE_CHANGE_E
 			driver->apps_rsp_buf[0] = 0x7c;
 			for (i = 1; i < 8; i++)
 				driver->apps_rsp_buf[i] = 0;
-			/* Tools ID for APQ 8060 */
+			/*                       */
 			*(int *)(driver->apps_rsp_buf + 8) =
 							 chk_config_get_id();
 			*(unsigned char *)(driver->apps_rsp_buf + 12) = '\0';
@@ -1235,7 +990,7 @@ void diag_send_error_rsp(int index)
 		pr_err("diag: error response too huge, aborting\n");
 		return;
 	}
-	driver->apps_rsp_buf[0] = 0x13; /* error code 13 */
+	driver->apps_rsp_buf[0] = 0x13; /*               */
 	for (i = 0; i < index; i++)
 		driver->apps_rsp_buf[i+1] = *(driver->hdlc_buf+i);
 	encode_rsp_and_send(index - 3);
@@ -1248,9 +1003,6 @@ void diag_process_hdlc(void *data, unsigned len)
 {
 	struct diag_hdlc_decode_type hdlc;
 	int ret, type = 0;
-
-	mutex_lock(&driver->diag_hdlc_mutex);
-
 	pr_debug("diag: HDLC decode fn, len of data  %d\n", len);
 	hdlc.dest_ptr = driver->hdlc_buf;
 	hdlc.dest_size = USB_MAX_OUT_BUF;
@@ -1262,26 +1014,15 @@ void diag_process_hdlc(void *data, unsigned len)
 
 	ret = diag_hdlc_decode(&hdlc);
 
-	/*
-	 * If the message is 3 bytes or less in length then the message is
-	 * too short. A message will need 4 bytes minimum, since there are
-	 * 2 bytes for the CRC and 1 byte for the ending 0x7e for the hdlc
-	 * encoding
-	 */
-	if (hdlc.dest_idx < 4) {
-		pr_err_ratelimited("diag: In %s, message is too short, len: %d, dest len: %d\n",
-			__func__, len, hdlc.dest_idx);
-		mutex_unlock(&driver->diag_hdlc_mutex);
+	if (hdlc.dest_idx < 3) {
+		pr_err("diag: Integer underflow in hdlc processing\n");
 		return;
 	}
-
 	if (ret) {
 		type = diag_process_apps_pkt(driver->hdlc_buf,
 							  hdlc.dest_idx - 3);
-		if (type < 0) {
-			mutex_unlock(&driver->diag_hdlc_mutex);
+		if (type < 0)
 			return;
-		}
 	} else if (driver->debug_flag) {
 		printk(KERN_ERR "Packet dropped due to bad HDLC coding/CRC"
 				" errors or partial packet received, packet"
@@ -1290,59 +1031,47 @@ void diag_process_hdlc(void *data, unsigned len)
 					   DUMP_PREFIX_ADDRESS, data, len, 1);
 		driver->debug_flag = 0;
 	}
-	/* send error responses from APPS for Central Routing */
+	/*                                                    */
 	if (type == 1 && chk_apps_only()) {
 		diag_send_error_rsp(hdlc.dest_idx);
 		type = 0;
 	}
-	/* implies this packet is NOT meant for apps */
+	/*                                           */
 	if (!(driver->smd_data[MODEM_DATA].ch) && type == 1) {
 		if (chk_apps_only()) {
 			diag_send_error_rsp(hdlc.dest_idx);
-		} else { /* APQ 8060, Let Q6 respond */
-			if (driver->smd_data[LPASS_DATA].ch) {
-				mutex_lock(&driver->smd_data[LPASS_DATA].
-								smd_ch_mutex);
+		} else { /*                          */
+			if (driver->smd_data[LPASS_DATA].ch)
 				smd_write(driver->smd_data[LPASS_DATA].ch,
 						driver->hdlc_buf,
 						hdlc.dest_idx - 3);
-				mutex_unlock(&driver->smd_data[LPASS_DATA].
-								smd_ch_mutex);
-			}
 		}
 		type = 0;
 	}
 
 #ifdef DIAG_DEBUG
 	pr_debug("diag: hdlc.dest_idx = %d", hdlc.dest_idx);
-#ifdef CONFIG_USB_G_LGE_ANDROID
-    print_hex_dump(KERN_DEBUG, "", DUMP_PREFIX_OFFSET, 16, 1, driver->hdlc_buf, hdlc.dest_idx, 1);
-#else
 	for (i = 0; i < hdlc.dest_idx; i++)
 		printk(KERN_DEBUG "\t%x", *(((unsigned char *)
 							driver->hdlc_buf)+i));
-#endif /* CONFIG_USB_G_LGE_ANDROID */
-#endif /* DIAG DEBUG */
-	/* ignore 2 bytes for CRC, one for 7E and send */
+#endif /*            */
+	/*                                             */
 	if ((driver->smd_data[MODEM_DATA].ch) && (ret) && (type) &&
 						(hdlc.dest_idx > 3)) {
 		APPEND_DEBUG('g');
-		mutex_lock(&driver->smd_data[MODEM_DATA].smd_ch_mutex);
 		smd_write(driver->smd_data[MODEM_DATA].ch,
 					driver->hdlc_buf, hdlc.dest_idx - 3);
-		mutex_unlock(&driver->smd_data[MODEM_DATA].smd_ch_mutex);
 		APPEND_DEBUG('h');
 #ifdef DIAG_DEBUG
 		printk(KERN_INFO "writing data to SMD, pkt length %d\n", len);
 		print_hex_dump(KERN_DEBUG, "Written Packet Data to SMD: ", 16,
 			       1, DUMP_PREFIX_ADDRESS, data, len, 1);
-#endif /* DIAG DEBUG */
+#endif /*            */
 	}
-	mutex_unlock(&driver->diag_hdlc_mutex);
 }
 
 #ifdef CONFIG_DIAG_OVER_USB
-/* 2+1 for modem ; 2 for LPASS ; 1 for WCNSS */
+/*                                           */
 #define N_LEGACY_WRITE	(driver->poolsize + 6)
 #define N_LEGACY_READ	1
 
@@ -1361,14 +1090,14 @@ int diagfwd_connect(void)
 	for (i = 0; i < NUM_SMD_DATA_CHANNELS; i++) {
 		driver->smd_data[i].in_busy_1 = 0;
 		driver->smd_data[i].in_busy_2 = 0;
-		/* Poll SMD data channels to check for data */
+		/*                                          */
 		queue_work(driver->diag_wq,
 			&(driver->smd_data[i].diag_read_smd_work));
-		/* Poll SMD CNTL channels to check for data */
+		/*                                          */
 		diag_smd_notify(&(driver->smd_cntl[i]), SMD_EVENT_DATA);
 	}
 
-	/* Poll USB channel to check for data*/
+	/*                                   */
 	queue_work(driver->diag_wq, &(driver->diag_read_work));
 #ifdef CONFIG_DIAG_SDIO_PIPE
 	if (machine_is_msm8x60_fusion() || machine_is_msm8x60_fusn_ffa()) {
@@ -1400,7 +1129,7 @@ int diagfwd_disconnect(void)
 		if (driver->mdm_ch && !IS_ERR(driver->mdm_ch))
 			diagfwd_disconnect_sdio();
 #endif
-	/* TBD - notify and flow control SMD */
+	/*                                   */
 	return 0;
 }
 
@@ -1410,8 +1139,8 @@ int diagfwd_write_complete(struct diag_request *diag_write_ptr)
 	int found_it = 0;
 	int i;
 
-	/* Determine if the write complete is for data from modem/apps/q6 */
-	/* Need a context variable here instead */
+	/*                                                                */
+	/*                                      */
 	for (i = 0; i < NUM_SMD_DATA_CHANNELS; i++) {
 		struct diag_smd_info *data = &(driver->smd_data[i]);
 		if (buf == (void *)data->buf_in_1) {
@@ -1454,7 +1183,7 @@ int diagfwd_read_complete(struct diag_request *diag_read_ptr)
 	int status = diag_read_ptr->status;
 	unsigned char *buf = diag_read_ptr->buf;
 
-	/* Determine if the read complete is for data on legacy/mdm ch */
+	/*                                                             */
 	if (buf == (void *)driver->usb_buf_out) {
 		driver->read_len_legacy = diag_read_ptr->actual;
 		APPEND_DEBUG('s');
@@ -1464,7 +1193,7 @@ int diagfwd_read_complete(struct diag_request *diag_read_ptr)
 		print_hex_dump(KERN_DEBUG, "Read Packet Data from USB: ", 16, 1,
 		       DUMP_PREFIX_ADDRESS, diag_read_ptr->buf,
 		       diag_read_ptr->actual, 1);
-#endif /* DIAG DEBUG */
+#endif /*            */
 		if (driver->logging_mode == USB_MODE) {
 			if (status != -ECONNRESET && status != -ESHUTDOWN)
 				queue_work(driver->diag_wq,
@@ -1529,7 +1258,7 @@ void diag_usb_legacy_notifier(void *priv, unsigned event,
 	}
 }
 
-#endif /* DIAG OVER USB */
+#endif /*               */
 
 void diag_smd_notify(void *ctxt, unsigned event)
 {
@@ -1545,7 +1274,7 @@ void diag_smd_notify(void *ctxt, unsigned event)
 			queue_work(driver->diag_cntl_wq,
 				 &(smd_info->diag_notify_update_smd_work));
 		} else if (smd_info->type == SMD_DCI_TYPE) {
-			/* Notify the clients of the close */
+			/*                                 */
 			diag_dci_notify_client(smd_info->peripheral_mask,
 							DIAG_STATUS_CLOSED);
 		}
@@ -1562,13 +1291,10 @@ void diag_smd_notify(void *ctxt, unsigned event)
 			smd_info->notify_context = event;
 			queue_work(driver->diag_dci_wq,
 				&(smd_info->diag_notify_update_smd_work));
-			/* Notify the clients of the open */
+			/*                                */
 			diag_dci_notify_client(smd_info->peripheral_mask,
 							DIAG_STATUS_OPEN);
 		}
-	} else if (event == SMD_EVENT_DATA && !driver->real_time_mode &&
-					smd_info->type == SMD_DATA_TYPE) {
-		process_lock_on_notify(&smd_info->nrt_lock);
 	}
 
 	wake_up(&driver->smd_wait_q);
@@ -1661,9 +1387,6 @@ static struct platform_driver diag_smd_lite_driver = {
 
 void diag_smd_destructor(struct diag_smd_info *smd_info)
 {
-	if (smd_info->type == SMD_DATA_TYPE)
-		wake_lock_destroy(&smd_info->nrt_lock.read_lock);
-
 	if (smd_info->ch)
 		smd_close(smd_info->ch);
 
@@ -1680,7 +1403,6 @@ int diag_smd_constructor(struct diag_smd_info *smd_info, int peripheral,
 {
 	smd_info->peripheral = peripheral;
 	smd_info->type = type;
-	mutex_init(&smd_info->smd_ch_mutex);
 
 	switch (peripheral) {
 	case MODEM_DATA:
@@ -1716,7 +1438,7 @@ int diag_smd_constructor(struct diag_smd_info *smd_info, int peripheral,
 		kmemleak_not_leak(smd_info->write_ptr_1);
 	}
 
-	/* The smd data type needs two buffers */
+	/*                                     */
 	if (smd_info->type == SMD_DATA_TYPE) {
 		if (smd_info->buf_in_2 == NULL) {
 			smd_info->buf_in_2 = kzalloc(IN_BUF_SIZE, GFP_KERNEL);
@@ -1737,12 +1459,12 @@ int diag_smd_constructor(struct diag_smd_info *smd_info, int peripheral,
 	INIT_WORK(&(smd_info->diag_read_smd_work), diag_read_smd_work_fn);
 
 	/*
-	 * The update function assigned to the diag_notify_update_smd_work
-	 * work_struct is meant to be used for updating that is not to
-	 * be done in the context of the smd notify function. The
-	 * notify_context variable can be used for passing additional
-	 * information to the update function.
-	 */
+                                                                   
+                                                               
+                                                          
+                                                              
+                                       
+  */
 	smd_info->notify_context = 0;
 	if (type == SMD_DATA_TYPE)
 		INIT_WORK(&(smd_info->diag_notify_update_smd_work),
@@ -1759,9 +1481,9 @@ int diag_smd_constructor(struct diag_smd_info *smd_info, int peripheral,
 	}
 
 	/*
-	 * Set function ptr for function to call to process the data that
-	 * was just read from the smd channel
-	 */
+                                                                  
+                                      
+  */
 	if (type == SMD_DATA_TYPE)
 		smd_info->process_smd_read_data = diag_process_smd_read_data;
 	else if (type == SMD_CNTL_TYPE)
@@ -1773,30 +1495,6 @@ int diag_smd_constructor(struct diag_smd_info *smd_info, int peripheral,
 	else {
 		pr_err("diag: In %s, unknown type, type: %d\n", __func__, type);
 		goto err;
-	}
-
-	smd_info->nrt_lock.enabled = 0;
-	smd_info->nrt_lock.ref_count = 0;
-	smd_info->nrt_lock.copy_count = 0;
-	if (type == SMD_DATA_TYPE) {
-		spin_lock_init(&smd_info->nrt_lock.read_spinlock);
-
-		switch (peripheral) {
-		case MODEM_DATA:
-			wake_lock_init(&smd_info->nrt_lock.read_lock,
-				WAKE_LOCK_SUSPEND, "diag_nrt_modem_read");
-			break;
-		case LPASS_DATA:
-			wake_lock_init(&smd_info->nrt_lock.read_lock,
-				WAKE_LOCK_SUSPEND, "diag_nrt_lpass_read");
-			break;
-		case WCNSS_DATA:
-			wake_lock_init(&smd_info->nrt_lock.read_lock,
-				WAKE_LOCK_SUSPEND, "diag_nrt_wcnss_read");
-			break;
-		default:
-			break;
-		}
 	}
 
 	return 1;
@@ -1819,8 +1517,6 @@ void diagfwd_init(void)
 	diag_debug_buf_idx = 0;
 	driver->read_len_legacy = 0;
 	driver->use_device_tree = has_device_tree();
-	driver->real_time_mode = 1;
-	mutex_init(&driver->diag_hdlc_mutex);
 	mutex_init(&driver->diag_cntl_mutex);
 
 	success = diag_smd_constructor(&driver->smd_data[MODEM_DATA],
@@ -1905,11 +1601,6 @@ void diagfwd_init(void)
 		goto err;
 	}
 #endif
-#ifdef CONFIG_USB_G_LGE_ANDROID_DIAG_OSP_SUPPORT
-	driver->diag_read_status = 1;
-	init_waitqueue_head(&driver->diag_read_wait_q);
-#endif
-
 	platform_driver_register(&msm_smd_ch1_driver);
 	platform_driver_register(&diag_smd_lite_driver);
 	return;

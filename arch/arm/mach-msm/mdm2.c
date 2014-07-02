@@ -41,10 +41,6 @@
 #include "devices.h"
 #include "clock.h"
 #include "mdm_private.h"
-#ifdef CONFIG_LGE_NFC_SONY_CXD2235AGG
-extern int snfc_poweroff_flag;
-#endif
-
 #define MDM_PBLRDY_CNT		20
 
 static int mdm_debug_mask;
@@ -77,7 +73,7 @@ out:
 	mutex_unlock(&mdm_drv->peripheral_status_lock);
 }
 
-/* This function can be called from atomic context. */
+/*                                                  */
 static void mdm_toggle_soft_reset(struct mdm_modem_drv *mdm_drv)
 {
 	int soft_reset_direction_assert = 0,
@@ -89,15 +85,15 @@ static void mdm_toggle_soft_reset(struct mdm_modem_drv *mdm_drv)
 	}
 	gpio_direction_output(mdm_drv->ap2mdm_soft_reset_gpio,
 			soft_reset_direction_assert);
-	/* Use mdelay because this function can be called from atomic
-	 * context.
-	 */
+	/*                                                           
+            
+  */
 	mdelay(10);
 	gpio_direction_output(mdm_drv->ap2mdm_soft_reset_gpio,
 			soft_reset_direction_de_assert);
 }
 
-/* This function can be called from atomic context. */
+/*                                                  */
 static void mdm_atomic_soft_reset(struct mdm_modem_drv *mdm_drv)
 {
 	mdm_toggle_soft_reset(mdm_drv);
@@ -111,7 +107,7 @@ static void mdm_power_down_common(struct mdm_modem_drv *mdm_drv)
 
 	mdm_peripheral_disconnect(mdm_drv);
 
-	/* Wait for the modem to complete its power down actions. */
+	/*                                                        */
 	for (i = 20; i > 0; i--) {
 		if (gpio_get_value(mdm_drv->mdm2ap_status_gpio) == 0) {
 			if (mdm_debug_mask & MDM_DEBUG_MASK_SHDN_LOG)
@@ -122,22 +118,18 @@ static void mdm_power_down_common(struct mdm_modem_drv *mdm_drv)
 		msleep(100);
 	}
 
-#ifdef CONFIG_LGE_NFC_SONY_CXD2235AGG
-	snfc_poweroff_flag = 1;
-#endif
-
-	/* Assert the soft reset line whether mdm2ap_status went low or not */
+	/*                                                                  */
 	gpio_direction_output(mdm_drv->ap2mdm_soft_reset_gpio,
 					soft_reset_direction);
 	if (i == 0) {
 		pr_err("%s: MDM2AP_STATUS never went low. Doing a hard reset\n",
 			   __func__);
 		/*
-		* Currently, there is a debounce timer on the charm PMIC. It is
-		* necessary to hold the PMIC RESET low for ~3.5 seconds
-		* for the reset to fully take place. Sleep here to ensure the
-		* reset has occured before the function exits.
-		*/
+                                                                 
+                                                         
+                                                               
+                                                
+  */
 		msleep(4000);
 	}
 }
@@ -146,14 +138,6 @@ static void mdm_do_first_power_on(struct mdm_modem_drv *mdm_drv)
 {
 	int i;
 	int pblrdy;
-	int kpd_direction_assert = 1,
-		kpd_direction_de_assert = 0;
-
-	if (mdm_drv->pdata->kpd_not_inverted) {
-		kpd_direction_assert = 0;
-		kpd_direction_de_assert = 1;
-	}
-
 	if (mdm_drv->power_on_count != 1) {
 		pr_err("%s:id %d: Calling fn when power_on_count != 1\n",
 			   __func__, mdm_drv->device_id);
@@ -164,26 +148,22 @@ static void mdm_do_first_power_on(struct mdm_modem_drv *mdm_drv)
 		   __func__, mdm_drv->device_id);
 	mdm_peripheral_disconnect(mdm_drv);
 
-	/* If this is the first power-up after a panic, the modem may still
-	 * be in a power-on state, in which case we need to toggle the gpio
-	 * instead of just de-asserting it. No harm done if the modem was
-	 * powered down.
-	 */
-	if (!mdm_drv->pdata->no_reset_on_first_powerup)
-		mdm_toggle_soft_reset(mdm_drv);
-
-	/* If the device has a kpd pwr gpio then toggle it. */
+	/*                                                                 
+                                                                    
+                                                                  
+                 
+  */
+	mdm_toggle_soft_reset(mdm_drv);
+	/*                                                  */
 	if (GPIO_IS_VALID(mdm_drv->ap2mdm_kpdpwr_n_gpio)) {
-		/* Pull AP2MDM_KPDPWR gpio high and wait for PS_HOLD to settle,
-		 * then	pull it back low.
-		 */
+		/*                                                             
+                           
+   */
 		pr_debug("%s:id %d: Pulling AP2MDM_KPDPWR gpio high\n",
 				 __func__, mdm_drv->device_id);
-		gpio_direction_output(mdm_drv->ap2mdm_kpdpwr_n_gpio,
-				kpd_direction_assert);
+		gpio_direction_output(mdm_drv->ap2mdm_kpdpwr_n_gpio, 1);
 		msleep(1000);
-		gpio_direction_output(mdm_drv->ap2mdm_kpdpwr_n_gpio,
-				kpd_direction_de_assert);
+		gpio_direction_output(mdm_drv->ap2mdm_kpdpwr_n_gpio, 0);
 	}
 
 	if (!GPIO_IS_VALID(mdm_drv->mdm2ap_pblrdy))
@@ -235,18 +215,18 @@ static void mdm_power_on_common(struct mdm_modem_drv *mdm_drv)
 {
 	mdm_drv->power_on_count++;
 
-	/* this gpio will be used to indicate apq readiness,
-	 * de-assert it now so that it can be asserted later.
-	 * May not be used.
-	 */
+	/*                                                  
+                                                      
+                    
+  */
 	if (GPIO_IS_VALID(mdm_drv->ap2mdm_wakeup_gpio))
 		gpio_direction_output(mdm_drv->ap2mdm_wakeup_gpio, 0);
 
 	/*
-	 * If we did an "early power on" then ignore the very next
-	 * power-on request because it would the be first request from
-	 * user space but we're already powered on. Ignore it.
-	 */
+                                                           
+                                                               
+                                                       
+  */
 	if (mdm_drv->pdata->early_power_on &&
 			(mdm_drv->power_on_count == 2))
 		return;
@@ -289,10 +269,10 @@ static void mdm_image_upgrade(struct mdm_modem_drv *mdm_drv, int type)
 				 __func__, mdm_drv->device_id);
 		atomic_set(&mdm_drv->mdm_ready, 0);
 		/*
-		 * If we have no image currently present on the modem, then we
-		 * would be in PBL, in which case the status gpio would not go
-		 * high.
-		 */
+                                                                
+                                                                
+          
+   */
 		mdm_drv->disable_status_check = 1;
 		if (GPIO_IS_VALID(mdm_drv->usb_switch_gpio)) {
 			pr_info("%s: id %d: Switching usb control to MDM\n",

@@ -473,11 +473,11 @@ void mdss_mdp_clk_ctrl(int enable, int isr)
 	pr_debug("clk enable=%d isr=%d clk_ref=%d\n", enable, isr,
 			atomic_read(&clk_ref));
 	/*
-	 * It is assumed that if isr = TRUE then start = OFF
-	 * if start = ON when isr = TRUE it could happen that the usercontext
-	 * could turn off the clocks while the interrupt is updating the
-	 * power to ON
-	 */
+                                                     
+                                                                      
+                                                                 
+               
+  */
 	WARN_ON(isr == true && enable);
 
 	if (enable == MDP_BLOCK_POWER_ON) {
@@ -494,7 +494,7 @@ void mdss_mdp_clk_ctrl(int enable, int isr)
 	WARN_ON(enable == MDP_BLOCK_MASTER_OFF && !force_off);
 
 	if (isr) {
-		/* if it's power off send workqueue to turn off clocks */
+		/*                                                     */
 		if (mdss_res->clk_ena && !atomic_read(&clk_ref))
 			queue_delayed_work(mdss_res->clk_ctrl_wq,
 					   &mdss_res->clk_ctrl_worker,
@@ -511,7 +511,7 @@ void mdss_mdp_clk_ctrl(int enable, int isr)
 			if (force_off || mdss_res->suspend) {
 				mdss_mdp_clk_ctrl_update(false);
 			} else {
-				/* send workqueue to turn off mdp power */
+				/*                                      */
 				queue_delayed_work(mdss_res->clk_ctrl_wq,
 						   &mdss_res->clk_ctrl_worker,
 						   mdss_res->timeout);
@@ -808,9 +808,9 @@ static struct platform_driver mdss_mdp_driver = {
 	.shutdown = NULL,
 	.driver = {
 		/*
-		 * Driver name must match the device name added in
-		 * platform.c.
-		 */
+                                                    
+                
+   */
 		.name = "mdp",
 		.of_match_table = mdss_mdp_dt_match,
 	},

@@ -21,4 +21,4 @@
 #endif
 
 #define MCR_PR_ERR   pr_err
-#endif /* MSM_MERCURY_COMMON_H */
+#endif /*                      */

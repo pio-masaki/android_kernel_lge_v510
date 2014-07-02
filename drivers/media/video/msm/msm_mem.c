@@ -138,9 +138,9 @@ static int msm_pmem_table_add(struct hlist_head *ptype,
 	if (ion_map_iommu(client, region->handle, domain_num, 0,
 				  SZ_4K, 0, &paddr, &len, 0, 0) < 0)
 		goto out2;
-		// Start LGE_BSP_CAMERA::seongjo.kim@lge.com 2012-08-17 Add log for iommu issue debug
+		//                                                                                   
 		pr_err("%s: IOMMU mapped address is 0x%x\n", __func__, (unsigned int)paddr);
-		// End LGE_BSP_CAMERA::seongjo.kim@lge.com 2012-08-17 Add log for iommu issue debug
+		//                                                                                 
 #elif CONFIG_ANDROID_PMEM
 	rc = get_pmem_file(info->fd, &paddr, &kvstart, &len, &file);
 	if (rc < 0) {
@@ -256,9 +256,9 @@ static int __msm_pmem_table_del(struct hlist_head *ptype,
 #ifdef CONFIG_MSM_MULTIMEDIA_USE_ION
 				ion_unmap_iommu(client, region->handle,
 					domain_num, 0);
-				// Start LGE_BSP_CAMERA::seongjo.kim@lge.com 2012-08-17 Add log for iommu issue debug
+				//                                                                                   
 				pr_err("%s: IOMMU unmapping address 0x%x\n", __func__, (unsigned int)region->paddr);
-				// End LGE_BSP_CAMERA::seongjo.kim@lge.com 2012-08-17 Add log for iommu issue debug
+				//                                                                                 
 				ion_free(client, region->handle);
 #else
 				put_pmem_file(region->file);
@@ -276,7 +276,7 @@ static int __msm_pmem_table_del(struct hlist_head *ptype,
 	return rc;
 }
 
-/* return of 0 means failure */
+/*                           */
 uint8_t msm_pmem_region_lookup(struct hlist_head *ptype,
 	int pmem_type, struct msm_pmem_region *reg, uint8_t maxcount)
 {
@@ -390,8 +390,8 @@ unsigned long msm_pmem_stats_ptov_lookup(
 	hlist_for_each_entry_safe(region, node, n,
 	&mctl->stats_info.pmem_stats_list, list) {
 		if (addr == region->paddr && region->info.active) {
-			/* offset since we could pass vaddr inside a
-			 * registered pmem buffer */
+			/*                                          
+                             */
 			*fd = region->info.fd;
 			region->info.active = 0;
 			return (unsigned long)(region->info.vaddr);
@@ -414,7 +414,7 @@ int msm_register_pmem(struct hlist_head *ptype, void __user *arg,
 
 	return __msm_register_pmem(ptype, &info, client, domain_num);
 }
-//EXPORT_SYMBOL(msm_register_pmem);
+//                                 
 
 int msm_pmem_table_del(struct hlist_head *ptype, void __user *arg,
 			struct ion_client *client, int domain_num)
@@ -428,4 +428,4 @@ int msm_pmem_table_del(struct hlist_head *ptype, void __user *arg,
 
 	return __msm_pmem_table_del(ptype, &info, client, domain_num);
 }
-//EXPORT_SYMBOL(msm_pmem_table_del);
+//                                  

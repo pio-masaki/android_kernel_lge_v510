@@ -6,9 +6,6 @@
  * Author: Mike Lockwood <lockwood@android.com>
  *
  * Copyright (C) 2009-2012 LGE, Inc.
- * Lee SungYoung <lsy@lge.com>
- * Kim Eun Hye <ehgrace.kim@lge.com>
- * Yoon Gi Souk <gisouk.yoon@lge.com>
  *
  * This software is licensed under the terms of the GNU General Public
  * License version 2, as published by the Free Software Foundation, and
@@ -20,11 +17,11 @@
  * GNU General Public License for more details.
  */
 
-/* Interface is following:
- * android:frameworks/base/services/java/com/android/server/HeadsetObserver.java
- * HEADSET_UEVENT_MATCH = "DEVPATH=/sys/devices/virtual/switch/h2w"
- * HEADSET_STATE_PATH = /sys/class/switch/h2w/state
- * HEADSET_NAME_PATH = /sys/class/switch/h2w/name
+/*                        
+                                                                                
+                                                                   
+                                                   
+                                                 
  */
 #include <linux/module.h>
 #include <linux/kernel.h>
@@ -45,14 +42,14 @@
 #include <linux/platform_data/hds_fsa8008.h>
 
 #define FSA8008_USE_WORK_QUEUE
-#define FSA8008_KEY_LATENCY_TIME	200 /* in ms */
-#define FSA8008_DEBOUNCE_TIME		500 /* in ms */
+#define FSA8008_KEY_LATENCY_TIME	200 /*       */
+#define FSA8008_DEBOUNCE_TIME		500 /*       */
 #define FSA8008_WAKELOCK_TIMEOUT	(2*HZ)
 
 #define HSD_DEBUG_PRINT
 
 #ifdef HSD_DEBUG_PRINT
-#define HSD_DBG(fmt, args...) printk(KERN_ERR "%s: " fmt, __func__, ##args)
+#define HSD_DBG(fmt, args...) printk(KERN_DEBUG "%s: " fmt, __func__, ##args)
 #else
 #define HSD_DBG(fmt, args...) do {} while (0)
 #endif
@@ -64,27 +61,20 @@ static struct workqueue_struct *local_fsa8008_workqueue;
 static struct wake_lock ear_hook_wake_lock;
 
 struct hsd_info {
-	/* function devices provided by this driver */
+	/*                                          */
 	struct switch_dev sdev;
 	struct input_dev *input;
-	/* mutex */
+	/*       */
 	struct mutex mutex_lock;
-	/* h/w configuration : initilized by platform data */
-	unsigned int gpio_detect; /* DET : to detect jack inserted or not */
+	/*                                                 */
+	unsigned int gpio_detect; /*                                      */
 	unsigned int gpio_detect_can_wakeup;
-	unsigned int gpio_mic_en; /* EN : to enable mic */
-	unsigned int gpio_mic_bias_en; /* EN : to enable mic bias */
-	unsigned int gpio_jpole;  /* JPOLE : 3pole or 4pole */
-	unsigned int gpio_key;    /* S/E button */
-	
-	//2013-04-17 Ilda_jung(ilda.jung@lge.com) [AWIFI/AUDIO BSP] Enable earjack power(LDO) [START]	
-	#if defined(CONFIG_MACH_APQ8064_AWIFI)
-	unsigned int gpio_power_en; /* EN : to enable 2V8_AUDIO_POWER_LDO */
-	unsigned int gpio_hph_en; /* EN : to enable 3V0_HPH_LDO */
-	#endif
-	//2013-04-17 Ilda_jung(ilda.jung@lge.com) [AWIFI/AUDIO BSP] Enable earjack power(LDO) [END]
+	unsigned int gpio_mic_en; /*                    */
+	unsigned int gpio_mic_bias_en; /*                         */
+	unsigned int gpio_jpole;  /*                        */
+	unsigned int gpio_key;    /*            */
 
-	/* callback function which is initialized while probing */
+	/*                                                      */
 	void (*set_headset_mic_bias)(int enable);
 	void (*set_uart_console)(int enable);
 
@@ -93,15 +83,15 @@ struct hsd_info {
 
 	unsigned int key_code;
 
-	/* irqs */
+	/*      */
 	unsigned int irq_detect;
 	unsigned int irq_key;
-	/* internal states */
+	/*                 */
 	atomic_t irq_key_enabled;
 	atomic_t is_3_pole_or_not;
 	atomic_t btn_state;
 	int saved_detect;
-	/* work for detect_work */
+	/*                      */
 	struct delayed_work work;
 	struct delayed_work work_for_key_pressed;
 	struct delayed_work work_for_key_released;
@@ -192,13 +182,6 @@ static void insert_headset(struct hsd_info *hi)
 		hi->set_headset_mic_bias(1);
 
 	gpio_set_value_cansleep(hi->gpio_mic_en, 1);
-	
-	//2013-04-17 Ilda_jung(ilda.jung@lge.com) [AWIFI/AUDIO BSP] Enable earjack power(LDO) [START]
-	#if defined(CONFIG_MACH_APQ8064_AWIFI)
-	gpio_set_value_cansleep(hi->gpio_power_en, 1);
-	gpio_set_value_cansleep(hi->gpio_hph_en, 1);
-	#endif
-	//2013-04-17 Ilda_jung(ilda.jung@lge.com) [AWIFI/AUDIO BSP] Enable earjack power(LDO) [END]
 
 	msleep(hi->latency_for_detection);
 
@@ -206,14 +189,6 @@ static void insert_headset(struct hsd_info *hi)
 
 	if (earjack_type == HEADSET_3POLE) {
 		HSD_DBG("3 polarity earjack");
-
-		//2013-05-08 Ilda_jung(ilda.jung@lge.com) [AWIFI/AUDIO BSP] Disable MIC BIAS LOD when insert  3 polarity earjack[START]
-		#if defined(CONFIG_MACH_APQ8064_AWIFI)
-		if (gpio_get_value(hi->gpio_power_en) != 0){
-			gpio_set_value_cansleep(hi->gpio_power_en, 0);
-		}
-		#endif
-		//2013-05-08 Ilda_jung(ilda.jung@lge.com) [AWIFI/AUDIO BSP] Disable MIC BIAS LOD when insert  3 polarity earjack[END]
 
 		atomic_set(&hi->is_3_pole_or_not, 1);
 
@@ -372,40 +347,40 @@ static int hsd_gpio_init(struct hsd_info *hi)
 {
 	int ret;
 
-	/* initialize gpio_detect */
+	/*                        */
 	ret = gpio_request_one(hi->gpio_detect, GPIOF_IN, "gpio_detect");
 	if (ret < 0) {
-		pr_err("%s: Failed to gpio_request gpio %d (gpio_detect)\n",
+		pr_err("%s: Failed to gpio_request gpio%d (gpio_detect)\n",
 				__func__, hi->gpio_detect);
 		goto error_01;
 	}
 
-	/* initialize gpio_jpole */
+	/*                       */
 	ret = gpio_request_one(hi->gpio_jpole, GPIOF_IN, "gpio_jpole");
 	if (ret < 0) {
-		pr_err("%s: Failed to gpio_request gpio %d (gpio_jpole)\n",
+		pr_err("%s: Failed to gpio_request gpio%d (gpio_jpole)\n",
 				__func__, hi->gpio_jpole);
 		goto error_02;
 	}
 
-	/* initialize gpio_key */
+	/*                     */
 	ret = gpio_request_one(hi->gpio_key, GPIOF_IN, "gpio_key");
 	if (ret < 0) {
-		pr_err("%s: Failed to gpio_request gpio %d (gpio_key)\n",
+		pr_err("%s: Failed to gpio_request gpio%d (gpio_key)\n",
 				__func__, hi->gpio_key);
 		goto error_03;
 	}
 
-	/* initialize gpio_mic_en */
+	/*                        */
 	ret = gpio_request_one(hi->gpio_mic_en, GPIOF_OUT_INIT_LOW,
 			"gpio_mic_en");
 	if (ret < 0) {
-		pr_err("%s: Failed to gpio_request gpio %d (gpio_mic_en)\n",
+		pr_err("%s: Failed to gpio_request gpio%d (gpio_mic_en)\n",
 				__func__, hi->gpio_mic_en);
 		goto error_04;
 	}
 
-	/* initialize gpio_mic_bias_en */
+	/*                             */
 	if (gpio_is_valid(hi->gpio_mic_bias_en)) {
 		ret = gpio_request_one(hi->gpio_mic_bias_en,
 				GPIOF_OUT_INIT_LOW, "gpio_mic_bias_en");
@@ -447,7 +422,7 @@ static int hsd_probe(struct platform_device *pdev)
 	struct fsa8008_platform_data *pdata = pdev->dev.platform_data;
 	struct hsd_info *hi;
 
-	HSD_DBG("hsd_probe");
+	pr_info("fsa8008 probe\n");
 
 	if (!pdata) {
 		pr_err("%s: no pdata\n", __func__);
@@ -487,7 +462,7 @@ static int hsd_probe(struct platform_device *pdev)
 	if (hsd_gpio_init(hi) < 0)
 		goto error_01;
 
-	/* initialize irq of gpio_jpole */
+	/*                              */
 	hi->irq_detect = gpio_to_irq(hi->gpio_detect);
 	HSD_DBG("hi->irq_detect = %d\n", hi->irq_detect);
 	if (hi->irq_detect < 0) {
@@ -513,7 +488,7 @@ static int hsd_probe(struct platform_device *pdev)
 		}
 	}
 
-	/* initialize irq of gpio_key */
+	/*                            */
 	hi->irq_key = gpio_to_irq(hi->gpio_key);
 	HSD_DBG("hi->irq_key = %d\n", hi->irq_key);
 	if (hi->irq_key < 0) {
@@ -538,7 +513,7 @@ static int hsd_probe(struct platform_device *pdev)
 		goto error_04;
 	}
 
-	/* initialize switch device */
+	/*                          */
 	hi->sdev.name = pdata->switch_name;
 	hi->sdev.print_state = hsd_print_state;
 	hi->sdev.print_name = hsd_print_name;
@@ -549,7 +524,7 @@ static int hsd_probe(struct platform_device *pdev)
 		goto error_04;
 	}
 
-	/* initialize input device */
+	/*                         */
 	hi->input = input_allocate_device();
 	if (!hi->input) {
 		pr_err("%s: Failed to allocate input device\n", __func__);
@@ -578,10 +553,10 @@ static int hsd_probe(struct platform_device *pdev)
 
 	if (!gpio_get_value_cansleep(hi->gpio_detect)) {
 #ifdef FSA8008_USE_WORK_QUEUE
-		/* to detect in initialization with eacjack insertion */
+		/*                                                    */
 		queue_delayed_work(local_fsa8008_workqueue, &(hi->work), 0);
 #else
-		/* to detect in initialization with eacjack insertion */
+		/*                                                    */
 		schedule_delayed_work(&(hi->work), 0);
 #endif
 	}
@@ -609,8 +584,6 @@ static int hsd_remove(struct platform_device *pdev)
 {
 	struct hsd_info *hi = (struct hsd_info *)platform_get_drvdata(pdev);
 
-	HSD_DBG("hsd_remove");
-
 	if (switch_get_state(&hi->sdev))
 		remove_headset(hi);
 
@@ -633,8 +606,6 @@ static int hsd_suspend(struct device *dev)
 	struct platform_device *pdev = to_platform_device(dev);
 	struct hsd_info *hi = platform_get_drvdata(pdev);
 
-	HSD_DBG("hsd_suspend");
-
 	if (!hi->gpio_detect_can_wakeup) {
 		disable_irq(hi->irq_detect);
 		hi->saved_detect = gpio_get_value(hi->gpio_detect);
@@ -649,8 +620,6 @@ static int hsd_resume(struct device *dev)
 	struct platform_device *pdev = to_platform_device(dev);
 	struct hsd_info *hi = platform_get_drvdata(pdev);
 	int detect = 0;
-
-	HSD_DBG("hsd_resume");
 
 	detect = gpio_get_value(hi->gpio_detect);
 	if (HEADSET_INSERT == detect)
@@ -684,39 +653,41 @@ static int __init hsd_init(void)
 {
 	int ret;
 
-	HSD_DBG("hsd_init");
+	pr_info("fsa8008 init\n");
+
+	wake_lock_init(&ear_hook_wake_lock, WAKE_LOCK_SUSPEND, "ear_hook");
 
 #ifdef FSA8008_USE_WORK_QUEUE
 	local_fsa8008_workqueue = create_workqueue("fsa8008");
 	if (!local_fsa8008_workqueue) {
 		pr_err("%s: out of memory\n", __func__);
-		return -ENOMEM;
+		ret = -ENOMEM;
+		goto err_workqueue;
 	}
 #endif
 
 	ret = platform_driver_register(&hsd_driver);
-	if (ret< 0) {
+	if (ret < 0) {
 		pr_err("%s: Fail to register platform driver\n", __func__);
-		goto err;
+		goto err_platform_driver_register;
 	}
 
-	wake_lock_init(&ear_hook_wake_lock, WAKE_LOCK_SUSPEND, "ear_hook");
+	return 0;
 
-	return ret;
-
-err:
+err_platform_driver_register:
 #ifdef FSA8008_USE_WORK_QUEUE
 	if (local_fsa8008_workqueue)
 		destroy_workqueue(local_fsa8008_workqueue);
 	local_fsa8008_workqueue = NULL;
 #endif
+err_workqueue:
+	wake_lock_destroy(&ear_hook_wake_lock);
+
 	return ret;
 }
 
 static void __exit hsd_exit(void)
 {
-	HSD_DBG("hsd_exit");
-
 #ifdef FSA8008_USE_WORK_QUEUE
 	if (local_fsa8008_workqueue)
 		destroy_workqueue(local_fsa8008_workqueue);
@@ -727,10 +698,10 @@ static void __exit hsd_exit(void)
 	wake_lock_destroy(&ear_hook_wake_lock);
 }
 
-/* to make init after pmicxxxx module */
+/*                                    */
 late_initcall_sync(hsd_init);
 module_exit(hsd_exit);
 
-MODULE_AUTHOR("Yoon Gi Souk <gisouk.yoon@lge.com>");
+MODULE_AUTHOR("");
 MODULE_DESCRIPTION("FSA8008 Headset detection driver");
 MODULE_LICENSE("GPL");

@@ -17,72 +17,72 @@
 #define TRUE  1
 #define FALSE 0
 
-/* at start of camif,  bit 1:0 = 0x01:enable
- * image data capture at frame boundary. */
+/*                                          
+                                         */
 #define CAMIF_COMMAND_START  0x00000005
 
-/* bit 2= 0x1:clear the CAMIF_STATUS register
- * value. */
+/*                                           
+          */
 #define CAMIF_COMMAND_CLEAR  0x00000004
 
-/* at stop of vfe pipeline, for now it is assumed
- * that camif will stop at any time. Bit 1:0 = 0x10:
- * disable image data capture immediately. */
+/*                                               
+                                                    
+                                           */
 #define CAMIF_COMMAND_STOP_IMMEDIATELY  0x00000002
 
-/* at stop of vfe pipeline, for now it is assumed
- * that camif will stop at any time. Bit 1:0 = 0x00:
- * disable image data capture at frame boundary */
+/*                                               
+                                                    
+                                                */
 #define CAMIF_COMMAND_STOP_AT_FRAME_BOUNDARY  0x00000000
 
-/* to halt axi bridge */
+/*                    */
 #define AXI_HALT  0x00000001
 
-/* clear the halt bit. */
+/*                     */
 #define AXI_HALT_CLEAR  0x00000000
 
-/* clear axi_halt_irq */
+/*                    */
 #define MASK_AXI_HALT_IRQ	0xFF7FFFFF
 
-/* reset the pipeline when stop command is issued.
- * (without reset the register.) bit 26-31 = 0,
- * domain reset, bit 0-9 = 1 for module reset, except
- * register module. */
+/*                                                
+                                               
+                                                     
+                    */
 #define VFE_RESET_UPON_STOP_CMD  0x000003ef
 
-/* reset the pipeline when reset command.
- * bit 26-31 = 0, domain reset, bit 0-9 = 1 for module reset. */
+/*                                       
+                                                              */
 #define VFE_RESET_UPON_RESET_CMD  0x000003ff
 
-/* bit 5 is for axi status idle or busy.
- * 1 =  halted,  0 = busy */
+/*                                      
+                          */
 #define AXI_STATUS_BUSY_MASK 0x00000020
 
-/* bit 0 & bit 1 = 1, both y and cbcr irqs need to be present
- * for frame done interrupt */
+/*                                                           
+                            */
 #define VFE_COMP_IRQ_BOTH_Y_CBCR 3
 
-/* bit 1 = 1, only cbcr irq triggers frame done interrupt */
+/*                                                        */
 #define VFE_COMP_IRQ_CBCR_ONLY 2
 
-/* bit 0 = 1, only y irq triggers frame done interrupt */
+/*                                                     */
 #define VFE_COMP_IRQ_Y_ONLY 1
 
-/* bit 0 = 1, PM go;   bit1 = 1, PM stop */
+/*                                       */
 #define VFE_PERFORMANCE_MONITOR_GO   0x00000001
 #define VFE_PERFORMANCE_MONITOR_STOP 0x00000002
 
-/* bit 0 = 1, test gen go;   bit1 = 1, test gen stop */
+/*                                                   */
 #define VFE_TEST_GEN_GO   0x00000001
 #define VFE_TEST_GEN_STOP 0x00000002
 
-/* the chroma is assumed to be interpolated between
- * the luma samples.  JPEG 4:2:2 */
+/*                                                 
+                                 */
 #define VFE_CHROMA_UPSAMPLE_INTERPOLATED 0
 
-/* constants for irq registers */
+/*                             */
 #define VFE_DISABLE_ALL_IRQS 0
-/* bit =1 is to clear the corresponding bit in VFE_IRQ_STATUS.  */
+/*                                                              */
 #define VFE_CLEAR_ALL_IRQS   0xffffffff
 
 #define VFE_IRQ_STATUS0_CAMIF_SOF_MASK            0x00000001
@@ -94,58 +94,58 @@
 #define VFE_IRQ_STATUS1_RESET_AXI_HALT_ACK_MASK   0x00800000
 #define VFE_IRQ_STATUS0_STATS_COMPOSIT_MASK       0x01000000
 
-#define VFE_IRQ_STATUS0_STATS_AEC     0x2000  /* bit 13 */
-#define VFE_IRQ_STATUS0_STATS_AF      0x4000  /* bit 14 */
-#define VFE_IRQ_STATUS0_STATS_AWB     0x8000  /* bit 15 */
-#define VFE_IRQ_STATUS0_STATS_RS      0x10000  /* bit 16 */
-#define VFE_IRQ_STATUS0_STATS_CS      0x20000  /* bit 17 */
-#define VFE_IRQ_STATUS0_STATS_IHIST   0x40000  /* bit 18 */
+#define VFE_IRQ_STATUS0_STATS_AEC     0x2000  /*        */
+#define VFE_IRQ_STATUS0_STATS_AF      0x4000  /*        */
+#define VFE_IRQ_STATUS0_STATS_AWB     0x8000  /*        */
+#define VFE_IRQ_STATUS0_STATS_RS      0x10000  /*        */
+#define VFE_IRQ_STATUS0_STATS_CS      0x20000  /*        */
+#define VFE_IRQ_STATUS0_STATS_IHIST   0x40000  /*        */
 
-#define VFE_IRQ_STATUS0_SYNC_TIMER0   0x2000000  /* bit 25 */
-#define VFE_IRQ_STATUS0_SYNC_TIMER1   0x4000000  /* bit 26 */
-#define VFE_IRQ_STATUS0_SYNC_TIMER2   0x8000000  /* bit 27 */
-#define VFE_IRQ_STATUS0_ASYNC_TIMER0  0x10000000  /* bit 28 */
-#define VFE_IRQ_STATUS0_ASYNC_TIMER1  0x20000000  /* bit 29 */
-#define VFE_IRQ_STATUS0_ASYNC_TIMER2  0x40000000  /* bit 30 */
-#define VFE_IRQ_STATUS0_ASYNC_TIMER3  0x80000000  /* bit 31 */
+#define VFE_IRQ_STATUS0_SYNC_TIMER0   0x2000000  /*        */
+#define VFE_IRQ_STATUS0_SYNC_TIMER1   0x4000000  /*        */
+#define VFE_IRQ_STATUS0_SYNC_TIMER2   0x8000000  /*        */
+#define VFE_IRQ_STATUS0_ASYNC_TIMER0  0x10000000  /*        */
+#define VFE_IRQ_STATUS0_ASYNC_TIMER1  0x20000000  /*        */
+#define VFE_IRQ_STATUS0_ASYNC_TIMER2  0x40000000  /*        */
+#define VFE_IRQ_STATUS0_ASYNC_TIMER3  0x80000000  /*        */
 
-/* imask for while waiting for stop ack,  driver has already
- * requested stop, waiting for reset irq, and async timer irq.
- * For irq_status_0, bit 28-31 are for async timer. For
- * irq_status_1, bit 22 for reset irq, bit 23 for axi_halt_ack
-   irq */
+/*                                                          
+                                                              
+                                                       
+                                                              
+       */
 #define VFE_IMASK_WHILE_STOPPING_0  0xF0000000
 #define VFE_IMASK_WHILE_STOPPING_1  0x00C00000
 #define VFE_IMASK_RESET             0x00400000
 #define VFE_IMASK_AXI_HALT          0x00800000
 
 
-/* no error irq in mask 0 */
+/*                        */
 #define VFE_IMASK_ERROR_ONLY_0  0x0
-/* when normal case, don't want to block error status. */
-/* bit 0-21 are error irq bits */
+/*                                                     */
+/*                             */
 #define VFE_IMASK_ERROR_ONLY_1  0x003fffff
 
-/* For BPC bit 0,bit 12-17 and bit 26 -20 are set to zero and other's 1 */
+/*                                                                      */
 #define BPC_MASK 0xF80C0FFE
 
-/* For BPC bit 1 and 2 are set to zero and other's 1 */
+/*                                                   */
 #define ABF_MASK 0xFFFFFFF9
 
-/* For MCE enable bit 28 set to zero and other's 1 */
+/*                                                 */
 #define MCE_EN_MASK 0xEFFFFFFF
 
-/* For MCE Q_K bit 28 to 31 set to zero and other's 1 */
+/*                                                    */
 #define MCE_Q_K_MASK 0x0FFFFFFF
 
-#define AWB_ENABLE_MASK 0x00000080     /* bit 7 */
-#define AF_ENABLE_MASK 0x00000040      /* bit 6 */
-#define AE_ENABLE_MASK 0x00000020      /* bit 5 */
-#define IHIST_ENABLE_MASK 0x00008000   /* bit 15 */
-#define RS_ENABLE_MASK 0x00000100      /* bit 8  */
-#define CS_ENABLE_MASK 0x00000200      /* bit 9  */
-#define RS_CS_ENABLE_MASK 0x00000300   /* bit 8,9  */
-#define STATS_ENABLE_MASK 0x000483E0   /* bit 18,15,9,8,7,6,5*/
+#define AWB_ENABLE_MASK 0x00000080     /*       */
+#define AF_ENABLE_MASK 0x00000040      /*       */
+#define AE_ENABLE_MASK 0x00000020      /*       */
+#define IHIST_ENABLE_MASK 0x00008000   /*        */
+#define RS_ENABLE_MASK 0x00000100      /*        */
+#define CS_ENABLE_MASK 0x00000200      /*        */
+#define RS_CS_ENABLE_MASK 0x00000300   /*          */
+#define STATS_ENABLE_MASK 0x000483E0   /*                    */
 
 #define VFE_REG_UPDATE_TRIGGER           1
 #define VFE_PM_BUF_MAX_CNT_MASK          0xFF
@@ -199,9 +199,9 @@ enum  vfe_recording_state {
 #define V31_BLACK_LEVEL_CFG       9
 #define V31_ROLL_OFF_CFG          10
 #define V31_DEMUX_CFG             11
-#define V31_DEMOSAIC_0_CFG        12 /* general */
-#define V31_DEMOSAIC_1_CFG        13 /* ABF     */
-#define V31_DEMOSAIC_2_CFG        14 /* BPC     */
+#define V31_DEMOSAIC_0_CFG        12 /*         */
+#define V31_DEMOSAIC_1_CFG        13 /*         */
+#define V31_DEMOSAIC_2_CFG        14 /*         */
 #define V31_FOV_CFG               15
 #define V31_MAIN_SCALER_CFG       16
 #define V31_WB_CFG                17
@@ -224,8 +224,8 @@ enum  vfe_recording_state {
 #define V31_UPDATE                34
 #define V31_BL_LVL_UPDATE         35
 #define V31_DEMUX_UPDATE          36
-#define V31_DEMOSAIC_1_UPDATE     37 /* BPC */
-#define V31_DEMOSAIC_2_UPDATE     38 /* ABF */
+#define V31_DEMOSAIC_1_UPDATE     37 /*     */
+#define V31_DEMOSAIC_2_UPDATE     38 /*     */
 #define V31_FOV_UPDATE            39
 #define V31_MAIN_SCALER_UPDATE    40
 #define V31_WB_UPDATE             41
@@ -308,14 +308,14 @@ enum  vfe_recording_state {
 
 #define V31_DEMOSAIC_0_OFF        0x00000298
 #define V31_DEMOSAIC_0_LEN        4
-/* ABF     */
+/*         */
 #define V31_DEMOSAIC_1_OFF        0x000002A4
 #define V31_DEMOSAIC_1_LEN        180
-/* BPC     */
+/*         */
 #define V31_DEMOSAIC_2_OFF        0x0000029C
 #define V31_DEMOSAIC_2_LEN        8
 
-/* gamma VFE_LUT_BANK_SEL*/
+/*                       */
 #define V31_GAMMA_CFG_OFF         0x000003BC
 #define V31_LUMA_CFG_OFF          0x000003C0
 
@@ -561,9 +561,9 @@ enum VFE_YUV_INPUT_COSITING_MODE {
 };
 
 
-/* 13*1  */
+/*       */
 #define VFE31_ROLL_OFF_INIT_TABLE_SIZE  13
-/* 13*16 */
+/*       */
 #define VFE31_ROLL_OFF_DELTA_TABLE_SIZE 208
 
 #define VFE31_GAMMA_NUM_ENTRIES  64
@@ -762,7 +762,7 @@ enum VFE_AXI_RD_UNPACK_HBI_SEL {
 };
 
 enum VFE31_MESSAGE_ID {
-	MSG_ID_RESET_ACK, /* 0 */
+	MSG_ID_RESET_ACK, /*   */
 	MSG_ID_START_ACK,
 	MSG_ID_STOP_ACK,
 	MSG_ID_UPDATE_ACK,
@@ -772,7 +772,7 @@ enum VFE31_MESSAGE_ID {
 	MSG_ID_OUTPUT_V,
 	MSG_ID_SNAPSHOT_DONE,
 	MSG_ID_COMMON,
-	MSG_ID_EPOCH1, /* 10 */
+	MSG_ID_EPOCH1, /*    */
 	MSG_ID_EPOCH2,
 	MSG_ID_SYNC_TIMER0_DONE,
 	MSG_ID_SYNC_TIMER1_DONE,
@@ -782,7 +782,7 @@ enum VFE31_MESSAGE_ID {
 	MSG_ID_ASYNC_TIMER2_DONE,
 	MSG_ID_ASYNC_TIMER3_DONE,
 	MSG_ID_AE_OVERFLOW,
-	MSG_ID_AF_OVERFLOW, /* 20 */
+	MSG_ID_AF_OVERFLOW, /*    */
 	MSG_ID_AWB_OVERFLOW,
 	MSG_ID_RS_OVERFLOW,
 	MSG_ID_CS_OVERFLOW,
@@ -792,7 +792,7 @@ enum VFE31_MESSAGE_ID {
 	MSG_ID_CAMIF_OVERFLOW,
 	MSG_ID_VIOLATION,
 	MSG_ID_CAMIF_ERROR,
-	MSG_ID_BUS_OVERFLOW, /* 30 */
+	MSG_ID_BUS_OVERFLOW, /*    */
 	MSG_ID_SOF_ACK,
 	MSG_ID_STOP_REC_ACK,
 };
@@ -860,7 +860,7 @@ struct vfe_message {
    } _u;
 };
 
-/* New one for 7x30 */
+/*                  */
 struct msm_vfe31_cmd {
 	int32_t  id;
 	uint16_t length;
@@ -896,10 +896,10 @@ struct vfe31_output_ch {
 	uint32_t  frame_drop_cnt;
 };
 
-/* no error irq in mask 0 */
+/*                        */
 #define VFE31_IMASK_ERROR_ONLY_0  0x0
-/* when normal case, don't want to block error status. */
-/* bit 0-21 are error irq bits */
+/*                                                     */
+/*                             */
 #define VFE31_IMASK_ERROR_ONLY_1               0x003FFFFF
 #define VFE31_IMASK_CAMIF_ERROR               (0x00000001<<0)
 #define VFE31_IMASK_STATS_CS_OVWR             (0x00000001<<1)
@@ -927,11 +927,11 @@ struct vfe31_output_ch {
 #define VFE_COM_STATUS 0x000FE000
 
 struct vfe31_output_path {
-	uint16_t output_mode;     /* bitmask  */
+	uint16_t output_mode;     /*          */
 
-	struct vfe31_output_ch out0; /* preview and thumbnail */
-	struct vfe31_output_ch out1; /* snapshot */
-	struct vfe31_output_ch out2; /* video    */
+	struct vfe31_output_ch out0; /*                       */
+	struct vfe31_output_ch out1; /*          */
+	struct vfe31_output_ch out2; /*          */
 };
 
 struct vfe31_frame_extra {
@@ -1031,7 +1031,7 @@ struct vfe_stats_control {
 };
 
 struct vfe31_ctrl_type {
-	uint16_t operation_mode;     /* streaming or snapshot */
+	uint16_t operation_mode;     /*                       */
 	struct vfe31_output_path outpath;
 
 	uint32_t vfeImaskCompositePacked;
@@ -1116,4 +1116,4 @@ struct vfe_cmd_stats_ack{
 struct vfe_cmd_stats_buf{
    uint32_t statsBuf[VFE_STATS_BUFFER_COUNT];
 };
-#endif /* __MSM_VFE31_H__ */
+#endif /*                 */
